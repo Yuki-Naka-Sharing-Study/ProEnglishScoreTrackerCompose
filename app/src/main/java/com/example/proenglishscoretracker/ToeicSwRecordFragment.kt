@@ -21,29 +21,41 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.sp
+import androidx.fragment.app.viewModels
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
+import kotlin.getValue
 
 class ToeicSwRecordFragment : Fragment() {
+    private val viewModel: EnglishInfoViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val composeView = ComposeView(requireContext()).apply {
             setContent {
-                ToeicSwScreen()
+                ToeicSwRecordScreen(viewModel = viewModel)
             }
         }
         return composeView
@@ -51,10 +63,13 @@ class ToeicSwRecordFragment : Fragment() {
 }
 
 @Composable
-fun ToeicSwScreen() {
+fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16))
     ) {
+        var writingScore by rememberSaveable { mutableStateOf("") }
+        var speakingScore by rememberSaveable { mutableStateOf("") }
+        var memoText by rememberSaveable { mutableStateOf("") }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
 
@@ -80,10 +95,10 @@ fun ToeicSwScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             WritingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-            WritingInputField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.toeic_sw_writing_score),
+                value = writingScore,
+                onValueChange = { writingScore = it }
             )
         }
 
@@ -97,10 +112,10 @@ fun ToeicSwScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             SpeakingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-            SpeakingInputField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.toeic_sw_speaking_score),
+                value = speakingScore,
+                onValueChange = { speakingScore = it }
             )
         }
 
@@ -112,30 +127,44 @@ fun ToeicSwScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-            MemoTextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.memo),
+                value = memoText,
+                onValueChange = { memoText = it }
             )
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+
+        val isButtonEnabled = writingScore.isNotBlank() && memoText.isNotBlank()
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton()
+            SaveButton(
+                onClick = {
+                    viewModel.saveToeicSwValues(
+                        writingScore,
+                        speakingScore,
+                        memoText
+                    )
+                },
+                enabled = isButtonEnabled
+            )
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ToeicSwScreenPreview() {
+private fun ToeicSwScreenPreview(
+    @PreviewParameter(PreviewParameterProvider::class)
+    viewModel: EnglishInfoViewModel
+) {
     ProEnglishScoreTrackerTheme {
-        ToeicSwScreen()
+        ToeicSwRecordScreen(viewModel = viewModel)
     }
 }
 
@@ -207,37 +236,6 @@ private fun WritingImageViewPreview() {
 }
 
 @Composable
-private fun WritingInputField(modifier: Modifier) {
-    var number by remember { mutableStateOf("") }
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52)),
-            value = number,
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    number = newValue
-                }
-            },
-            label = { Text("200") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun WritingInputFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        WritingInputField(modifier = Modifier)
-    }
-}
-
-@Composable
 private fun SpeakingText(speakingText: String, modifier: Modifier = Modifier) {
     Text(
         text = "Speaking",
@@ -269,37 +267,6 @@ private fun SpeakingImageView(modifier: Modifier = Modifier) {
 private fun SpeakingImageViewPreview() {
     ProEnglishScoreTrackerTheme {
         SpeakingImageView(modifier = Modifier)
-    }
-}
-
-@Composable
-private fun SpeakingInputField(modifier: Modifier) {
-    var number by remember { mutableStateOf("") }
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52)),
-            value = number,
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    number = newValue
-                }
-            },
-            label = { Text("200") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SpeakingInputFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        SpeakingInputField(modifier = Modifier)
     }
 }
 
@@ -351,12 +318,45 @@ private fun MemoTextFieldPreview() {
 }
 
 @Composable
+private fun InputRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52)),
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+    }
+}
+
+@Composable
 private fun SaveButton(
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(Color.Blue)
+        colors = ButtonDefaults.buttonColors(Color.Blue),
+        enabled = enabled
     ) {
         Text("記録する", color = Color.White)
     }

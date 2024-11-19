@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.room)
+    alias(libs.plugins.google.devtools.ksp)
 }
 
 android {
@@ -36,6 +38,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
     buildFeatures {
         compose = true
     }
@@ -51,6 +56,12 @@ android {
 
 dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.material)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material3.android)

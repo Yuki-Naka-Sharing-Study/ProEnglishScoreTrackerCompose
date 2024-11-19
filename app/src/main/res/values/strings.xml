@@ -2,4 +2,44 @@
     <string name="app_name">ProEnglishScoreTracker</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- XxxRecordFragment -->
+    <string name="memo">The problem was difficult.</string>
+
+    <!-- EikenIchijiRecordFragment -->
+    <string name="cse_score">3400</string>
+    <string name="eiken_ichiji_reading_score">850</string>
+    <string name="eiken_ichiji_listening_score">850</string>
+    <string name="eiken_ichiji_writing_score">850</string>
+
+    <!-- EikenNijiRecordFragment -->
+    <!--    <string name="cse_score">3400</string>-->
+    <string name="eiken_niji_speaking_score">850</string>
+    <string name="eiken_niji_short_speech">10</string>
+    <string name="eiken_niji_interaction">10</string>
+    <string name="eiken_niji_grammar_and_vocabulary">10</string>
+    <string name="eiken_niji_pronunciation">10</string>
+
+    <!-- ToeicRecordFragment -->
+    <string name="toeic_reading_score">495</string>
+    <string name="toeic_listening_score">495</string>
+
+    <!-- ToeicSwRecordFragment -->
+    <string name="toeic_sw_writing_score">200</string>
+    <string name="toeic_sw_speaking_score">200</string>
+
+    <!-- ToeflIbtRecordFragment -->
+    <string name="toefl_ibt_overall_score">120</string>
+    <string name="toefl_ibt_reading_score">30</string>
+    <string name="toefl_ibt_listening_score">30</string>
+    <string name="toefl_ibt_writing_score">30</string>
+    <string name="toefl_ibt_speaking_score">30</string>
+
+    <!-- IeltsRecordFragment -->
+    <string name="ielts_overall_score">9.0</string>
+    <string name="ielts_reading_score">9.0</string>
+    <string name="ielts_listening_score">9.0</string>
+    <string name="ielts_writing_score">9.0</string>
+    <string name="ielts_speaking_score">9.0</string>
+
 </resources>

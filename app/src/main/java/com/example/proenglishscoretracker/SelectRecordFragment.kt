@@ -92,27 +92,27 @@ private fun EikenIchijiView(navController: NavController, buttonColor: Color) {
 
 @Composable
 private fun EikenNijiView(navController: NavController, buttonColor: Color) {
-    TapView("英検二次", buttonColor) { navController.navigate("eikenNijiScreen") }
+    TapView("英検二次", buttonColor) { navController.navigate("eikenNijiRecordScreen") }
 }
 
 @Composable
 private fun ToeicView(navController: NavController, buttonColor: Color) {
-    TapView("TOEIC", buttonColor) { navController.navigate("toeicScreen") }
+    TapView("TOEIC", buttonColor) { navController.navigate("toeicRecordScreen") }
 }
 
 @Composable
 private fun ToeicSwView(navController: NavController, buttonColor: Color) {
-    TapView("TOEIC SW", buttonColor) { navController.navigate("toeicSwScreen") }
+    TapView("TOEIC SW", buttonColor) { navController.navigate("toeicSwRecordScreen") }
 }
 
 @Composable
 private fun ToeflIbtView(navController: NavController, buttonColor: Color) {
-    TapView("TOEFL iBT", buttonColor) { navController.navigate("toeflIbtScreen") }
+    TapView("TOEFL iBT", buttonColor) { navController.navigate("toeflIbtRecordScreen") }
 }
 
 @Composable
 private fun IeltsView(navController: NavController, buttonColor: Color) {
-    TapView("IELTS", buttonColor) { navController.navigate("ieltsScreen") }
+    TapView("IELTS", buttonColor) { navController.navigate("ieltsRecordScreen") }
 }
 
 @Composable

@@ -8,9 +8,6 @@ import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,29 +18,40 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.sp
+import androidx.fragment.app.viewModels
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
+import kotlin.getValue
 
 class EikenNijiRecordFragment : Fragment() {
+    private val viewModel: EnglishInfoViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val composeView = ComposeView(requireContext()).apply {
             setContent {
-                EikenNijiRecordScreen()
+                EikenNijiRecordScreen(viewModel = viewModel)
             }
         }
         return composeView
@@ -51,10 +59,17 @@ class EikenNijiRecordFragment : Fragment() {
 }
 
 @Composable
-fun EikenNijiRecordScreen() {
+fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16))
     ) {
+        var cseScore by rememberSaveable { mutableStateOf("") }
+        var speakingScore by rememberSaveable { mutableStateOf("") }
+        var shortSpeechScore by rememberSaveable { mutableStateOf("") }
+        var interactionScore by rememberSaveable { mutableStateOf("") }
+        var grammarAndVocabularyScore by rememberSaveable { mutableStateOf("") }
+        var pronunciationScore by rememberSaveable { mutableStateOf("") }
+        var eikenNijiMemoText by rememberSaveable { mutableStateOf("") }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
 
@@ -85,9 +100,10 @@ fun EikenNijiRecordScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             CSEScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-            CSEScoreInputField(
-                modifier = Modifier
-                    .weight(1f),
+            InputRow(
+                placeholder = stringResource(id = R.string.cse_score),
+                value = cseScore,
+                onValueChange = { cseScore = it }
             )
         }
 
@@ -101,10 +117,10 @@ fun EikenNijiRecordScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             SpeakingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-            SpeakingInputField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.eiken_niji_speaking_score),
+                value = speakingScore,
+                onValueChange = { speakingScore = it }
             )
         }
 
@@ -116,10 +132,10 @@ fun EikenNijiRecordScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             ShortSpeechText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
-            EachSectionField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.eiken_niji_short_speech),
+                value = shortSpeechScore,
+                onValueChange = { shortSpeechScore = it }
             )
         }
 
@@ -131,10 +147,10 @@ fun EikenNijiRecordScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             InteractionText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
-            EachSectionField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.eiken_niji_interaction),
+                value = interactionScore,
+                onValueChange = { interactionScore = it }
             )
         }
 
@@ -146,10 +162,10 @@ fun EikenNijiRecordScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             GrammarAndVocabularyText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
-            EachSectionField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.eiken_niji_grammar_and_vocabulary),
+                value = grammarAndVocabularyScore,
+                onValueChange = { grammarAndVocabularyScore = it }
             )
         }
 
@@ -161,10 +177,10 @@ fun EikenNijiRecordScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             PronunciationText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
-            EachSectionField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.eiken_niji_pronunciation),
+                value = pronunciationScore,
+                onValueChange = { pronunciationScore = it }
             )
         }
 
@@ -176,30 +192,54 @@ fun EikenNijiRecordScreen() {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-            MemoTextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .width(dimensionResource(id = R.dimen.space_16))
+            InputRow(
+                placeholder = stringResource(id = R.string.memo),
+                value = eikenNijiMemoText,
+                onValueChange = { eikenNijiMemoText = it }
             )
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+
+        val isButtonEnabled = cseScore.isNotBlank() &&
+                speakingScore.isNotBlank() &&
+                shortSpeechScore.isNotBlank() &&
+                interactionScore.isNotBlank() &&
+                grammarAndVocabularyScore.isNotBlank() &&
+                pronunciationScore.isNotBlank() &&
+                eikenNijiMemoText.isNotBlank()
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton()
+            SaveButton(
+                onClick = {
+                    viewModel.saveEikenNijiValues(
+                        cseScore,
+                        speakingScore,
+                        shortSpeechScore,
+                        interactionScore,
+                        grammarAndVocabularyScore,
+                        pronunciationScore,
+                        eikenNijiMemoText
+                    )
+                },
+                enabled = isButtonEnabled
+            )
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun EikenNijiRecordScreenPreview() {
+private fun EikenNijiRecordScreenPreview(
+    @PreviewParameter(PreviewParameterProvider::class)
+    viewModel: EnglishInfoViewModel
+) {
     ProEnglishScoreTrackerTheme {
-        EikenNijiRecordScreen()
+        EikenNijiRecordScreen(viewModel = viewModel)
     }
 }
 
@@ -268,29 +308,6 @@ private fun CSEScoreTextPreview() {
 }
 
 @Composable
-private fun CSEScoreInputField(modifier: Modifier) {
-    var number by remember { mutableStateOf("") }
-    OutlinedTextField(
-        value = number,
-        onValueChange = { newValue ->
-            if (newValue.all { it.isDigit() }) {
-                number = newValue
-            }
-        },
-        label = { Text("3400") },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CSEScoreInputFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        CSEScoreInputField(modifier = Modifier)
-    }
-}
-
-@Composable
 private fun SpeakingText(speakingText: String, modifier: Modifier = Modifier) {
     Text(
         text = "Speaking",
@@ -322,68 +339,6 @@ private fun SpeakingImageView(modifier: Modifier = Modifier) {
 private fun SpeakingImageViewPreview() {
     ProEnglishScoreTrackerTheme {
         SpeakingImageView(modifier = Modifier)
-    }
-}
-
-@Composable
-private fun SpeakingInputField(modifier: Modifier) {
-    var number by remember { mutableStateOf("") }
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52)),
-            value = number,
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    number = newValue
-                }
-            },
-            label = { Text("850") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SpeakingInputFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        SpeakingInputField(modifier = Modifier)
-    }
-}
-
-@Composable
-private fun EachSectionField(modifier: Modifier) {
-    var number by remember { mutableStateOf("") }
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52)),
-            value = number,
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    number = newValue
-                }
-            },
-            label = { Text("10") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun EachSectionFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        EachSectionField(modifier = Modifier)
     }
 }
 
@@ -468,43 +423,45 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun MemoTextField(modifier: Modifier) {
-    var text by remember { mutableStateOf("") }
+private fun InputRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
-    ){
-        OutlinedTextField(
+    ) {
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
                 .height(dimensionResource(id = R.dimen.space_52)),
-            value = text,
-            onValueChange = { newText ->
-                text = newText
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
             },
-            label = { Text("MEMO") },
-            placeholder = { Text("") },
-            maxLines = 5,
-            singleLine = false
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MemoTextFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        MemoTextField(modifier = Modifier)
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
     }
 }
 
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(Color.Blue)
+        colors = ButtonDefaults.buttonColors(Color.Blue),
+        enabled = enabled
     ) {
         Text("記録する", color = Color.White)
     }

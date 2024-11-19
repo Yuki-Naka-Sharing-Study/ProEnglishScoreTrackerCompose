@@ -3,10 +3,10 @@ package com.example.proenglishscoretracker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,32 +27,33 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
+import androidx.room.Room
 
 class MainActivity : ComponentActivity() {
+    private val repository: EnglishInfoRepository = EnglishInfoRepository()
+    private lateinit var englishInfoDao: EnglishInfoDao
+    private val viewModel: EnglishInfoViewModel by viewModels {
+        EnglishInfoViewModelFactory(repository, englishInfoDao)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        englishInfoDao = Room.databaseBuilder(
+            application,
+            EnglishInfoDatabase::class.java, "english_info_database"
+        ).build().englishInfoDao()
         setContent {
-            EnglishScoreTracker()
-            ProEnglishScoreTrackerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    EnglishScoreTracker()
-                }
-            }
+            EnglishScoreTracker(viewModel = viewModel)
         }
     }
 }
 
 @Composable
-fun EnglishScoreTracker() {
+fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomNavigationBar(navController) }
@@ -70,6 +71,27 @@ fun EnglishScoreTracker() {
             // 以下、「SelectConfirmFragment」
 
 
+            // 以下、「SelectXxxScreen」
+            composable("selectEikenIchijiScreen") {
+                SelectEikenIchijiScreen(navController)
+            }
+            composable("selectEikenNijiScreen") {
+                SelectEikenNijiScreen(navController)
+            }
+            composable("selectToeicScreen") {
+                SelectToeicScreen(navController)
+            }
+            composable("selectToeicSwScreen") {
+                SelectToeicSwScreen(navController)
+            }
+            composable("selectToeflIbtScreen") {
+                SelectToeflIbtScreen(navController)
+            }
+            composable("selectIeltsScreen") {
+                SelectIeltsScreen(navController)
+            }
+
+
             // 以下、「SelectEikenIchijiFragment」
             composable("eikenIchijiIndividualScreen") {
                 EikenIchijiIndividualScreen()
@@ -79,48 +101,69 @@ fun EnglishScoreTracker() {
             }
 
 
-            // 以下、「SelectRecordFragment」
-            // 以下の三行はテストで書いたコード
-//            composable("selectEikenIchijiScreenDesu") {
-//                SelectEikenIchijiScreenDesu()
-//            }
-
-            composable("selectEikenIchijiScreen") {
-                SelectEikenIchijiScreen(navController)
+            // 以下、「SelectEikenNijiFragment」
+            composable("eikenNijiIndividualScreen") {
+//                EikenNijiIndividualScreen()
             }
-//            composable("eikenNijiScreen") {
-//                Screen("英検二次")
-//            }
-//            composable("toeicScreen") {
-//                Screen("TOEIC")
-//            }
-//            composable("toeicSwScreen") {
-//                Screen("TOEIC SW")
-//            }
-//            composable("toeflIbtScreen") {
-//                Screen("TOEFL iBT")
-//            }
-//            composable("ieltsScreen") {
-//                Screen("IELTS")
-//            }
+            composable("eikenIchijiChartScreen") {
+                EikenNijiChartScreen()
+            }
 
+
+            // 以下、「SelectToeicFragment」
+            composable("toeicIndividualScreen") {
+//                ToeicIndividualScreen()
+            }
+            composable("toeicChartScreen") {
+                ToeicChartScreen()
+            }
+
+
+            // 以下、「SelectToeicSwFragment」
+            composable("toeicSwIndividualScreen") {
+//                ToeicSwIndividualScreen()
+            }
+            composable("toeicSwChartScreen") {
+                ToeicSwChartScreen()
+            }
+
+
+            // 以下、「SelectToeflIbtFragment」
+            composable("toeflIbtIndividualScreen") {
+//                ToeflIbtIndividualScreen()
+            }
+            composable("toeflIbtChartScreen") {
+                ToeflIbtChartScreen()
+            }
+
+
+            // 以下、「SelectIeltsFragment」
+            composable("ieltsIndividualScreen") {
+//                IeltsIndividualScreen()
+            }
+            composable("ieltsIbtChartScreen") {
+                IeltsChartScreen()
+            }
+
+
+            // 以下、「XxxRecordScreen」
             composable("eikenIchijiRecordScreen") {
-                EikenIchijiRecordScreen()
+                EikenIchijiRecordScreen(viewModel = viewModel)
             }
             composable("eikenNijiRecordScreen") {
-                EikenIchijiRecordScreen()
+                EikenNijiRecordScreen(viewModel = viewModel)
             }
             composable("toeicRecordScreen") {
-                EikenIchijiRecordScreen()
+                ToeicRecordScreen(viewModel = viewModel)
             }
             composable("toeicSwRecordScreen") {
-                EikenIchijiRecordScreen()
+                ToeicSwRecordScreen(viewModel = viewModel)
             }
             composable("toeflIbtRecordScreen") {
-                EikenIchijiRecordScreen()
+                ToeflIbtRecordScreen(viewModel = viewModel)
             }
             composable("ieltsRecordScreen") {
-                EikenIchijiRecordScreen()
+                IeltsRecordScreen(viewModel = viewModel)
             }
 
         }
