@@ -55,8 +55,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
     val navController = rememberNavController()
+
     Scaffold(
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { BottomNavigationBar(
+            navController
+        ) }
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -174,19 +177,22 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
 fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
-
-    BottomNavigation {
+    BottomNavigation(
+        backgroundColor = Color(0xFFE0F7FA), // ナビゲーションバーの背景色
+        contentColor = Color(0xFF00796B) // デフォルトのコンテンツカラー（アイコン・テキスト）
+    ) {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Check, contentDescription = "Confirm") },
             label = { Text("Confirm") },
             selected = currentDestination?.route == "selectConfirm",
             onClick = {
                 navController.navigate("selectConfirm") {
-//                    popUpTo("confirm") { saveState = true }
                     launchSingleTop = true
                     restoreState = true
                 }
-            }
+            },
+            selectedContentColor = Color(0xFF004D40), // 選択中のタブの色
+            unselectedContentColor = Color(0xFFB2DFDB) // 非選択中のタブの色
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Edit, contentDescription = "Record") },
@@ -194,11 +200,12 @@ fun BottomNavigationBar(navController: NavController) {
             selected = currentDestination?.route == "selectRecord",
             onClick = {
                 navController.navigate("selectRecord") {
-//                    popUpTo("record") { saveState = true }
                     launchSingleTop = true
                     restoreState = true
                 }
-            }
+            },
+            selectedContentColor = Color(0xFF004D40),
+            unselectedContentColor = Color(0xFFB2DFDB)
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
@@ -206,11 +213,12 @@ fun BottomNavigationBar(navController: NavController) {
             selected = currentDestination?.route == "setting",
             onClick = {
                 navController.navigate("setting") {
-//                    popUpTo("setting") { saveState = true }
                     launchSingleTop = true
                     restoreState = true
                 }
-            }
+            },
+            selectedContentColor = Color(0xFF004D40),
+            unselectedContentColor = Color(0xFFB2DFDB)
         )
     }
 }
