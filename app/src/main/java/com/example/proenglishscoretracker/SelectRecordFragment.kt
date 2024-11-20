@@ -64,9 +64,9 @@ private fun LeftSideViews(navController: NavController, modifier: Modifier = Mod
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        EikenIchijiView(navController, Color(0xFF9C27B0))
-        ToeicView(navController, Color.Green)
-        ToeflIbtView(navController, Color(0xFFFF5722))
+        EikenIchijiView(navController, Color(0xFF800080))
+        ToeicView(navController, Color(0xff00FF00))
+        ToeflIbtView(navController, Color(0xFFFFA500))
     }
 }
 
@@ -79,9 +79,9 @@ private fun RightSideViews(navController: NavController, modifier: Modifier = Mo
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        EikenNijiView(navController, Color.Blue)
-        ToeicSwView(navController, Color.Yellow)
-        IeltsView(navController, Color.Red)
+        EikenNijiView(navController, Color(0xff0000FF))
+        ToeicSwView(navController, Color(0xFF008000))
+        IeltsView(navController, Color(0xffFF0000))
     }
 }
 
