@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.util.*
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
@@ -234,8 +235,13 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
         }, year, month, day
     )
     datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-    Button(onClick = { datePickerDialog.show() }) {
-        Text("受験日を選択する")
+    Button(onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
+        containerColor = Color.Blue
+    ), shape = RoundedCornerShape(8.dp)) {
+        Text(
+            text = "受験日を選択する",
+            color = Color.White,
+        )
     }
 }
 
