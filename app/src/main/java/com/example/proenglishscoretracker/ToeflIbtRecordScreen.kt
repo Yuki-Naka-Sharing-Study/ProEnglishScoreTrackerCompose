@@ -481,11 +481,14 @@ private fun SaveButton(
     Button(
         onClick = { showMessage = true },
         colors = ButtonDefaults.buttonColors(Color.Blue),
+        shape = RoundedCornerShape(8.dp),
         enabled = enabled
     ) {
-        Text("記録する", color = Color.White)
+        Text(
+            text = "記録する",
+            color = Color.White
+        )
     }
-
     if (showMessage) {
         Text("記録しました。")
         LaunchedEffect(Unit) {
