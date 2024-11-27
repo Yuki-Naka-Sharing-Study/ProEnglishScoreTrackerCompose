@@ -1,9 +1,5 @@
 package com.example.proenglishscoretracker
 
-import androidx.fragment.app.Fragment
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.graphics.Color
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,24 +13,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
-
-class ToeicSwChartFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val composeView = ComposeView(requireContext()).apply {
-            setContent {
-                ToeicSwChartScreen()
-            }
-        }
-        return composeView
-    }
-}
 
 @Composable
 fun ToeicSwChartScreen() {

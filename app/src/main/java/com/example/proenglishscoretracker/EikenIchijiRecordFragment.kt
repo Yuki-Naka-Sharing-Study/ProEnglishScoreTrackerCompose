@@ -1,15 +1,9 @@
 package com.example.proenglishscoretracker
 
 import android.content.Context
-import androidx.fragment.app.Fragment
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,22 +40,6 @@ import androidx.fragment.app.viewModels
 import java.util.*
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import kotlinx.coroutines.delay
-
-class EikenIchijiRecordFragment : Fragment() {
-    private val viewModel: EnglishInfoViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val composeView = ComposeView(requireContext()).apply {
-            setContent {
-                EikenIchijiRecordScreen(viewModel = viewModel)
-            }
-        }
-        return composeView
-    }
-}
 
 @Composable
 fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {

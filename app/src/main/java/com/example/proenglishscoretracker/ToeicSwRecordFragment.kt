@@ -1,18 +1,10 @@
 package com.example.proenglishscoretracker
 
-import androidx.fragment.app.Fragment
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,28 +46,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.viewModels
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import kotlin.getValue
-
-class ToeicSwRecordFragment : Fragment() {
-    private val viewModel: EnglishInfoViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val composeView = ComposeView(requireContext()).apply {
-            setContent {
-                ToeicSwRecordScreen(viewModel = viewModel)
-            }
-        }
-        return composeView
-    }
-}
 
 @Composable
 fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
