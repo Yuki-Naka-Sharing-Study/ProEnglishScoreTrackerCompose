@@ -2,11 +2,9 @@ package com.example.proenglishscoretracker
 
 import android.content.Context
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,24 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,7 +32,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -49,13 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @Composable
 fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16))
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by remember { mutableStateOf("") }
         var overallScore by rememberSaveable { mutableStateOf("") }
@@ -65,12 +54,9 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         var speakingScore by rememberSaveable { mutableStateOf("") }
         var memoText by rememberSaveable { mutableStateOf("") }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
-
         Row {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             SelectDayText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_24)))
+            Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
@@ -79,21 +65,20 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             }
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             EnterScoreText("")
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             OverallScoreText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.ielts_overall_score),
                 value = overallScore,
@@ -101,16 +86,16 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.ielts_reading_score),
                 value = readingScore,
@@ -118,16 +103,16 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.ielts_listening_score),
                 value = listeningScore,
@@ -135,16 +120,16 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.ielts_writing_score),
                 value = writingScore,
@@ -152,16 +137,16 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             SpeakingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.ielts_speaking_score),
                 value = speakingScore,
@@ -169,14 +154,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
@@ -184,7 +169,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         val isButtonEnabled = overallScore.isNotBlank() &&
                 readingScore.isNotBlank() &&
@@ -321,7 +306,7 @@ private fun ReadingImageView(modifier: Modifier = Modifier) {
         painter = painterResource(id = R.drawable.reading),
         contentDescription = "",
         modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32)))
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
             .aspectRatio(1f)
     )
 }
@@ -356,7 +341,7 @@ private fun ListeningImageView(modifier: Modifier = Modifier) {
         painter = painterResource(id = R.drawable.listening),
         contentDescription = "",
         modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32)))
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
             .aspectRatio(1f)
     )
 }
@@ -391,7 +376,7 @@ private fun WritingImageView(modifier: Modifier = Modifier) {
         painter = painterResource(id = R.drawable.writing),
         contentDescription = "",
         modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32)))
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
             .aspectRatio(1f)
     )
 }
@@ -426,7 +411,7 @@ private fun SpeakingImageView(modifier: Modifier = Modifier) {
         painter = painterResource(id = R.drawable.speaking),
         contentDescription = "",
         modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32)))
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
             .aspectRatio(1f)
     )
 }
@@ -461,12 +446,12 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52)),
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value,
             onValueChange = onValueChange,
             placeholder = {
@@ -482,7 +467,7 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
 }
 

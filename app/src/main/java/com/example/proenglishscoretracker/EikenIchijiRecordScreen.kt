@@ -2,9 +2,11 @@ package com.example.proenglishscoretracker
 
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,10 +15,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -32,9 +43,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.util.*
@@ -44,7 +57,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16))
+        modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by remember { mutableStateOf("") }
         var cseScore by rememberSaveable { mutableStateOf("") }
@@ -53,12 +66,9 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var writingScore by rememberSaveable { mutableStateOf("") }
         var memoText by rememberSaveable { mutableStateOf("") }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
-
         Row {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             SelectDayText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_24)))
+            Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
@@ -67,28 +77,27 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             }
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             SelectGradeText("")
+            DropdownMenuWithIcon()
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
             EnterScoreText("")
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             CSEScoreText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.cse_score),
                 value = cseScore,
@@ -96,16 +105,16 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
                 value = readingScore,
@@ -113,16 +122,16 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
                 value = listeningScore,
@@ -131,16 +140,16 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
                 value = writingScore,
@@ -149,14 +158,14 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
@@ -164,7 +173,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         val isButtonEnabled = cseScore.isNotBlank() &&
                 readingScore.isNotBlank() &&
@@ -262,6 +271,75 @@ private fun SelectGradeTextPreview() {
 }
 
 @Composable
+private fun DropdownMenuWithIcon() {
+    val items = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
+    var expanded by remember { mutableStateOf(false) }
+    var selectedIndex by remember { mutableStateOf(0) }
+
+    // Anchor用のBoxを導入
+    Box(
+        modifier = Modifier
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .wrapContentSize(Alignment.Center)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clickable { expanded = !expanded }
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = items[selectedIndex],
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                    contentDescription = "Dropdown Icon",
+                    tint = Color.Black,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            // DropdownMenu のオフセット調整
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                offset = DpOffset(0.dp, 8.dp) // Y方向に8dp下げる
+            ) {
+                items.forEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedIndex = index
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DropdownMenuWithIconPreview() {
+    ProEnglishScoreTrackerTheme {
+        Surface(
+            color = MaterialTheme.colorScheme.background
+        ) {
+            DropdownMenuWithIcon()
+        }
+    }
+}
+
+@Composable
 private fun EnterScoreText(grade: String, modifier: Modifier = Modifier) {
     Text(
         text = "スコアを記入",
@@ -315,7 +393,7 @@ private fun ReadingImageView(modifier: Modifier = Modifier) {
         painter = painterResource(id = R.drawable.reading),
         contentDescription = "",
         modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32)))
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
             .aspectRatio(1f)
     )
 }
@@ -350,7 +428,7 @@ private fun ListeningImageView(modifier: Modifier = Modifier) {
         painter = painterResource(id = R.drawable.listening),
         contentDescription = "",
         modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32)))
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
             .aspectRatio(1f)
     )
 }
@@ -385,7 +463,7 @@ private fun WritingImageView(modifier: Modifier = Modifier) {
         painter = painterResource(id = R.drawable.writing),
         contentDescription = "",
         modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32)))
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
             .aspectRatio(1f)
     )
 }
@@ -420,12 +498,12 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52)),
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value,
             onValueChange = onValueChange,
             placeholder = {
@@ -441,7 +519,7 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
 }
 
