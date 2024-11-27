@@ -5,4 +5,7 @@
         <item name="postSplashScreenTheme">@style/Theme.ProEnglishScoreTracker</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/splash</item>
     </style>
+    <style name="CustomDatePickerTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">#4169e1</item>
+    </style>
 </resources>
