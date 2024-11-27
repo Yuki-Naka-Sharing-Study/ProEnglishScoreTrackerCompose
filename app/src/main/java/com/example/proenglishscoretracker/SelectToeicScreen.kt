@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
-
 @Composable
 fun SelectToeicScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {

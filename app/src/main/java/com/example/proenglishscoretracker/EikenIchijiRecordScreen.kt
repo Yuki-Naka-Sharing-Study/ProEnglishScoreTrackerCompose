@@ -36,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.viewModels
 import java.util.*
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import kotlinx.coroutines.delay
