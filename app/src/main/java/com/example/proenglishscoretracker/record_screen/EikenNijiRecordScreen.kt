@@ -60,7 +60,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by remember { mutableStateOf("") }
+        var selectedDate by rememberSaveable { mutableStateOf("") }
         var cseScore by rememberSaveable { mutableStateOf("") }
         var speakingScore by rememberSaveable { mutableStateOf("") }
         var shortSpeechScore by rememberSaveable { mutableStateOf("") }

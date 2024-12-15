@@ -48,7 +48,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by remember { mutableStateOf("") }
+        var selectedDate by rememberSaveable { mutableStateOf("") }
         var writingScore by rememberSaveable { mutableStateOf("") }
         var speakingScore by rememberSaveable { mutableStateOf("") }
         var memoText by rememberSaveable { mutableStateOf("") }

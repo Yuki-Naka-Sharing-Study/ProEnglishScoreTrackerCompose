@@ -50,7 +50,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by remember { mutableStateOf("") }
+        var selectedDate by rememberSaveable { mutableStateOf("") }
         var readingScore by rememberSaveable { mutableStateOf("") }
         var listeningScore by rememberSaveable { mutableStateOf("") }
         var memoText by rememberSaveable { mutableStateOf("") }
