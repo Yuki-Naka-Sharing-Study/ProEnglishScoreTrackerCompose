@@ -1,6 +1,7 @@
 package com.example.proenglishscoretracker
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.material.Text
@@ -528,26 +529,19 @@ private fun SaveButton(
     onClick: () -> Unit = {},
     enabled: Boolean = true
 ) {
-    var showMessage by remember { mutableStateOf(false) }
-
+    val context = LocalContext.current
     Button(
-        onClick = { showMessage = true },
+        onClick = { showToast(context, "記録しました") },
         colors = ButtonDefaults.buttonColors(Color.Blue),
         shape = RoundedCornerShape(8.dp),
-        enabled = enabled
+        enabled = enabled,
     ) {
-        Text(
-            text = "記録する",
-            color = Color.White
-        )
+        Text(stringResource(id = R.string.record))
     }
-    if (showMessage) {
-        Text("記録しました。")
-        LaunchedEffect(Unit) {
-            delay(2000)
-            showMessage = false
-        }
-    }
+}
+
+private fun showToast(context: android.content.Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 @Preview(showBackground = true)
