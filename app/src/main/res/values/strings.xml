@@ -5,7 +5,7 @@
 
     <!-- XxxRecordFragment -->
     <string name="memo">The problem was difficult.</string>
-    <string name="record">記録しました。</string>
+    <string name="record">記録</string>
 
     <!-- EikenIchijiRecordFragment -->
     <string name="cse_score">3400</string>

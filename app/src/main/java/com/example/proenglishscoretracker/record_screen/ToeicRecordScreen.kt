@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,8 +52,8 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by rememberSaveable { mutableStateOf("") }
-        var readingScore by rememberSaveable { mutableStateOf("") }
-        var listeningScore by rememberSaveable { mutableStateOf("") }
+        var readingScore by rememberSaveable { mutableIntStateOf(0) }
+        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
 
         Row {
@@ -82,7 +83,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputScoreRow(
                 placeholder = stringResource(id = R.string.toeic_reading_score),
                 value = readingScore,
                 onValueChange = { readingScore = it }
@@ -99,7 +100,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputScoreRow(
                 placeholder = stringResource(id = R.string.toeic_listening_score),
                 value = listeningScore,
                 onValueChange = { listeningScore = it }
@@ -114,7 +115,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputMemoRow(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
                 onValueChange = { memoText = it }
@@ -123,8 +124,14 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val isButtonEnabled = readingScore.isNotBlank() &&
-                listeningScore.isNotBlank() &&
+        val readingMaxScoreChecker = readingScore <= 495
+        val listeningMaxScoreChecker = listeningScore <= 495
+
+        val readingScoreDivisionChecker = readingScore % 5
+        val listeningScoreDivisionChecker = listeningScore % 5
+
+        val areAllFilled = readingScore.toString().isNotBlank() &&
+                listeningScore.toString().isNotBlank() &&
                 memoText.isNotBlank()
 
         Row(
@@ -140,7 +147,21 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                         memoText
                     )
                 },
-                enabled = isButtonEnabled
+                errorMessage = when {
+                    readingScore >= 496 -> "スコアは496未満である必要があります"
+                    listeningScore >= 496 -> "スコアは496未満である必要があります"
+                    readingScore % 5 != 0 -> "スコアは5で割り切れる必要があります"
+                    listeningScore % 5 != 0 -> "スコアは5で割り切れる必要があります"
+                    else -> {
+                        // 記録処理
+                        "記録しました"
+                    }
+                },
+                enabled = areAllFilled &&
+                        readingMaxScoreChecker &&
+                        listeningMaxScoreChecker
+//                        readingScoreDivisionChecker &&
+//                        listeningScoreDivisionChecker
             )
         }
     }
@@ -394,7 +415,44 @@ private fun MemoTextFieldPreview() {
 }
 
 @Composable
-private fun InputRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+    }
+}
+
+@Composable
+private fun InputMemoRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -407,6 +465,7 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value,
             onValueChange = onValueChange,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             placeholder = {
                 Text(
                     text = placeholder,
@@ -427,6 +486,7 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
 @Composable
 private fun SaveButton(
     onClick: () -> Unit = {},
+    errorMessage: String,
     enabled: Boolean = true
 ) {
     val context = LocalContext.current
@@ -444,10 +504,10 @@ private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun SaveButtonPreview() {
-    ProEnglishScoreTrackerTheme {
-        SaveButton()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun SaveButtonPreview() {
+//    ProEnglishScoreTrackerTheme {
+//        SaveButton()
+//    }
+//}

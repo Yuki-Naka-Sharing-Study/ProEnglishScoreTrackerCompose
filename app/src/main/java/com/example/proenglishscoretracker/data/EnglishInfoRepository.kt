@@ -21,8 +21,8 @@ class EnglishInfoRepository {
 
     }
 
-    fun saveToeicInfo(readingScore: String,
-                      listeningScore: String,
+    fun saveToeicInfo(readingScore: Int,
+                      listeningScore: Int,
                       memoText: String
     ){
 
