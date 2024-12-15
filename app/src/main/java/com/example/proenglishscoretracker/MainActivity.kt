@@ -32,6 +32,33 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.room.Room
+import com.example.proenglishscoretracker.chart_screen.EikenIchijiChartScreen
+import com.example.proenglishscoretracker.chart_screen.EikenNijiChartScreen
+import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
+import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen
+import com.example.proenglishscoretracker.chart_screen.ToeicChartScreen
+import com.example.proenglishscoretracker.chart_screen.ToeicSwChartScreen
+import com.example.proenglishscoretracker.data.EnglishInfoDao
+import com.example.proenglishscoretracker.data.EnglishInfoDatabase
+import com.example.proenglishscoretracker.data.EnglishInfoRepository
+import com.example.proenglishscoretracker.data.EnglishInfoViewModel
+import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
+import com.example.proenglishscoretracker.record_screen.EikenIchijiRecordScreen
+import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
+import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
+import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
+import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
+import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
+import com.example.proenglishscoretracker.individual_screen.EikenIchijiIndividualScreen
+import com.example.proenglishscoretracker.tab_screen.SelectConfirmScreen
+import com.example.proenglishscoretracker.select_screen.SelectEikenIchijiScreen
+import com.example.proenglishscoretracker.select_screen.SelectEikenNijiScreen
+import com.example.proenglishscoretracker.select_screen.SelectIeltsScreen
+import com.example.proenglishscoretracker.tab_screen.SelectRecordScreen
+import com.example.proenglishscoretracker.select_screen.SelectToeflIbtScreen
+import com.example.proenglishscoretracker.select_screen.SelectToeicScreen
+import com.example.proenglishscoretracker.select_screen.SelectToeicSwScreen
+import com.example.proenglishscoretracker.tab_screen.SettingScreen
 
 class MainActivity : ComponentActivity() {
     private val repository: EnglishInfoRepository = EnglishInfoRepository()

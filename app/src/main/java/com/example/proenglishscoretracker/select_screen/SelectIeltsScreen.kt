@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.select_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,16 +9,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.proenglishscoretracker.TapView
 
 @Composable
-fun SelectToeicScreen(navController: NavController) {
+fun SelectIeltsScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
-        ToeicIndividualView(
+        IeltsIndividualView(
             navController,
             modifier = Modifier.weight(1f),
             buttonColor = Color.Red
         )
-        ToeicChartView(
+        IeltsChartView(
             navController,
             modifier = Modifier.weight(1f),
             buttonColor = Color.Blue
@@ -28,12 +29,12 @@ fun SelectToeicScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectToeicScreenPreview() {
-    SelectToeicScreen(navController = rememberNavController())
+private fun SelectIeltsScreenPreview() {
+    SelectIeltsScreen(navController = rememberNavController())
 }
 
 @Composable
-private fun ToeicIndividualView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
+private fun IeltsIndividualView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -41,12 +42,12 @@ private fun ToeicIndividualView(navController: NavController, modifier: Modifier
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TapView("TOEIC　個別記録画面", buttonColor) { navController.navigate("toeicIndividualScreen") }
+        TapView("IELTS　個別記録画面", buttonColor) { navController.navigate("toeflIbtIndividualScreen") }
     }
 }
 
 @Composable
-private fun ToeicChartView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
+private fun IeltsChartView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -54,6 +55,6 @@ private fun ToeicChartView(navController: NavController, modifier: Modifier = Mo
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TapView("TOEIC　チャート記録画面", buttonColor) { navController.navigate("toeicChartScreen") }
+        TapView("IELTS　チャート記録画面", buttonColor) { navController.navigate("toeflIbtChartScreen") }
     }
 }

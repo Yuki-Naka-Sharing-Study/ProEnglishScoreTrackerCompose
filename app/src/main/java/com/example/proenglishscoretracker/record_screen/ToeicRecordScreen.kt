@@ -1,10 +1,13 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.record_screen
 
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,10 +22,9 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,21 +40,19 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.proenglishscoretracker.data.EnglishInfoViewModel
+import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
-import kotlinx.coroutines.delay
 import java.util.Calendar
 
 @Composable
-fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
+fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by remember { mutableStateOf("") }
-        var overallScore by rememberSaveable { mutableStateOf("") }
         var readingScore by rememberSaveable { mutableStateOf("") }
         var listeningScore by rememberSaveable { mutableStateOf("") }
-        var writingScore by rememberSaveable { mutableStateOf("") }
-        var speakingScore by rememberSaveable { mutableStateOf("") }
         var memoText by rememberSaveable { mutableStateOf("") }
 
         Row {
@@ -78,27 +78,12 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            OverallScoreText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
-                value = overallScore,
-                onValueChange = { overallScore = it }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_reading_score),
+                placeholder = stringResource(id = R.string.toeic_reading_score),
                 value = readingScore,
                 onValueChange = { readingScore = it }
             )
@@ -109,49 +94,15 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_listening_score),
+                placeholder = stringResource(id = R.string.toeic_listening_score),
                 value = listeningScore,
                 onValueChange = { listeningScore = it }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            WritingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_writing_score),
-                value = writingScore,
-                onValueChange = { writingScore = it }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            SpeakingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            SpeakingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_speaking_score),
-                value = speakingScore,
-                onValueChange = { speakingScore = it }
             )
         }
 
@@ -172,11 +123,8 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val isButtonEnabled = overallScore.isNotBlank() &&
-                readingScore.isNotBlank() &&
+        val isButtonEnabled = readingScore.isNotBlank() &&
                 listeningScore.isNotBlank() &&
-                writingScore.isNotBlank() &&
-                speakingScore.isNotBlank() &&
                 memoText.isNotBlank()
 
         Row(
@@ -186,12 +134,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         ) {
             SaveButton(
                 onClick = {
-                    viewModel.saveToeflIbtValues(
-                        overallScore,
+                    viewModel.saveToeicValues(
                         readingScore,
                         listeningScore,
-                        writingScore,
-                        speakingScore,
                         memoText
                     )
                 },
@@ -203,12 +148,12 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
 @Preview(showBackground = true)
 @Composable
-private fun ToeflIbtRecordScreenPreview(
+private fun ToeicRecordScreenPreview(
     @PreviewParameter(PreviewParameterProvider::class)
     viewModel: EnglishInfoViewModel
 ) {
     ProEnglishScoreTrackerTheme {
-        ToeflIbtRecordScreen(viewModel = viewModel)
+        ToeicRecordScreen(viewModel = viewModel)
     }
 }
 
@@ -270,22 +215,6 @@ private fun EnterScoreTextPreview() {
 }
 
 @Composable
-private fun OverallScoreText(grade: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Overall",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun OverallScoreTextPreview() {
-    ProEnglishScoreTrackerTheme {
-        OverallScoreText("Overall")
-    }
-}
-
-@Composable
 private fun ReadingText(readingText: String, modifier: Modifier = Modifier) {
     Text(
         text = "Reading",
@@ -317,6 +246,37 @@ private fun ReadingImageView(modifier: Modifier = Modifier) {
 private fun ReadingImageViewPreview() {
     ProEnglishScoreTrackerTheme {
         ReadingImageView(modifier = Modifier)
+    }
+}
+
+@Composable
+private fun ReadingInputField(modifier: Modifier) {
+    var number by remember { mutableStateOf("") }
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = number,
+            onValueChange = { newValue ->
+                if (newValue.all { it.isDigit() }) {
+                    number = newValue
+                }
+            },
+            label = { Text("495") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ReadingInputFieldPreview() {
+    ProEnglishScoreTrackerTheme {
+        ReadingInputField(modifier = Modifier)
     }
 }
 
@@ -356,72 +316,33 @@ private fun ListeningImageViewPreview() {
 }
 
 @Composable
-private fun WritingText(writingText: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Writing",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun WritingTextPreview() {
-    ProEnglishScoreTrackerTheme {
-        WritingText("Writing")
+private fun ListeningInputField(modifier: Modifier) {
+    var number by remember { mutableStateOf("") }
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = number,
+            onValueChange = { newValue ->
+                if (newValue.all { it.isDigit() }) {
+                    number = newValue
+                }
+            },
+            label = { Text("495") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
     }
 }
 
-@Composable
-private fun WritingImageView(modifier: Modifier = Modifier) {
-    Image(
-        painter = painterResource(id = R.drawable.writing),
-        contentDescription = "",
-        modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32_dp)))
-            .aspectRatio(1f)
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
-private fun WritingImageViewPreview() {
+private fun ListeningInputFieldPreview() {
     ProEnglishScoreTrackerTheme {
-        WritingImageView(modifier = Modifier)
-    }
-}
-
-@Composable
-private fun SpeakingText(speakingText: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Speaking",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SpeakingTextPreview() {
-    ProEnglishScoreTrackerTheme {
-        SpeakingText("Speaking")
-    }
-}
-
-@Composable
-private fun SpeakingImageView(modifier: Modifier = Modifier) {
-    Image(
-        painter = painterResource(id = R.drawable.speaking),
-        contentDescription = "",
-        modifier = modifier
-            .size((dimensionResource(id = R.dimen.space_32_dp)))
-            .aspectRatio(1f)
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SpeakingImageViewPreview() {
-    ProEnglishScoreTrackerTheme {
-        SpeakingImageView(modifier = Modifier)
+        ListeningInputField(modifier = Modifier)
     }
 }
 
@@ -438,6 +359,37 @@ private fun MemoText(memoText: String, modifier: Modifier = Modifier) {
 private fun MemoTextPreview() {
     ProEnglishScoreTrackerTheme {
         MemoText("Memo")
+    }
+}
+
+@Composable
+private fun MemoTextField(modifier: Modifier) {
+    var text by remember { mutableStateOf("") }
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = text,
+            onValueChange = { newText ->
+                text = newText
+            },
+            label = { Text("MEMO") },
+            placeholder = { Text("") },
+            maxLines = 5,
+            singleLine = false
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun MemoTextFieldPreview() {
+    ProEnglishScoreTrackerTheme {
+        MemoTextField(modifier = Modifier)
     }
 }
 

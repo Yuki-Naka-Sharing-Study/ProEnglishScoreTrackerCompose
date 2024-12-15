@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.chart_screen
 
 import android.view.ViewGroup
 import android.graphics.Color
@@ -18,18 +18,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 
 @Composable
-fun ToeflIbtChartScreen() {
-    ToeflIbtScoreChart()
+fun ToeicSwChartScreen() {
+    ToeicSwScoreChart()
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ToeflIbtChartScreenPreview() {
-    ToeflIbtChartScreen()
+private fun ToeicSwChartScreenPreview() {
+    ToeicSwChartScreen()
 }
 
 @Composable
-private fun ToeflIbtScoreChart() {
+private fun ToeicSwScoreChart() {
     AndroidView(
         factory = { context ->
             LineChart(context).apply {
@@ -38,19 +38,11 @@ private fun ToeflIbtScoreChart() {
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
                 // データのセットアップ
-                val readingScores = listOf(27f, 28f, 30f)
-                val listeningScores = listOf(28f, 25f, 29f)
-                val writingScores = listOf(25f, 29f, 27f)
-                val speakingScores = listOf(25f, 20f, 26f)
+                val writingScores = listOf(150f, 180f, 200f)
+                val speakingScores = listOf(180f, 170f, 190f)
 
                 val examDates = listOf("2023-09-01", "2023-10-01", "2023-11-01")
 
-                val entriesReading = readingScores.mapIndexed { index, score ->
-                    Entry(index.toFloat(), score)
-                }
-                val entriesListening = listeningScores.mapIndexed { index, score ->
-                    Entry(index.toFloat(), score)
-                }
                 val entriesWriting = writingScores.mapIndexed { index, score ->
                     Entry(index.toFloat(), score)
                 }
@@ -58,24 +50,17 @@ private fun ToeflIbtScoreChart() {
                     Entry(index.toFloat(), score)
                 }
 
-                val dataSetReading = LineDataSet(entriesReading, "リーディングスコア").apply {
-                    color = Color.RED
-                    valueTextColor = Color.BLACK
-                }
-                val dataSetListening = LineDataSet(entriesListening, "リスニングスコア").apply {
-                    color = Color.BLUE
-                    valueTextColor = Color.BLACK
-                }
+
                 val dataSetWriting = LineDataSet(entriesWriting, "ライティングスコア").apply {
                     color = Color.YELLOW
                     valueTextColor = Color.BLACK
                 }
                 val dataSetSpeaking = LineDataSet(entriesSpeaking, "スピーキングスコア").apply {
-                    color = Color.GREEN
+                    color = Color.BLUE
                     valueTextColor = Color.BLACK
                 }
 
-                val lineData = LineData(dataSetReading, dataSetListening, dataSetWriting, dataSetSpeaking)
+                val lineData = LineData(dataSetWriting, dataSetSpeaking)
                 this.data = lineData
                 // X軸ラベル設定
                 xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
@@ -100,6 +85,6 @@ private fun ToeflIbtScoreChart() {
 @Composable
 private fun ScoreChartPreview() {
     ProEnglishScoreTrackerTheme {
-        ToeflIbtScoreChart()
+        ToeicSwScoreChart()
     }
 }

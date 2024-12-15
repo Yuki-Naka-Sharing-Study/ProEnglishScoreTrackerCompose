@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.data
 
 import android.content.Context
 import androidx.room.Database
@@ -12,7 +12,7 @@ abstract class EnglishInfoDatabase : RoomDatabase() {
     companion object {
         // Singleton prevents multiple instances of database opening at the same time.
         @Volatile
-        private var INSTANCE: EnglishInfoDatabase ? = null
+        private var INSTANCE: EnglishInfoDatabase? = null
 
         fun getEnglishInfoDatabase(context: Context): EnglishInfoDatabase {
             // if the INSTANCE is not null, then return it,

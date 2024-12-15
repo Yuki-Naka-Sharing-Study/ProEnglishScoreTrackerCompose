@@ -1,16 +1,16 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.tab_screen
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,9 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.proenglishscoretracker.TapView
 
 @Composable
-fun SelectConfirmScreen(navController: NavController) {
+fun SelectRecordScreen(navController: NavController) {
     Row(modifier = Modifier.fillMaxSize()) {
         LeftSideViews(navController, modifier = Modifier.weight(1f))
         RightSideViews(navController, modifier = Modifier.weight(1f))
@@ -29,8 +30,8 @@ fun SelectConfirmScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectConfirmScreenPreview() {
-    SelectConfirmScreen(navController = rememberNavController())
+private fun SelectRecordScreenPreview() {
+    SelectRecordScreen(navController = rememberNavController())
 }
 
 @Composable
@@ -42,9 +43,9 @@ private fun LeftSideViews(navController: NavController, modifier: Modifier = Mod
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        EikenIchijiView(navController, Color(0xffFF0000))
+        EikenIchijiView(navController, Color(0xFF800080))
         ToeicView(navController, Color(0xff00FF00))
-        ToeflIbtView(navController, Color(0xff0000FF))
+        ToeflIbtView(navController, Color(0xFFFFA500))
     }
 }
 
@@ -57,40 +58,40 @@ private fun RightSideViews(navController: NavController, modifier: Modifier = Mo
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        EikenNijiView(navController, Color(0xFFFFA500))
+        EikenNijiView(navController, Color(0xff0000FF))
         ToeicSwView(navController, Color(0xFF008000))
-        IeltsView(navController, Color(0xFF800080))
+        IeltsView(navController, Color(0xffFF0000))
     }
 }
 
 @Composable
 private fun EikenIchijiView(navController: NavController, buttonColor: Color) {
-    TapView("英検一次", buttonColor) { navController.navigate("selectEikenIchijiScreen") }
+    TapView("英検一次", buttonColor) { navController.navigate("eikenIchijiRecordScreen") }
 }
 
 @Composable
 private fun EikenNijiView(navController: NavController, buttonColor: Color) {
-    TapView("英検二次", buttonColor) { navController.navigate("eikenNijiScreen") }
+    TapView("英検二次", buttonColor) { navController.navigate("eikenNijiRecordScreen") }
 }
 
 @Composable
 private fun ToeicView(navController: NavController, buttonColor: Color) {
-    TapView("TOEIC", buttonColor) { navController.navigate("toeicScreen") }
+    TapView("TOEIC", buttonColor) { navController.navigate("toeicRecordScreen") }
 }
 
 @Composable
 private fun ToeicSwView(navController: NavController, buttonColor: Color) {
-    TapView("TOEIC SW", buttonColor) { navController.navigate("toeicSwScreen") }
+    TapView("TOEIC SW", buttonColor) { navController.navigate("toeicSwRecordScreen") }
 }
 
 @Composable
 private fun ToeflIbtView(navController: NavController, buttonColor: Color) {
-    TapView("TOEFL iBT", buttonColor) { navController.navigate("toeflIbtScreen") }
+    TapView("TOEFL iBT", buttonColor) { navController.navigate("toeflIbtRecordScreen") }
 }
 
 @Composable
 private fun IeltsView(navController: NavController, buttonColor: Color) {
-    TapView("IELTS", buttonColor) { navController.navigate("ieltsScreen") }
+    TapView("IELTS", buttonColor) { navController.navigate("ieltsRecordScreen") }
 }
 
 @Composable

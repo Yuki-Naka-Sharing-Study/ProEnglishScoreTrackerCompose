@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.select_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,16 +9,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.proenglishscoretracker.TapView
 
 @Composable
-fun SelectIeltsScreen(navController: NavController) {
+fun SelectEikenNijiScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
-        IeltsIndividualView(
+        EikenNijiIndividualView(
             navController,
             modifier = Modifier.weight(1f),
             buttonColor = Color.Red
         )
-        IeltsChartView(
+        EikenNijiChartView(
             navController,
             modifier = Modifier.weight(1f),
             buttonColor = Color.Blue
@@ -28,12 +29,12 @@ fun SelectIeltsScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectIeltsScreenPreview() {
-    SelectIeltsScreen(navController = rememberNavController())
+private fun SelectEikenNijiScreenPreview() {
+    SelectEikenNijiScreen(navController = rememberNavController())
 }
 
 @Composable
-private fun IeltsIndividualView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
+private fun EikenNijiIndividualView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -41,12 +42,12 @@ private fun IeltsIndividualView(navController: NavController, modifier: Modifier
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TapView("IELTS　個別記録画面", buttonColor) { navController.navigate("toeflIbtIndividualScreen") }
+        TapView("英検二次　個別記録画面", buttonColor) { navController.navigate("eikenNijiIndividualScreen") }
     }
 }
 
 @Composable
-private fun IeltsChartView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
+private fun EikenNijiChartView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -54,6 +55,6 @@ private fun IeltsChartView(navController: NavController, modifier: Modifier = Mo
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TapView("IELTS　チャート記録画面", buttonColor) { navController.navigate("toeflIbtChartScreen") }
+        TapView("英検二次　チャート記録画面", buttonColor) { navController.navigate("eikenNijiChartScreen") }
     }
 }

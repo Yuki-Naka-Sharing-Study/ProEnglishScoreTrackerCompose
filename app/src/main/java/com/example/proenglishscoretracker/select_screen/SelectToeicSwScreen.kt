@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.select_screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,16 +9,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.proenglishscoretracker.TapView
 
 @Composable
-fun SelectEikenNijiScreen(navController: NavController) {
+fun SelectToeicSwScreen(navController: NavController) {
     Column(modifier = Modifier.fillMaxSize()) {
-        EikenNijiIndividualView(
+        ToeicSwIndividualView(
             navController,
             modifier = Modifier.weight(1f),
             buttonColor = Color.Red
         )
-        EikenNijiChartView(
+        ToeicSwChartView(
             navController,
             modifier = Modifier.weight(1f),
             buttonColor = Color.Blue
@@ -28,12 +29,12 @@ fun SelectEikenNijiScreen(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectEikenNijiScreenPreview() {
-    SelectEikenNijiScreen(navController = rememberNavController())
+private fun SelectToeicSwScreenPreview() {
+    SelectToeicSwScreen(navController = rememberNavController())
 }
 
 @Composable
-private fun EikenNijiIndividualView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
+private fun ToeicSwIndividualView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -41,12 +42,12 @@ private fun EikenNijiIndividualView(navController: NavController, modifier: Modi
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TapView("英検二次　個別記録画面", buttonColor) { navController.navigate("eikenNijiIndividualScreen") }
+        TapView("TOEIC SW　個別記録画面", buttonColor) { navController.navigate("toeicSwIndividualScreen") }
     }
 }
 
 @Composable
-private fun EikenNijiChartView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
+private fun ToeicSwChartView(navController: NavController, modifier: Modifier = Modifier, buttonColor: Color) {
     Column(
         modifier = modifier
             .fillMaxHeight()
@@ -54,6 +55,6 @@ private fun EikenNijiChartView(navController: NavController, modifier: Modifier 
             .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        TapView("英検二次　チャート記録画面", buttonColor) { navController.navigate("eikenNijiChartScreen") }
+        TapView("TOEIC SW　チャート記録画面", buttonColor) { navController.navigate("toeicSwChartScreen") }
     }
 }

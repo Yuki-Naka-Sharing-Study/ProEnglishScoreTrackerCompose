@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.data
 
 class EnglishInfoRepository {
     fun saveEikenIchijiInfo(cseScore: String,

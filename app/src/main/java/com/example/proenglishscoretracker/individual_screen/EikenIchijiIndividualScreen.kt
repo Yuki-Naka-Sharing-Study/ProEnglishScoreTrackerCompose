@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.individual_screen
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

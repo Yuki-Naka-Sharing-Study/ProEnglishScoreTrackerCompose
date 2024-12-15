@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -1,7 +1,10 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.proenglishscoretracker.data.EnglishInfo
+import com.example.proenglishscoretracker.data.EnglishInfoDao
+import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

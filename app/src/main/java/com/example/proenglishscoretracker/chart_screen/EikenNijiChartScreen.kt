@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.chart_screen
 
 import android.view.ViewGroup
 import android.graphics.Color
@@ -18,18 +18,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 
 @Composable
-fun ToeicChartScreen() {
-    ToeicScoreChart()
+fun EikenNijiChartScreen() {
+    EikenNijiScoreChart()
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ToeicChartScreenPreview() {
-    ToeicChartScreen()
+private fun EikenNijiChartScreenPreview() {
+    EikenNijiChartScreen()
 }
 
 @Composable
-private fun ToeicScoreChart() {
+private fun EikenNijiScoreChart() {
     AndroidView(
         factory = { context ->
             LineChart(context).apply {
@@ -38,28 +38,20 @@ private fun ToeicScoreChart() {
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
                 // データのセットアップ
-                val readingScores = listOf(300f, 445f, 495f)
-                val listeningScores = listOf(350f, 345f, 400f)
+                val speakingScores = listOf(750f, 730f, 790f)
 
                 val examDates = listOf("2023-09-01", "2023-10-01", "2023-11-01")
 
-                val entriesReading = readingScores.mapIndexed { index, score ->
-                    Entry(index.toFloat(), score)
-                }
-                val entriesListening = listeningScores.mapIndexed { index, score ->
+                val entriesSpeaking = speakingScores.mapIndexed { index, score ->
                     Entry(index.toFloat(), score)
                 }
 
-                val dataSetReading = LineDataSet(entriesReading, "リーディングスコア").apply {
-                    color = Color.RED
-                    valueTextColor = Color.BLACK
-                }
-                val dataSetListening = LineDataSet(entriesListening, "リスニングスコア").apply {
-                    color = Color.BLUE
+                val dataSetSpeaking = LineDataSet(entriesSpeaking, "スピーキングスコア").apply {
+                    color = Color.YELLOW
                     valueTextColor = Color.BLACK
                 }
 
-                val lineData = LineData(dataSetReading, dataSetListening)
+                val lineData = LineData(dataSetSpeaking)
                 this.data = lineData
                 // X軸ラベル設定
                 xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
@@ -84,6 +76,6 @@ private fun ToeicScoreChart() {
 @Composable
 private fun ScoreChartPreview() {
     ProEnglishScoreTrackerTheme {
-        ToeicScoreChart()
+        EikenNijiScoreChart()
     }
 }

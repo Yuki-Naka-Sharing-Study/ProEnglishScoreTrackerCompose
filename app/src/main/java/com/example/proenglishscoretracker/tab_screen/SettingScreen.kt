@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.tab_screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

@@ -1,13 +1,11 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.record_screen
 
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,21 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -44,45 +32,38 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.util.*
+import com.example.proenglishscoretracker.data.EnglishInfoViewModel
+import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
-import kotlinx.coroutines.delay
+import java.util.Calendar
 
 @Composable
-fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
+fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by remember { mutableStateOf("") }
-        var cseScore by rememberSaveable { mutableStateOf("") }
+        var overallScore by rememberSaveable { mutableStateOf("") }
         var readingScore by rememberSaveable { mutableStateOf("") }
         var listeningScore by rememberSaveable { mutableStateOf("") }
         var writingScore by rememberSaveable { mutableStateOf("") }
+        var speakingScore by rememberSaveable { mutableStateOf("") }
         var memoText by rememberSaveable { mutableStateOf("") }
 
         Row {
             SelectDayText("")
-            Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
                 }
                 Text("受験日: $selectedDate")
             }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row {
-            SelectGradeText("")
-            DropdownMenuWithIcon()
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -97,12 +78,12 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            CSEScoreText("")
+            OverallScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
-                placeholder = stringResource(id = R.string.cse_score),
-                value = cseScore,
-                onValueChange = { cseScore = it }
+                placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
+                value = overallScore,
+                onValueChange = { overallScore = it }
             )
         }
 
@@ -117,7 +98,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             ReadingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
-                placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
+                placeholder = stringResource(id = R.string.toefl_ibt_reading_score),
                 value = readingScore,
                 onValueChange = { readingScore = it }
             )
@@ -134,11 +115,10 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             ListeningImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
-                placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
+                placeholder = stringResource(id = R.string.toefl_ibt_listening_score),
                 value = listeningScore,
                 onValueChange = { listeningScore = it }
             )
-
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -152,11 +132,27 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             WritingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputRow(
-                placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
+                placeholder = stringResource(id = R.string.toefl_ibt_writing_score),
                 value = writingScore,
                 onValueChange = { writingScore = it }
             )
+        }
 
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            SpeakingText("")
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            SpeakingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            InputRow(
+                placeholder = stringResource(id = R.string.toefl_ibt_speaking_score),
+                value = speakingScore,
+                onValueChange = { speakingScore = it }
+            )
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -176,10 +172,11 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val isButtonEnabled = cseScore.isNotBlank() &&
+        val isButtonEnabled = overallScore.isNotBlank() &&
                 readingScore.isNotBlank() &&
                 listeningScore.isNotBlank() &&
                 writingScore.isNotBlank() &&
+                speakingScore.isNotBlank() &&
                 memoText.isNotBlank()
 
         Row(
@@ -189,11 +186,12 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         ) {
             SaveButton(
                 onClick = {
-                    viewModel.saveEikenIchijiValues(
-                        cseScore,
+                    viewModel.saveToeflIbtValues(
+                        overallScore,
                         readingScore,
                         listeningScore,
                         writingScore,
+                        speakingScore,
                         memoText
                     )
                 },
@@ -205,12 +203,12 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
 @Preview(showBackground = true)
 @Composable
-private fun EikenIchijiRecordScreenPreview(
+private fun ToeflIbtRecordScreenPreview(
     @PreviewParameter(PreviewParameterProvider::class)
     viewModel: EnglishInfoViewModel
 ) {
     ProEnglishScoreTrackerTheme {
-        EikenIchijiRecordScreen(viewModel = viewModel)
+        ToeflIbtRecordScreen(viewModel = viewModel)
     }
 }
 
@@ -256,91 +254,6 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
 }
 
 @Composable
-private fun SelectGradeText(grade: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "受験級を選択",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SelectGradeTextPreview() {
-    ProEnglishScoreTrackerTheme {
-        SelectGradeText("受験級を選択")
-    }
-}
-
-@Composable
-private fun DropdownMenuWithIcon() {
-    val items = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
-    var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
-
-    // Anchor用のBoxを導入
-    Box(
-        modifier = Modifier
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .wrapContentSize(Alignment.Center)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable { expanded = !expanded }
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = items[selectedIndex],
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(
-                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                    contentDescription = "Dropdown Icon",
-                    tint = Color.Black,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
-            // DropdownMenu のオフセット調整
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                offset = DpOffset(0.dp, 8.dp) // Y方向に8dp下げる
-            ) {
-                items.forEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            selectedIndex = index
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DropdownMenuWithIconPreview() {
-    ProEnglishScoreTrackerTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background
-        ) {
-            DropdownMenuWithIcon()
-        }
-    }
-}
-
-@Composable
 private fun EnterScoreText(grade: String, modifier: Modifier = Modifier) {
     Text(
         text = "スコアを記入",
@@ -357,18 +270,18 @@ private fun EnterScoreTextPreview() {
 }
 
 @Composable
-private fun CSEScoreText(grade: String, modifier: Modifier = Modifier) {
+private fun OverallScoreText(grade: String, modifier: Modifier = Modifier) {
     Text(
-        text = "CSEスコア",
+        text = "Overall",
         modifier = modifier
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun CSEScoreTextPreview() {
+private fun OverallScoreTextPreview() {
     ProEnglishScoreTrackerTheme {
-        CSEScoreText("CSEスコア")
+        OverallScoreText("Overall")
     }
 }
 
@@ -474,6 +387,41 @@ private fun WritingImageView(modifier: Modifier = Modifier) {
 private fun WritingImageViewPreview() {
     ProEnglishScoreTrackerTheme {
         WritingImageView(modifier = Modifier)
+    }
+}
+
+@Composable
+private fun SpeakingText(speakingText: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Speaking",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SpeakingTextPreview() {
+    ProEnglishScoreTrackerTheme {
+        SpeakingText("Speaking")
+    }
+}
+
+@Composable
+private fun SpeakingImageView(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.speaking),
+        contentDescription = "",
+        modifier = modifier
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
+            .aspectRatio(1f)
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SpeakingImageViewPreview() {
+    ProEnglishScoreTrackerTheme {
+        SpeakingImageView(modifier = Modifier)
     }
 }
 

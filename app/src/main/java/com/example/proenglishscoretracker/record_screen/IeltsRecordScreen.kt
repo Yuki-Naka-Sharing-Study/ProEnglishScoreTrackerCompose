@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.record_screen
 
 import android.content.Context
 import android.widget.Toast
@@ -19,7 +19,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -38,8 +37,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.proenglishscoretracker.data.EnglishInfoViewModel
+import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
-import kotlinx.coroutines.delay
 import java.util.Calendar
 
 @Composable
