@@ -71,8 +71,8 @@ class EnglishInfoViewModel(
         }
     }
 
-    fun saveToeicSwValues(writingScore: String,
-                          speakingScore: String,
+    fun saveToeicSwValues(writingScore: Int,
+                          speakingScore: Int,
                           memoText: String) {
         viewModelScope.launch {
             repository.saveToeicSwInfo(

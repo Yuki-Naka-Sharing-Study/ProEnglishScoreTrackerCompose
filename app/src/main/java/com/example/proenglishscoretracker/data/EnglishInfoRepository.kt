@@ -28,8 +28,8 @@ class EnglishInfoRepository {
 
     }
 
-    fun saveToeicSwInfo(writingScore: String,
-                        speakingScore: String,
+    fun saveToeicSwInfo(writingScore: Int,
+                        speakingScore: Int,
                         memoText: String
     ){
 
