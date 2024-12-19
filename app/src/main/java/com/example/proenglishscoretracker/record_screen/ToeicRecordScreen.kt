@@ -124,15 +124,23 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val readingMaxScoreChecker = readingScore <= 495
-        val listeningMaxScoreChecker = listeningScore <= 495
+        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
+        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val readingMaxScoreError = readingScore >= 496
+        val listeningMaxScoreError = listeningScore >= 496
+        val readingScoreDivisionError = readingScore % 5 != 0
+        val listeningScoreDivisionError = listeningScore % 5 != 0
+        val memoEmptyError = memoText.isEmpty()
 
-        val readingScoreDivisionChecker = readingScore % 5
-        val listeningScoreDivisionChecker = listeningScore % 5
-
-        val areAllFilled = readingScore.toString().isNotBlank() &&
+        val enableChecker = !selectedDateEmptyError &&
+                readingScore.toString().isNotBlank() &&
                 listeningScore.toString().isNotBlank() &&
-                memoText.isNotBlank()
+                !memoEmptyError &&
+                !readingMaxScoreError &&
+                !listeningMaxScoreError &&
+                !readingScoreDivisionError &&
+                !listeningScoreDivisionError
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -148,20 +156,17 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     )
                 },
                 errorMessage = when {
-                    readingScore >= 496 -> "スコアは496未満である必要があります"
-                    listeningScore >= 496 -> "スコアは496未満である必要があります"
-                    readingScore % 5 != 0 -> "スコアは5で割り切れる必要があります"
-                    listeningScore % 5 != 0 -> "スコアは5で割り切れる必要があります"
+                    selectedDateEmptyError -> "受験日が記入されていません。"
+                    readingMaxScoreError -> "スコアは496未満である必要があります。"
+                    listeningMaxScoreError -> "スコアは496未満である必要があります。"
+                    readingScoreDivisionError -> "スコアは5で割り切れる必要があります。"
+                    listeningScoreDivisionError -> "スコアは5で割り切れる必要があります。"
+                    memoEmptyError -> "メモが記入されていません。"
                     else -> {
-                        // 記録処理
-                        "記録しました"
+                        ""
                     }
                 },
-                enabled = areAllFilled &&
-                        readingMaxScoreChecker &&
-                        listeningMaxScoreChecker
-//                        readingScoreDivisionChecker &&
-//                        listeningScoreDivisionChecker
+                enabled = enableChecker
             )
         }
     }
@@ -490,13 +495,18 @@ private fun SaveButton(
     enabled: Boolean = true
 ) {
     val context = LocalContext.current
-    Button(
-        onClick = { showToast(context, "記録しました") },
-        colors = ButtonDefaults.buttonColors(Color.Blue),
-        shape = RoundedCornerShape(8.dp),
-        enabled = enabled,
+    Column(
+        verticalArrangement = Arrangement.Center
     ) {
-        Text(stringResource(id = R.string.record))
+        Button(
+            onClick = { showToast(context, "記録しました") },
+            colors = ButtonDefaults.buttonColors(Color.Blue),
+            shape = RoundedCornerShape(8.dp),
+            enabled = enabled,
+        ) {
+            Text(stringResource(id = R.string.record), color = Color.White)
+        }
+        Text(errorMessage, color = Color.Red)
     }
 }
 
