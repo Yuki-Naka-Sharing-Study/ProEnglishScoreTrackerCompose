@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -32,6 +33,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -44,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -61,10 +64,10 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by rememberSaveable { mutableStateOf("") }
-        var cseScore by rememberSaveable { mutableStateOf("") }
-        var readingScore by rememberSaveable { mutableStateOf("") }
-        var listeningScore by rememberSaveable { mutableStateOf("") }
-        var writingScore by rememberSaveable { mutableStateOf("") }
+        var cseScore by rememberSaveable { mutableIntStateOf(0) }
+        var readingScore by rememberSaveable { mutableIntStateOf(0) }
+        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
+        var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
 
         Row {
@@ -99,7 +102,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             CSEScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputScoreRow(
                 placeholder = stringResource(id = R.string.cse_score),
                 value = cseScore,
                 onValueChange = { cseScore = it }
@@ -116,7 +119,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputScoreRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
                 value = readingScore,
                 onValueChange = { readingScore = it }
@@ -133,7 +136,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputScoreRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
                 value = listeningScore,
                 onValueChange = { listeningScore = it }
@@ -151,7 +154,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputScoreRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
                 value = writingScore,
                 onValueChange = { writingScore = it }
@@ -167,7 +170,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputRow(
+            InputMemoRow(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
                 onValueChange = { memoText = it }
@@ -176,11 +179,22 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val isButtonEnabled = cseScore.isNotBlank() &&
-                readingScore.isNotBlank() &&
-                listeningScore.isNotBlank() &&
-                writingScore.isNotBlank() &&
-                memoText.isNotBlank()
+        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
+        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val cseMaxScoreError = cseScore >= 2551
+        val readingMaxScoreError = readingScore >= 851
+        val listeningMaxScoreError = listeningScore >= 851
+        val writingMaxScoreError = writingScore >= 851
+        val memoEmptyError = memoText.isEmpty()
+
+        val enableChecker = !selectedDateEmptyError &&
+                readingScore.toString().isNotBlank() &&
+                listeningScore.toString().isNotBlank() &&
+                !memoEmptyError &&
+                !readingMaxScoreError &&
+                !listeningMaxScoreError &&
+                !writingMaxScoreError
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -197,7 +211,18 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                         memoText
                     )
                 },
-                enabled = isButtonEnabled
+                errorMessage = when {
+                    selectedDateEmptyError -> "受験日が記入されていません。"
+                    cseMaxScoreError -> "スコアは2551未満である必要があります。"
+                    readingMaxScoreError -> "スコアは851未満である必要があります。"
+                    listeningMaxScoreError -> "スコアは851未満である必要があります。"
+                    writingMaxScoreError -> "スコアは851未満である必要があります。"
+                    memoEmptyError -> "メモが記入されていません。"
+                    else -> {
+                        ""
+                    }
+                },
+                enabled = enableChecker
             )
         }
     }
@@ -494,7 +519,44 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun InputRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+    }
+}
+
+@Composable
+private fun InputMemoRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -507,6 +569,7 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value,
             onValueChange = onValueChange,
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             placeholder = {
                 Text(
                     text = placeholder,
@@ -527,16 +590,22 @@ private fun InputRow(placeholder: String, value: String, onValueChange: (String)
 @Composable
 private fun SaveButton(
     onClick: () -> Unit = {},
+    errorMessage: String,
     enabled: Boolean = true
 ) {
     val context = LocalContext.current
-    Button(
-        onClick = { showToast(context, "記録しました") },
-        colors = ButtonDefaults.buttonColors(Color.Blue),
-        shape = RoundedCornerShape(8.dp),
-        enabled = enabled,
+    Column(
+        verticalArrangement = Arrangement.Center
     ) {
-        Text(stringResource(id = R.string.record))
+        Button(
+            onClick = { showToast(context, "記録しました") },
+            colors = ButtonDefaults.buttonColors(Color.Blue),
+            shape = RoundedCornerShape(8.dp),
+            enabled = enabled,
+        ) {
+            Text(stringResource(id = R.string.record), color = Color.White)
+        }
+        Text(errorMessage, color = Color.Red)
     }
 }
 
@@ -544,10 +613,10 @@ private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun SaveButtonPreview() {
-    ProEnglishScoreTrackerTheme {
-        SaveButton()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun SaveButtonPreview() {
+//    ProEnglishScoreTrackerTheme {
+//        SaveButton()
+//    }
+//}

@@ -1,10 +1,10 @@
 package com.example.proenglishscoretracker.data
 
 class EnglishInfoRepository {
-    fun saveEikenIchijiInfo(cseScore: String,
-                            readingScore: String,
-                            listeningScore: String,
-                            writingScore: String,
+    fun saveEikenIchijiInfo(cseScore: Int,
+                            readingScore: Int,
+                            listeningScore: Int,
+                            writingScore: Int,
                             memoText: String
     ){
 

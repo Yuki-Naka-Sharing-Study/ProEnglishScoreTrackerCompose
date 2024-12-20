@@ -23,10 +23,10 @@ class EnglishInfoViewModel(
         }
     }
 
-    fun saveEikenIchijiValues(cseScore: String,
-                              readingScore: String,
-                              listeningScore: String,
-                              writingScore: String,
+    fun saveEikenIchijiValues(cseScore: Int,
+                              readingScore: Int,
+                              listeningScore: Int,
+                              writingScore: Int,
                               memoText: String) {
         viewModelScope.launch {
             repository.saveEikenIchijiInfo(
