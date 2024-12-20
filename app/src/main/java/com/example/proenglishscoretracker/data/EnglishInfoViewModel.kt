@@ -39,12 +39,12 @@ class EnglishInfoViewModel(
         }
     }
 
-    fun saveEikenNijiValues(cseScore: String,
-                            speakingScore: String,
-                            shortSpeechScore: String,
-                            interactionScore: String,
-                            grammarAndVocabularyScore: String,
-                            pronunciationScore: String,
+    fun saveEikenNijiValues(cseScore: Int,
+                            speakingScore: Int,
+                            shortSpeechScore: Int,
+                            interactionScore: Int,
+                            grammarAndVocabularyScore: Int,
+                            pronunciationScore: Int,
                             memoText: String) {
         viewModelScope.launch {
             repository.saveEikenNijiInfo(

@@ -10,12 +10,12 @@ class EnglishInfoRepository {
 
     }
 
-    fun saveEikenNijiInfo(cseScore: String,
-                          speakingScore: String,
-                          shortSpeechScore: String,
-                          interactionScore: String,
-                          grammarAndVocabularyScore: String,
-                          pronunciationScore: String,
+    fun saveEikenNijiInfo(cseScore: Int,
+                          speakingScore: Int,
+                          shortSpeechScore: Int,
+                          interactionScore: Int,
+                          grammarAndVocabularyScore: Int,
+                          pronunciationScore: Int,
                           memoText: String
     ){
 
