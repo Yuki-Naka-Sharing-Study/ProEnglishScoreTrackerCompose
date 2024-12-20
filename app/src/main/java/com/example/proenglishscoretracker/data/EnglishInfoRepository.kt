@@ -35,11 +35,11 @@ class EnglishInfoRepository {
 
     }
 
-    fun saveToeflIbtInfo(overallScore: String,
-                         readingScore: String,
-                         listeningScore: String,
-                         writingScore: String,
-                         speakingScore: String,
+    fun saveToeflIbtInfo(overallScore: Int,
+                         readingScore: Int,
+                         listeningScore: Int,
+                         writingScore: Int,
+                         speakingScore: Int,
                          memoText: String
     ){
 

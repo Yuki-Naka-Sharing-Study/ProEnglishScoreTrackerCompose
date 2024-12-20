@@ -83,11 +83,11 @@ class EnglishInfoViewModel(
         }
     }
 
-    fun saveToeflIbtValues(overallScore: String,
-                           readingScore: String,
-                           listeningScore: String,
-                           writingScore: String,
-                           speakingScore: String,
+    fun saveToeflIbtValues(overallScore: Int,
+                           readingScore: Int,
+                           listeningScore: Int,
+                           writingScore: Int,
+                           speakingScore: Int,
                            memoText: String) {
         viewModelScope.launch {
             repository.saveToeflIbtInfo(
