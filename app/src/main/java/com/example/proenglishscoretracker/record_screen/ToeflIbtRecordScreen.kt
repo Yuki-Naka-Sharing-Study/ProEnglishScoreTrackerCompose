@@ -216,11 +216,11 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 },
                 errorMessage = when {
                     selectedDateEmptyError -> "受験日が記入されていません。"
-                    overallMaxScoreError -> "スコアは121未満である必要があります。"
-                    readingMaxScoreError -> "スコアは31未満である必要があります。"
-                    listeningMaxScoreError -> "スコアは31未満である必要があります。"
-                    writingMaxScoreError -> "スコアは31未満である必要があります。"
-                    speakingMaxScoreError -> "スコアは31未満である必要があります。"
+                    overallMaxScoreError -> "Overallスコアは121未満である必要があります。"
+                    readingMaxScoreError -> "Readingスコアは31未満である必要があります。"
+                    listeningMaxScoreError -> "Listeningスコアは31未満である必要があります。"
+                    writingMaxScoreError -> "Writingスコアは31未満である必要があります。"
+                    speakingMaxScoreError -> "Speakingスコアは31未満である必要があります。"
                     memoEmptyError -> "メモが記入されていません。"
                     else -> {
                         ""
