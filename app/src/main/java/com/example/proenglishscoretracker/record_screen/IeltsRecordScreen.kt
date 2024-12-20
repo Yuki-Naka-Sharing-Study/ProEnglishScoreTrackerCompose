@@ -216,11 +216,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 },
                 errorMessage = when {
                     selectedDateEmptyError -> "受験日が記入されていません。"
-                    overallMaxScoreError -> "スコアは36.1未満である必要があります。"
-                    readingMaxScoreError -> "スコアは9.1未満である必要があります。"
-                    listeningMaxScoreError -> "スコアは9.1未満である必要があります。"
-                    writingMaxScoreError -> "スコアは9.1未満である必要があります。"
-                    speakingMaxScoreError -> "スコアは9.1未満である必要があります。"
+                    overallMaxScoreError -> "Overallスコアは36.1未満である必要があります。"
+                    readingMaxScoreError -> "Readingスコアは9.1未満である必要があります。"
+                    listeningMaxScoreError -> "Listeningスコアは9.1未満である必要があります。"
+                    writingMaxScoreError -> "Writingスコアは9.1未満である必要があります。"
+                    speakingMaxScoreError -> "Speakingスコアは9.1未満である必要があります。"
                     memoEmptyError -> "メモが記入されていません。"
                     else -> {
                         ""
