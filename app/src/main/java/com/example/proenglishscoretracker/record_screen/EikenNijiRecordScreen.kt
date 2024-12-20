@@ -248,12 +248,12 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 },
                 errorMessage = when {
                     selectedDateEmptyError -> "受験日が記入されていません。"
-                    cseMaxScoreError -> "スコアは3401未満である必要があります。"
-                    speakingMaxScoreError -> "スコアは851未満である必要があります。"
-                    shortSpeechMaxScoreError -> "スコアは11未満である必要があります。"
-                    interactionMaxScoreError -> "スコアは11未満である必要があります。"
-                    grammarAndVocabularyMaxScoreError -> "スコアは11未満である必要があります。"
-                    pronunciationMaxScoreError -> "スコアは11未満である必要があります。"
+                    cseMaxScoreError -> "CSEスコアは3401未満である必要があります。"
+                    speakingMaxScoreError -> "Speakingスコアは851未満である必要があります。"
+                    shortSpeechMaxScoreError -> "Short Speechスコアは11未満である必要があります。"
+                    interactionMaxScoreError -> "Interactionスコアは11未満である必要があります。"
+                    grammarAndVocabularyMaxScoreError -> "Grammar and Vocabularyスコアは11未満である必要があります。"
+                    pronunciationMaxScoreError -> "Pronunciationスコアは11未満である必要があります。"
                     memoEmptyError -> "メモが記入されていません。"
                     else -> {
                         ""
