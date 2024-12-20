@@ -223,6 +223,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 interactionScore.toString().isNotBlank() &&
                 grammarAndVocabularyScore.toString().isNotBlank() &&
                 !cseMaxScoreError &&
+                !speakingMaxScoreError &&
                 !shortSpeechMaxScoreError &&
                 !interactionMaxScoreError &&
                 !grammarAndVocabularyMaxScoreError &&
