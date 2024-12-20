@@ -157,10 +157,10 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 },
                 errorMessage = when {
                     selectedDateEmptyError -> "受験日が記入されていません。"
-                    writingMaxScoreError -> "スコアは496未満である必要があります。"
-                    speakingMaxScoreError -> "スコアは496未満である必要があります。"
-                    writingScoreDivisionError -> "スコアは5で割り切れる必要があります。"
-                    speakingScoreDivisionError -> "スコアは5で割り切れる必要があります。"
+                    writingMaxScoreError -> "Writingスコアは201未満である必要があります。"
+                    speakingMaxScoreError -> "Speakingスコアは201未満である必要があります。"
+                    writingScoreDivisionError -> "Writingスコアは5で割り切れる必要があります。"
+                    speakingScoreDivisionError -> "Speakingスコアは5で割り切れる必要があります。"
                     memoEmptyError -> "メモが記入されていません。"
                     else -> {
                         ""
