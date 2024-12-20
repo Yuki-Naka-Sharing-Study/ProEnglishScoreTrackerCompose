@@ -101,11 +101,11 @@ class EnglishInfoViewModel(
         }
     }
 
-    fun saveIeltsValues(overallScore: String,
-                        readingScore: String,
-                        listeningScore: String,
-                        writingScore: String,
-                        speakingScore: String,
+    fun saveIeltsValues(overallScore: Float,
+                        readingScore: Float,
+                        listeningScore: Float,
+                        writingScore: Float,
+                        speakingScore: Float,
                         memoText: String) {
         viewModelScope.launch {
             repository.saveIeltsInfo(
