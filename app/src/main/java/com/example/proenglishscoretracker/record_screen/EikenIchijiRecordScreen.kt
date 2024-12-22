@@ -179,8 +179,6 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
-        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
         val selectedDateEmptyError = selectedDate.isEmpty()
         val cseMaxScoreError = cseScore >= 2551
         val readingMaxScoreError = readingScore >= 851
@@ -188,42 +186,63 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         val writingMaxScoreError = writingScore >= 851
         val memoEmptyError = memoText.isEmpty()
 
-        val enableChecker = !selectedDateEmptyError &&
-                readingScore.toString().isNotBlank() &&
-                listeningScore.toString().isNotBlank() &&
-                !memoEmptyError &&
-                !readingMaxScoreError &&
-                !listeningMaxScoreError &&
-                !writingMaxScoreError
+        val enableChecker =
+            selectedDate.isNotBlank() &&
+            cseScore.toString().isNotBlank() &&
+            readingScore.toString().isNotBlank() &&
+            listeningScore.toString().isNotBlank() &&
+            writingScore.toString().isNotBlank() &&
+            !selectedDateEmptyError &&
+            !cseMaxScoreError &&
+            !readingMaxScoreError &&
+            !listeningMaxScoreError &&
+            !writingMaxScoreError
+
+        var showText by remember { mutableStateOf("") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton(
-                onClick = {
-                    viewModel.saveEikenIchijiValues(
-                        cseScore,
-                        readingScore,
-                        listeningScore,
-                        writingScore,
-                        memoText
-                    )
-                },
-                errorMessage = when {
-                    selectedDateEmptyError -> "受験日が記入されていません。"
-                    cseMaxScoreError -> "CSEスコアは2551未満である必要があります。"
-                    readingMaxScoreError -> "Readingスコアは851未満である必要があります。"
-                    listeningMaxScoreError -> "Listeningスコアは851未満である必要があります。"
-                    writingMaxScoreError -> "Writingスコアは851未満である必要があります。"
-                    memoEmptyError -> "メモが記入されていません。"
-                    else -> {
-                        ""
-                    }
-                },
-                enabled = enableChecker
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SaveButton(
+                    onClick = {
+                        when {
+                            enableChecker -> {
+                                showText = "記録しました。"
+                                viewModel.saveEikenIchijiValues(
+                                    cseScore,
+                                    readingScore,
+                                    listeningScore,
+                                    writingScore,
+                                    memoText
+                                )
+                            }
+                            selectedDateEmptyError -> {
+                                showText = "受験日が記入されていません。"
+                            }
+                            cseMaxScoreError -> {
+                                showText = "CSEスコアは2551未満である必要があります。"
+                            }
+                            readingMaxScoreError -> {
+                                showText = "Readingスコアは851未満である必要があります。"
+                            }
+                            listeningMaxScoreError -> {
+                                showText = "Listeningスコアは851未満である必要があります。"
+                            }
+                            writingMaxScoreError -> {
+                                showText = "Writingスコアは851未満である必要があります。"
+                            }
+                        }
+                    },
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                DisplayResultButtonText(showText)
+            }
         }
     }
 }
@@ -589,28 +608,19 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit = {},
-    errorMessage: String,
-    enabled: Boolean = true
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { showToast(context, "記録しました") },
+            onClick = onClick,
             colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(8.dp),
-            enabled = enabled,
         ) {
             Text(stringResource(id = R.string.record), color = Color.White)
         }
-        Text(errorMessage, color = Color.Red)
     }
-}
-
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 //@Preview(showBackground = true)
@@ -620,3 +630,14 @@ private fun showToast(context: android.content.Context, message: String) {
 //        SaveButton()
 //    }
 //}
+
+private fun showToast(context: android.content.Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Composable
+private fun DisplayResultButtonText(result: String) {
+    Text(
+        text = result, fontSize = 16.sp, color = Color.Red
+    )
+}
