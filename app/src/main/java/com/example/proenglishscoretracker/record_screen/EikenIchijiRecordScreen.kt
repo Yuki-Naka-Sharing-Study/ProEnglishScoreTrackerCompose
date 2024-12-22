@@ -242,8 +242,10 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                ShowErrorText(showError)
-                ShowSavedText(showSaved)
+                Box {
+                    ShowErrorText(showError)
+                    ShowSavedText(showSaved)
+                }
             }
         }
     }
