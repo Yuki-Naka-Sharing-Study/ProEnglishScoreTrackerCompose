@@ -240,7 +240,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                DisplayResultButtonText(showError)
+                ShowErrorText(showError)
             }
         }
     }
@@ -635,8 +635,8 @@ private fun showToast(context: android.content.Context, message: String) {
 }
 
 @Composable
-private fun DisplayResultButtonText(result: String) {
+private fun ShowErrorText(error: String) {
     Text(
-        text = result, fontSize = 16.sp, color = Color.Red
+        text = error, fontSize = 16.sp, color = Color.Red
     )
 }
