@@ -199,6 +199,8 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             !listeningMaxScoreError &&
             !writingMaxScoreError
 
+        var showSaved by remember { mutableStateOf("") }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -212,7 +214,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     onClick = {
                         when {
                             savable -> {
-                                showError = "記録しました。"
+                                showSaved = "記録しました。"
                                 viewModel.saveEikenIchijiValues(
                                     cseScore,
                                     readingScore,
@@ -241,6 +243,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 ShowErrorText(showError)
+                ShowSavedText(showSaved)
             }
         }
     }
@@ -638,5 +641,12 @@ private fun showToast(context: android.content.Context, message: String) {
 private fun ShowErrorText(error: String) {
     Text(
         text = error, fontSize = 16.sp, color = Color.Red
+    )
+}
+
+@Composable
+private fun ShowSavedText(saved: String) {
+    Text(
+        text = saved, fontSize = 16.sp, color = Color.Green
     )
 }
