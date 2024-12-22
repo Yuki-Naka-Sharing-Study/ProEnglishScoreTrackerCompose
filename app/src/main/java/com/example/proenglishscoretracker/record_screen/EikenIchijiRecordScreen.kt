@@ -69,6 +69,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+        var showText by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
@@ -76,6 +77,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
+                    if (selectedDate.isNotBlank()) { showText = ""}
                 }
                 Text("受験日: $selectedDate")
             }
@@ -184,7 +186,6 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         val readingMaxScoreError = readingScore >= 851
         val listeningMaxScoreError = listeningScore >= 851
         val writingMaxScoreError = writingScore >= 851
-        val memoEmptyError = memoText.isEmpty()
 
         val enableChecker =
             selectedDate.isNotBlank() &&
@@ -197,8 +198,6 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             !readingMaxScoreError &&
             !listeningMaxScoreError &&
             !writingMaxScoreError
-
-        var showText by remember { mutableStateOf("") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
