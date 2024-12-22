@@ -115,9 +115,9 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
@@ -132,9 +132,9 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
@@ -150,9 +150,9 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),

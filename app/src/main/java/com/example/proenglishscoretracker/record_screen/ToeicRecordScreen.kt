@@ -156,12 +156,12 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     )
                 },
                 errorMessage = when {
-                    selectedDateEmptyError -> "受験日が記入されていません。"
+//                    selectedDateEmptyError -> "受験日が記入されていません。"
                     readingMaxScoreError -> "Readingスコアは496未満である必要があります。"
                     listeningMaxScoreError -> "Listeningスコアは496未満である必要があります。"
                     readingScoreDivisionError -> "Readingスコアは5で割り切れる必要があります。"
                     listeningScoreDivisionError -> "Listeningスコアは5で割り切れる必要があります。"
-                    memoEmptyError -> "メモが記入されていません。"
+//                    memoEmptyError -> "メモが記入されていません。"
                     else -> {
                         ""
                     }
