@@ -187,7 +187,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         val listeningMaxScoreError = listeningScore >= 851
         val writingMaxScoreError = writingScore >= 851
 
-        val enableChecker =
+        val savable =
             selectedDate.isNotBlank() &&
             cseScore.toString().isNotBlank() &&
             readingScore.toString().isNotBlank() &&
@@ -211,7 +211,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 SaveButton(
                     onClick = {
                         when {
-                            enableChecker -> {
+                            savable -> {
                                 showText = "記録しました。"
                                 viewModel.saveEikenIchijiValues(
                                     cseScore,
