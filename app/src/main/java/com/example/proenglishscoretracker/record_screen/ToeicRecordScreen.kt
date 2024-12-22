@@ -79,9 +79,9 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.toeic_reading_score),
@@ -96,9 +96,9 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.toeic_listening_score),
