@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- XxxRecordFragment -->
-    <string name="memo">The problem was difficult.</string>
+    <string name="memo">(任意)</string>
     <string name="record">記録</string>
 
     <!-- EikenIchijiRecordFragment -->
