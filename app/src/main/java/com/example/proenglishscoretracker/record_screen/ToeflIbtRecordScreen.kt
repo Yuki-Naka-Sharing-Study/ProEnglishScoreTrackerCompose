@@ -96,9 +96,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.toefl_ibt_reading_score),
@@ -113,9 +113,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.toefl_ibt_listening_score),
@@ -130,9 +130,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.toefl_ibt_writing_score),
@@ -147,9 +147,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            SpeakingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.toefl_ibt_speaking_score),
