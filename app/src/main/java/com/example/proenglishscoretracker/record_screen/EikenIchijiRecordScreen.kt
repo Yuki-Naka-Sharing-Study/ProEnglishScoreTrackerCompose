@@ -77,7 +77,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
-                    if (selectedDate.isNotBlank()) { showText = ""}
+                    showText = ""
                 }
                 Text("受験日: $selectedDate")
             }
