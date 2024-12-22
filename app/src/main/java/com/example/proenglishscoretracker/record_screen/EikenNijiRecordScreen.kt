@@ -117,9 +117,9 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-            SpeakingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingImageView()
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             InputScoreRow(
                 placeholder = stringResource(id = R.string.eiken_niji_speaking_score),
