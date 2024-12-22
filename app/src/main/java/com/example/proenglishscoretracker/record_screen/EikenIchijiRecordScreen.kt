@@ -69,7 +69,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
-        var showText by remember { mutableStateOf("") }
+        var showError by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
@@ -77,7 +77,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
-                    showText = ""
+                    showError = ""
                 }
                 Text("受験日: $selectedDate")
             }
@@ -212,7 +212,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     onClick = {
                         when {
                             savable -> {
-                                showText = "記録しました。"
+                                showError = "記録しました。"
                                 viewModel.saveEikenIchijiValues(
                                     cseScore,
                                     readingScore,
@@ -222,25 +222,25 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                                 )
                             }
                             selectedDateEmptyError -> {
-                                showText = "受験日が記入されていません。"
+                                showError = "受験日が記入されていません。"
                             }
                             cseMaxScoreError -> {
-                                showText = "CSEスコアは2551未満である必要があります。"
+                                showError = "CSEスコアは2551未満である必要があります。"
                             }
                             readingMaxScoreError -> {
-                                showText = "Readingスコアは851未満である必要があります。"
+                                showError = "Readingスコアは851未満である必要があります。"
                             }
                             listeningMaxScoreError -> {
-                                showText = "Listeningスコアは851未満である必要があります。"
+                                showError = "Listeningスコアは851未満である必要があります。"
                             }
                             writingMaxScoreError -> {
-                                showText = "Writingスコアは851未満である必要があります。"
+                                showError = "Writingスコアは851未満である必要があります。"
                             }
                         }
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                DisplayResultButtonText(showText)
+                DisplayResultButtonText(showError)
             }
         }
     }
