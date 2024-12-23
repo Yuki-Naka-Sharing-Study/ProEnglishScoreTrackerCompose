@@ -9,6 +9,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,6 +56,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+        var showError by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
@@ -62,6 +64,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
+                    showError = ""
                 }
                 Text("受験日: $selectedDate")
             }
@@ -124,50 +127,62 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
-        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
         val selectedDateEmptyError = selectedDate.isEmpty()
         val readingMaxScoreError = readingScore >= 496
         val listeningMaxScoreError = listeningScore >= 496
         val readingScoreDivisionError = readingScore % 5 != 0
         val listeningScoreDivisionError = listeningScore % 5 != 0
-        val memoEmptyError = memoText.isEmpty()
 
-        val enableChecker = !selectedDateEmptyError &&
-                readingScore.toString().isNotBlank() &&
-                listeningScore.toString().isNotBlank() &&
-                !memoEmptyError &&
-                !readingMaxScoreError &&
-                !listeningMaxScoreError &&
-                !readingScoreDivisionError &&
-                !listeningScoreDivisionError
+        val savable =
+            readingScore.toString().isNotBlank() &&
+                    listeningScore.toString().isNotBlank() &&
+                    !selectedDateEmptyError &&
+                    !readingMaxScoreError &&
+                    !listeningMaxScoreError &&
+                    !readingScoreDivisionError &&
+                    !listeningScoreDivisionError
+
+        var showSaved by remember { mutableStateOf("") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton(
-                onClick = {
-                    viewModel.saveToeicValues(
-                        readingScore,
-                        listeningScore,
-                        memoText
-                    )
-                },
-                errorMessage = when {
-//                    selectedDateEmptyError -> "受験日が記入されていません。"
-                    readingMaxScoreError -> "Readingスコアは496未満である必要があります。"
-                    listeningMaxScoreError -> "Listeningスコアは496未満である必要があります。"
-                    readingScoreDivisionError -> "Readingスコアは5で割り切れる必要があります。"
-                    listeningScoreDivisionError -> "Listeningスコアは5で割り切れる必要があります。"
-//                    memoEmptyError -> "メモが記入されていません。"
-                    else -> {
-                        ""
-                    }
-                },
-                enabled = enableChecker
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SaveButton(
+                    onClick = {
+                        when {
+                            savable -> {
+                                showError = ""
+                                showSaved = "記録しました。"
+                                viewModel.saveToeicValues(
+                                    readingScore,
+                                    listeningScore,
+                                    memoText
+                                )
+                            }
+                            selectedDateEmptyError -> {
+                                showError = "受験日が記入されていません。"
+                            }
+                            readingMaxScoreError -> {
+                                showError = "Readingスコアは496未満である必要があります。"
+                            }
+                            listeningMaxScoreError -> {
+                                showError = "Listeningスコアは496未満である必要があります。"
+                            }
+                        }
+                    },
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                Box {
+                    ShowErrorText(showError)
+                    ShowSavedText(showSaved)
+                }
+            }
         }
     }
 }
@@ -490,28 +505,19 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit = {},
-    errorMessage: String,
-    enabled: Boolean = true
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { showToast(context, "記録しました") },
+            onClick = onClick,
             colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(8.dp),
-            enabled = enabled,
         ) {
             Text(stringResource(id = R.string.record), color = Color.White)
         }
-        Text(errorMessage, color = Color.Red)
     }
-}
-
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 //@Preview(showBackground = true)
@@ -521,3 +527,21 @@ private fun showToast(context: android.content.Context, message: String) {
 //        SaveButton()
 //    }
 //}
+
+private fun showToast(context: android.content.Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Composable
+private fun ShowErrorText(error: String) {
+    Text(
+        text = error, fontSize = 16.sp, color = Color.Red
+    )
+}
+
+@Composable
+private fun ShowSavedText(saved: String) {
+    Text(
+        text = saved, fontSize = 16.sp, color = Color.Green
+    )
+}
