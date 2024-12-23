@@ -69,17 +69,29 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
-        var showError by remember { mutableStateOf("") }
+        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
+        var cseMaxScoreErrorText by remember { mutableStateOf("") }
+        var readingMaxScoreErrorText by remember { mutableStateOf("") }
+        var listeningMaxScoreErrorText by remember { mutableStateOf("") }
+        var writingMaxScoreErrorText by remember { mutableStateOf("") }
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val cseMaxScoreError = cseScore >= 2551
+        val readingMaxScoreError = readingScore >= 851
+        val listeningMaxScoreError = listeningScore >= 851
+        val writingMaxScoreError = writingScore >= 851
 
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                SelectDatePicker(LocalContext.current) { date->
+                SelectDatePicker(LocalContext.current) { date ->
                     selectedDate = date
-                    showError = ""
+                    selectedDateEmptyErrorText = ""
                 }
-                Text("受験日: $selectedDate")
+                Text(selectedDate)
+                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                    selectedDateEmptyErrorText
+                )
             }
         }
 
@@ -101,14 +113,17 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             CSEScoreText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.cse_score),
-                value = cseScore,
-                onValueChange = { cseScore = it }
-            )
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Column {
+                CseInputScoreRow(
+                    placeholder = stringResource(id = R.string.cse_score),
+                    value = cseScore,
+                    onValueChange = { cseScore = it }
+                )
+                if (cseScore >= 2551) InputScoreRowErrorText("CSEスコアは2551未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -116,16 +131,20 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
             ReadingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
-                value = readingScore,
-                onValueChange = { readingScore = it }
-            )
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Column {
+                RLWSInputScoreRow(
+                    placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
+                    value = readingScore,
+                    onValueChange = { readingScore = it }
+                )
+                // 以下の字が途切れる問題は「InputScoreRow」と「ReadingText」の間の「dp」をいじれば解決できそう。
+                if (readingScore >= 851) InputScoreRowErrorText("Readingスコアは851未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -133,17 +152,19 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
             ListeningImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
-                value = listeningScore,
-                onValueChange = { listeningScore = it }
-            )
-
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Column {
+                RLWSInputScoreRow(
+                    placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
+                    value = listeningScore,
+                    onValueChange = { listeningScore = it }
+                )
+                if (listeningScore >= 851) InputScoreRowErrorText("Listeningスコアは851未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -151,17 +172,19 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
             WritingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
-                value = writingScore,
-                onValueChange = { writingScore = it }
-            )
-
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Column {
+                RLWSInputScoreRow(
+                    placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
+                    value = writingScore,
+                    onValueChange = { writingScore = it }
+                )
+                if (writingScore >= 851) InputScoreRowErrorText("Writingスコアは851未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -169,9 +192,9 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             InputMemoRow(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
@@ -181,23 +204,16 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val cseMaxScoreError = cseScore >= 2551
-        val readingMaxScoreError = readingScore >= 851
-        val listeningMaxScoreError = listeningScore >= 851
-        val writingMaxScoreError = writingScore >= 851
-
-        val savable =
-            selectedDate.isNotBlank() &&
-            cseScore.toString().isNotBlank() &&
-            readingScore.toString().isNotBlank() &&
-            listeningScore.toString().isNotBlank() &&
-            writingScore.toString().isNotBlank() &&
-            !selectedDateEmptyError &&
-            !cseMaxScoreError &&
-            !readingMaxScoreError &&
-            !listeningMaxScoreError &&
-            !writingMaxScoreError
+        val savable = selectedDate.isNotBlank() &&
+                cseScore.toString().isNotBlank() &&
+                readingScore.toString().isNotBlank() &&
+                listeningScore.toString().isNotBlank() &&
+                writingScore.toString().isNotBlank() &&
+                !selectedDateEmptyError &&
+                !cseMaxScoreError &&
+                !readingMaxScoreError &&
+                !listeningMaxScoreError &&
+                !writingMaxScoreError
 
         var showSaved by remember { mutableStateOf("") }
 
@@ -214,7 +230,11 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     onClick = {
                         when {
                             savable -> {
-                                showError = ""
+                                selectedDateEmptyErrorText = ""
+                                cseMaxScoreErrorText = ""
+                                readingMaxScoreErrorText = ""
+                                listeningMaxScoreErrorText = ""
+                                writingMaxScoreErrorText = ""
                                 showSaved = "記録しました。"
                                 viewModel.saveEikenIchijiValues(
                                     cseScore,
@@ -224,29 +244,34 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                                     memoText
                                 )
                             }
+                            /// TODO : エラーをまとめて表示
                             selectedDateEmptyError -> {
-                                showError = "受験日が記入されていません。"
+                                selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
+
                             cseMaxScoreError -> {
-                                showError = "CSEスコアは2551未満である必要があります。"
+                                cseMaxScoreErrorText = "CSEスコアは2551未満である必要があります。"
                             }
+
                             readingMaxScoreError -> {
-                                showError = "Readingスコアは851未満である必要があります。"
+                                readingMaxScoreErrorText =
+                                    "Readingスコアは851未満である必要があります。"
                             }
+
                             listeningMaxScoreError -> {
-                                showError = "Listeningスコアは851未満である必要があります。"
+                                listeningMaxScoreErrorText =
+                                    "Listeningスコアは851未満である必要があります。"
                             }
+
                             writingMaxScoreError -> {
-                                showError = "Writingスコアは851未満である必要があります。"
+                                writingMaxScoreErrorText =
+                                    "Writingスコアは851未満である必要があります。"
                             }
                         }
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Box {
-                    ShowErrorText(showError)
-                    ShowSavedText(showSaved)
-                }
+                ShowSavedText(showSaved)
             }
         }
     }
@@ -289,19 +314,35 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
         context,
         { _, selectedYear, selectedMonth, selectedDay ->
             val formattedDate =
-                String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                String.format(
+                    "受験日：%04d年%02d月%02d日",
+                    selectedYear,
+                    selectedMonth + 1,
+                    selectedDay
+                )
             onDateSelected(formattedDate)
         }, year, month, day
     )
     datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-    Button(onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
-        containerColor = Color.Blue
-    ), shape = RoundedCornerShape(8.dp)) {
+    Button(
+        onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Blue
+        ), shape = RoundedCornerShape(8.dp)
+    ) {
         Text(
             text = "受験日を選択する",
             color = Color.White,
         )
     }
+}
+
+@Composable
+private fun ShowSelectedDateEmptyErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -326,7 +367,6 @@ private fun DropdownMenuWithIcon() {
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
 
-    // Anchor用のBoxを導入
     Box(
         modifier = Modifier
             .padding(16.dp),
@@ -357,11 +397,10 @@ private fun DropdownMenuWithIcon() {
                 )
             }
 
-            // DropdownMenu のオフセット調整
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                offset = DpOffset(0.dp, 8.dp) // Y方向に8dp下げる
+                offset = DpOffset(0.dp, 8.dp)
             ) {
                 items.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -543,13 +582,12 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun CseInputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        if (value >= 2551) InputScoreRowErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -575,8 +613,52 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
+}
+
+@Composable
+private fun RLWSInputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (value >= 851) InputScoreRowErrorText("")
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+    }
+}
+
+@Composable
+private fun InputScoreRowErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -607,7 +689,6 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
 }
 
@@ -638,13 +719,6 @@ private fun SaveButton(
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
-@Composable
-private fun ShowErrorText(error: String) {
-    Text(
-        text = error, fontSize = 16.sp, color = Color.Red
-    )
 }
 
 @Composable
