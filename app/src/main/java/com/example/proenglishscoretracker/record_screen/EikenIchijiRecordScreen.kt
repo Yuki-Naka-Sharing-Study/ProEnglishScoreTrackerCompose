@@ -214,6 +214,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     onClick = {
                         when {
                             savable -> {
+                                showError = ""
                                 showSaved = "記録しました。"
                                 viewModel.saveEikenIchijiValues(
                                     cseScore,
