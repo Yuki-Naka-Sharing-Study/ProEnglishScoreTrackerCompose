@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -55,6 +56,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+        var showError by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
@@ -62,6 +64,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
+                    showError = ""
                 }
                 Text("受験日: $selectedDate")
             }
@@ -124,50 +127,68 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
-        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
         val selectedDateEmptyError = selectedDate.isEmpty()
-        val writingMaxScoreError = writingScore >= 496
-        val speakingMaxScoreError = speakingScore >= 496
+        val writingMaxScoreError = writingScore >= 201
+        val speakingMaxScoreError = speakingScore >= 201
         val writingScoreDivisionError = writingScore % 5 != 0
         val speakingScoreDivisionError = speakingScore % 5 != 0
-        val memoEmptyError = memoText.isEmpty()
 
-        val enableChecker = !selectedDateEmptyError &&
-                writingScore.toString().isNotBlank() &&
-                speakingScore.toString().isNotBlank() &&
-                !memoEmptyError &&
-                !writingMaxScoreError &&
-                !speakingMaxScoreError &&
-                !writingScoreDivisionError &&
-                !speakingScoreDivisionError
+        val savable =
+            writingScore.toString().isNotBlank() &&
+                    speakingScore.toString().isNotBlank() &&
+                    !selectedDateEmptyError &&
+                    !writingMaxScoreError &&
+                    !speakingMaxScoreError &&
+                    !writingScoreDivisionError &&
+                    !speakingScoreDivisionError
+
+        var showSaved by remember { mutableStateOf("") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton(
-                onClick = {
-                    viewModel.saveToeicSwValues(
-                        writingScore,
-                        speakingScore,
-                        memoText
-                    )
-                },
-                errorMessage = when {
-                    selectedDateEmptyError -> "受験日が記入されていません。"
-                    writingMaxScoreError -> "Writingスコアは201未満である必要があります。"
-                    speakingMaxScoreError -> "Speakingスコアは201未満である必要があります。"
-                    writingScoreDivisionError -> "Writingスコアは5で割り切れる必要があります。"
-                    speakingScoreDivisionError -> "Speakingスコアは5で割り切れる必要があります。"
-                    memoEmptyError -> "メモが記入されていません。"
-                    else -> {
-                        ""
-                    }
-                },
-                enabled = enableChecker
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SaveButton(
+                    onClick = {
+                        when {
+                            savable -> {
+                                showError = ""
+                                showSaved = "記録しました。"
+                                viewModel.saveToeicSwValues(
+                                    writingScore,
+                                    speakingScore,
+                                    memoText
+                                )
+                            }
+                            selectedDateEmptyError -> {
+                                showError = "受験日が記入されていません。"
+                            }
+                            writingMaxScoreError -> {
+                                showError = "Readingスコアは201未満である必要があります。"
+                            }
+                            speakingMaxScoreError -> {
+                                showError = "Listeningスコアは201未満である必要があります。"
+                            }
+                            writingScoreDivisionError -> {
+                                showError = "Readingスコアは5で割り切れる必要があります。"
+                            }
+                            speakingScoreDivisionError -> {
+                                showError = "Speakingスコアは5で割り切れる必要があります。"
+                            }
+                        }
+                    },
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                Box {
+                    ShowErrorText(showError)
+                    ShowSavedText(showSaved)
+                }
+            }
         }
     }
 }
@@ -426,37 +447,46 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
     }
 }
 
-
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit = {},
-    errorMessage: String,
-    enabled: Boolean = true
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { showToast(context, "記録しました") },
+            onClick = onClick,
             colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(8.dp),
-            enabled = enabled,
         ) {
             Text(stringResource(id = R.string.record), color = Color.White)
         }
-        Text(errorMessage, color = Color.Red)
     }
 }
 
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
 
-//@Preview(showBackground = true)
 //@Composable
+//@Preview(showBackground = true)
 //private fun SaveButtonPreview() {
 //    ProEnglishScoreTrackerTheme {
 //        SaveButton()
 //    }
 //}
+
+private fun showToast(context: android.content.Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Composable
+private fun ShowErrorText(error: String) {
+    Text(
+        text = error, fontSize = 16.sp, color = Color.Red
+    )
+}
+
+@Composable
+private fun ShowSavedText(saved: String) {
+    Text(
+        text = saved, fontSize = 16.sp, color = Color.Green
+    )
+}
