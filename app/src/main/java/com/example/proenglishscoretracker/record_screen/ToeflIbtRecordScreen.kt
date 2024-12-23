@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -57,13 +58,15 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+        var showError by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
             Column {
-                SelectDatePicker(LocalContext.current) { date->
+                SelectDatePicker(LocalContext.current) { date ->
                     selectedDate = date
+                    showError = ""
                 }
                 Text("受験日: $selectedDate")
             }
@@ -175,59 +178,83 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
-        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
         val selectedDateEmptyError = selectedDate.isEmpty()
         val overallMaxScoreError = overallScore >= 121
         val readingMaxScoreError = readingScore >= 31
         val listeningMaxScoreError = listeningScore >= 31
         val writingMaxScoreError = writingScore >= 31
         val speakingMaxScoreError = speakingScore >= 31
-        val memoEmptyError = memoText.isEmpty()
 
-        val enableChecker = !selectedDateEmptyError &&
-                overallScore.toString().isNotBlank() &&
+        val savable = overallScore.toString().isNotBlank() &&
                 readingScore.toString().isNotBlank() &&
                 listeningScore.toString().isNotBlank() &&
                 writingScore.toString().isNotBlank() &&
                 speakingScore.toString().isNotBlank() &&
+                !selectedDateEmptyError &&
                 !overallMaxScoreError &&
                 !readingMaxScoreError &&
                 !listeningMaxScoreError &&
                 !writingMaxScoreError &&
-                !speakingMaxScoreError &&
-                !memoEmptyError
+                !speakingMaxScoreError
 
-                Row(
+        var showSaved by remember { mutableStateOf("") }
+
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton(
-                onClick = {
-                    viewModel.saveToeflIbtValues(
-                        overallScore,
-                        readingScore,
-                        listeningScore,
-                        writingScore,
-                        speakingScore,
-                        memoText
-                    )
-                },
-                errorMessage = when {
-                    selectedDateEmptyError -> "受験日が記入されていません。"
-                    overallMaxScoreError -> "Overallスコアは121未満である必要があります。"
-                    readingMaxScoreError -> "Readingスコアは31未満である必要があります。"
-                    listeningMaxScoreError -> "Listeningスコアは31未満である必要があります。"
-                    writingMaxScoreError -> "Writingスコアは31未満である必要があります。"
-                    speakingMaxScoreError -> "Speakingスコアは31未満である必要があります。"
-                    memoEmptyError -> "メモが記入されていません。"
-                    else -> {
-                        ""
-                    }
-                },
-                enabled = enableChecker
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SaveButton(
+                    onClick = {
+                        when {
+                            savable -> {
+                                showError = ""
+                                showSaved = "記録しました。"
+                                viewModel.saveEikenIchijiValues(
+                                    overallScore,
+                                    readingScore,
+                                    listeningScore,
+                                    writingScore,
+                                    memoText
+                                )
+                            }
+
+                            selectedDateEmptyError -> {
+                                showError = "受験日が記入されていません。"
+                            }
+
+                            overallMaxScoreError -> {
+                                showError = "Overallスコアは121未満である必要があります。"
+                            }
+
+                            readingMaxScoreError -> {
+                                showError = "Readingスコアは31未満である必要があります。"
+                            }
+
+                            listeningMaxScoreError -> {
+                                showError = "Listeningスコアは31未満である必要があります。"
+                            }
+
+                            writingMaxScoreError -> {
+                                showError = "Writingスコアは31未満である必要があります。"
+                            }
+
+                            speakingMaxScoreError -> {
+                                showError = "Speakingスコアは31未満である必要があります。"
+                            }
+                        }
+                    },
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                Box {
+                    ShowErrorText(showError)
+                    ShowSavedText(showSaved)
+                }
+            }
         }
     }
 }
@@ -274,9 +301,11 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
         }, year, month, day
     )
     datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-    Button(onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
-        containerColor = Color.Blue
-    ), shape = RoundedCornerShape(8.dp)) {
+    Button(
+        onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Blue
+        ), shape = RoundedCornerShape(8.dp)
+    ) {
         Text(
             text = "受験日を選択する",
             color = Color.White,
@@ -543,29 +572,19 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit = {},
-    errorMessage: String,
-    enabled: Boolean = true
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { showToast(context, "記録しました") },
+            onClick = onClick,
             colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(8.dp),
-            enabled = enabled,
         ) {
             Text(stringResource(id = R.string.record), color = Color.White)
         }
-        Text(errorMessage, color = Color.Red)
     }
-}
-
-
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 //@Preview(showBackground = true)
@@ -575,3 +594,21 @@ private fun showToast(context: android.content.Context, message: String) {
 //        SaveButton()
 //    }
 //}
+
+private fun showToast(context: android.content.Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Composable
+private fun ShowErrorText(error: String) {
+    Text(
+        text = error, fontSize = 16.sp, color = Color.Red
+    )
+}
+
+@Composable
+private fun ShowSavedText(saved: String) {
+    Text(
+        text = saved, fontSize = 16.sp, color = Color.Green
+    )
+}
