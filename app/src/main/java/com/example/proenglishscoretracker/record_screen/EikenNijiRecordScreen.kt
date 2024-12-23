@@ -71,13 +71,15 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var grammarAndVocabularyScore by rememberSaveable { mutableIntStateOf(0) }
         var pronunciationScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+        var showError by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                SelectDatePicker(LocalContext.current) { date->
+                SelectDatePicker(LocalContext.current) { date ->
                     selectedDate = date
+                    showError = ""
                 }
                 Text("受験日: $selectedDate")
             }
@@ -205,8 +207,6 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
-        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
         val selectedDateEmptyError = selectedDate.isEmpty()
         val cseMaxScoreError = cseScore >= 3401
         val speakingMaxScoreError = speakingScore >= 851
@@ -214,54 +214,86 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
         val interactionMaxScoreError = interactionScore >= 11
         val grammarAndVocabularyMaxScoreError = grammarAndVocabularyScore >= 11
         val pronunciationMaxScoreError = pronunciationScore >= 11
-        val memoEmptyError = memoText.isEmpty()
 
-        val enableChecker = !selectedDateEmptyError &&
+        val savable = selectedDate.isNotBlank() &&
                 cseScore.toString().isNotBlank() &&
                 speakingScore.toString().isNotBlank() &&
                 shortSpeechScore.toString().isNotBlank() &&
                 interactionScore.toString().isNotBlank() &&
                 grammarAndVocabularyScore.toString().isNotBlank() &&
+                !selectedDateEmptyError &&
                 !cseMaxScoreError &&
                 !speakingMaxScoreError &&
                 !shortSpeechMaxScoreError &&
                 !interactionMaxScoreError &&
                 !grammarAndVocabularyMaxScoreError &&
-                !pronunciationMaxScoreError &&
-                !memoEmptyError
+                !pronunciationMaxScoreError
+
+        var showSaved by remember { mutableStateOf("") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton(
-                onClick = {
-                    viewModel.saveEikenNijiValues(
-                        cseScore,
-                        speakingScore,
-                        shortSpeechScore,
-                        interactionScore,
-                        grammarAndVocabularyScore,
-                        pronunciationScore,
-                        memoText
-                    )
-                },
-                errorMessage = when {
-                    selectedDateEmptyError -> "受験日が記入されていません。"
-                    cseMaxScoreError -> "CSEスコアは3401未満である必要があります。"
-                    speakingMaxScoreError -> "Speakingスコアは851未満である必要があります。"
-                    shortSpeechMaxScoreError -> "Short Speechスコアは11未満である必要があります。"
-                    interactionMaxScoreError -> "Interactionスコアは11未満である必要があります。"
-                    grammarAndVocabularyMaxScoreError -> "Grammar and Vocabularyスコアは11未満である必要があります。"
-                    pronunciationMaxScoreError -> "Pronunciationスコアは11未満である必要があります。"
-                    memoEmptyError -> "メモが記入されていません。"
-                    else -> {
-                        ""
-                    }
-                },
-                enabled = enableChecker
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SaveButton(
+                    onClick = {
+                        when {
+                            savable -> {
+                                showError = ""
+                                showSaved = "記録しました。"
+                                viewModel.saveEikenNijiValues(
+                                    cseScore,
+                                    speakingScore,
+                                    shortSpeechScore,
+                                    interactionScore,
+                                    grammarAndVocabularyScore,
+                                    pronunciationScore,
+                                    memoText
+                                )
+                            }
+
+                            selectedDateEmptyError -> {
+                                showError = "受験日が記入されていません。"
+                            }
+
+                            cseMaxScoreError -> {
+                                showError = "CSEスコアは3401未満である必要があります。"
+                            }
+
+                            speakingMaxScoreError -> {
+                                showError = "Speakingスコアは851未満である必要があります。"
+                            }
+
+                            shortSpeechMaxScoreError -> {
+                                showError = "Short Speechスコアは10未満である必要があります。"
+                            }
+
+                            interactionMaxScoreError -> {
+                                showError = "Interactionスコアは10未満である必要があります。"
+                            }
+
+                            grammarAndVocabularyMaxScoreError -> {
+                                showError =
+                                    "Grammar and Vocabularyスコアは10未満である必要があります。"
+                            }
+
+                            pronunciationMaxScoreError -> {
+                                showError = "Pronunciationスコアは10未満である必要があります。"
+                            }
+                        }
+                    },
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                Box {
+                    ShowErrorText(showError)
+                    ShowSavedText(showSaved)
+                }
+            }
         }
     }
 }
@@ -300,9 +332,11 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
         }, year, month, day
     )
     datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-    Button(onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
-        containerColor = Color.Blue
-    ), shape = RoundedCornerShape(8.dp)) {
+    Button(
+        onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Blue
+        ), shape = RoundedCornerShape(8.dp)
+    ) {
         Text(
             text = "受験日を選択する",
             color = Color.White,
@@ -619,31 +653,21 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
     }
 }
 
-
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit = {},
-    errorMessage: String,
-    enabled: Boolean = true
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { showToast(context, "記録しました") },
+            onClick = onClick,
             colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(8.dp),
-            enabled = enabled,
         ) {
             Text(stringResource(id = R.string.record), color = Color.White)
         }
-        Text(errorMessage, color = Color.Red)
     }
-}
-
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 //@Preview(showBackground = true)
@@ -653,3 +677,21 @@ private fun showToast(context: android.content.Context, message: String) {
 //        SaveButton()
 //    }
 //}
+
+private fun showToast(context: android.content.Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Composable
+private fun ShowErrorText(error: String) {
+    Text(
+        text = error, fontSize = 16.sp, color = Color.Red
+    )
+}
+
+@Composable
+private fun ShowSavedText(saved: String) {
+    Text(
+        text = saved, fontSize = 16.sp, color = Color.Green
+    )
+}
