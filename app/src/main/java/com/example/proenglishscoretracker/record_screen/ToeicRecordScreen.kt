@@ -9,7 +9,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,17 +55,29 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
-        var showError by remember { mutableStateOf("") }
+
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val readingMaxScoreError = readingScore >= 496
+        val listeningMaxScoreError = listeningScore >= 496
+
+        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
+        var readingMaxScoreErrorText by remember { mutableStateOf("") }
+        var listeningMaxScoreErrorText by remember { mutableStateOf("") }
+        var readingScoreDivisionErrorText by remember { mutableStateOf("") }
+        var listeningScoreDivisionErrorText by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
             Column {
+                // 受験日が記入されていない && R/Wが5の倍数でない状態で記録ボタンをタップすると
+                // 「受験日が記入されていません。」のみが表示されてしまう。
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
-                    showError = ""
+                    selectedDateEmptyErrorText = ""
                 }
-                Text("受験日: $selectedDate")
+                Text(selectedDate)
+                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(selectedDateEmptyErrorText)
             }
         }
 
@@ -86,11 +97,17 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toeic_reading_score),
-                value = readingScore,
-                onValueChange = { readingScore = it }
-            )
+            Column {
+                InputScoreRow(
+                    placeholder = stringResource(id = R.string.toeic_reading_score),
+                    value = readingScore,
+                    onValueChange = { readingScore = it }
+                )
+                if (readingScore >= 496) MaxScoreErrorText("Readingスコアは496未満である必要があります。")
+                // 受験日が記入されていない && R/Wが5の倍数でない状態で記録ボタンをタップすると
+                // 「受験日が記入されていません。」のみが表示されてしまう。
+                DivisionScoreErrorText(readingScoreDivisionErrorText)
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -103,11 +120,17 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toeic_listening_score),
-                value = listeningScore,
-                onValueChange = { listeningScore = it }
-            )
+            Column {
+                InputScoreRow(
+                    placeholder = stringResource(id = R.string.toeic_listening_score),
+                    value = listeningScore,
+                    onValueChange = { listeningScore = it }
+                )
+                if (listeningScore >= 496) MaxScoreErrorText("Listeningスコアは496未満である必要があります。")
+                // 受験日が記入されていない && R/Wが5の倍数でない状態で記録ボタンをタップすると
+                // 「受験日が記入されていません。」のみが表示されてしまう。
+                DivisionScoreErrorText(listeningScoreDivisionErrorText)
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -127,9 +150,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val readingMaxScoreError = readingScore >= 496
-        val listeningMaxScoreError = listeningScore >= 496
         val readingScoreDivisionError = readingScore % 5 != 0
         val listeningScoreDivisionError = listeningScore % 5 != 0
 
@@ -157,7 +177,11 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     onClick = {
                         when {
                             savable -> {
-                                showError = ""
+                                selectedDateEmptyErrorText = ""
+                                readingMaxScoreErrorText = ""
+                                listeningMaxScoreErrorText = ""
+                                readingScoreDivisionErrorText = ""
+                                listeningScoreDivisionErrorText = ""
                                 showSaved = "記録しました。"
                                 viewModel.saveToeicValues(
                                     readingScore,
@@ -166,22 +190,27 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                 )
                             }
                             selectedDateEmptyError -> {
-                                showError = "受験日が記入されていません。"
+                                selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
                             readingMaxScoreError -> {
-                                showError = "Readingスコアは496未満である必要があります。"
+                                readingMaxScoreErrorText =
+                                    "Readingスコアは496未満である必要があります。"
                             }
                             listeningMaxScoreError -> {
-                                showError = "Listeningスコアは496未満である必要があります。"
+                                listeningMaxScoreErrorText =
+                                    "Listeningスコアは496未満である必要があります。"
+                            }
+                            readingScoreDivisionError -> {
+                                readingScoreDivisionErrorText = "Readingスコアはである5の倍数である必要があります。"
+                            }
+                            listeningScoreDivisionError -> {
+                                listeningScoreDivisionErrorText = "Listeningスコアはである5の倍数である必要があります。"
                             }
                         }
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Box {
-                    ShowErrorText(showError)
-                    ShowSavedText(showSaved)
-                }
+                ShowSavedText(showSaved)
             }
         }
     }
@@ -237,6 +266,15 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
             color = Color.White,
         )
     }
+}
+
+@Composable
+private fun ShowSelectedDateEmptyErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -440,8 +478,7 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        if (value >= 496) MaxScoreErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -504,6 +541,26 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 }
 
 @Composable
+private fun MaxScoreErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
+}
+
+@Composable
+private fun DivisionScoreErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
+}
+
+@Composable
 private fun SaveButton(
     onClick: () -> Unit
 ) {
@@ -530,13 +587,6 @@ private fun SaveButton(
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
-@Composable
-private fun ShowErrorText(error: String) {
-    Text(
-        text = error, fontSize = 16.sp, color = Color.Red
-    )
 }
 
 @Composable
