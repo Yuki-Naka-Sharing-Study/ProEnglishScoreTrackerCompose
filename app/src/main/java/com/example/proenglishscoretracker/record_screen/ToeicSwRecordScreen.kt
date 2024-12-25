@@ -7,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,7 +55,18 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
-        var showError by remember { mutableStateOf("") }
+
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val writingMaxScoreError = writingScore >= 201
+        val speakingMaxScoreError = speakingScore >= 201
+        val writingScoreDivisionError = writingScore % 5 != 0
+        val speakingScoreDivisionError = speakingScore % 5 != 0
+
+        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
+        var writingMaxScoreErrorText by remember { mutableStateOf("") }
+        var speakingMaxScoreErrorText by remember { mutableStateOf("") }
+        var writingScoreDivisionErrorText by remember { mutableStateOf("") }
+        var speakingScoreDivisionErrorText by remember { mutableStateOf("") }
 
         Row {
             SelectDayText("")
@@ -64,9 +74,10 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Column {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
-                    showError = ""
+                    selectedDateEmptyErrorText = ""
                 }
-                Text("受験日: $selectedDate")
+                Text(selectedDate)
+                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(selectedDateEmptyErrorText)
             }
         }
 
@@ -86,11 +97,15 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toeic_reading_score),
-                value = writingScore,
-                onValueChange = { writingScore = it }
-            )
+            Column {
+                InputScoreRow(
+                    placeholder = stringResource(id = R.string.toeic_sw_writing_score),
+                    value = writingScore,
+                    onValueChange = { writingScore = it }
+                )
+                if (writingScore >= 201) MaxScoreErrorText("Writingスコアは201未満である必要があります。")
+                if (writingScoreDivisionErrorText.isNotEmpty()) DivisionScoreErrorText(writingScoreDivisionErrorText)
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -103,11 +118,15 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toeic_listening_score),
-                value = speakingScore,
-                onValueChange = { speakingScore = it }
-            )
+            Column {
+                InputScoreRow(
+                    placeholder = stringResource(id = R.string.toeic_sw_speaking_score),
+                    value = speakingScore,
+                    onValueChange = { speakingScore = it }
+                )
+                if (speakingScore >= 201) MaxScoreErrorText("Speakingスコアは201未満である必要があります。")
+                if (speakingScoreDivisionErrorText.isNotEmpty()) DivisionScoreErrorText(speakingScoreDivisionErrorText)
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -127,20 +146,14 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val writingMaxScoreError = writingScore >= 201
-        val speakingMaxScoreError = speakingScore >= 201
-        val writingScoreDivisionError = writingScore % 5 != 0
-        val speakingScoreDivisionError = speakingScore % 5 != 0
-
-        val savable =
-            writingScore.toString().isNotBlank() &&
-                    speakingScore.toString().isNotBlank() &&
-                    !selectedDateEmptyError &&
-                    !writingMaxScoreError &&
-                    !speakingMaxScoreError &&
-                    !writingScoreDivisionError &&
-                    !speakingScoreDivisionError
+        val savable = selectedDate.isNotEmpty() &&
+                writingScore.toString().isNotBlank() &&
+                speakingScore.toString().isNotBlank() &&
+                !selectedDateEmptyError &&
+                !writingMaxScoreError &&
+                !speakingMaxScoreError &&
+                !writingScoreDivisionError &&
+                !speakingScoreDivisionError
 
         var showSaved by remember { mutableStateOf("") }
 
@@ -155,39 +168,45 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             ) {
                 SaveButton(
                     onClick = {
-                        when {
-                            savable -> {
-                                showError = ""
-                                showSaved = "記録しました。"
-                                viewModel.saveToeicSwValues(
-                                    writingScore,
-                                    speakingScore,
-                                    memoText
-                                )
+                        if (savable) {
+                            selectedDateEmptyErrorText = ""
+                            writingMaxScoreErrorText = ""
+                            speakingMaxScoreErrorText = ""
+                            writingScoreDivisionErrorText = ""
+                            speakingScoreDivisionErrorText = ""
+                            showSaved = "記録しました。"
+                            viewModel.saveToeicValues(
+                                writingScore,
+                                speakingScore,
+                                memoText
+                            )
+                        } else {
+                            if (selectedDateEmptyError) {
+                                selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
-                            selectedDateEmptyError -> {
-                                showError = "受験日が記入されていません。"
+                            if (writingMaxScoreError) {
+                                writingMaxScoreErrorText = "Writingスコアは201未満である必要があります。"
                             }
-                            writingMaxScoreError -> {
-                                showError = "Readingスコアは201未満である必要があります。"
+                            if (speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = "Speakingスコアは201未満である必要があります。"
                             }
-                            speakingMaxScoreError -> {
-                                showError = "Listeningスコアは201未満である必要があります。"
+                            if (writingScoreDivisionError) {
+                                writingScoreDivisionErrorText = "Writingスコアはである5の倍数である必要があります。"
                             }
-                            writingScoreDivisionError -> {
-                                showError = "Readingスコアは5で割り切れる必要があります。"
+                            if (speakingScoreDivisionError) {
+                                speakingScoreDivisionErrorText = "Speakingスコアはである5の倍数である必要があります。"
                             }
-                            speakingScoreDivisionError -> {
-                                showError = "Speakingスコアは5で割り切れる必要があります。"
+                            if (!writingScoreDivisionError) {
+                                writingScoreDivisionErrorText = ""
+                            }
+                            if (!speakingScoreDivisionError) {
+                                speakingScoreDivisionErrorText = ""
                             }
                         }
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Box {
-                    ShowErrorText(showError)
-                    ShowSavedText(showSaved)
-                }
+                ShowSavedText(showSaved)
             }
         }
     }
@@ -243,6 +262,15 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
             color = Color.White,
         )
     }
+}
+
+@Composable
+private fun ShowSelectedDateEmptyErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -448,6 +476,26 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 }
 
 @Composable
+private fun MaxScoreErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
+}
+
+@Composable
+private fun DivisionScoreErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
+}
+
+@Composable
 private fun SaveButton(
     onClick: () -> Unit
 ) {
@@ -464,9 +512,8 @@ private fun SaveButton(
     }
 }
 
-
-//@Composable
 //@Preview(showBackground = true)
+//@Composable
 //private fun SaveButtonPreview() {
 //    ProEnglishScoreTrackerTheme {
 //        SaveButton()
