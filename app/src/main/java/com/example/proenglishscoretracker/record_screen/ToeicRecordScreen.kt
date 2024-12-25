@@ -59,6 +59,8 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         val selectedDateEmptyError = selectedDate.isEmpty()
         val readingMaxScoreError = readingScore >= 496
         val listeningMaxScoreError = listeningScore >= 496
+        val readingScoreDivisionError = readingScore % 5 != 0
+        val listeningScoreDivisionError = listeningScore % 5 != 0
 
         var selectedDateEmptyErrorText by remember { mutableStateOf("") }
         var readingMaxScoreErrorText by remember { mutableStateOf("") }
@@ -70,8 +72,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
             Column {
-                // 受験日が記入されていない && R/Wが5の倍数でない状態で記録ボタンをタップすると
-                // 「受験日が記入されていません。」のみが表示されてしまう。
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
                     selectedDateEmptyErrorText = ""
@@ -104,8 +104,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     onValueChange = { readingScore = it }
                 )
                 if (readingScore >= 496) MaxScoreErrorText("Readingスコアは496未満である必要があります。")
-                // 受験日が記入されていない && R/Wが5の倍数でない状態で記録ボタンをタップすると
-                // 「受験日が記入されていません。」のみが表示されてしまう。
                 DivisionScoreErrorText(readingScoreDivisionErrorText)
             }
         }
@@ -127,8 +125,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     onValueChange = { listeningScore = it }
                 )
                 if (listeningScore >= 496) MaxScoreErrorText("Listeningスコアは496未満である必要があります。")
-                // 受験日が記入されていない && R/Wが5の倍数でない状態で記録ボタンをタップすると
-                // 「受験日が記入されていません。」のみが表示されてしまう。
                 DivisionScoreErrorText(listeningScoreDivisionErrorText)
             }
         }
@@ -149,9 +145,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        val readingScoreDivisionError = readingScore % 5 != 0
-        val listeningScoreDivisionError = listeningScore % 5 != 0
 
         val savable =
             readingScore.toString().isNotBlank() &&
@@ -175,36 +168,40 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             ) {
                 SaveButton(
                     onClick = {
-                        when {
-                            savable -> {
-                                selectedDateEmptyErrorText = ""
-                                readingMaxScoreErrorText = ""
-                                listeningMaxScoreErrorText = ""
-                                readingScoreDivisionErrorText = ""
-                                listeningScoreDivisionErrorText = ""
-                                showSaved = "記録しました。"
-                                viewModel.saveToeicValues(
-                                    readingScore,
-                                    listeningScore,
-                                    memoText
-                                )
-                            }
-                            selectedDateEmptyError -> {
+                        // 修正後のコード（when文 → if文）
+                        if (savable) {
+                            selectedDateEmptyErrorText = ""
+                            readingMaxScoreErrorText = ""
+                            listeningMaxScoreErrorText = ""
+                            readingScoreDivisionErrorText = ""
+                            listeningScoreDivisionErrorText = ""
+                            showSaved = "記録しました。"
+                            viewModel.saveToeicValues(
+                                readingScore,
+                                listeningScore,
+                                memoText
+                            )
+                        } else {
+                            if (selectedDateEmptyError) {
                                 selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
-                            readingMaxScoreError -> {
-                                readingMaxScoreErrorText =
-                                    "Readingスコアは496未満である必要があります。"
+                            if (readingMaxScoreError) {
+                                readingMaxScoreErrorText = "Readingスコアは496未満である必要があります。"
                             }
-                            listeningMaxScoreError -> {
-                                listeningMaxScoreErrorText =
-                                    "Listeningスコアは496未満である必要があります。"
+                            if (listeningMaxScoreError) {
+                                listeningMaxScoreErrorText = "Listeningスコアは496未満である必要があります。"
                             }
-                            readingScoreDivisionError -> {
+                            if (readingScoreDivisionError) {
                                 readingScoreDivisionErrorText = "Readingスコアはである5の倍数である必要があります。"
                             }
-                            listeningScoreDivisionError -> {
+                            if (listeningScoreDivisionError) {
                                 listeningScoreDivisionErrorText = "Listeningスコアはである5の倍数である必要があります。"
+                            }
+                            if (!readingScoreDivisionError) {
+                                readingScoreDivisionErrorText = ""
+                            }
+                            if (!listeningScoreDivisionError) {
+                                listeningScoreDivisionErrorText = ""
                             }
                         }
                     },
