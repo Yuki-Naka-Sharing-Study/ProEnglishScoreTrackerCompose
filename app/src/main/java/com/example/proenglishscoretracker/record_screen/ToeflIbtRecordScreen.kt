@@ -58,6 +58,18 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+
+        //「ErrorText」系
+
+
+        //「Error」系
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val overallMaxScoreError = overallScore >= 121
+        val readingMaxScoreError = readingScore >= 31
+        val listeningMaxScoreError = listeningScore >= 31
+        val writingMaxScoreError = writingScore >= 31
+        val speakingMaxScoreError = speakingScore >= 31
+
         var showError by remember { mutableStateOf("") }
 
         Row {
@@ -177,13 +189,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val overallMaxScoreError = overallScore >= 121
-        val readingMaxScoreError = readingScore >= 31
-        val listeningMaxScoreError = listeningScore >= 31
-        val writingMaxScoreError = writingScore >= 31
-        val speakingMaxScoreError = speakingScore >= 31
 
         val savable = overallScore.toString().isNotBlank() &&
                 readingScore.toString().isNotBlank() &&
