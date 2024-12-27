@@ -59,6 +59,15 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         var speakingScore by rememberSaveable { mutableFloatStateOf(0F) }
         var memoText by rememberSaveable { mutableStateOf("") }
 
+        //「Error」系
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val overallMaxScoreError = overallScore >= 36.1
+        val readingMaxScoreError = readingScore >= 9.1
+        val listeningMaxScoreError = listeningScore >= 9.1
+        val writingMaxScoreError = writingScore >= 9.1
+        val speakingMaxScoreError = writingScore >= 9.1
+        val memoEmptyError = memoText.isEmpty()
+
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
@@ -175,16 +184,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        // 問題点① 受験日とメモを記入していない段階でエラーメッセージを表示すると
-        // 　　　　 ユーザーからすると鬱陶しいと思われるかも。
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val overallMaxScoreError = overallScore >= 36.1
-        val readingMaxScoreError = readingScore >= 9.1
-        val listeningMaxScoreError = listeningScore >= 9.1
-        val writingMaxScoreError = writingScore >= 9.1
-        val speakingMaxScoreError = writingScore >= 9.1
-        val memoEmptyError = memoText.isEmpty()
 
         val enableChecker = !selectedDateEmptyError &&
                 overallScore.toString().isNotBlank() &&
