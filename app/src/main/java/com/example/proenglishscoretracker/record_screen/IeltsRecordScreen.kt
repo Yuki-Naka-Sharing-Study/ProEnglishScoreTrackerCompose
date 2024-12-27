@@ -66,7 +66,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 SelectDatePicker(LocalContext.current) { date->
                     selectedDate = date
                 }
-                Text("受験日: $selectedDate")
+                Text(selectedDate)
             }
         }
 
