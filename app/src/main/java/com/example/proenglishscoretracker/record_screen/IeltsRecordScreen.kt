@@ -80,10 +80,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
             Column {
-                SelectDatePicker(LocalContext.current) { date->
+                SelectDatePicker(LocalContext.current) { date ->
                     selectedDate = date
+                    selectedDateEmptyErrorText = ""
                 }
                 Text(selectedDate)
+                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                    selectedDateEmptyErrorText
+                )
             }
         }
 
@@ -289,6 +293,15 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
             color = Color.White,
         )
     }
+}
+
+@Composable
+private fun ShowSelectedDateEmptyErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red
+    )
 }
 
 @Composable
