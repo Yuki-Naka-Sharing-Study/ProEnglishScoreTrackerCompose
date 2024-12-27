@@ -73,7 +73,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         val readingMaxScoreError = readingScore >= 10
         val listeningMaxScoreError = listeningScore >= 10
         val writingMaxScoreError = writingScore >= 10
-        val speakingMaxScoreError = writingScore >= 10
+        val speakingMaxScoreError = speakingScore >= 10
 
         Row {
             SelectDayText("")
