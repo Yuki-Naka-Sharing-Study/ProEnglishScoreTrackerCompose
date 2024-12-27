@@ -236,44 +236,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ) {
                 SaveButton(
                     onClick = {
-//                        when {
-//                            savable -> {
-//                                showError = ""
-//                                showSaved = "記録しました。"
-//                                viewModel.saveEikenIchijiValues(
-//                                    overallScore,
-//                                    readingScore,
-//                                    listeningScore,
-//                                    writingScore,
-//                                    memoText
-//                                )
-//                            }
-//
-//                            selectedDateEmptyError -> {
-//                                showError = "受験日が記入されていません。"
-//                            }
-//
-//                            overallMaxScoreError -> {
-//                                showError = "Overallスコアは121未満である必要があります。"
-//                            }
-//
-//                            readingMaxScoreError -> {
-//                                showError = "Readingスコアは31未満である必要があります。"
-//                            }
-//
-//                            listeningMaxScoreError -> {
-//                                showError = "Listeningスコアは31未満である必要があります。"
-//                            }
-//
-//                            writingMaxScoreError -> {
-//                                showError = "Writingスコアは31未満である必要があります。"
-//                            }
-//
-//                            speakingMaxScoreError -> {
-//                                showError = "Speakingスコアは31未満である必要があります。"
-//                            }
-//                        }
-
                         if (savable) {
                             selectedDateEmptyErrorText = ""
                             overallMaxScoreErrorText = ""
