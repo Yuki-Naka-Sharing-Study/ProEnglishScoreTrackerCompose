@@ -624,7 +624,7 @@ private fun MemoTextPreview() {
     }
 }
 
-// TODO : 現状の「OutlinedTextField」を「ドラムロール型DataPicker」に修正。
+// TODO : 現状の「OutlinedTextField」を「ドラムロール型」に修正。
 // TODO : "文字を入力し終えたタイミングで"0.5の倍数でない場合エラーを表示するロジックの実装。
 @Composable
 private fun OverallScoreInputRow(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
