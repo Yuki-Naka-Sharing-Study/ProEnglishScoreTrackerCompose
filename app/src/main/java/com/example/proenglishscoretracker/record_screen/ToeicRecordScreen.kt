@@ -101,7 +101,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                InputScoreRow(
+                ReadingScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_reading_score),
                     value = readingScore,
                     onValueChange = { readingScore = it }
@@ -120,7 +120,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                InputScoreRow(
+                ListeningScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_listening_score),
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
@@ -514,6 +514,104 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
         }
         if (value >= 496) {
             MaxScoreErrorText("Readingスコアは496未満である必要があります。")
+        }
+    }
+}
+
+@Composable
+private fun ReadingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 5 != 0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5 != 0) {
+                        isError = true
+                    }
+                },
+            value = value.toString(),
+            onValueChange = { newValue ->
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("Readingスコアは5の倍数である必要があります。")
+        }
+        if (value >= 496) {
+            MaxScoreErrorText("Readingスコアは496未満である必要があります。")
+        }
+    }
+}
+
+@Composable
+private fun ListeningScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 5 != 0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5 != 0) {
+                        isError = true
+                    }
+                },
+            value = value.toString(),
+            onValueChange = { newValue ->
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("Listeningスコアは5の倍数である必要があります。")
+        }
+        if (value >= 496) {
+            MaxScoreErrorText("Listeningスコアは496未満である必要があります。")
         }
     }
 }
