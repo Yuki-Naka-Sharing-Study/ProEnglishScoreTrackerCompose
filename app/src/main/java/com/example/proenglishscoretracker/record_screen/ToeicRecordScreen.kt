@@ -80,7 +80,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedDateEmptyErrorText = ""
                 }
                 Text(selectedDate)
-                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(selectedDateEmptyErrorText)
+                if (selectedDate.isEmpty()) ErrorText(selectedDateEmptyErrorText)
             }
         }
 
@@ -262,15 +262,6 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
             color = Color.White,
         )
     }
-}
-
-@Composable
-private fun ShowSelectedDateEmptyErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        color = Color.Red
-    )
 }
 
 @Composable
