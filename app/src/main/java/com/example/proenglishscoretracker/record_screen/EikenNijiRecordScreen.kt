@@ -72,6 +72,13 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var pronunciationScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
         var showError by remember { mutableStateOf("") }
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val cseMaxScoreError = cseScore >= 3401
+        val speakingMaxScoreError = speakingScore >= 851
+        val shortSpeechMaxScoreError = shortSpeechScore >= 11
+        val interactionMaxScoreError = interactionScore >= 11
+        val grammarAndVocabularyMaxScoreError = grammarAndVocabularyScore >= 11
+        val pronunciationMaxScoreError = pronunciationScore >= 11
 
         Row {
             SelectDayText("")
@@ -206,14 +213,6 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val cseMaxScoreError = cseScore >= 3401
-        val speakingMaxScoreError = speakingScore >= 851
-        val shortSpeechMaxScoreError = shortSpeechScore >= 11
-        val interactionMaxScoreError = interactionScore >= 11
-        val grammarAndVocabularyMaxScoreError = grammarAndVocabularyScore >= 11
-        val pronunciationMaxScoreError = pronunciationScore >= 11
 
         val savable = selectedDate.isNotBlank() &&
                 cseScore.toString().isNotBlank() &&
