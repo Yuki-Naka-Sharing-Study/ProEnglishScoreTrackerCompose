@@ -56,17 +56,19 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
 
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val writingMaxScoreError = writingScore >= 201
-        val speakingMaxScoreError = speakingScore >= 201
-        val writingScoreDivisionError = writingScore % 5 != 0
-        val speakingScoreDivisionError = speakingScore % 5 != 0
-
+        //「ErrorText」系
         var selectedDateEmptyErrorText by remember { mutableStateOf("") }
         var writingMaxScoreErrorText by remember { mutableStateOf("") }
         var speakingMaxScoreErrorText by remember { mutableStateOf("") }
         var writingScoreDivisionErrorText by remember { mutableStateOf("") }
         var speakingScoreDivisionErrorText by remember { mutableStateOf("") }
+
+        //「Error」系
+        val selectedDateEmptyError = selectedDate.isEmpty()
+        val writingMaxScoreError = writingScore >= 201
+        val speakingMaxScoreError = speakingScore >= 201
+        val writingScoreDivisionError = writingScore % 5 != 0
+        val speakingScoreDivisionError = speakingScore % 5 != 0
 
         Row {
             SelectDayText("")
