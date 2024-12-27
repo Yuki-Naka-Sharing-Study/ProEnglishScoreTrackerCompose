@@ -509,10 +509,10 @@ private fun ReadingScoreInputField(placeholder: String, value: Int, onValueChang
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Readingスコアは5の倍数である必要があります。")
+            ErrorText("Readingスコアは5の倍数である必要があります。")
         }
         if (value >= 496) {
-            MaxScoreErrorText("Readingスコアは496未満である必要があります。")
+            ErrorText("Readingスコアは496未満である必要があります。")
         }
     }
 }
@@ -558,10 +558,10 @@ private fun ListeningScoreInputField(placeholder: String, value: Int, onValueCha
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Listeningスコアは5の倍数である必要があります。")
+            ErrorText("Listeningスコアは5の倍数である必要があります。")
         }
         if (value >= 496) {
-            MaxScoreErrorText("Listeningスコアは496未満である必要があります。")
+            ErrorText("Listeningスコアは496未満である必要があります。")
         }
     }
 }
@@ -599,17 +599,7 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 }
 
 @Composable
-private fun MaxScoreErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
-}
-
-@Composable
-private fun DivisionScoreErrorText(error: String) {
+private fun ErrorText(error: String) {
     Text(
         text = error,
         fontSize = 12.sp,
