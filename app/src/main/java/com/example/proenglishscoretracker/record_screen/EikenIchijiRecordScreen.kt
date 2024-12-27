@@ -69,11 +69,15 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+
+        //「ErrorText」系
         var selectedDateEmptyErrorText by remember { mutableStateOf("") }
         var cseMaxScoreErrorText by remember { mutableStateOf("") }
         var readingMaxScoreErrorText by remember { mutableStateOf("") }
         var listeningMaxScoreErrorText by remember { mutableStateOf("") }
         var writingMaxScoreErrorText by remember { mutableStateOf("") }
+
+        //「Error」系
         val selectedDateEmptyError = selectedDate.isEmpty()
         val cseMaxScoreError = cseScore >= 2551
         val readingMaxScoreError = readingScore >= 851
@@ -228,44 +232,47 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             ) {
                 SaveButton(
                     onClick = {
-                        when {
-                            savable -> {
-                                selectedDateEmptyErrorText = ""
-                                cseMaxScoreErrorText = ""
-                                readingMaxScoreErrorText = ""
-                                listeningMaxScoreErrorText = ""
-                                writingMaxScoreErrorText = ""
-                                showSaved = "記録しました。"
-                                viewModel.saveEikenIchijiValues(
-                                    cseScore,
-                                    readingScore,
-                                    listeningScore,
-                                    writingScore,
-                                    memoText
-                                )
-                            }
-                            /// TODO : エラーをまとめて表示
-                            selectedDateEmptyError -> {
+                        if (savable) {
+                            selectedDateEmptyErrorText = ""
+                            cseMaxScoreErrorText = ""
+                            readingMaxScoreErrorText = ""
+                            listeningMaxScoreErrorText = ""
+                            writingMaxScoreErrorText = ""
+                            showSaved = "記録しました。"
+                            viewModel.saveEikenIchijiValues(
+                                cseScore,
+                                readingScore,
+                                listeningScore,
+                                writingScore,
+                                memoText
+                            )
+                        } else {
+                            if (selectedDateEmptyError) {
                                 selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
-
-                            cseMaxScoreError -> {
-                                cseMaxScoreErrorText = "CSEスコアは2551未満である必要があります。"
+                            if (cseMaxScoreError) {
+                                cseMaxScoreErrorText = "CSEスコアは3401未満である必要があります。"
                             }
-
-                            readingMaxScoreError -> {
-                                readingMaxScoreErrorText =
-                                    "Readingスコアは851未満である必要があります。"
+                            if (readingMaxScoreError) {
+                                readingMaxScoreErrorText = "Readingスコアは851未満である必要があります。"
                             }
-
-                            listeningMaxScoreError -> {
-                                listeningMaxScoreErrorText =
-                                    "Listeningスコアは851未満である必要があります。"
+                            if (listeningMaxScoreError) {
+                                listeningMaxScoreErrorText = "Listeningスコアは11未満である必要があります。"
                             }
-
-                            writingMaxScoreError -> {
-                                writingMaxScoreErrorText =
-                                    "Writingスコアは851未満である必要があります。"
+                            if (writingMaxScoreError) {
+                                writingMaxScoreErrorText = "Writingスコアは11未満である必要があります。"
+                            }
+                            if (!cseMaxScoreError) {
+                                cseMaxScoreErrorText = ""
+                            }
+                            if (!readingMaxScoreError) {
+                                readingMaxScoreErrorText = ""
+                            }
+                            if (!listeningMaxScoreError) {
+                                listeningMaxScoreErrorText = ""
+                            }
+                            if (!writingMaxScoreError) {
+                                writingMaxScoreErrorText = ""
                             }
                         }
                     },
