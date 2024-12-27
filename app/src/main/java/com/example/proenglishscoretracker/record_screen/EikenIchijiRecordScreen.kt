@@ -141,7 +141,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Column {
-                RLWSInputScoreRow(
+                RLWScoreInputRow(
                     placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
                     value = readingScore,
                     onValueChange = { readingScore = it }
@@ -162,7 +162,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Column {
-                RLWSInputScoreRow(
+                RLWScoreInputRow(
                     placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
@@ -182,7 +182,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Column {
-                RLWSInputScoreRow(
+                RLWScoreInputRow(
                     placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
                     value = writingScore,
                     onValueChange = { writingScore = it }
@@ -624,7 +624,7 @@ private fun CseInputScoreRow(placeholder: String, value: Int, onValueChange: (In
 }
 
 @Composable
-private fun RLWSInputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun RLWScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
