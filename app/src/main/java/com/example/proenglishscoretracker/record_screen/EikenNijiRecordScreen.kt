@@ -369,7 +369,7 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
         context,
         { _, selectedYear, selectedMonth, selectedDay ->
             val formattedDate =
-                String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                String.format("%04d年%02d月%02d日", selectedYear, selectedMonth + 1, selectedDay)
             onDateSelected(formattedDate)
         }, year, month, day
     )
