@@ -469,56 +469,6 @@ private fun MemoTextFieldPreview() {
 }
 
 @Composable
-private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 5 != 0 && !focusState
-
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5 != 0) {
-                        isError = true
-                    }
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            DivisionScoreErrorText("スコアは5の倍数である必要があります。")
-        }
-        if (value >= 496) {
-            MaxScoreErrorText("Readingスコアは496未満である必要があります。")
-        }
-    }
-}
-
-@Composable
 private fun ReadingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     var isError by rememberSaveable { mutableStateOf(false) }
     var focusState by rememberSaveable { mutableStateOf(false) }
