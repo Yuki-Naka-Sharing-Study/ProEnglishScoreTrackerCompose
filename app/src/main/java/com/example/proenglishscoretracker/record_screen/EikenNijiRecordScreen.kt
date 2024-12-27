@@ -455,12 +455,10 @@ private fun DropdownMenuWithIcon() {
                     modifier = Modifier.size(24.dp)
                 )
             }
-
-            // DropdownMenu のオフセット調整
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                offset = DpOffset(0.dp, 8.dp) // Y方向に8dp下げる
+                offset = DpOffset(0.dp, 8.dp)
             ) {
                 items.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -683,7 +681,6 @@ private fun SpeakingScoreInputRow(placeholder: String, value: Int, onValueChange
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value.toString(),
             onValueChange = { newValue ->
-                // 数字のみ受け付ける
                 if (newValue.all { it.isDigit() }) {
                     onValueChange(newValue.toInt())
                 }
@@ -718,7 +715,6 @@ private fun SectionOfSpeakingScoreInputRow(placeholder: String, value: Int, onVa
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value.toString(),
             onValueChange = { newValue ->
-                // 数字のみ受け付ける
                 if (newValue.all { it.isDigit() }) {
                     onValueChange(newValue.toInt())
                 }
