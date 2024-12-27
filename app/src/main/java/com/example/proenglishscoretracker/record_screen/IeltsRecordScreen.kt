@@ -28,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -116,17 +117,10 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
                 OverallScoreInputRow(
-                    placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
+                    placeholder = stringResource(id = R.string.ielts_overall_score),
                     value = overallScore,
                     onValueChange = { overallScore = it }
                 )
-                if (overallScore >= 36.1f) MaxScoreErrorText("Overallスコアは36.1未満である必要があります。")
-                if (!overallScoreDivisionError) {
-                    overallScoreDivisionErrorText = ""
-                    DivisionScoreErrorText(overallScoreDivisionErrorText)
-                } else {
-                    DivisionScoreErrorText(overallScoreDivisionErrorText)
-                }
             }
         }
 
@@ -141,18 +135,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                ReadingScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_reading_score),
                     value = readingScore,
                     onValueChange = { readingScore = it }
                 )
-                if (readingScore >= 9.1) MaxScoreErrorText("Readingスコアは9.1未満である必要があります。")
-                if (!readingScoreDivisionError) {
-                    readingScoreDivisionErrorText = ""
-                    DivisionScoreErrorText(readingScoreDivisionErrorText)
-                } else {
-                    DivisionScoreErrorText(readingScoreDivisionErrorText)
-                }
             }
         }
 
@@ -167,18 +154,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                ListeningScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_listening_score),
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
                 )
-                if (listeningScore >= 9.1) MaxScoreErrorText("Listeningスコアは9.1未満である必要があります。")
-                if (!listeningScoreDivisionError) {
-                    listeningScoreDivisionErrorText = ""
-                    DivisionScoreErrorText(listeningScoreDivisionErrorText)
-                } else {
-                    DivisionScoreErrorText(listeningScoreDivisionErrorText)
-                }
             }
         }
 
@@ -193,18 +173,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                WritingScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_writing_score),
                     value = writingScore,
                     onValueChange = { writingScore = it }
                 )
-                if (writingScore >= 9.1) MaxScoreErrorText("Writingスコアは9.1未満である必要があります。")
-                if (!writingScoreDivisionError) {
-                    writingScoreDivisionErrorText = ""
-                    DivisionScoreErrorText(writingScoreDivisionErrorText)
-                } else {
-                    DivisionScoreErrorText(writingScoreDivisionErrorText)
-                }
             }
         }
 
@@ -219,18 +192,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                SpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_speaking_score),
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
                 )
-                if (speakingScore >= 9.1) InputScoreRowErrorText("Speakingスコアは9.1未満である必要があります。")
-                if (!speakingScoreDivisionError) {
-                    speakingScoreDivisionErrorText = ""
-                    DivisionScoreErrorText(speakingScoreDivisionErrorText)
-                } else {
-                    DivisionScoreErrorText(speakingScoreDivisionErrorText)
-                }
             }
         }
 
@@ -242,7 +208,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputMemoRow(
+            MemoInputField(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
                 onValueChange = { memoText = it }
@@ -624,19 +590,25 @@ private fun MemoTextPreview() {
     }
 }
 
-// TODO : 現状の「OutlinedTextField」を「ドラムロール型」に修正。
-// TODO : "文字を入力し終えたタイミングで"0.5の倍数でない場合エラーを表示するロジックの実装。
 @Composable
 private fun OverallScoreInputRow(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 0.5 != 0.0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        if (value >= 36.1f) InputScoreRowErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5.0 != 0.0) {
+                        isError = true
+                    }
+                },
             value = value.toString(),
             onValueChange = { newValue ->
                 // 小数点や符号も許可する
@@ -659,20 +631,35 @@ private fun OverallScoreInputRow(placeholder: String, value: Float, onValueChang
                 unfocusedBorderColor = Color.Gray
             )
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (value >= 36.1) {
+            MaxScoreErrorText("Overallスコアは36.1未満である必要があります。")
+        }
+        if (showError) {
+            DivisionScoreErrorText("スコアは0.5の倍数である必要があります。")
+        }
     }
 }
 
 @Composable
-private fun RLWSScoreInputRow(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+private fun ReadingScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 0.5 != 0.0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        if (value >= 9.1) MaxScoreErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5.0 != 0.0) {
+                        isError = true
+                    }
+                },
             value = value.toString(),
             onValueChange = { newValue ->
                 // 小数点や符号も許可する
@@ -695,11 +682,171 @@ private fun RLWSScoreInputRow(placeholder: String, value: Float, onValueChange: 
                 unfocusedBorderColor = Color.Gray
             )
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("Readingスコアは0.5の倍数である必要があります。")
+        }
+        if (value >= 9.1) {
+            MaxScoreErrorText("Readingスコアは9.1未満である必要があります。")
+        }
     }
 }
 
 @Composable
-private fun InputMemoRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun ListeningScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 0.5 != 0.0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5.0 != 0.0) {
+                        isError = true
+                    }
+                },
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 小数点や符号も許可する
+                val regex = "^-?\\d*\\.?\\d*$".toRegex()
+                if (newValue.isEmpty() || newValue.matches(regex)) {
+                    onValueChange(newValue.toFloatOrNull() ?: 0f)
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("Listeningスコアは0.5の倍数である必要があります。")
+        }
+        if (value >= 9.1) {
+            MaxScoreErrorText("Listeningスコアは9.1未満である必要があります。")
+        }
+    }
+}
+
+@Composable
+private fun WritingScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 0.5 != 0.0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5.0 != 0.0) {
+                        isError = true
+                    }
+                },
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 小数点や符号も許可する
+                val regex = "^-?\\d*\\.?\\d*$".toRegex()
+                if (newValue.isEmpty() || newValue.matches(regex)) {
+                    onValueChange(newValue.toFloatOrNull() ?: 0f)
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("Writingスコアは0.5の倍数である必要があります。")
+        }
+        if (value >= 9.1) {
+            MaxScoreErrorText("Writingスコアは9.1未満である必要があります。")
+        }
+    }
+}
+
+@Composable
+private fun SpeakingScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 0.5 != 0.0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5.0 != 0.0) {
+                        isError = true
+                    }
+                },
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 小数点や符号も許可する
+                val regex = "^-?\\d*\\.?\\d*$".toRegex()
+                if (newValue.isEmpty() || newValue.matches(regex)) {
+                    onValueChange(newValue.toFloatOrNull() ?: 0f)
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("Speakingスコアは0.5の倍数である必要があります。")
+        }
+        if (value >= 9.1) {
+            MaxScoreErrorText("Speakingスコアは9.1未満である必要があります。")
+        }
+    }
+}
+
+@Composable
+private fun MemoInputField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
