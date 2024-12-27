@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -52,11 +51,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by rememberSaveable { mutableStateOf("") }
-        var overallScore by rememberSaveable { mutableIntStateOf(0) }
-        var readingScore by rememberSaveable { mutableIntStateOf(0) }
-        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-        var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+        var overallScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var readingScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var listeningScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var writingScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var speakingScore by rememberSaveable { mutableFloatStateOf(0F) }
         var memoText by rememberSaveable { mutableStateOf("") }
 
         //「ErrorText」系
@@ -66,14 +65,25 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         var listeningMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
         var writingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
         var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var overallScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
+        var readingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
+        var listeningScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
+        var writingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
+        var speakingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
 
         //「Error」系
         val selectedDateEmptyError = selectedDate.isEmpty()
-        val overallMaxScoreError = overallScore >= 37
-        val readingMaxScoreError = readingScore >= 10
-        val listeningMaxScoreError = listeningScore >= 10
-        val writingMaxScoreError = writingScore >= 10
-        val speakingMaxScoreError = speakingScore >= 10
+        val overallMaxScoreError = overallScore >= 36.1
+        val readingMaxScoreError = readingScore >= 9.1
+        val listeningMaxScoreError = listeningScore >= 9.1
+        val writingMaxScoreError = writingScore >= 9.1
+        val speakingMaxScoreError = speakingScore >= 9.1
+
+        val overallScoreDivisionError = overallScore % 0.5 != 0.0
+        val readingScoreDivisionError = readingScore % 0.5 != 0.0
+        val listeningScoreDivisionError = listeningScore % 0.5 != 0.0
+        val writingScoreDivisionError = writingScore % 0.5 != 0.0
+        val speakingScoreDivisionError = speakingScore % 0.5 != 0.0
 
         Row {
             SelectDayText("")
@@ -110,7 +120,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = overallScore,
                     onValueChange = { overallScore = it }
                 )
-                if (overallScore >= 37) InputScoreRowErrorText("Overallスコアは37未満である必要があります。")
+                if (overallScore >= 36.1f) MaxScoreErrorText("Overallスコアは36.1未満である必要があります。")
+                if (!overallScoreDivisionError) {
+                    overallScoreDivisionErrorText = ""
+                    DivisionScoreErrorText(overallScoreDivisionErrorText)
+                } else {
+                    DivisionScoreErrorText(overallScoreDivisionErrorText)
+                }
             }
         }
 
@@ -130,7 +146,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = readingScore,
                     onValueChange = { readingScore = it }
                 )
-                if (readingScore >= 10) InputScoreRowErrorText("Readingスコアは10未満である必要があります。")
+                if (readingScore >= 9.1) MaxScoreErrorText("Readingスコアは9.1未満である必要があります。")
+                if (!readingScoreDivisionError) {
+                    readingScoreDivisionErrorText = ""
+                    DivisionScoreErrorText(readingScoreDivisionErrorText)
+                } else {
+                    DivisionScoreErrorText(readingScoreDivisionErrorText)
+                }
             }
         }
 
@@ -150,7 +172,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
                 )
-                if (listeningScore >= 10) InputScoreRowErrorText("Listeningスコアは10未満である必要があります。")
+                if (listeningScore >= 9.1) MaxScoreErrorText("Listeningスコアは9.1未満である必要があります。")
+                if (!listeningScoreDivisionError) {
+                    listeningScoreDivisionErrorText = ""
+                    DivisionScoreErrorText(listeningScoreDivisionErrorText)
+                } else {
+                    DivisionScoreErrorText(listeningScoreDivisionErrorText)
+                }
             }
         }
 
@@ -170,7 +198,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = writingScore,
                     onValueChange = { writingScore = it }
                 )
-                if (writingScore >= 10) InputScoreRowErrorText("Writingスコアは10未満である必要があります。")
+                if (writingScore >= 9.1) MaxScoreErrorText("Writingスコアは9.1未満である必要があります。")
+                if (!writingScoreDivisionError) {
+                    writingScoreDivisionErrorText = ""
+                    DivisionScoreErrorText(writingScoreDivisionErrorText)
+                } else {
+                    DivisionScoreErrorText(writingScoreDivisionErrorText)
+                }
             }
         }
 
@@ -190,7 +224,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
                 )
-                if (speakingScore >= 10) InputScoreRowErrorText("Speakingスコアは10未満である必要があります。")
+                if (speakingScore >= 9.1) InputScoreRowErrorText("Speakingスコアは9.1未満である必要があります。")
+                if (!speakingScoreDivisionError) {
+                    speakingScoreDivisionErrorText = ""
+                    DivisionScoreErrorText(speakingScoreDivisionErrorText)
+                } else {
+                    DivisionScoreErrorText(speakingScoreDivisionErrorText)
+                }
             }
         }
 
@@ -217,10 +257,16 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 writingScore.toString().isNotBlank() &&
                 speakingScore.toString().isNotBlank() &&
                 !selectedDateEmptyError &&
+                !overallMaxScoreError &&
                 !readingMaxScoreError &&
                 !listeningMaxScoreError &&
                 !writingMaxScoreError &&
-                !speakingMaxScoreError
+                !speakingMaxScoreError &&
+                !overallScoreDivisionError &&
+                !readingScoreDivisionError &&
+                !listeningScoreDivisionError &&
+                !writingScoreDivisionError &&
+                !speakingScoreDivisionError
 
         var showSaved by remember { mutableStateOf("") }
 
@@ -229,62 +275,102 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            SaveButton(
-                onClick = {
-                    if (savable) {
-                        selectedDateEmptyErrorText = ""
-                        overallMaxScoreErrorText = ""
-                        readingMaxScoreErrorText = ""
-                        listeningMaxScoreErrorText = ""
-                        writingMaxScoreErrorText = ""
-                        speakingMaxScoreErrorText = ""
-                        showSaved = "記録しました。"
-                        viewModel.saveIeltsValues(
-                            overallScore,
-                            readingScore,
-                            listeningScore,
-                            writingScore,
-                            speakingScore,
-                            memoText)
-                    } else {
-                        if (selectedDateEmptyError) {
-                            selectedDateEmptyErrorText = "受験日が記入されていません。"
-                        }
-                        if (overallMaxScoreError) {
-                            overallMaxScoreErrorText = "Overallスコアは121未満である必要があります。"
-                        }
-                        if (readingMaxScoreError) {
-                            readingMaxScoreErrorText = "Readingスコアは31未満である必要があります。"
-                        }
-                        if (listeningMaxScoreError) {
-                            listeningMaxScoreErrorText = "Listeningスコアは31未満である必要があります。"
-                        }
-                        if (writingMaxScoreError) {
-                            writingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
-                        }
-                        if (speakingMaxScoreError) {
-                            speakingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
-                        }
-                        if (!overallMaxScoreError) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SaveButton(
+                    onClick = {
+                        if (savable) {
+                            selectedDateEmptyErrorText = ""
                             overallMaxScoreErrorText = ""
-                        }
-                        if (!readingMaxScoreError) {
                             readingMaxScoreErrorText = ""
-                        }
-                        if (!listeningMaxScoreError) {
                             listeningMaxScoreErrorText = ""
-                        }
-                        if (!writingMaxScoreError) {
                             writingMaxScoreErrorText = ""
-                        }
-                        if (!speakingMaxScoreError) {
                             speakingMaxScoreErrorText = ""
+                            overallScoreDivisionErrorText = ""
+                            readingScoreDivisionErrorText = ""
+                            listeningMaxScoreErrorText = ""
+                            writingScoreDivisionErrorText = ""
+                            speakingScoreDivisionErrorText = ""
+                            showSaved = "記録しました。"
+                            viewModel.saveIeltsValues(
+                                overallScore,
+                                readingScore,
+                                listeningScore,
+                                writingScore,
+                                speakingScore,
+                                memoText)
+                        } else {
+                            if (selectedDateEmptyError) {
+                                selectedDateEmptyErrorText = "受験日が記入されていません。"
+                            }
+                            if (overallMaxScoreError) {
+                                overallMaxScoreErrorText = "Overallスコアは36.1未満である必要があります。"
+                            }
+                            if (readingMaxScoreError) {
+                                readingMaxScoreErrorText = "Readingスコアは9.1未満である必要があります。"
+                            }
+                            if (listeningMaxScoreError) {
+                                listeningMaxScoreErrorText = "Listeningスコアは9.1未満である必要があります。"
+                            }
+                            if (writingMaxScoreError) {
+                                writingMaxScoreErrorText = "Writingスコアは9.1未満である必要があります。"
+                            }
+                            if (speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = "Speakingスコアは9.1未満である必要があります。"
+                            }
+                            if (overallScoreDivisionError) {
+                                overallScoreDivisionErrorText = "Overallスコアは0.5の倍数である必要があります。"
+                            }
+                            if (readingScoreDivisionError) {
+                                readingScoreDivisionErrorText = "Readingスコアは0.5の倍数である必要があります。"
+                            }
+                            if (listeningScoreDivisionError) {
+                                listeningScoreDivisionErrorText = "Listeningスコアは0.5の倍数である必要があります。"
+                            }
+                            if (writingScoreDivisionError) {
+                                writingScoreDivisionErrorText = "Writingスコアは0.5の倍数である必要があります。"
+                            }
+                            if (speakingScoreDivisionError) {
+                                speakingScoreDivisionErrorText = "Speakingスコアは0.5の倍数である必要があります。"
+                            }
+                            if (!overallMaxScoreError) {
+                                overallMaxScoreErrorText = ""
+                            }
+                            if (!readingMaxScoreError) {
+                                readingMaxScoreErrorText = ""
+                            }
+                            if (!listeningMaxScoreError) {
+                                listeningMaxScoreErrorText = ""
+                            }
+                            if (!writingMaxScoreError) {
+                                writingMaxScoreErrorText = ""
+                            }
+                            if (!speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = ""
+                            }
+                            if (!overallScoreDivisionError) {
+                                overallScoreDivisionErrorText = ""
+                            }
+                            if (!readingScoreDivisionError) {
+                                readingScoreDivisionErrorText = ""
+                            }
+                            if (!listeningScoreDivisionError) {
+                                listeningScoreDivisionErrorText = ""
+                            }
+                            if (!writingScoreDivisionError) {
+                                writingScoreDivisionErrorText = ""
+                            }
+                            if (!speakingScoreDivisionError) {
+                                speakingScoreDivisionErrorText = ""
+                            }
                         }
-                    }
-                },
-            )
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-            ShowSavedText(showSaved)
+                    },
+                )
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                ShowSavedText(showSaved)
+            }
         }
     }
 }
@@ -539,21 +625,22 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun OverallScoreInputRow(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 121) InputScoreRowErrorText("")
+        if (value >= 36.1f) InputScoreRowErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value.toString(),
             onValueChange = { newValue ->
-                // 数字のみ受け付ける
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
+                // 小数点や符号も許可する
+                val regex = "^-?\\d*\\.?\\d*$".toRegex()
+                if (newValue.isEmpty() || newValue.matches(regex)) {
+                    onValueChange(newValue.toFloatOrNull() ?: 0f)
                 }
             },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -574,21 +661,22 @@ private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange:
 }
 
 @Composable
-private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun RLWSScoreInputRow(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 10) InputScoreRowErrorText("")
+        if (value >= 9.1) MaxScoreErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value.toString(),
             onValueChange = { newValue ->
-                // 数字のみ受け付ける
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
+                // 小数点や符号も許可する
+                val regex = "^-?\\d*\\.?\\d*$".toRegex()
+                if (newValue.isEmpty() || newValue.matches(regex)) {
+                    onValueChange(newValue.toFloatOrNull() ?: 0f)
                 }
             },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -606,16 +694,6 @@ private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (I
             )
         )
     }
-}
-
-@Composable
-private fun InputScoreRowErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
 }
 
 @Composable
@@ -648,6 +726,36 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
         )
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
+}
+
+@Composable
+private fun InputScoreRowErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
+}
+
+@Composable
+private fun MaxScoreErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
+}
+
+@Composable
+private fun DivisionScoreErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
 }
 
 @Composable
