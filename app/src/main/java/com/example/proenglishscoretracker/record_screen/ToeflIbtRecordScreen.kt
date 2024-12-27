@@ -581,7 +581,6 @@ private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange:
     }
 }
 
-
 @Composable
 private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
@@ -616,7 +615,6 @@ private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (I
         )
     }
 }
-
 
 @Composable
 private fun InputScoreRowErrorText(error: String) {
