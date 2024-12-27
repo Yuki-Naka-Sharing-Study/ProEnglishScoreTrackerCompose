@@ -30,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -105,8 +106,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = readingScore,
                     onValueChange = { readingScore = it }
                 )
-                if (readingScore >= 496) MaxScoreErrorText("Readingスコアは496未満である必要があります。")
-                DivisionScoreErrorText(readingScoreDivisionErrorText)
             }
         }
 
@@ -126,8 +125,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
                 )
-                if (listeningScore >= 496) MaxScoreErrorText("Listeningスコアは496未満である必要があります。")
-                DivisionScoreErrorText(listeningScoreDivisionErrorText)
             }
         }
 
@@ -473,18 +470,26 @@ private fun MemoTextFieldPreview() {
 
 @Composable
 private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 5 != 0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        if (value >= 496) MaxScoreErrorText("")
+
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5 != 0) {
+                        isError = true
+                    }
+                },
             value = value.toString(),
             onValueChange = { newValue ->
-                // 数字のみ受け付ける
                 if (newValue.all { it.isDigit() }) {
                     onValueChange(newValue.toInt())
                 }
@@ -503,7 +508,13 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("スコアは5の倍数である必要があります。")
+        }
+        if (value >= 496) {
+            MaxScoreErrorText("Readingスコアは496未満である必要があります。")
+        }
     }
 }
 
