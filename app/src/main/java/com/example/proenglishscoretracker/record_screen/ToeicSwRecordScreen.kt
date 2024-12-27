@@ -452,10 +452,10 @@ private fun WritingScoreInputField(placeholder: String, value: Int, onValueChang
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Writingスコアは5の倍数である必要があります。")
+            ErrorText("Writingスコアは5の倍数である必要があります。")
         }
         if (value >= 201) {
-            MaxScoreErrorText("Writingスコアは201未満である必要があります。")
+            ErrorText("Writingスコアは201未満である必要があります。")
         }
     }
 }
@@ -501,10 +501,10 @@ private fun SpeakingScoreInputField(placeholder: String, value: Int, onValueChan
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Speakingスコアは5の倍数である必要があります。")
+            ErrorText("Speakingスコアは5の倍数である必要があります。")
         }
         if (value >= 201) {
-            MaxScoreErrorText("Speakingスコアは201未満である必要があります。")
+            ErrorText("Speakingスコアは201未満である必要があります。")
         }
     }
 }
@@ -542,17 +542,7 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 }
 
 @Composable
-private fun MaxScoreErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
-}
-
-@Composable
-private fun DivisionScoreErrorText(error: String) {
+private fun ErrorText(error: String) {
     Text(
         text = error,
         fontSize = 12.sp,
@@ -588,13 +578,6 @@ private fun SaveButton(
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
-@Composable
-private fun ShowErrorText(error: String) {
-    Text(
-        text = error, fontSize = 16.sp, color = Color.Red
-    )
 }
 
 @Composable
