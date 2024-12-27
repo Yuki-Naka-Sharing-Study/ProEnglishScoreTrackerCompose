@@ -75,17 +75,18 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         val writingMaxScoreError = writingScore >= 31
         val speakingMaxScoreError = speakingScore >= 31
 
-        var showError by remember { mutableStateOf("") }
-
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
             Column {
                 SelectDatePicker(LocalContext.current) { date ->
                     selectedDate = date
-                    showError = ""
+                    selectedDateEmptyErrorText = ""
                 }
-                Text("受験日: $selectedDate")
+                Text(selectedDate)
+                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                    selectedDateEmptyErrorText
+                )
             }
         }
 
@@ -103,11 +104,14 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             OverallScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
-                value = overallScore,
-                onValueChange = { overallScore = it }
-            )
+            Column {
+                OverallScoreInputRow(
+                    placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
+                    value = overallScore,
+                    onValueChange = { overallScore = it }
+                )
+                if (overallScore >= 121) InputScoreRowErrorText("Overallスコアは121未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -120,11 +124,14 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_reading_score),
-                value = readingScore,
-                onValueChange = { readingScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.toefl_ibt_reading_score),
+                    value = readingScore,
+                    onValueChange = { readingScore = it }
+                )
+                if (readingScore >= 31) InputScoreRowErrorText("Readingスコアは31未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -137,11 +144,14 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_listening_score),
-                value = listeningScore,
-                onValueChange = { listeningScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.toefl_ibt_listening_score),
+                    value = listeningScore,
+                    onValueChange = { listeningScore = it }
+                )
+                if (listeningScore >= 31) InputScoreRowErrorText("Listeningスコアは31未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -154,11 +164,14 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_writing_score),
-                value = writingScore,
-                onValueChange = { writingScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.toefl_ibt_writing_score),
+                    value = writingScore,
+                    onValueChange = { writingScore = it }
+                )
+                if (writingScore >= 31) InputScoreRowErrorText("Writingスコアは31未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -171,11 +184,14 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.toefl_ibt_speaking_score),
-                value = speakingScore,
-                onValueChange = { speakingScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.toefl_ibt_speaking_score),
+                    value = speakingScore,
+                    onValueChange = { speakingScore = it }
+                )
+                if (speakingScore >= 31) InputScoreRowErrorText("Speakingスコアは31未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -220,50 +236,98 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ) {
                 SaveButton(
                     onClick = {
-                        when {
-                            savable -> {
-                                showError = ""
-                                showSaved = "記録しました。"
-                                viewModel.saveEikenIchijiValues(
-                                    overallScore,
-                                    readingScore,
-                                    listeningScore,
-                                    writingScore,
-                                    memoText
-                                )
-                            }
+//                        when {
+//                            savable -> {
+//                                showError = ""
+//                                showSaved = "記録しました。"
+//                                viewModel.saveEikenIchijiValues(
+//                                    overallScore,
+//                                    readingScore,
+//                                    listeningScore,
+//                                    writingScore,
+//                                    memoText
+//                                )
+//                            }
+//
+//                            selectedDateEmptyError -> {
+//                                showError = "受験日が記入されていません。"
+//                            }
+//
+//                            overallMaxScoreError -> {
+//                                showError = "Overallスコアは121未満である必要があります。"
+//                            }
+//
+//                            readingMaxScoreError -> {
+//                                showError = "Readingスコアは31未満である必要があります。"
+//                            }
+//
+//                            listeningMaxScoreError -> {
+//                                showError = "Listeningスコアは31未満である必要があります。"
+//                            }
+//
+//                            writingMaxScoreError -> {
+//                                showError = "Writingスコアは31未満である必要があります。"
+//                            }
+//
+//                            speakingMaxScoreError -> {
+//                                showError = "Speakingスコアは31未満である必要があります。"
+//                            }
+//                        }
 
-                            selectedDateEmptyError -> {
-                                showError = "受験日が記入されていません。"
+                        if (savable) {
+                            selectedDateEmptyErrorText = ""
+                            overallMaxScoreErrorText = ""
+                            readingMaxScoreErrorText = ""
+                            listeningMaxScoreErrorText = ""
+                            writingMaxScoreErrorText = ""
+                            speakingMaxScoreErrorText = ""
+                            showSaved = "記録しました。"
+                            viewModel.saveToeflIbtValues(
+                                overallScore,
+                                readingScore,
+                                listeningScore,
+                                writingScore,
+                                speakingScore,
+                                memoText)
+                        } else {
+                            if (selectedDateEmptyError) {
+                                selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
-
-                            overallMaxScoreError -> {
-                                showError = "Overallスコアは121未満である必要があります。"
+                            if (overallMaxScoreError) {
+                                overallMaxScoreErrorText = "Overallスコアは121未満である必要があります。"
                             }
-
-                            readingMaxScoreError -> {
-                                showError = "Readingスコアは31未満である必要があります。"
+                            if (readingMaxScoreError) {
+                                readingMaxScoreErrorText = "Readingスコアは31未満である必要があります。"
                             }
-
-                            listeningMaxScoreError -> {
-                                showError = "Listeningスコアは31未満である必要があります。"
+                            if (listeningMaxScoreError) {
+                                listeningMaxScoreErrorText = "Listeningスコアは31未満である必要があります。"
                             }
-
-                            writingMaxScoreError -> {
-                                showError = "Writingスコアは31未満である必要があります。"
+                            if (writingMaxScoreError) {
+                                writingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
                             }
-
-                            speakingMaxScoreError -> {
-                                showError = "Speakingスコアは31未満である必要があります。"
+                            if (speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
+                            }
+                            if (!overallMaxScoreError) {
+                                overallMaxScoreErrorText = ""
+                            }
+                            if (!readingMaxScoreError) {
+                                readingMaxScoreErrorText = ""
+                            }
+                            if (!listeningMaxScoreError) {
+                                listeningMaxScoreErrorText = ""
+                            }
+                            if (!writingMaxScoreError) {
+                                writingMaxScoreErrorText = ""
+                            }
+                            if (!speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = ""
                             }
                         }
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Box {
-                    ShowErrorText(showError)
-                    ShowSavedText(showSaved)
-                }
+                ShowSavedText(showSaved)
             }
         }
     }
@@ -321,6 +385,15 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
             color = Color.White,
         )
     }
+}
+
+@Composable
+private fun ShowSelectedDateEmptyErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -512,13 +585,12 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        if (value >= 121) InputScoreRowErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -544,8 +616,54 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
+}
+
+
+@Composable
+private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (value >= 31) InputScoreRowErrorText("")
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+    }
+}
+
+
+@Composable
+private fun InputScoreRowErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -607,13 +725,6 @@ private fun SaveButton(
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
-@Composable
-private fun ShowErrorText(error: String) {
-    Text(
-        text = error, fontSize = 16.sp, color = Color.Red
-    )
 }
 
 @Composable
