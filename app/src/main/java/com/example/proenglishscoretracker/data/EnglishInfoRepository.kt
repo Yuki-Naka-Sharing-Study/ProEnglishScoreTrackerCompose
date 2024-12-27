@@ -45,11 +45,11 @@ class EnglishInfoRepository {
 
     }
 
-    fun saveIeltsInfo(overallScore: Float,
-                      readingScore: Float,
-                      listeningScore: Float,
-                      writingScore: Float,
-                      speakingScore: Float,
+    fun saveIeltsInfo(overallScore: Int,
+                      readingScore: Int,
+                      listeningScore: Int,
+                      writingScore: Int,
+                      speakingScore: Int,
                       memoText: String
     ){
 

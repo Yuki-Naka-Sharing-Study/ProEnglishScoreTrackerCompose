@@ -52,11 +52,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by rememberSaveable { mutableStateOf("") }
-        var overallScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var readingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var listeningScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var writingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var speakingScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var overallScore by rememberSaveable { mutableIntStateOf(0) }
+        var readingScore by rememberSaveable { mutableIntStateOf(0) }
+        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
+        var writingScore by rememberSaveable { mutableIntStateOf(0) }
+        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
 
         //「ErrorText」系
@@ -69,11 +69,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         //「Error」系
         val selectedDateEmptyError = selectedDate.isEmpty()
-        val overallMaxScoreError = overallScore >= 36.1
-        val readingMaxScoreError = readingScore >= 9.1
-        val listeningMaxScoreError = listeningScore >= 9.1
-        val writingMaxScoreError = writingScore >= 9.1
-        val speakingMaxScoreError = writingScore >= 9.1
+        val overallMaxScoreError = overallScore >= 37
+        val readingMaxScoreError = readingScore >= 10
+        val listeningMaxScoreError = listeningScore >= 10
+        val writingMaxScoreError = writingScore >= 10
+        val speakingMaxScoreError = writingScore >= 10
         val memoEmptyError = memoText.isEmpty()
 
         Row {
@@ -493,7 +493,7 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun InputScoreRow(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
+private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -508,7 +508,7 @@ private fun InputScoreRow(placeholder: String, value: Float, onValueChange: (Flo
             onValueChange = { newValue ->
                 // 数字のみ受け付ける
                 if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toFloat())
+                    onValueChange(newValue.toInt())
                 }
             },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
