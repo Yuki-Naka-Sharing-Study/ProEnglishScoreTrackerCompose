@@ -71,7 +71,17 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var grammarAndVocabularyScore by rememberSaveable { mutableIntStateOf(0) }
         var pronunciationScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
-        var showError by remember { mutableStateOf("") }
+
+        //「ErrorText」系
+        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
+        var cseMaxScoreErrorText by remember { mutableStateOf("") }
+        var speakingMaxScoreErrorText by remember { mutableStateOf("") }
+        var shortSpeechMaxScoreErrorText by remember { mutableStateOf("") }
+        var interactionMaxScoreErrorText by remember { mutableStateOf("") }
+        var grammarAndVocabularyMaxScoreErrorText by remember { mutableStateOf("") }
+        var pronunciationMaxScoreErrorText by remember { mutableStateOf("") }
+
+        //「Error」系
         val selectedDateEmptyError = selectedDate.isEmpty()
         val cseMaxScoreError = cseScore >= 3401
         val speakingMaxScoreError = speakingScore >= 851
@@ -86,9 +96,12 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Column {
                 SelectDatePicker(LocalContext.current) { date ->
                     selectedDate = date
-                    showError = ""
+                    selectedDateEmptyErrorText = ""
                 }
-                Text("受験日: $selectedDate")
+                Text(selectedDate)
+                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                    selectedDateEmptyErrorText
+                )
             }
         }
 
@@ -113,11 +126,14 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             CSEScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.cse_score),
-                value = cseScore,
-                onValueChange = { cseScore = it }
-            )
+            Column {
+                CseInputScoreRow(
+                    placeholder = stringResource(id = R.string.cse_score),
+                    value = cseScore,
+                    onValueChange = { cseScore = it }
+                )
+                if (cseScore >= 3401) InputScoreRowErrorText("CSEスコアは3401未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -130,11 +146,14 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_niji_speaking_score),
-                value = speakingScore,
-                onValueChange = { speakingScore = it }
-            )
+            Column {
+                SpeakingScoreInputRow(
+                    placeholder = stringResource(id = R.string.eiken_niji_speaking_score),
+                    value = speakingScore,
+                    onValueChange = { speakingScore = it }
+                )
+                if (speakingScore >= 851) InputScoreRowErrorText("Speakingスコアは851未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -145,11 +164,14 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_72_dp)))
             ShortSpeechText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_niji_short_speech),
-                value = shortSpeechScore,
-                onValueChange = { shortSpeechScore = it }
-            )
+            Column {
+                SectionOfSpeakingScoreInputRow(
+                    placeholder = stringResource(id = R.string.eiken_niji_short_speech),
+                    value = shortSpeechScore,
+                    onValueChange = { shortSpeechScore = it }
+                )
+                if (shortSpeechScore >= 11) InputScoreRowErrorText("Short Speechスコアは11未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -160,11 +182,14 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_72_dp)))
             InteractionText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_niji_interaction),
-                value = interactionScore,
-                onValueChange = { interactionScore = it }
-            )
+            Column {
+                SectionOfSpeakingScoreInputRow(
+                    placeholder = stringResource(id = R.string.eiken_niji_interaction),
+                    value = interactionScore,
+                    onValueChange = { interactionScore = it }
+                )
+                if (interactionScore >= 11) InputScoreRowErrorText("Interactionスコアは11未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -175,11 +200,14 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_72_dp)))
             GrammarAndVocabularyText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_niji_grammar_and_vocabulary),
-                value = grammarAndVocabularyScore,
-                onValueChange = { grammarAndVocabularyScore = it }
-            )
+            Column {
+                SectionOfSpeakingScoreInputRow(
+                    placeholder = stringResource(id = R.string.eiken_niji_grammar_and_vocabulary),
+                    value = grammarAndVocabularyScore,
+                    onValueChange = { grammarAndVocabularyScore = it }
+                )
+                if (grammarAndVocabularyScore >= 11) InputScoreRowErrorText("Grammar and Vocabularyスコアは11未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -190,11 +218,14 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_72_dp)))
             PronunciationText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.eiken_niji_pronunciation),
-                value = pronunciationScore,
-                onValueChange = { pronunciationScore = it }
-            )
+            Column {
+                SectionOfSpeakingScoreInputRow(
+                    placeholder = stringResource(id = R.string.eiken_niji_pronunciation),
+                    value = pronunciationScore,
+                    onValueChange = { pronunciationScore = it }
+                )
+                if (pronunciationScore >= 11) InputScoreRowErrorText("Pronunciationスコアは11未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -241,57 +272,69 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             ) {
                 SaveButton(
                     onClick = {
-                        when {
-                            savable -> {
-                                showError = ""
-                                showSaved = "記録しました。"
-                                viewModel.saveEikenNijiValues(
-                                    cseScore,
-                                    speakingScore,
-                                    shortSpeechScore,
-                                    interactionScore,
-                                    grammarAndVocabularyScore,
-                                    pronunciationScore,
-                                    memoText
-                                )
+                        if (savable) {
+                            selectedDateEmptyErrorText = ""
+                            cseMaxScoreErrorText = ""
+                            speakingMaxScoreErrorText = ""
+                            shortSpeechMaxScoreErrorText = ""
+                            interactionMaxScoreErrorText = ""
+                            grammarAndVocabularyMaxScoreErrorText = ""
+                            pronunciationMaxScoreErrorText = ""
+                            showSaved = "記録しました。"
+                            viewModel.saveEikenNijiValues(
+                                cseScore,
+                                speakingScore,
+                                shortSpeechScore,
+                                interactionScore,
+                                grammarAndVocabularyScore,
+                                pronunciationScore,
+                                memoText
+                            )
+                        } else {
+                            if (selectedDateEmptyError) {
+                                selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
-
-                            selectedDateEmptyError -> {
-                                showError = "受験日が記入されていません。"
+                            if (cseMaxScoreError) {
+                                cseMaxScoreErrorText = "CSEスコアは3401未満である必要があります。"
                             }
-
-                            cseMaxScoreError -> {
-                                showError = "CSEスコアは3401未満である必要があります。"
+                            if (speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = "Speakingスコアは851未満である必要があります。"
                             }
-
-                            speakingMaxScoreError -> {
-                                showError = "Speakingスコアは851未満である必要があります。"
+                            if (shortSpeechMaxScoreError) {
+                                shortSpeechMaxScoreErrorText = "Short Speechスコアは11未満である必要があります。"
                             }
-
-                            shortSpeechMaxScoreError -> {
-                                showError = "Short Speechスコアは10未満である必要があります。"
+                            if (interactionMaxScoreError) {
+                                interactionMaxScoreErrorText = "Interactionスコアは11未満である必要があります。"
                             }
-
-                            interactionMaxScoreError -> {
-                                showError = "Interactionスコアは10未満である必要があります。"
+                            if (grammarAndVocabularyMaxScoreError) {
+                                grammarAndVocabularyMaxScoreErrorText = "Grammar and Vocabularyスコアは11未満である必要があります。"
                             }
-
-                            grammarAndVocabularyMaxScoreError -> {
-                                showError =
-                                    "Grammar and Vocabularyスコアは10未満である必要があります。"
+                            if (pronunciationMaxScoreError) {
+                                pronunciationMaxScoreErrorText = "Pronunciationスコアは11未満である必要があります。"
                             }
-
-                            pronunciationMaxScoreError -> {
-                                showError = "Pronunciationスコアは10未満である必要があります。"
+                            if (!cseMaxScoreError) {
+                                cseMaxScoreErrorText = ""
+                            }
+                            if (!speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = ""
+                            }
+                            if (!shortSpeechMaxScoreError) {
+                                shortSpeechMaxScoreErrorText = ""
+                            }
+                            if (!interactionMaxScoreError) {
+                                interactionMaxScoreErrorText = ""
+                            }
+                            if (!grammarAndVocabularyMaxScoreError) {
+                                grammarAndVocabularyMaxScoreErrorText = ""
+                            }
+                            if (!pronunciationMaxScoreError) {
+                                pronunciationMaxScoreErrorText= ""
                             }
                         }
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Box {
-                    ShowErrorText(showError)
-                    ShowSavedText(showSaved)
-                }
+                ShowSavedText(showSaved)
             }
         }
     }
@@ -349,6 +392,15 @@ private fun SelectDayTextPreview() {
     ProEnglishScoreTrackerTheme {
         SelectDayText("受験日を選択")
     }
+}
+
+@Composable
+private fun ShowSelectedDateEmptyErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -584,13 +636,12 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun CseInputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        if (value >= 3401) InputScoreRowErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -616,8 +667,87 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
+}
+
+@Composable
+private fun SpeakingScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (value >= 851) InputScoreRowErrorText("")
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+    }
+}
+
+@Composable
+private fun SectionOfSpeakingScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (value >= 11) InputScoreRowErrorText("")
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+    }
+}
+
+@Composable
+private fun InputScoreRowErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -679,13 +809,6 @@ private fun SaveButton(
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
-@Composable
-private fun ShowErrorText(error: String) {
-    Text(
-        text = error, fontSize = 16.sp, color = Color.Red
-    )
 }
 
 @Composable
