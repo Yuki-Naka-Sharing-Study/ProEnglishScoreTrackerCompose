@@ -106,7 +106,12 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     onValueChange = { writingScore = it }
                 )
                 if (writingScore >= 201) MaxScoreErrorText("Writingスコアは201未満である必要があります。")
-                if (writingScoreDivisionErrorText.isNotEmpty()) DivisionScoreErrorText(writingScoreDivisionErrorText)
+                if (!writingScoreDivisionError) {
+                    writingScoreDivisionErrorText = ""
+                    DivisionScoreErrorText(writingScoreDivisionErrorText)
+                } else {
+                    DivisionScoreErrorText(writingScoreDivisionErrorText)
+                }
             }
         }
 
@@ -127,7 +132,12 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     onValueChange = { speakingScore = it }
                 )
                 if (speakingScore >= 201) MaxScoreErrorText("Speakingスコアは201未満である必要があります。")
-                if (speakingScoreDivisionErrorText.isNotEmpty()) DivisionScoreErrorText(speakingScoreDivisionErrorText)
+                if (!speakingScoreDivisionError) {
+                    speakingScoreDivisionErrorText = ""
+                    DivisionScoreErrorText(speakingScoreDivisionErrorText)
+                } else {
+                    DivisionScoreErrorText(speakingScoreDivisionErrorText)
+                }
             }
         }
 
@@ -197,6 +207,12 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                             if (speakingScoreDivisionError) {
                                 speakingScoreDivisionErrorText = "Speakingスコアはである5の倍数である必要があります。"
+                            }
+                            if (!writingMaxScoreError) {
+                                writingMaxScoreErrorText = ""
+                            }
+                            if (!speakingMaxScoreError) {
+                                speakingMaxScoreErrorText = ""
                             }
                             if (!writingScoreDivisionError) {
                                 writingScoreDivisionErrorText = ""
