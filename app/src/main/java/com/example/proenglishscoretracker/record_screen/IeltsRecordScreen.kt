@@ -74,7 +74,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         val listeningMaxScoreError = listeningScore >= 10
         val writingMaxScoreError = writingScore >= 10
         val speakingMaxScoreError = writingScore >= 10
-        val memoEmptyError = memoText.isEmpty()
 
         Row {
             SelectDayText("")
@@ -105,11 +104,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             OverallScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.ielts_overall_score),
-                value = overallScore,
-                onValueChange = { overallScore = it }
-            )
+            Column {
+                OverallScoreInputRow(
+                    placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
+                    value = overallScore,
+                    onValueChange = { overallScore = it }
+                )
+                if (overallScore >= 37) InputScoreRowErrorText("Overallスコアは37未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -122,11 +124,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.ielts_reading_score),
-                value = readingScore,
-                onValueChange = { readingScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.ielts_reading_score),
+                    value = readingScore,
+                    onValueChange = { readingScore = it }
+                )
+                if (readingScore >= 10) InputScoreRowErrorText("Readingスコアは10未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -139,11 +144,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.ielts_listening_score),
-                value = listeningScore,
-                onValueChange = { listeningScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.ielts_listening_score),
+                    value = listeningScore,
+                    onValueChange = { listeningScore = it }
+                )
+                if (listeningScore >= 10) InputScoreRowErrorText("Listeningスコアは10未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -156,11 +164,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.ielts_writing_score),
-                value = writingScore,
-                onValueChange = { writingScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.ielts_writing_score),
+                    value = writingScore,
+                    onValueChange = { writingScore = it }
+                )
+                if (writingScore >= 10) InputScoreRowErrorText("Writingスコアは10未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -173,11 +184,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputScoreRow(
-                placeholder = stringResource(id = R.string.ielts_speaking_score),
-                value = speakingScore,
-                onValueChange = { speakingScore = it }
-            )
+            Column {
+                RLWSScoreInputRow(
+                    placeholder = stringResource(id = R.string.ielts_speaking_score),
+                    value = speakingScore,
+                    onValueChange = { speakingScore = it }
+                )
+                if (speakingScore >= 10) InputScoreRowErrorText("Speakingスコアは10未満である必要があります。")
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -197,17 +211,18 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val enableChecker = !selectedDateEmptyError &&
-                overallScore.toString().isNotBlank() &&
+        val savable = overallScore.toString().isNotBlank() &&
                 readingScore.toString().isNotBlank() &&
                 listeningScore.toString().isNotBlank() &&
                 writingScore.toString().isNotBlank() &&
                 speakingScore.toString().isNotBlank() &&
-                !memoEmptyError &&
+                !selectedDateEmptyError &&
                 !readingMaxScoreError &&
                 !listeningMaxScoreError &&
                 !writingMaxScoreError &&
                 !speakingMaxScoreError
+
+        var showSaved by remember { mutableStateOf("") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -216,29 +231,60 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         ) {
             SaveButton(
                 onClick = {
-                    viewModel.saveIeltsValues(
-                        overallScore,
-                        readingScore,
-                        listeningScore,
-                        writingScore,
-                        speakingScore,
-                        memoText
-                    )
-                },
-                errorMessage = when {
-                    selectedDateEmptyError -> "受験日が記入されていません。"
-                    overallMaxScoreError -> "Overallスコアは36.1未満である必要があります。"
-                    readingMaxScoreError -> "Readingスコアは9.1未満である必要があります。"
-                    listeningMaxScoreError -> "Listeningスコアは9.1未満である必要があります。"
-                    writingMaxScoreError -> "Writingスコアは9.1未満である必要があります。"
-                    speakingMaxScoreError -> "Speakingスコアは9.1未満である必要があります。"
-                    memoEmptyError -> "メモが記入されていません。"
-                    else -> {
-                        ""
+                    if (savable) {
+                        selectedDateEmptyErrorText = ""
+                        overallMaxScoreErrorText = ""
+                        readingMaxScoreErrorText = ""
+                        listeningMaxScoreErrorText = ""
+                        writingMaxScoreErrorText = ""
+                        speakingMaxScoreErrorText = ""
+                        showSaved = "記録しました。"
+                        viewModel.saveIeltsValues(
+                            overallScore,
+                            readingScore,
+                            listeningScore,
+                            writingScore,
+                            speakingScore,
+                            memoText)
+                    } else {
+                        if (selectedDateEmptyError) {
+                            selectedDateEmptyErrorText = "受験日が記入されていません。"
+                        }
+                        if (overallMaxScoreError) {
+                            overallMaxScoreErrorText = "Overallスコアは121未満である必要があります。"
+                        }
+                        if (readingMaxScoreError) {
+                            readingMaxScoreErrorText = "Readingスコアは31未満である必要があります。"
+                        }
+                        if (listeningMaxScoreError) {
+                            listeningMaxScoreErrorText = "Listeningスコアは31未満である必要があります。"
+                        }
+                        if (writingMaxScoreError) {
+                            writingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
+                        }
+                        if (speakingMaxScoreError) {
+                            speakingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
+                        }
+                        if (!overallMaxScoreError) {
+                            overallMaxScoreErrorText = ""
+                        }
+                        if (!readingMaxScoreError) {
+                            readingMaxScoreErrorText = ""
+                        }
+                        if (!listeningMaxScoreError) {
+                            listeningMaxScoreErrorText = ""
+                        }
+                        if (!writingMaxScoreError) {
+                            writingMaxScoreErrorText = ""
+                        }
+                        if (!speakingMaxScoreError) {
+                            speakingMaxScoreErrorText = ""
+                        }
                     }
                 },
-                enabled = enableChecker
             )
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+            ShowSavedText(showSaved)
         }
     }
 }
@@ -493,13 +539,12 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        if (value >= 121) InputScoreRowErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -525,8 +570,52 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
     }
+}
+
+@Composable
+private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (value >= 10) InputScoreRowErrorText("")
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
+                // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+    }
+}
+
+@Composable
+private fun InputScoreRowErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        maxLines = 1,
+        color = Color.Red
+    )
 }
 
 @Composable
@@ -563,28 +652,19 @@ private fun InputMemoRow(placeholder: String, value: String, onValueChange: (Str
 
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit = {},
-    errorMessage: String,
-    enabled: Boolean = true
+    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
-            onClick = { showToast(context, "記録しました") },
+            onClick = onClick,
             colors = ButtonDefaults.buttonColors(Color.Blue),
             shape = RoundedCornerShape(8.dp),
-            enabled = enabled,
         ) {
             Text(stringResource(id = R.string.record), color = Color.White)
         }
-        Text(errorMessage, color = Color.Red)
     }
-}
-
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 //@Preview(showBackground = true)
@@ -594,3 +674,14 @@ private fun showToast(context: android.content.Context, message: String) {
 //        SaveButton()
 //    }
 //}
+
+private fun showToast(context: android.content.Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+}
+
+@Composable
+private fun ShowSavedText(saved: String) {
+    Text(
+        text = saved, fontSize = 16.sp, color = Color.Green
+    )
+}
