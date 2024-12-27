@@ -73,13 +73,13 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var memoText by rememberSaveable { mutableStateOf("") }
 
         //「ErrorText」系
-        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
-        var cseMaxScoreErrorText by remember { mutableStateOf("") }
-        var speakingMaxScoreErrorText by remember { mutableStateOf("") }
-        var shortSpeechMaxScoreErrorText by remember { mutableStateOf("") }
-        var interactionMaxScoreErrorText by remember { mutableStateOf("") }
-        var grammarAndVocabularyMaxScoreErrorText by remember { mutableStateOf("") }
-        var pronunciationMaxScoreErrorText by remember { mutableStateOf("") }
+        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
+        var cseMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var shortSpeechMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var interactionMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var grammarAndVocabularyMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var pronunciationMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
 
         //「Error」系
         val selectedDateEmptyError = selectedDate.isEmpty()

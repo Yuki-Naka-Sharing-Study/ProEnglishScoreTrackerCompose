@@ -57,11 +57,11 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         var memoText by rememberSaveable { mutableStateOf("") }
 
         //「ErrorText」系
-        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
-        var readingMaxScoreErrorText by remember { mutableStateOf("") }
-        var listeningMaxScoreErrorText by remember { mutableStateOf("") }
-        var readingScoreDivisionErrorText by remember { mutableStateOf("") }
-        var listeningScoreDivisionErrorText by remember { mutableStateOf("") }
+        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
+        var readingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var listeningMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var readingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
+        var listeningScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
 
         //「Error」系
         val selectedDateEmptyError = selectedDate.isEmpty()

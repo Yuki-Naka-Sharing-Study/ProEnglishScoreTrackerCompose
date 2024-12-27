@@ -60,12 +60,12 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         var memoText by rememberSaveable { mutableStateOf("") }
 
         //「ErrorText」系
-        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
-        var overallMaxScoreErrorText by remember { mutableStateOf("") }
-        var readingMaxScoreErrorText by remember { mutableStateOf("") }
-        var listeningMaxScoreErrorText by remember { mutableStateOf("") }
-        var writingMaxScoreErrorText by remember { mutableStateOf("") }
-        var speakingMaxScoreErrorText by remember { mutableStateOf("") }
+        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
+        var overallMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var readingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var listeningMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var writingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
+        var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
 
         //「Error」系
         val selectedDateEmptyError = selectedDate.isEmpty()
