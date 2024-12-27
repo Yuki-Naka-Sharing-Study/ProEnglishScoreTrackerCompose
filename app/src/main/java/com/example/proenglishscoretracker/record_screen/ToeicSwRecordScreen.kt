@@ -101,7 +101,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                InputScoreRow(
+                WritingScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_sw_writing_score),
                     value = writingScore,
                     onValueChange = { writingScore = it }
@@ -120,7 +120,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                InputScoreRow(
+                SpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_sw_speaking_score),
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
@@ -412,7 +412,7 @@ private fun MemoTextFieldPreview() {
 }
 
 @Composable
-private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun WritingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     var isError by rememberSaveable { mutableStateOf(false) }
     var focusState by rememberSaveable { mutableStateOf(false) }
     val showError = value % 5 != 0 && !focusState
@@ -420,7 +420,6 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -453,10 +452,59 @@ private fun InputScoreRow(placeholder: String, value: Int, onValueChange: (Int) 
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("スコアは5の倍数である必要があります。")
+            DivisionScoreErrorText("Writingスコアは5の倍数である必要があります。")
         }
         if (value >= 201) {
-            MaxScoreErrorText("Readingスコアは201未満である必要があります。")
+            MaxScoreErrorText("Writingスコアは201未満である必要があります。")
+        }
+    }
+}
+
+@Composable
+private fun SpeakingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+    var isError by rememberSaveable { mutableStateOf(false) }
+    var focusState by rememberSaveable { mutableStateOf(false) }
+    val showError = value % 5 != 0 && !focusState
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged {
+                    focusState = it.isFocused
+                    if (!it.isFocused && value % 5 != 0) {
+                        isError = true
+                    }
+                },
+            value = value.toString(),
+            onValueChange = { newValue ->
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        if (showError) {
+            DivisionScoreErrorText("Speakingスコアは5の倍数である必要があります。")
+        }
+        if (value >= 201) {
+            MaxScoreErrorText("Speakingスコアは201未満である必要があります。")
         }
     }
 }
