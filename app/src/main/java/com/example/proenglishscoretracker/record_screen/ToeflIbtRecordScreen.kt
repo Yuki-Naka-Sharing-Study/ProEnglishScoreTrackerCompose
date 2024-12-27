@@ -559,7 +559,6 @@ private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange:
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value.toString(),
             onValueChange = { newValue ->
-                // 数字のみ受け付ける
                 if (newValue.all { it.isDigit() }) {
                     onValueChange(newValue.toInt())
                 }
@@ -594,7 +593,6 @@ private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (I
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
             value = value.toString(),
             onValueChange = { newValue ->
-                // 数字のみ受け付ける
                 if (newValue.all { it.isDigit() }) {
                     onValueChange(newValue.toInt())
                 }
