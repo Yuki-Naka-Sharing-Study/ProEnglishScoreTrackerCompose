@@ -109,7 +109,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = overallScore,
                     onValueChange = { overallScore = it }
                 )
-                if (overallScore >= 121) ErrorText("Overallスコアは121未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (overallScore >= 121) {
+                ErrorText("Overallスコアは121未満である必要があります。")
             }
         }
 
