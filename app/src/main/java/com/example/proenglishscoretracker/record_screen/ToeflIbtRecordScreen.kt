@@ -6,7 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -202,7 +201,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputMemoRow(
+            InputMemoField(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
                 onValueChange = { memoText = it }
@@ -606,7 +605,7 @@ private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (I
 }
 
 @Composable
-private fun InputMemoRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun InputMemoField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
