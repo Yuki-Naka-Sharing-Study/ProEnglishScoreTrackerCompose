@@ -99,7 +99,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedDateEmptyErrorText = ""
                 }
                 Text(selectedDate)
-                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                if (selectedDate.isEmpty()) ErrorText(
                     selectedDateEmptyErrorText
                 )
             }
@@ -132,7 +132,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = cseScore,
                     onValueChange = { cseScore = it }
                 )
-                if (cseScore >= 3401) InputScoreRowErrorText("CSEスコアは3401未満である必要があります。")
+                if (cseScore >= 3401) ErrorText("CSEスコアは3401未満である必要があります。")
             }
         }
 
@@ -152,7 +152,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
                 )
-                if (speakingScore >= 851) InputScoreRowErrorText("Speakingスコアは851未満である必要があります。")
+                if (speakingScore >= 851) ErrorText("Speakingスコアは851未満である必要があります。")
             }
         }
 
@@ -170,7 +170,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = shortSpeechScore,
                     onValueChange = { shortSpeechScore = it }
                 )
-                if (shortSpeechScore >= 11) InputScoreRowErrorText("Short Speechスコアは11未満である必要があります。")
+                if (shortSpeechScore >= 11) ErrorText("Short Speechスコアは11未満である必要があります。")
             }
         }
 
@@ -188,7 +188,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = interactionScore,
                     onValueChange = { interactionScore = it }
                 )
-                if (interactionScore >= 11) InputScoreRowErrorText("Interactionスコアは11未満である必要があります。")
+                if (interactionScore >= 11) ErrorText("Interactionスコアは11未満である必要があります。")
             }
         }
 
@@ -206,7 +206,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = grammarAndVocabularyScore,
                     onValueChange = { grammarAndVocabularyScore = it }
                 )
-                if (grammarAndVocabularyScore >= 11) InputScoreRowErrorText("Grammar and Vocabularyスコアは11未満である必要があります。")
+                if (grammarAndVocabularyScore >= 11) ErrorText("Grammar and Vocabularyスコアは11未満である必要があります。")
             }
         }
 
@@ -224,7 +224,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = pronunciationScore,
                     onValueChange = { pronunciationScore = it }
                 )
-                if (pronunciationScore >= 11) InputScoreRowErrorText("Pronunciationスコアは11未満である必要があります。")
+                if (pronunciationScore >= 11) ErrorText("Pronunciationスコアは11未満である必要があります。")
             }
         }
 
@@ -392,15 +392,6 @@ private fun SelectDayTextPreview() {
     ProEnglishScoreTrackerTheme {
         SelectDayText("受験日を選択")
     }
-}
-
-@Composable
-private fun ShowSelectedDateEmptyErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        color = Color.Red
-    )
 }
 
 @Composable
@@ -639,7 +630,7 @@ private fun CseInputScoreRow(placeholder: String, value: Int, onValueChange: (In
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 3401) InputScoreRowErrorText("")
+        if (value >= 3401) ErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -674,7 +665,7 @@ private fun SpeakingScoreInputRow(placeholder: String, value: Int, onValueChange
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 851) InputScoreRowErrorText("")
+        if (value >= 851) ErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -708,7 +699,7 @@ private fun SectionOfSpeakingScoreInputRow(placeholder: String, value: Int, onVa
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 11) InputScoreRowErrorText("")
+        if (value >= 11) ErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -734,16 +725,6 @@ private fun SectionOfSpeakingScoreInputRow(placeholder: String, value: Int, onVa
             )
         )
     }
-}
-
-@Composable
-private fun InputScoreRowErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
 }
 
 @Composable
@@ -802,6 +783,16 @@ private fun SaveButton(
 //        SaveButton()
 //    }
 //}
+
+@Composable
+private fun ErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red,
+        maxLines = 1,
+    )
+}
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
