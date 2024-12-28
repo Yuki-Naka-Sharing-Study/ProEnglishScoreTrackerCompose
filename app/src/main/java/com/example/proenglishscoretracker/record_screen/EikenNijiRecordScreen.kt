@@ -158,7 +158,13 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
                 )
-                if (speakingScore >= 851) ErrorText("Speakingスコアは851未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (speakingScore >= 851) {
+                ErrorText("Speakingスコアは851未満である必要があります。")
             }
         }
 
