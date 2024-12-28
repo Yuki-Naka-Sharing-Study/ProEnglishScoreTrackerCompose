@@ -204,7 +204,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = writingScore,
                     onValueChange = { writingScore = it }
                 )
-                if (writingScore >= 851) ErrorText("Writingスコアは851未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+            if (writingScore >= 851) {
+                ErrorText("Writingスコアは851未満である必要があります。")
             }
         }
 
