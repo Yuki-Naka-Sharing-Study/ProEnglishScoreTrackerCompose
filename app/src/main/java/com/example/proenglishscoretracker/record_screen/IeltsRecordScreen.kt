@@ -190,7 +190,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         var focusStateOfListening by rememberSaveable { mutableStateOf(false) }
-        val showListeningScoreDivisionError = listeningScore % 5.0 != 0.0 && !focusStateOfListening
+        val showListeningScoreDivisionError = listeningScore % 0.5 != 0.0 && !focusStateOfListening
 
         Row(
             verticalAlignment = Alignment.CenterVertically
