@@ -92,7 +92,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-
         var focusStateOfReading by rememberSaveable { mutableStateOf(false) }
         val showReadingScoreDivisionError = readingScore % 5 != 0 && !focusStateOfReading
 
@@ -133,6 +132,9 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+        var focusStateOfListening by rememberSaveable { mutableStateOf(false) }
+        val showListeningScoreDivisionError = listeningScore % 5 != 0 && !focusStateOfListening
 
         Row(
             verticalAlignment = Alignment.CenterVertically
