@@ -116,7 +116,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             OverallScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                OverallScoreInputRow(
+                OverallScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_overall_score),
                     value = overallScore,
                     onValueChange = { overallScore = it }
@@ -591,7 +591,7 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun OverallScoreInputRow(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
+private fun OverallScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
     var isError by rememberSaveable { mutableStateOf(false) }
     var focusState by rememberSaveable { mutableStateOf(false) }
     val showError = value % 0.5 != 0.0 && !focusState
