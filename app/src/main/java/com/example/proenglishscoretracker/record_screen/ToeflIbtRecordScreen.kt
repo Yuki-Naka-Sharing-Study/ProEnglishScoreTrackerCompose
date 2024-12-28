@@ -104,7 +104,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             OverallScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                OverallScoreInputRow(
+                OverallScoreInputField(
                     placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
                     value = overallScore,
                     onValueChange = { overallScore = it }
@@ -537,7 +537,7 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun OverallScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
