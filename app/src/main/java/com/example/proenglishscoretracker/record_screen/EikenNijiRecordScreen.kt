@@ -182,7 +182,13 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = shortSpeechScore,
                     onValueChange = { shortSpeechScore = it }
                 )
-                if (shortSpeechScore >= 11) ErrorText("Short Speechスコアは11未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_72_dp)))
+            if (shortSpeechScore >= 11) {
+                ErrorText("Short Speechスコアは11未満である必要があります。")
             }
         }
 
