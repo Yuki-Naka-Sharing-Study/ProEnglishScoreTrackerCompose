@@ -126,7 +126,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = cseScore,
                     onValueChange = { cseScore = it }
                 )
-                if (cseScore >= 2551) ErrorText("CSEスコアは2551未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+            if (cseScore >= 2551) {
+                ErrorText("CSEスコアは2551未満である必要があります。")
             }
         }
 
