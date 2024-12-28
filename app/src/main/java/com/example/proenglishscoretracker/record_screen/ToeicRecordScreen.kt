@@ -93,8 +93,8 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
 
-        var focusState by rememberSaveable { mutableStateOf(false) }
-        val showError = readingScore % 5 != 0 && !focusState
+        var focusStateOfReading by rememberSaveable { mutableStateOf(false) }
+        val showError = readingScore % 5 != 0 && !focusStateOfReading
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -110,7 +110,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = readingScore,
                     onValueChange = { readingScore = it },
                     onFocusChanged = {
-                        focusState = it
+                        focusStateOfReading = it
                     }
                 )
             }
@@ -519,7 +519,6 @@ private fun ReadingScoreInputField(
                 unfocusedBorderColor = Color.Gray
             )
         )
-//        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
