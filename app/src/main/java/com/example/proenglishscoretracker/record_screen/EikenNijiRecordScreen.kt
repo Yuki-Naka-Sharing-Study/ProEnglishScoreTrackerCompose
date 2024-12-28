@@ -165,7 +165,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             ShortSpeechText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Column {
-                SectionOfSpeakingScoreInputRow(
+                SectionOfSpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.eiken_niji_short_speech),
                     value = shortSpeechScore,
                     onValueChange = { shortSpeechScore = it }
@@ -183,7 +183,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             InteractionText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Column {
-                SectionOfSpeakingScoreInputRow(
+                SectionOfSpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.eiken_niji_interaction),
                     value = interactionScore,
                     onValueChange = { interactionScore = it }
@@ -201,7 +201,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             GrammarAndVocabularyText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Column {
-                SectionOfSpeakingScoreInputRow(
+                SectionOfSpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.eiken_niji_grammar_and_vocabulary),
                     value = grammarAndVocabularyScore,
                     onValueChange = { grammarAndVocabularyScore = it }
@@ -219,7 +219,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             PronunciationText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Column {
-                SectionOfSpeakingScoreInputRow(
+                SectionOfSpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.eiken_niji_pronunciation),
                     value = pronunciationScore,
                     onValueChange = { pronunciationScore = it }
@@ -694,7 +694,7 @@ private fun SpeakingScoreInputRow(placeholder: String, value: Int, onValueChange
 }
 
 @Composable
-private fun SectionOfSpeakingScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun SectionOfSpeakingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
