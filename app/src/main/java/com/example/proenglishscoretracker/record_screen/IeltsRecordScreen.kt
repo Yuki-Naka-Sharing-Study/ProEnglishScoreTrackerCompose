@@ -878,16 +878,6 @@ private fun MemoInputField(placeholder: String, value: String, onValueChange: (S
 }
 
 @Composable
-private fun InputScoreRowErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
-}
-
-@Composable
 private fun SaveButton(
     onClick: () -> Unit
 ) {
