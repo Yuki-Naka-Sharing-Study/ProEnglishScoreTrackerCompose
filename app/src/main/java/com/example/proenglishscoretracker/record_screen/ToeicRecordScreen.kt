@@ -148,7 +148,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 ListeningScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_listening_score),
                     value = listeningScore,
-                    onValueChange = { listeningScore = it }
+                    onValueChange = { listeningScore = it },
+                    onFocusChanged = {
+                        focusStateOfListening = it
+                    }
                 )
             }
         }
@@ -525,11 +528,12 @@ private fun ReadingScoreInputField(
 }
 
 @Composable
-private fun ListeningScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 5 != 0 && !focusState
-
+private fun ListeningScoreInputField(
+    placeholder: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -538,10 +542,7 @@ private fun ListeningScoreInputField(placeholder: String, value: Int, onValueCha
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5 != 0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -563,13 +564,6 @@ private fun ListeningScoreInputField(placeholder: String, value: Int, onValueCha
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            ErrorText("Listeningスコアは5の倍数である必要があります。")
-        }
-        if (value >= 496) {
-            ErrorText("Listeningスコアは496未満である必要があります。")
-        }
     }
 }
 
