@@ -84,7 +84,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedDateEmptyErrorText = ""
                 }
                 Text(selectedDate)
-                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                if (selectedDate.isEmpty()) ErrorText(
                     selectedDateEmptyErrorText
                 )
             }
@@ -110,7 +110,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = overallScore,
                     onValueChange = { overallScore = it }
                 )
-                if (overallScore >= 121) InputScoreRowErrorText("Overallスコアは121未満である必要があります。")
+                if (overallScore >= 121) ErrorText("Overallスコアは121未満である必要があります。")
             }
         }
 
@@ -130,7 +130,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = readingScore,
                     onValueChange = { readingScore = it }
                 )
-                if (readingScore >= 31) InputScoreRowErrorText("Readingスコアは31未満である必要があります。")
+                if (readingScore >= 31) ErrorText("Readingスコアは31未満である必要があります。")
             }
         }
 
@@ -150,7 +150,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
                 )
-                if (listeningScore >= 31) InputScoreRowErrorText("Listeningスコアは31未満である必要があります。")
+                if (listeningScore >= 31) ErrorText("Listeningスコアは31未満である必要があります。")
             }
         }
 
@@ -170,7 +170,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = writingScore,
                     onValueChange = { writingScore = it }
                 )
-                if (writingScore >= 31) InputScoreRowErrorText("Writingスコアは31未満である必要があります。")
+                if (writingScore >= 31) ErrorText("Writingスコアは31未満である必要があります。")
             }
         }
 
@@ -190,7 +190,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
                 )
-                if (speakingScore >= 31) InputScoreRowErrorText("Speakingスコアは31未満である必要があります。")
+                if (speakingScore >= 31) ErrorText("Speakingスコアは31未満である必要があります。")
             }
         }
 
@@ -347,15 +347,6 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
             color = Color.White,
         )
     }
-}
-
-@Composable
-private fun ShowSelectedDateEmptyErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        color = Color.Red
-    )
 }
 
 @Composable
@@ -552,7 +543,7 @@ private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange:
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 121) InputScoreRowErrorText("")
+        if (value >= 121) ErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -586,7 +577,7 @@ private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (I
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 31) InputScoreRowErrorText("")
+        if (value >= 31) ErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -612,16 +603,6 @@ private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (I
             )
         )
     }
-}
-
-@Composable
-private fun InputScoreRowErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
 }
 
 @Composable
@@ -680,6 +661,16 @@ private fun SaveButton(
 //        SaveButton()
 //    }
 //}
+
+@Composable
+private fun ErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red,
+        maxLines = 1,
+    )
+}
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
