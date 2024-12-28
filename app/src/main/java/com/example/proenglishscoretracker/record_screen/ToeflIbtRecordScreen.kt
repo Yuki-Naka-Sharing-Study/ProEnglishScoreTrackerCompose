@@ -124,7 +124,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                RLWSScoreInputField(
                     placeholder = stringResource(id = R.string.toefl_ibt_reading_score),
                     value = readingScore,
                     onValueChange = { readingScore = it }
@@ -144,7 +144,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                RLWSScoreInputField(
                     placeholder = stringResource(id = R.string.toefl_ibt_listening_score),
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
@@ -164,7 +164,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                RLWSScoreInputField(
                     placeholder = stringResource(id = R.string.toefl_ibt_writing_score),
                     value = writingScore,
                     onValueChange = { writingScore = it }
@@ -184,7 +184,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                RLWSScoreInputRow(
+                RLWSScoreInputField(
                     placeholder = stringResource(id = R.string.toefl_ibt_speaking_score),
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
@@ -571,7 +571,7 @@ private fun OverallScoreInputRow(placeholder: String, value: Int, onValueChange:
 }
 
 @Composable
-private fun RLWSScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun RLWSScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
