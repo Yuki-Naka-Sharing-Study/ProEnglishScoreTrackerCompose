@@ -127,7 +127,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             CSEScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                CseInputScoreRow(
+                CseInputScoreField(
                     placeholder = stringResource(id = R.string.cse_score),
                     value = cseScore,
                     onValueChange = { cseScore = it }
@@ -625,7 +625,7 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun CseInputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun CseInputScoreField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
