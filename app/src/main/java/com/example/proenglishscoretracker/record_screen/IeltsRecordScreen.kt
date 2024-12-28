@@ -95,7 +95,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedDateEmptyErrorText = ""
                 }
                 Text(selectedDate)
-                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                if (selectedDate.isEmpty()) ErrorText(
                     selectedDateEmptyErrorText
                 )
             }
@@ -633,10 +633,10 @@ private fun OverallScoreInputRow(placeholder: String, value: Float, onValueChang
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (value >= 36.1) {
-            MaxScoreErrorText("Overallスコアは36.1未満である必要があります。")
+            ErrorText("Overallスコアは36.1未満である必要があります。")
         }
         if (showError) {
-            DivisionScoreErrorText("スコアは0.5の倍数である必要があります。")
+            ErrorText("スコアは0.5の倍数である必要があります。")
         }
     }
 }
@@ -684,10 +684,10 @@ private fun ReadingScoreInputField(placeholder: String, value: Float, onValueCha
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Readingスコアは0.5の倍数である必要があります。")
+            ErrorText("Readingスコアは0.5の倍数である必要があります。")
         }
         if (value >= 9.1) {
-            MaxScoreErrorText("Readingスコアは9.1未満である必要があります。")
+            ErrorText("Readingスコアは9.1未満である必要があります。")
         }
     }
 }
@@ -735,10 +735,10 @@ private fun ListeningScoreInputField(placeholder: String, value: Float, onValueC
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Listeningスコアは0.5の倍数である必要があります。")
+            ErrorText("Listeningスコアは0.5の倍数である必要があります。")
         }
         if (value >= 9.1) {
-            MaxScoreErrorText("Listeningスコアは9.1未満である必要があります。")
+            ErrorText("Listeningスコアは9.1未満である必要があります。")
         }
     }
 }
@@ -786,10 +786,10 @@ private fun WritingScoreInputField(placeholder: String, value: Float, onValueCha
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Writingスコアは0.5の倍数である必要があります。")
+            ErrorText("Writingスコアは0.5の倍数である必要があります。")
         }
         if (value >= 9.1) {
-            MaxScoreErrorText("Writingスコアは9.1未満である必要があります。")
+            ErrorText("Writingスコアは9.1未満である必要があります。")
         }
     }
 }
@@ -837,10 +837,10 @@ private fun SpeakingScoreInputField(placeholder: String, value: Float, onValueCh
         )
         Spacer(modifier = Modifier.height(8.dp))
         if (showError) {
-            DivisionScoreErrorText("Speakingスコアは0.5の倍数である必要があります。")
+            ErrorText("Speakingスコアは0.5の倍数である必要があります。")
         }
         if (value >= 9.1) {
-            MaxScoreErrorText("Speakingスコアは9.1未満である必要があります。")
+            ErrorText("Speakingスコアは9.1未満である必要があります。")
         }
     }
 }
@@ -888,26 +888,6 @@ private fun InputScoreRowErrorText(error: String) {
 }
 
 @Composable
-private fun MaxScoreErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
-}
-
-@Composable
-private fun DivisionScoreErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
-}
-
-@Composable
 private fun SaveButton(
     onClick: () -> Unit
 ) {
@@ -931,6 +911,16 @@ private fun SaveButton(
 //        SaveButton()
 //    }
 //}
+
+@Composable
+private fun ErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red,
+        maxLines = 1,
+    )
+}
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
