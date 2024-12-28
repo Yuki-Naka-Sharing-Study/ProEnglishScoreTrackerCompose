@@ -116,13 +116,20 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             }
         }
 
-        if (showError) {
-            ErrorText(
-                "Readingスコアは5の倍数である必要があります。"
-            )
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (readingScore >= 496) {
+                ErrorText("Readingスコアは496未満である必要があります。")
+            }
         }
-        if (readingScore >= 496) {
-            ErrorText("Readingスコアは496未満である必要があります。")
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (showError) {
+                ErrorText(
+                    "Readingスコアは5の倍数である必要があります。"
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -512,7 +519,7 @@ private fun ReadingScoreInputField(
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
+//        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
