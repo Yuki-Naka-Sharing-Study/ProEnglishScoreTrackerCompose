@@ -230,6 +230,9 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+        var focusStateOfWriting by rememberSaveable { mutableStateOf(false) }
+        val showWritingScoreDivisionError = writingScore % 5.0 != 0.0 && !focusStateOfWriting
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -242,7 +245,26 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 WritingScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_writing_score),
                     value = writingScore,
-                    onValueChange = { writingScore = it }
+                    onValueChange = { writingScore = it },
+                    onFocusChanged = {
+                        focusStateOfWriting = it
+                    }
+                )
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (writingScore >= 9.1) {
+                ErrorText("Writingスコアは9.1未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (showWritingScoreDivisionError) {
+                ErrorText(
+                    "Writingスコアは0.5の倍数である必要があります。"
                 )
             }
         }
@@ -774,11 +796,12 @@ private fun ListeningScoreInputField(
 }
 
 @Composable
-private fun WritingScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 0.5 != 0.0 && !focusState
-
+private fun WritingScoreInputField(
+    placeholder: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -787,10 +810,7 @@ private fun WritingScoreInputField(placeholder: String, value: Float, onValueCha
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5.0 != 0.0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -814,13 +834,6 @@ private fun WritingScoreInputField(placeholder: String, value: Float, onValueCha
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            ErrorText("Writingスコアは0.5の倍数である必要があります。")
-        }
-        if (value >= 9.1) {
-            ErrorText("Writingスコアは9.1未満である必要があります。")
-        }
     }
 }
 
