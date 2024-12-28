@@ -109,6 +109,9 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+        var focusStateOfOverall by rememberSaveable { mutableStateOf(false) }
+        val showOverallScoreDivisionError = overallScore % 5.0 != 0.0 && !focusStateOfOverall
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -119,7 +122,26 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 OverallScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_overall_score),
                     value = overallScore,
-                    onValueChange = { overallScore = it }
+                    onValueChange = { overallScore = it },
+                    onFocusChanged = {
+                        focusStateOfOverall = it
+                    }
+                )
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (overallScore >= 36.1) {
+                ErrorText("Overallスコアは36.1未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (showOverallScoreDivisionError) {
+                ErrorText(
+                    "Overallスコアは0.5の倍数である必要があります。"
                 )
             }
         }
@@ -582,11 +604,12 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun OverallScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 0.5 != 0.0 && !focusState
-
+private fun OverallScoreInputField(
+    placeholder: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -595,10 +618,7 @@ private fun OverallScoreInputField(placeholder: String, value: Float, onValueCha
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5.0 != 0.0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -622,13 +642,6 @@ private fun OverallScoreInputField(placeholder: String, value: Float, onValueCha
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (value >= 36.1) {
-            ErrorText("Overallスコアは36.1未満である必要があります。")
-        }
-        if (showError) {
-            ErrorText("スコアは0.5の倍数である必要があります。")
-        }
     }
 }
 
