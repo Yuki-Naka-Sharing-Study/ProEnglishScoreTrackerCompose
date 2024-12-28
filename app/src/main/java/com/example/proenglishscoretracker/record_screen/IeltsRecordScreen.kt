@@ -148,6 +148,9 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+        var focusStateOfReading by rememberSaveable { mutableStateOf(false) }
+        val showReadingScoreDivisionError = readingScore % 5.0 != 0.0 && !focusStateOfReading
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -160,7 +163,26 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 ReadingScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_reading_score),
                     value = readingScore,
-                    onValueChange = { readingScore = it }
+                    onValueChange = { readingScore = it },
+                    onFocusChanged = {
+                        focusStateOfReading = it
+                    }
+                )
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (readingScore >= 9.1) {
+                ErrorText("Readingスコアは9.1未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (showReadingScoreDivisionError) {
+                ErrorText(
+                    "Readingスコアは0.5の倍数である必要があります。"
                 )
             }
         }
@@ -646,11 +668,12 @@ private fun OverallScoreInputField(
 }
 
 @Composable
-private fun ReadingScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 0.5 != 0.0 && !focusState
-
+private fun ReadingScoreInputField(
+    placeholder: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -659,10 +682,7 @@ private fun ReadingScoreInputField(placeholder: String, value: Float, onValueCha
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5.0 != 0.0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -686,13 +706,6 @@ private fun ReadingScoreInputField(placeholder: String, value: Float, onValueCha
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            ErrorText("Readingスコアは0.5の倍数である必要があります。")
-        }
-        if (value >= 9.1) {
-            ErrorText("Readingスコアは9.1未満である必要があります。")
-        }
     }
 }
 
