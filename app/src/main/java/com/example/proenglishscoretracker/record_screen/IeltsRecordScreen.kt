@@ -271,6 +271,9 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+        var focusStateOfSpeaking by rememberSaveable { mutableStateOf(false) }
+        val showSpeakingScoreDivisionError = speakingScore % 5.0 != 0.0 && !focusStateOfSpeaking
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -283,7 +286,26 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 SpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.ielts_speaking_score),
                     value = speakingScore,
-                    onValueChange = { speakingScore = it }
+                    onValueChange = { speakingScore = it },
+                    onFocusChanged = {
+                        focusStateOfSpeaking = it
+                    }
+                )
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (speakingScore >= 9.1) {
+                ErrorText("Speakingスコアは9.1未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (showSpeakingScoreDivisionError) {
+                ErrorText(
+                    "Speakingスコアは0.5の倍数である必要があります。"
                 )
             }
         }
@@ -838,11 +860,12 @@ private fun WritingScoreInputField(
 }
 
 @Composable
-private fun SpeakingScoreInputField(placeholder: String, value: Float, onValueChange: (Float) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 0.5 != 0.0 && !focusState
-
+private fun SpeakingScoreInputField(
+    placeholder: String,
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -851,10 +874,7 @@ private fun SpeakingScoreInputField(placeholder: String, value: Float, onValueCh
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5.0 != 0.0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -878,13 +898,6 @@ private fun SpeakingScoreInputField(placeholder: String, value: Float, onValueCh
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            ErrorText("Speakingスコアは0.5の倍数である必要があります。")
-        }
-        if (value >= 9.1) {
-            ErrorText("Speakingスコアは9.1未満である必要があります。")
-        }
     }
 }
 
