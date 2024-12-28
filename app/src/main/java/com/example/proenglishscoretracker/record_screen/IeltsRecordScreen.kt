@@ -394,15 +394,6 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
 }
 
 @Composable
-private fun ShowSelectedDateEmptyErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        color = Color.Red
-    )
-}
-
-@Composable
 private fun EnterScoreText(grade: String, modifier: Modifier = Modifier) {
     Text(
         text = "スコアを記入",
