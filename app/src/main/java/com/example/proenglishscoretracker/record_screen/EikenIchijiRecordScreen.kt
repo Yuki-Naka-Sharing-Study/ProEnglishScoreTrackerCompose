@@ -199,7 +199,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            InputMemoRow(
+            MemoInputField(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
                 onValueChange = { memoText = it }
@@ -650,7 +650,7 @@ private fun RLWScoreInputField(placeholder: String, value: Int, onValueChange: (
 }
 
 @Composable
-private fun InputMemoRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun MemoInputField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically

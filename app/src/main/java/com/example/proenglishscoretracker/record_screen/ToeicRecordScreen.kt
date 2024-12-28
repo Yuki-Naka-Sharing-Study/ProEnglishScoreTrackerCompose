@@ -136,7 +136,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputMemoField(
+            MemoInputField(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
                 onValueChange = { memoText = it }
@@ -558,7 +558,7 @@ private fun ListeningScoreInputField(placeholder: String, value: Int, onValueCha
 }
 
 @Composable
-private fun InputMemoField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun MemoInputField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
