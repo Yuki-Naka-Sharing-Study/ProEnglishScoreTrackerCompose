@@ -230,7 +230,13 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = grammarAndVocabularyScore,
                     onValueChange = { grammarAndVocabularyScore = it }
                 )
-                if (grammarAndVocabularyScore >= 11) ErrorText("Grammar and Vocabularyスコアは11未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_72_dp)))
+            if (grammarAndVocabularyScore >= 11) {
+                ErrorText("Grammar and Vocabularyスコアは11未満である必要があります。")
             }
         }
 
@@ -814,7 +820,7 @@ private fun ErrorText(error: String) {
         text = error,
         fontSize = 12.sp,
         color = Color.Red,
-        maxLines = 1,
+        maxLines = 2,
     )
 }
 
