@@ -92,6 +92,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+
+        var focusState by rememberSaveable { mutableStateOf(false) }
+        val showError = readingScore % 5 != 0 && !focusState
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -104,9 +108,21 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 ReadingScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_reading_score),
                     value = readingScore,
-                    onValueChange = { readingScore = it }
+                    onValueChange = { readingScore = it },
+                    onFocusChanged = {
+                        focusState = it
+                    }
                 )
             }
+        }
+
+        if (showError) {
+            ErrorText(
+                "Readingスコアは5の倍数である必要があります。"
+            )
+        }
+        if (readingScore >= 496) {
+            ErrorText("Readingスコアは496未満である必要があります。")
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -460,11 +476,12 @@ private fun MemoTextFieldPreview() {
 }
 
 @Composable
-private fun ReadingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 5 != 0 && !focusState
-
+private fun ReadingScoreInputField(
+    placeholder: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -473,10 +490,7 @@ private fun ReadingScoreInputField(placeholder: String, value: Int, onValueChang
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5 != 0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -499,12 +513,6 @@ private fun ReadingScoreInputField(placeholder: String, value: Int, onValueChang
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            ErrorText("Readingスコアは5の倍数である必要があります。")
-        }
-        if (value >= 496) {
-            ErrorText("Readingスコアは496未満である必要があります。")
-        }
     }
 }
 
