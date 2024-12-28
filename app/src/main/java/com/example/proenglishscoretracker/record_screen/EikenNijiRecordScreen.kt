@@ -236,7 +236,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            InputMemoRow(
+            InputMemoField(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
                 onValueChange = { memoText = it }
@@ -728,7 +728,7 @@ private fun SectionOfSpeakingScoreInputRow(placeholder: String, value: Int, onVa
 }
 
 @Composable
-private fun InputMemoRow(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun InputMemoField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
