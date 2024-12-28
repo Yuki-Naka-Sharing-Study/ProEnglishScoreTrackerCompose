@@ -213,7 +213,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
                 )
-                if (speakingScore >= 31) ErrorText("Speakingスコアは31未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            if (speakingScore >= 31) {
+                ErrorText("Speakingスコアは31未満である必要があります。")
             }
         }
 
