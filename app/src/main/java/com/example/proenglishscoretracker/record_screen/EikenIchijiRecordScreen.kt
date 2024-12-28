@@ -152,8 +152,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = readingScore,
                     onValueChange = { readingScore = it }
                 )
-                // 以下の字が途切れる問題は「InputScoreRow」と「ReadingText」の間の「dp」をいじれば解決できそう。
-                if (readingScore >= 851) ErrorText("Readingスコアは851未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+            if (readingScore >= 851) {
+                ErrorText("Readingスコアは851未満である必要があります。")
             }
         }
 
