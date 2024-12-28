@@ -147,7 +147,7 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             Column {
-                SpeakingScoreInputRow(
+                SpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.eiken_niji_speaking_score),
                     value = speakingScore,
                     onValueChange = { speakingScore = it }
@@ -660,7 +660,7 @@ private fun CseInputScoreField(placeholder: String, value: Int, onValueChange: (
 }
 
 @Composable
-private fun SpeakingScoreInputRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun SpeakingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
