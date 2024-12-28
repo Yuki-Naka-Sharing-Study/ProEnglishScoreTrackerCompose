@@ -206,7 +206,13 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = interactionScore,
                     onValueChange = { interactionScore = it }
                 )
-                if (interactionScore >= 11) ErrorText("Interactionスコアは11未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_72_dp)))
+            if (interactionScore >= 11) {
+                ErrorText("Interactionスコアは11未満である必要があります。")
             }
         }
 
