@@ -93,7 +93,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedDateEmptyErrorText = ""
                 }
                 Text(selectedDate)
-                if (selectedDate.isEmpty()) ShowSelectedDateEmptyErrorText(
+                if (selectedDate.isEmpty()) ErrorText(
                     selectedDateEmptyErrorText
                 )
             }
@@ -126,7 +126,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = cseScore,
                     onValueChange = { cseScore = it }
                 )
-                if (cseScore >= 2551) InputScoreRowErrorText("CSEスコアは2551未満である必要があります。")
+                if (cseScore >= 2551) ErrorText("CSEスコアは2551未満である必要があります。")
             }
         }
 
@@ -147,7 +147,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     onValueChange = { readingScore = it }
                 )
                 // 以下の字が途切れる問題は「InputScoreRow」と「ReadingText」の間の「dp」をいじれば解決できそう。
-                if (readingScore >= 851) InputScoreRowErrorText("Readingスコアは851未満である必要があります。")
+                if (readingScore >= 851) ErrorText("Readingスコアは851未満である必要があります。")
             }
         }
 
@@ -167,7 +167,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = listeningScore,
                     onValueChange = { listeningScore = it }
                 )
-                if (listeningScore >= 851) InputScoreRowErrorText("Listeningスコアは851未満である必要があります。")
+                if (listeningScore >= 851) ErrorText("Listeningスコアは851未満である必要があります。")
             }
         }
 
@@ -187,7 +187,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = writingScore,
                     onValueChange = { writingScore = it }
                 )
-                if (writingScore >= 851) InputScoreRowErrorText("Writingスコアは851未満である必要があります。")
+                if (writingScore >= 851) ErrorText("Writingスコアは851未満である必要があります。")
             }
         }
 
@@ -341,15 +341,6 @@ private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit)
             color = Color.White,
         )
     }
-}
-
-@Composable
-private fun ShowSelectedDateEmptyErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        color = Color.Red
-    )
 }
 
 @Composable
@@ -594,7 +585,7 @@ private fun CseInputScoreRow(placeholder: String, value: Int, onValueChange: (In
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 2551) InputScoreRowErrorText("")
+        if (value >= 2551) ErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -629,7 +620,7 @@ private fun RLWScoreInputField(placeholder: String, value: Int, onValueChange: (
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 851) InputScoreRowErrorText("")
+        if (value >= 851) ErrorText("")
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -656,16 +647,6 @@ private fun RLWScoreInputField(placeholder: String, value: Int, onValueChange: (
             )
         )
     }
-}
-
-@Composable
-private fun InputScoreRowErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
 }
 
 @Composable
@@ -723,6 +704,16 @@ private fun SaveButton(
 //        SaveButton()
 //    }
 //}
+
+@Composable
+private fun ErrorText(error: String) {
+    Text(
+        text = error,
+        fontSize = 12.sp,
+        color = Color.Red,
+        maxLines = 1,
+    )
+}
 
 private fun showToast(context: android.content.Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
