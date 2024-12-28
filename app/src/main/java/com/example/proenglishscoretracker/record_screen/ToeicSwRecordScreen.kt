@@ -92,6 +92,9 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+        var focusStateOfWriting by rememberSaveable { mutableStateOf(false) }
+        val showWritingScoreDivisionError = writingScore % 5 != 0 && !focusStateOfWriting
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -104,12 +107,34 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 WritingScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_sw_writing_score),
                     value = writingScore,
-                    onValueChange = { writingScore = it }
+                    onValueChange = { writingScore = it },
+                    onFocusChanged = {
+                        focusStateOfWriting = it
+                    }
+                )
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (writingScore >= 201) {
+                ErrorText("Writingスコアは201未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (showWritingScoreDivisionError) {
+                ErrorText(
+                    "Writingスコアは5の倍数である必要があります。"
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+        var focusStateOfSpeaking by rememberSaveable { mutableStateOf(false) }
+        val showSpeakingScoreDivisionError = speakingScore % 5 != 0 && !focusStateOfSpeaking
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -123,7 +148,26 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 SpeakingScoreInputField(
                     placeholder = stringResource(id = R.string.toeic_sw_speaking_score),
                     value = speakingScore,
-                    onValueChange = { speakingScore = it }
+                    onValueChange = { speakingScore = it },
+                    onFocusChanged = {
+                        focusStateOfSpeaking = it
+                    }
+                )
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (speakingScore >= 201) {
+                ErrorText("Speakingスコアは201未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (showSpeakingScoreDivisionError) {
+                ErrorText(
+                    "Speakingスコアは5の倍数である必要があります。"
                 )
             }
         }
@@ -403,11 +447,12 @@ private fun MemoTextFieldPreview() {
 }
 
 @Composable
-private fun WritingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 5 != 0 && !focusState
-
+private fun WritingScoreInputField(
+    placeholder: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -416,10 +461,7 @@ private fun WritingScoreInputField(placeholder: String, value: Int, onValueChang
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5 != 0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -441,22 +483,16 @@ private fun WritingScoreInputField(placeholder: String, value: Int, onValueChang
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            ErrorText("Writingスコアは5の倍数である必要があります。")
-        }
-        if (value >= 201) {
-            ErrorText("Writingスコアは201未満である必要があります。")
-        }
     }
 }
 
 @Composable
-private fun SpeakingScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
-    var isError by rememberSaveable { mutableStateOf(false) }
-    var focusState by rememberSaveable { mutableStateOf(false) }
-    val showError = value % 5 != 0 && !focusState
-
+private fun SpeakingScoreInputField(
+    placeholder: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    onFocusChanged: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -465,10 +501,7 @@ private fun SpeakingScoreInputField(placeholder: String, value: Int, onValueChan
                 .fillMaxWidth()
                 .height(dimensionResource(id = R.dimen.space_52_dp))
                 .onFocusChanged {
-                    focusState = it.isFocused
-                    if (!it.isFocused && value % 5 != 0) {
-                        isError = true
-                    }
+                    onFocusChanged(it.isFocused)
                 },
             value = value.toString(),
             onValueChange = { newValue ->
@@ -490,13 +523,6 @@ private fun SpeakingScoreInputField(placeholder: String, value: Int, onValueChan
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.height(8.dp))
-        if (showError) {
-            ErrorText("Speakingスコアは5の倍数である必要があります。")
-        }
-        if (value >= 201) {
-            ErrorText("Speakingスコアは201未満である必要があります。")
-        }
     }
 }
 
