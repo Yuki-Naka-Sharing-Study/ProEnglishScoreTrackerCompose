@@ -156,6 +156,22 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             }
         }
 
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (listeningScore >= 496) {
+                ErrorText("Listeningスコアは496未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            if (showListeningScoreDivisionError) {
+                ErrorText(
+                    "Listeningスコアは5の倍数である必要があります。"
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
