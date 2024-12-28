@@ -94,7 +94,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
 
         var focusStateOfReading by rememberSaveable { mutableStateOf(false) }
-        val showError = readingScore % 5 != 0 && !focusStateOfReading
+        val showReadingScoreDivisionError = readingScore % 5 != 0 && !focusStateOfReading
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -125,7 +125,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Row {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (showError) {
+            if (showReadingScoreDivisionError) {
                 ErrorText(
                     "Readingスコアは5の倍数である必要があります。"
                 )
