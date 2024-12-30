@@ -43,6 +43,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoDatabase
 import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
+import com.example.proenglishscoretracker.data_screen.ToeicDataScreen
 import com.example.proenglishscoretracker.record_screen.EikenIchijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
@@ -90,9 +91,10 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "selectConfirm",
+            startDestination = "toeicDataScreen",
             Modifier.padding(innerPadding)
         ) {
+            composable("toeicDataScreen") { ToeicDataScreen(navController) }
             // 以下、BottomNavigationBar
             composable("selectConfirm") { SelectConfirmScreen(navController) }
             composable("selectRecord") { SelectRecordScreen(navController) }
