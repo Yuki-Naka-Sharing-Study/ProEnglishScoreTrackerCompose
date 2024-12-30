@@ -95,7 +95,7 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
             startDestination = "toeicDataScreen",
             Modifier.padding(innerPadding)
         ) {
-            composable("toeicDataScreen") { ToeicDataScreen(navController) }
+            composable("toeicDataScreen") { ToeicDataScreen() }
             // 以下、BottomNavigationBar
             composable("selectConfirm") { SelectConfirmScreen(navController) }
             composable("selectRecord") { SelectRecordScreen(navController) }
