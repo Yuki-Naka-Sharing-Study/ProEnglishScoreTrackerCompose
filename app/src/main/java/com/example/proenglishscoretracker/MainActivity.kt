@@ -51,6 +51,7 @@ import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
 import com.example.proenglishscoretracker.individual_screen.EikenIchijiIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
 import com.example.proenglishscoretracker.tab_screen.SelectConfirmScreen
 import com.example.proenglishscoretracker.select_screen.SelectEikenIchijiScreen
 import com.example.proenglishscoretracker.select_screen.SelectEikenNijiScreen
@@ -143,12 +144,8 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
 
 
             // 以下、「SelectToeicFragment」
-            composable("toeicIndividualScreen") {
-//                ToeicIndividualScreen()
-            }
-            composable("toeicChartScreen") {
-                ToeicChartScreen()
-            }
+            composable("toeicIndividualScreen") { ToeicIndividualScreen() }
+            composable("toeicChartScreen") { ToeicChartScreen() }
 
 
             // 以下、「SelectToeicSwFragment」
