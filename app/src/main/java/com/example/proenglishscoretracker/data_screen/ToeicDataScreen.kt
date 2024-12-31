@@ -14,15 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.proenglishscoretracker.chart_screen.ToeicChartScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import com.example.proenglishscoretracker.TabItem
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -32,25 +26,26 @@ import kotlinx.coroutines.launch
 @Composable
 fun ToeicDataScreen() {
     Column {
-        //「ToeicSegmentedButton()」の上にTabLayoutを配置。
-        MainScreen()
-        ToeicSegmentedButton()
+        ExamTabLayout()
     }
 }
 
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalMaterialApi
 @Composable
-fun MainScreen() {
+private fun ExamTabLayout() {
     val tabs = listOf(
-        TabItem.Home,
-        TabItem.Profile,
-        TabItem.Settings,
+        TabItem.TOEIC,
+        TabItem.TOEIC_SW,
+        TabItem.EIKEN,
+        TabItem.TOEFL_IBT,
+        TabItem.IELTS,
     )
     val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
 
     Column() {
         Tabs(tabs = tabs, pagerState = pagerState)
+        ToeicSegmentedButton()
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
 }
@@ -75,7 +70,7 @@ private fun Tabs(
     ) {
         tabs.forEachIndexed { index, tab ->
             LeadingIconTab(
-                icon = { Icon(painter = painterResource(id = tab.icon), contentDescription = "") },
+                icon = { /* アイコンを表示しない */ },
                 text = { Text(text = tab.title) },
                 selected = pagerState.currentPage == index,
                 onClick = {
@@ -96,58 +91,10 @@ private fun TabsContent(
 ) {
     com.google.accompanist.pager.HorizontalPager(
         state = pagerState,
-        count = 3,
+        count = 5,
     )
     { page ->
         tabs[page].screen()
-    }
-}
-
-@Composable
-fun HomeScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Home Screen",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            fontSize = 30.sp
-        )
-    }
-}
-
-@Composable
-fun ProfileScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Profile Screen",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            fontSize = 30.sp
-        )
-    }
-}
-
-@Composable
-fun SettingsScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Settings Screen",
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            fontSize = 30.sp
-        )
     }
 }
 
