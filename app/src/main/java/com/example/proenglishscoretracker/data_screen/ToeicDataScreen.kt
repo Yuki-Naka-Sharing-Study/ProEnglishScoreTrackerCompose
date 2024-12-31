@@ -52,7 +52,7 @@ fun MainScreen() {
         TabItem.Profile,
         TabItem.Settings,
     )
-    val pagerState = rememberPagerState(pageCount = { tabs.size })
+    val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
 
     Column() {
         Tabs(tabs = tabs, pagerState = pagerState)
@@ -63,7 +63,7 @@ fun MainScreen() {
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalMaterialApi
 @Composable
-private fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
+private fun Tabs(tabs: List<TabItem>, pagerState: com.google.accompanist.pager.PagerState) {
     val scope = rememberCoroutineScope()
     TabRow(
         selectedTabIndex = pagerState.currentPage,
@@ -71,7 +71,7 @@ private fun Tabs(tabs: List<TabItem>, pagerState: PagerState) {
         contentColor = Color.Green,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
-//                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
 //                Modifier.tabIndicatorOffset(pagerState, tabPositions)
             )
         }
