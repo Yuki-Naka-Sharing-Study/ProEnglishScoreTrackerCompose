@@ -22,6 +22,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
+//「feature/pagerTabIndicatorOffset」をマージした。
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ToeicDataScreen() {
