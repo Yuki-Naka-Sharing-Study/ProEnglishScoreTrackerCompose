@@ -56,6 +56,8 @@ android {
 
 dependencies {
     implementation("com.google.accompanist:accompanist-pager-indicators:0.27.1")
+    implementation("com.google.accompanist:accompanist-pager:0.27.1")
+
     implementation("androidx.compose.material:material-icons-extended:1.7.6")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")

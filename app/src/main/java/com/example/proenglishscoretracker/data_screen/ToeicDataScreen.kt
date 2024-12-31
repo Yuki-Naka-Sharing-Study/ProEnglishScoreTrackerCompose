@@ -16,12 +16,7 @@ import com.example.proenglishscoretracker.chart_screen.ToeicChartScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.*
-import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -63,16 +58,18 @@ fun MainScreen() {
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalMaterialApi
 @Composable
-private fun Tabs(tabs: List<TabItem>, pagerState: com.google.accompanist.pager.PagerState) {
+private fun Tabs(
+    tabs: List<TabItem>,
+    pagerState: com.google.accompanist.pager.PagerState
+) {
     val scope = rememberCoroutineScope()
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = Color.Black,
-        contentColor = Color.Green,
+        backgroundColor = Color.LightGray,
+        contentColor = Color.Gray,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
-//                Modifier.tabIndicatorOffset(pagerState, tabPositions)
             )
         }
     ) {
@@ -91,9 +88,17 @@ private fun Tabs(tabs: List<TabItem>, pagerState: com.google.accompanist.pager.P
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-private fun TabsContent(tabs: List<TabItem>, pagerState: PagerState) {
-    HorizontalPager(state = pagerState) { page ->
+private fun TabsContent(
+    tabs: List<TabItem>,
+    pagerState: com.google.accompanist.pager.PagerState
+) {
+    com.google.accompanist.pager.HorizontalPager(
+        count = pagerState.pageCount,
+        state = pagerState
+    )
+    { page ->
         tabs[page].screen()
     }
 }
