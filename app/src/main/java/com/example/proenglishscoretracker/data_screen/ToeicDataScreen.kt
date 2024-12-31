@@ -95,8 +95,8 @@ private fun TabsContent(
     pagerState: com.google.accompanist.pager.PagerState
 ) {
     com.google.accompanist.pager.HorizontalPager(
-        count = pagerState.pageCount,
-        state = pagerState
+        state = pagerState,
+        count = 3,
     )
     { page ->
         tabs[page].screen()
