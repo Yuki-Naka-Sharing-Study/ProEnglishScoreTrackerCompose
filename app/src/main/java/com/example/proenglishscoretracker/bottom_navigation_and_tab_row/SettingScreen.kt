@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.bottom_navigation
+package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

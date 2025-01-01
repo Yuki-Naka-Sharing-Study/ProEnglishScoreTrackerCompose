@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.bottom_navigation
+package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +17,6 @@ import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScree
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import com.example.proenglishscoretracker.TabItem
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
 import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen

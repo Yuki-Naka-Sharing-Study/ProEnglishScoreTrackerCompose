@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker
+package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -34,8 +34,6 @@ import com.example.proenglishscoretracker.data.EnglishInfoDatabase
 import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
-import com.example.proenglishscoretracker.bottom_navigation.ExamDataScreen
-import com.example.proenglishscoretracker.bottom_navigation.ExamRecordScreen
 import com.example.proenglishscoretracker.record_screen.EikenIchijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
@@ -44,7 +42,6 @@ import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
 import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
-import com.example.proenglishscoretracker.bottom_navigation.SettingScreen
 
 class MainActivity : ComponentActivity() {
     private val repository: EnglishInfoRepository = EnglishInfoRepository()

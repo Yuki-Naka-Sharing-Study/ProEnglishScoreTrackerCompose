@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.bottom_navigation
+package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
@@ -7,10 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import com.example.proenglishscoretracker.TabItem
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.record_screen.EikenIchijiRecordScreen
-import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
