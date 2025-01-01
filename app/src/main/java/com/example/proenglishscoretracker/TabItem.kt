@@ -14,11 +14,11 @@ import androidx.compose.ui.unit.sp
 typealias ComposableFun = @Composable () -> Unit
 
 sealed class TabItem(var icon: Int,var title: String, var screen: ComposableFun){
-    object TOEIC : TabItem(R.drawable.toeic, "TOEIC", { KariToeicScreen() })
-    object TOEIC_SW : TabItem(R.drawable.toeic, "TOEIC SW", { KariToeicSwScreen() })
-    object EIKEN : TabItem(R.drawable.eiken, "英検", { KariEikenScreen() })
-    object TOEFL_IBT : TabItem(R.drawable.toefl, "TOEFL iBT", { KariToeflIbtScreen() })
     object IELTS : TabItem(R.drawable.ielts, "IELTS", { KariIeltsScreen() })
+    object TOEFL_IBT : TabItem(R.drawable.toefl, "TOEFL iBT", { KariToeflIbtScreen() })
+    object EIKEN : TabItem(R.drawable.eiken, "英検", { KariEikenScreen() })
+    object TOEIC_SW : TabItem(R.drawable.toeic, "TOEIC SW", { KariToeicSwScreen() })
+    object TOEIC : TabItem(R.drawable.toeic, "TOEIC", { KariToeicScreen() })
 }
 
 @Composable

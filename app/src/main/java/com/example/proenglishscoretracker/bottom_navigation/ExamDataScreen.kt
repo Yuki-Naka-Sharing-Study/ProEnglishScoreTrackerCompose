@@ -34,22 +34,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun ExamDataScreen() {
     val tabs = listOf(
-        TabItem.TOEIC,
-        TabItem.TOEIC_SW,
-        TabItem.EIKEN,
-        TabItem.TOEFL_IBT,
         TabItem.IELTS,
+        TabItem.TOEFL_IBT,
+        TabItem.EIKEN,
+        TabItem.TOEIC_SW,
+        TabItem.TOEIC,
     )
     val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
 
     Column {
         Tabs(tabs = tabs, pagerState = pagerState)
         when (pagerState.currentPage) {
-            0 -> ToeicSegmentedButton()
-            1 -> ToeicSwSegmentedButton()
+            0 -> IeltsSegmentedButton()
+            1 -> ToeflIbtSegmentedButton()
             2 -> EikenSegmentedButton()
-            3 -> ToeflIbtSegmentedButton()
-            4 -> IeltsSegmentedButton()
+            3 -> ToeicSwSegmentedButton()
+            4 -> ToeicSegmentedButton()
         }
         TabsContent(tabs = tabs, pagerState = pagerState)
     }

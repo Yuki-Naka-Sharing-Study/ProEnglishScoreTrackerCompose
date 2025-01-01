@@ -11,6 +11,7 @@ import com.example.proenglishscoretracker.TabItem
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.record_screen.EikenIchijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
+import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
@@ -22,23 +23,22 @@ import kotlinx.coroutines.launch
 @Composable
 fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
     val tabs = listOf(
-        TabItem.TOEIC,
-        TabItem.TOEIC_SW,
-        TabItem.EIKEN,
-        TabItem.TOEFL_IBT,
         TabItem.IELTS,
+        TabItem.TOEFL_IBT,
+        TabItem.EIKEN,
+        TabItem.TOEIC_SW,
+        TabItem.TOEIC,
     )
     val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
 
     Column {
         Tabs(tabs = tabs, pagerState = pagerState)
         when (pagerState.currentPage) {
-            0 -> ToeicRecordScreen(viewModel = viewModel)
-            1 -> ToeicSwRecordScreen(viewModel = viewModel)
+            0 -> IeltsRecordScreen(viewModel = viewModel)
+            1 -> ToeflIbtRecordScreen(viewModel = viewModel)
             2 -> EikenIchijiRecordScreen(viewModel = viewModel)
-            3 -> EikenNijiRecordScreen(viewModel = viewModel)
-            4 -> ToeflIbtRecordScreen(viewModel = viewModel)
-
+            3 -> ToeicSwRecordScreen(viewModel = viewModel)
+            4 -> ToeicRecordScreen(viewModel = viewModel)
         }
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
