@@ -22,7 +22,9 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.filled.StackedLineChart
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.room.Room
+import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
 import com.example.proenglishscoretracker.chart_screen.EikenNijiChartScreen
 import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
@@ -165,7 +167,14 @@ fun BottomNavigationBar(navController: NavController) {
         contentColor = Color(0xFF00796B) // デフォルトのコンテンツカラー（アイコン・テキスト）
     ) {
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.StackedLineChart, contentDescription = "examDataScreen") },
+//            icon = { Icon(Icons.Default.StackedLineChart, contentDescription = "examDataScreen") },
+            icon = {
+                // 自作のアイコンを表示
+                Icon(
+                    painter = painterResource(id = R.drawable.chart), // ここを自作のアイコンに変更
+                    contentDescription = "examDataScreen"
+                )
+            },
             label = { Text("記録確認") },
             selected = currentDestination?.route == "examDataScreen",
             onClick = {
