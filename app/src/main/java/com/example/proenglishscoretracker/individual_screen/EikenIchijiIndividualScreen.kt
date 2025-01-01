@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun EikenIchijiIndividualScreen() {
+fun EikenIndividualScreen() {
     Text(text = "英検個別データ保存画面")
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun EikenIchijiIndividualScreenPreview() {
-    EikenIchijiIndividualScreen()
+    EikenIndividualScreen()
 }

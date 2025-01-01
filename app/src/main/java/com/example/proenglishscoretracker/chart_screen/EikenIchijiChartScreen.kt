@@ -18,14 +18,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 
 @Composable
-fun EikenIchijiChartScreen() {
+fun EikenChartScreen() {
     EikenIchijiScoreChart()
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun EikenIchijiChartScreenPreview() {
-    EikenIchijiChartScreen()
+    EikenChartScreen()
 }
 
 @Composable

@@ -19,11 +19,18 @@ import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import com.example.proenglishscoretracker.TabItem
+import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
+import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
+import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen
+import com.example.proenglishscoretracker.chart_screen.ToeicSwChartScreen
+import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.IeltsIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.ToeflIbtIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
-//「feature/pagerTabIndicatorOffset」をマージした。
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class)
 @Composable
 fun ExamDataScreen() {
@@ -38,7 +45,13 @@ fun ExamDataScreen() {
 
     Column {
         Tabs(tabs = tabs, pagerState = pagerState)
-        ToeicSegmentedButton()
+        when (pagerState.currentPage) {
+            0 -> ToeicSegmentedButton()
+            1 -> ToeicSwSegmentedButton()
+            2 -> EikenSegmentedButton()
+            3 -> ToeflIbtSegmentedButton()
+            4 -> IeltsSegmentedButton()
+        }
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
 }
@@ -76,21 +89,6 @@ private fun Tabs(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-private fun TabsContent(
-    tabs: List<TabItem>,
-    pagerState: com.google.accompanist.pager.PagerState
-) {
-    com.google.accompanist.pager.HorizontalPager(
-        state = pagerState,
-        count = 5,
-    )
-    { page ->
-        tabs[page].screen()
-    }
-}
-
 @Composable
 private fun ToeicSegmentedButton() {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -118,5 +116,140 @@ private fun ToeicSegmentedButton() {
             0 -> ToeicIndividualScreen()
             1 -> ToeicChartScreen()
         }
+    }
+}
+
+@Composable
+private fun ToeicSwSegmentedButton() {
+    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+    val options = listOf("個別", "グラフ")
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            options.forEachIndexed { index, label ->
+                SegmentedButton(
+                    modifier = Modifier
+                        .weight(1f),
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = options.size
+                    ),
+                    onClick = { selectedIndex = index },
+                    selected = index == selectedIndex,
+                    label = { Text(label) }
+                )
+            }
+        }
+        when (selectedIndex) {
+            0 -> ToeicSwIndividualScreen()
+            1 -> ToeicSwChartScreen()
+        }
+    }
+}
+
+@Composable
+private fun EikenSegmentedButton() {
+    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+    val options = listOf("個別", "グラフ")
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            options.forEachIndexed { index, label ->
+                SegmentedButton(
+                    modifier = Modifier
+                        .weight(1f),
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = options.size
+                    ),
+                    onClick = { selectedIndex = index },
+                    selected = index == selectedIndex,
+                    label = { Text(label) }
+                )
+            }
+        }
+        when (selectedIndex) {
+            0 -> EikenIndividualScreen()
+            1 -> EikenChartScreen()
+        }
+    }
+}
+
+@Composable
+private fun ToeflIbtSegmentedButton() {
+    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+    val options = listOf("個別", "グラフ")
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            options.forEachIndexed { index, label ->
+                SegmentedButton(
+                    modifier = Modifier
+                        .weight(1f),
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = options.size
+                    ),
+                    onClick = { selectedIndex = index },
+                    selected = index == selectedIndex,
+                    label = { Text(label) }
+                )
+            }
+        }
+        when (selectedIndex) {
+            0 -> ToeflIbtIndividualScreen()
+            1 -> ToeflIbtChartScreen()
+        }
+    }
+}
+
+@Composable
+private fun IeltsSegmentedButton() {
+    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+    val options = listOf("個別", "グラフ")
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        SingleChoiceSegmentedButtonRow(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            options.forEachIndexed { index, label ->
+                SegmentedButton(
+                    modifier = Modifier
+                        .weight(1f),
+                    shape = SegmentedButtonDefaults.itemShape(
+                        index = index,
+                        count = options.size
+                    ),
+                    onClick = { selectedIndex = index },
+                    selected = index == selectedIndex,
+                    label = { Text(label) }
+                )
+            }
+        }
+        when (selectedIndex) {
+            0 -> IeltsIndividualScreen()
+            1 -> IeltsChartScreen()
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+private fun TabsContent(
+    tabs: List<TabItem>,
+    pagerState: com.google.accompanist.pager.PagerState
+) {
+    com.google.accompanist.pager.HorizontalPager(
+        state = pagerState,
+        count = 5,
+    )
+    { page ->
+        tabs[page].screen()
     }
 }

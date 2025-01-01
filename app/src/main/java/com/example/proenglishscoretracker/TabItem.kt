@@ -16,8 +16,8 @@ import com.example.proenglishscoretracker.data_screen.ToeicSwDataScreen
 typealias ComposableFun = @Composable () -> Unit
 
 sealed class TabItem(var icon: Int,var title: String, var screen: ComposableFun){
-    object TOEIC : TabItem(R.drawable.reading, "TOEIC", { ToeicDataScreen() })
-    object TOEIC_SW : TabItem(R.drawable.listening, "TOEIC SW", { ToeicSwDataScreen() })
+    object TOEIC : TabItem(R.drawable.reading, "TOEIC", { KariToeicScreen() })
+    object TOEIC_SW : TabItem(R.drawable.listening, "TOEIC SW", { KariToeicSwScreen() })
     object EIKEN : TabItem(R.drawable.speaking, "英検", { KariEikenScreen() })
     object TOEFL_IBT : TabItem(R.drawable.speaking, "TOEFL iBT", { KariToeflIbtScreen() })
     object IELTS : TabItem(R.drawable.speaking, "IELTS", { KariIeltsScreen() })

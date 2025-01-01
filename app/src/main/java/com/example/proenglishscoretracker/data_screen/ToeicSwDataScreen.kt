@@ -36,7 +36,7 @@ fun ToeicSwDataScreen() {
 
     Column {
         Tabs(tabs = tabs, pagerState = pagerState)
-        ToeicSwSegmentedButton()
+//        ToeicSwSegmentedButton()
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
 }
@@ -89,32 +89,32 @@ private fun TabsContent(
     }
 }
 
-@Composable
-private fun ToeicSwSegmentedButton() {
-    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("個別", "グラフ")
-
-    Column(modifier = Modifier.fillMaxWidth()) {
-        SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            options.forEachIndexed { index, label ->
-                SegmentedButton(
-                    modifier = Modifier
-                        .weight(1f),
-                    shape = SegmentedButtonDefaults.itemShape(
-                        index = index,
-                        count = options.size
-                    ),
-                    onClick = { selectedIndex = index },
-                    selected = index == selectedIndex,
-                    label = { Text(label) }
-                )
-            }
-        }
-        when (selectedIndex) {
-            0 -> ToeicSwIndividualScreen()
-            1 -> ToeicSwChartScreen()
-        }
-    }
-}
+//@Composable
+//private fun ToeicSwSegmentedButton() {
+//    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+//    val options = listOf("個別", "グラフ")
+//
+//    Column(modifier = Modifier.fillMaxWidth()) {
+//        SingleChoiceSegmentedButtonRow(
+//            modifier = Modifier.fillMaxWidth()
+//        ) {
+//            options.forEachIndexed { index, label ->
+//                SegmentedButton(
+//                    modifier = Modifier
+//                        .weight(1f),
+//                    shape = SegmentedButtonDefaults.itemShape(
+//                        index = index,
+//                        count = options.size
+//                    ),
+//                    onClick = { selectedIndex = index },
+//                    selected = index == selectedIndex,
+//                    label = { Text(label) }
+//                )
+//            }
+//        }
+//        when (selectedIndex) {
+//            0 -> ToeicSwIndividualScreen()
+//            1 -> ToeicSwChartScreen()
+//        }
+//    }
+//}

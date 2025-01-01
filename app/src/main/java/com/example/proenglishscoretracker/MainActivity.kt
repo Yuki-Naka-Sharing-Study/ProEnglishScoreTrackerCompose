@@ -32,7 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.room.Room
-import com.example.proenglishscoretracker.chart_screen.EikenIchijiChartScreen
+import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
 import com.example.proenglishscoretracker.chart_screen.EikenNijiChartScreen
 import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen
@@ -51,7 +51,7 @@ import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
-import com.example.proenglishscoretracker.individual_screen.EikenIchijiIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
 import com.example.proenglishscoretracker.tab_screen.SelectConfirmScreen
 import com.example.proenglishscoretracker.select_screen.SelectEikenIchijiScreen
@@ -129,10 +129,10 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
 
             // 以下、「SelectEikenIchijiFragment」
             composable("eikenIchijiIndividualScreen") {
-                EikenIchijiIndividualScreen()
+                EikenIndividualScreen()
             }
             composable("eikenIchijiChartScreen") {
-                EikenIchijiChartScreen()
+                EikenChartScreen()
             }
 
 
