@@ -206,7 +206,7 @@ fun BottomNavigationBar(navController: NavController) {
     ) {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.StackedLineChart, contentDescription = "examDataScreen") },
-            label = { Text("Confirm") },
+            label = { Text("記録確認") },
             selected = currentDestination?.route == "examDataScreen",
             onClick = {
                 navController.navigate("examDataScreen") {
@@ -219,7 +219,7 @@ fun BottomNavigationBar(navController: NavController) {
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Edit, contentDescription = "Record") },
-            label = { Text("Record") },
+            label = { Text("記録") },
             selected = currentDestination?.route == "examRecordScreen",
             onClick = {
                 navController.navigate("examRecordScreen") {
@@ -232,7 +232,7 @@ fun BottomNavigationBar(navController: NavController) {
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-            label = { Text("Settings") },
+            label = { Text("設定") },
             selected = currentDestination?.route == "setting",
             onClick = {
                 navController.navigate("setting") {
