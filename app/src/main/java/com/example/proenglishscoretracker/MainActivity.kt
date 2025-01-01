@@ -52,7 +52,6 @@ import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
 import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
-import com.example.proenglishscoretracker.tab_screen.SelectConfirmScreen
 import com.example.proenglishscoretracker.select_screen.SelectEikenIchijiScreen
 import com.example.proenglishscoretracker.select_screen.SelectEikenNijiScreen
 import com.example.proenglishscoretracker.select_screen.SelectIeltsScreen
@@ -95,14 +94,10 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
             startDestination = "examDataScreen",
             Modifier.padding(innerPadding)
         ) {
-            composable("examDataScreen") { ExamDataScreen() }
             // 以下、BottomNavigationBar
-            composable("selectConfirm") { SelectConfirmScreen(navController) }
+            composable("examDataScreen") { ExamDataScreen() }
             composable("selectRecord") { SelectRecordScreen(navController) }
             composable("setting") { SettingScreen() }
-
-            // 以下、「SelectConfirmFragment」
-
 
             // 以下、「SelectXxxScreen」
             composable("selectEikenIchijiScreen") {
