@@ -1,5 +1,6 @@
 package com.example.proenglishscoretracker.data_screen
 
+
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.SegmentedButton
@@ -12,19 +13,20 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.example.proenglishscoretracker.chart_screen.ToeicChartScreen
+import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import com.example.proenglishscoretracker.TabItem
-import com.example.proenglishscoretracker.chart_screen.ToeicSwChartScreen
-import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
+//「feature/pagerTabIndicatorOffset」をマージした。
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class)
 @Composable
-fun ToeicSwDataScreen() {
+fun ExamDataScreen() {
     val tabs = listOf(
         TabItem.TOEIC,
         TabItem.TOEIC_SW,
@@ -36,7 +38,7 @@ fun ToeicSwDataScreen() {
 
     Column {
         Tabs(tabs = tabs, pagerState = pagerState)
-        ToeicSwSegmentedButton()
+        ToeicSegmentedButton()
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
 }
@@ -90,7 +92,7 @@ private fun TabsContent(
 }
 
 @Composable
-private fun ToeicSwSegmentedButton() {
+private fun ToeicSegmentedButton() {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("個別", "グラフ")
 
@@ -113,8 +115,8 @@ private fun ToeicSwSegmentedButton() {
             }
         }
         when (selectedIndex) {
-            0 -> ToeicSwIndividualScreen()
-            1 -> ToeicSwChartScreen()
+            0 -> ToeicIndividualScreen()
+            1 -> ToeicChartScreen()
         }
     }
 }

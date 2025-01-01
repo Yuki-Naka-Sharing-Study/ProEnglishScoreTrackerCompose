@@ -23,33 +23,47 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
 
 //「feature/pagerTabIndicatorOffset」をマージした。
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class)
 @Composable
 fun ToeicDataScreen() {
-    Column {
-        ExamTabLayout()
-    }
+
+
+//    val tabs = listOf(
+//        TabItem.TOEIC,
+//        TabItem.TOEIC_SW,
+//        TabItem.EIKEN,
+//        TabItem.TOEFL_IBT,
+//        TabItem.IELTS,
+//    )
+//    val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
+//
+//    Column {
+////        ExamTabLayout()
+//        Tabs(tabs = tabs, pagerState = pagerState)
+//        ToeicSegmentedButton()
+//        TabsContent(tabs = tabs, pagerState = pagerState)
+//    }
 }
 
-@OptIn(ExperimentalPagerApi::class)
-@ExperimentalMaterialApi
-@Composable
-private fun ExamTabLayout() {
-    val tabs = listOf(
-        TabItem.TOEIC,
-        TabItem.TOEIC_SW,
-        TabItem.EIKEN,
-        TabItem.TOEFL_IBT,
-        TabItem.IELTS,
-    )
-    val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
-
-    Column() {
-        Tabs(tabs = tabs, pagerState = pagerState)
-        ToeicSegmentedButton()
-        TabsContent(tabs = tabs, pagerState = pagerState)
-    }
-}
+//@OptIn(ExperimentalPagerApi::class)
+//@ExperimentalMaterialApi
+//@Composable
+//private fun ExamTabLayout() {
+//    val tabs = listOf(
+//        TabItem.TOEIC,
+//        TabItem.TOEIC_SW,
+//        TabItem.EIKEN,
+//        TabItem.TOEFL_IBT,
+//        TabItem.IELTS,
+//    )
+//    val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
+//
+//    Column() {
+//        Tabs(tabs = tabs, pagerState = pagerState)
+//        ToeicSegmentedButton()
+//        TabsContent(tabs = tabs, pagerState = pagerState)
+//    }
+//}
 
 @OptIn(ExperimentalPagerApi::class)
 @ExperimentalMaterialApi
