@@ -6,7 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun EikenIndividualScreen() {
-    Text(text = "英検個別データ保存画面")
+    Text(text = "英検記録確認画面(個別)")
 }
 
 @Preview(showBackground = true)

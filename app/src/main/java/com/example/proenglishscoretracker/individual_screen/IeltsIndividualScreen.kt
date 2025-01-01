@@ -6,7 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun IeltsIndividualScreen() {
-    Text(text = "Ielts記録確認画面(個別)")
+    Text(text = "IELTS記録確認画面(個別)")
 }
 
 @Preview(showBackground = true)
