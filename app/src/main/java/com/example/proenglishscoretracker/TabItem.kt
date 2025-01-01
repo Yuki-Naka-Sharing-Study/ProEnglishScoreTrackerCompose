@@ -14,11 +14,11 @@ import androidx.compose.ui.unit.sp
 typealias ComposableFun = @Composable () -> Unit
 
 sealed class TabItem(var icon: Int,var title: String, var screen: ComposableFun){
-    object TOEIC : TabItem(R.drawable.reading, "TOEIC", { KariToeicScreen() })
-    object TOEIC_SW : TabItem(R.drawable.listening, "TOEIC SW", { KariToeicSwScreen() })
-    object EIKEN : TabItem(R.drawable.speaking, "英検", { KariEikenScreen() })
-    object TOEFL_IBT : TabItem(R.drawable.speaking, "TOEFL iBT", { KariToeflIbtScreen() })
-    object IELTS : TabItem(R.drawable.speaking, "IELTS", { KariIeltsScreen() })
+    object TOEIC : TabItem(R.drawable.toeic, "TOEIC", { KariToeicScreen() })
+    object TOEIC_SW : TabItem(R.drawable.toeic, "TOEIC SW", { KariToeicSwScreen() })
+    object EIKEN : TabItem(R.drawable.eiken, "英検", { KariEikenScreen() })
+    object TOEFL_IBT : TabItem(R.drawable.toefl, "TOEFL iBT", { KariToeflIbtScreen() })
+    object IELTS : TabItem(R.drawable.ielts, "IELTS", { KariIeltsScreen() })
 }
 
 @Composable
@@ -29,7 +29,7 @@ private fun KariToeicScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "TOEIC",
+            text = "",
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             fontSize = 30.sp
@@ -45,7 +45,7 @@ private fun KariToeicSwScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "TOEIC SW",
+            text = "",
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             fontSize = 30.sp
@@ -61,7 +61,7 @@ private fun KariEikenScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "英検",
+            text = "",
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             fontSize = 30.sp
@@ -77,7 +77,7 @@ private fun KariToeflIbtScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "TOEFL iBT",
+            text = "",
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             fontSize = 30.sp
@@ -93,7 +93,7 @@ private fun KariIeltsScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "IELTS",
+            text = "",
             fontWeight = FontWeight.Bold,
             color = Color.Black,
             fontSize = 30.sp
