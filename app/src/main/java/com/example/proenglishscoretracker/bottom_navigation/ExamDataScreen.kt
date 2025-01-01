@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.data_screen
+package com.example.proenglishscoretracker.bottom_navigation
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
