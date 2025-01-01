@@ -210,11 +210,11 @@ fun BottomNavigationBar(navController: NavController) {
         contentColor = Color(0xFF00796B) // デフォルトのコンテンツカラー（アイコン・テキスト）
     ) {
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Check, contentDescription = "Confirm") },
+            icon = { Icon(Icons.Default.Check, contentDescription = "examDataScreen") },
             label = { Text("Confirm") },
-            selected = currentDestination?.route == "selectConfirm",
+            selected = currentDestination?.route == "examDataScreen",
             onClick = {
-                navController.navigate("selectConfirm") {
+                navController.navigate("examDataScreen") {
                     launchSingleTop = true
                     restoreState = true
                 }

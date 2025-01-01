@@ -1,6 +1,5 @@
 package com.example.proenglishscoretracker.data_screen
 
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.SegmentedButton
