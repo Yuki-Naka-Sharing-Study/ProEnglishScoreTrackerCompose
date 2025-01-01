@@ -44,6 +44,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
 import com.example.proenglishscoretracker.bottom_navigation.ExamDataScreen
+import com.example.proenglishscoretracker.bottom_navigation.ExamRecordScreen
 import com.example.proenglishscoretracker.record_screen.EikenIchijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
@@ -55,7 +56,6 @@ import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScree
 import com.example.proenglishscoretracker.select_screen.SelectEikenIchijiScreen
 import com.example.proenglishscoretracker.select_screen.SelectEikenNijiScreen
 import com.example.proenglishscoretracker.select_screen.SelectIeltsScreen
-import com.example.proenglishscoretracker.bottom_navigation.SelectRecordScreen
 import com.example.proenglishscoretracker.select_screen.SelectToeflIbtScreen
 import com.example.proenglishscoretracker.select_screen.SelectToeicScreen
 import com.example.proenglishscoretracker.select_screen.SelectToeicSwScreen
@@ -96,7 +96,7 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
         ) {
             // 以下、BottomNavigationBar
             composable("examDataScreen") { ExamDataScreen() }
-            composable("selectRecord") { SelectRecordScreen(navController) }
+            composable("examRecordScreen") { ExamRecordScreen(viewModel) }
             composable("setting") { SettingScreen() }
 
             // 以下、「SelectXxxScreen」
@@ -218,9 +218,9 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Edit, contentDescription = "Record") },
             label = { Text("Record") },
-            selected = currentDestination?.route == "selectRecord",
+            selected = currentDestination?.route == "examRecordScreen",
             onClick = {
-                navController.navigate("selectRecord") {
+                navController.navigate("examRecordScreen") {
                     launchSingleTop = true
                     restoreState = true
                 }
