@@ -26,6 +26,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.icons.filled.AutoGraph
+import androidx.compose.material.icons.filled.StackedLineChart
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -203,7 +205,7 @@ fun BottomNavigationBar(navController: NavController) {
         contentColor = Color(0xFF00796B) // デフォルトのコンテンツカラー（アイコン・テキスト）
     ) {
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Check, contentDescription = "examDataScreen") },
+            icon = { Icon(Icons.Default.StackedLineChart, contentDescription = "examDataScreen") },
             label = { Text("Confirm") },
             selected = currentDestination?.route == "examDataScreen",
             onClick = {
