@@ -4,14 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -26,13 +20,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.icons.filled.AutoGraph
 import androidx.compose.material.icons.filled.StackedLineChart
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.room.Room
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
 import com.example.proenglishscoretracker.chart_screen.EikenNijiChartScreen
@@ -55,12 +44,6 @@ import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
 import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
-import com.example.proenglishscoretracker.select_screen.SelectEikenIchijiScreen
-import com.example.proenglishscoretracker.select_screen.SelectEikenNijiScreen
-import com.example.proenglishscoretracker.select_screen.SelectIeltsScreen
-import com.example.proenglishscoretracker.select_screen.SelectToeflIbtScreen
-import com.example.proenglishscoretracker.select_screen.SelectToeicScreen
-import com.example.proenglishscoretracker.select_screen.SelectToeicSwScreen
 import com.example.proenglishscoretracker.bottom_navigation.SettingScreen
 
 class MainActivity : ComponentActivity() {
@@ -96,30 +79,10 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
             startDestination = "examDataScreen",
             Modifier.padding(innerPadding)
         ) {
-            // 以下、BottomNavigationBar
+            // 以下、「BottomNavigationBar」
             composable("examDataScreen") { ExamDataScreen() }
             composable("examRecordScreen") { ExamRecordScreen(viewModel) }
             composable("setting") { SettingScreen() }
-
-            // 以下、「SelectXxxScreen」
-            composable("selectEikenIchijiScreen") {
-                SelectEikenIchijiScreen(navController)
-            }
-            composable("selectEikenNijiScreen") {
-                SelectEikenNijiScreen(navController)
-            }
-            composable("selectToeicScreen") {
-                SelectToeicScreen(navController)
-            }
-            composable("selectToeicSwScreen") {
-                SelectToeicSwScreen(navController)
-            }
-            composable("selectToeflIbtScreen") {
-                SelectToeflIbtScreen(navController)
-            }
-            composable("selectIeltsScreen") {
-                SelectIeltsScreen(navController)
-            }
 
 
             // 以下、「SelectEikenIchijiFragment」
@@ -244,24 +207,4 @@ fun BottomNavigationBar(navController: NavController) {
             unselectedContentColor = Color(0xFFB2DFDB)
         )
     }
-}
-
-@Composable
-fun TapView(text: String, buttonColor: Color,  onTap: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .background(buttonColor)
-            .clickable { onTap()},
-        contentAlignment = Alignment.Center,
-        content = {
-            Text(
-                text = text,
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.White,
-                fontSize = 24.sp,
-            )
-        }
-    )
 }
