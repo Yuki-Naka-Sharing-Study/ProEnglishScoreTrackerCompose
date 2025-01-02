@@ -494,6 +494,7 @@ private fun ReadingImageViewPreview() {
     }
 }
 
+// TODO : 「ReadingInputField」をドラムロール型にし、3桁目の数字は0か5のみしか入力不可にする。
 @Composable
 private fun ReadingInputField(modifier: Modifier) {
     var number by remember { mutableStateOf("") }
