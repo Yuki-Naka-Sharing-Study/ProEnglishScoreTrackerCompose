@@ -313,7 +313,7 @@ private fun SelectDatePicker(
         }
         // おそらく以下のif文をホイスティング
         if (showDatePicker) {
-            Picker(
+            DatePicker(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 date = date,
                 onDone = {
@@ -328,7 +328,7 @@ private fun SelectDatePicker(
 }
 
 @Composable
-private fun Picker(
+private fun DatePicker(
     modifier: Modifier = Modifier,
     date: FDate,
     onDone: (FDate?) -> Unit,
