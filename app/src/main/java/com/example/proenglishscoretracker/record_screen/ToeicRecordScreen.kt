@@ -345,7 +345,7 @@ private fun Picker(
         selector.setDate(date)
     }
     Column(modifier = modifier.fillMaxWidth()) {
-        PickerView(
+        DatePickerView(
             listYear = state.listYear,
             listMonth = state.listMonth,
             listDayOfMonth = state.listDayOfMonth,
@@ -378,7 +378,7 @@ private fun Picker(
 }
 
 @Composable
-private fun PickerView(
+private fun DatePickerView(
     modifier: Modifier = Modifier,
     listYear: List<Int>,
     listMonth: List<Int>,
