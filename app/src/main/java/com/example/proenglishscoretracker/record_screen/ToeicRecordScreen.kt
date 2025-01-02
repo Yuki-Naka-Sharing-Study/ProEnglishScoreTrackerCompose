@@ -287,10 +287,12 @@ private fun SelectDayTextPreview() {
     }
 }
 
+// TODO : 「状態ホイスティング」を活用してDatePickerの表示位置を調整
 @Composable
 private fun SelectDatePicker(
     modifier: Modifier = Modifier,
 ) {
+    // おそらく以下の変数をホイスティング
     var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -309,6 +311,7 @@ private fun SelectDatePicker(
                 color = Color.White
                 )
         }
+        // おそらく以下のif文をホイスティング
         if (showDatePicker) {
             Picker(
                 modifier = Modifier.align(Alignment.BottomCenter),
