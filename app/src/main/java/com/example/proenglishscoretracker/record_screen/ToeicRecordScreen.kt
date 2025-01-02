@@ -1,6 +1,5 @@
 package com.example.proenglishscoretracker.record_screen
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.material.Text
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -23,9 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.DisplayMode.Companion.Picker
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -38,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,7 +57,6 @@ import com.sd.lib.date.fDate
 import com.sd.lib.date.selectDayOfMonthWithIndex
 import com.sd.lib.date.selectMonthWithIndex
 import com.sd.lib.date.selectYearWithIndex
-import java.util.Calendar
 
 @Composable
 fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
@@ -298,7 +292,7 @@ private fun SelectDatePicker(
     modifier: Modifier = Modifier,
 ) {
     var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-    var showPicker by remember { mutableStateOf(false) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     Box(
         modifier = modifier
@@ -306,7 +300,7 @@ private fun SelectDatePicker(
     ) {
         Button(
             modifier = Modifier.align(Alignment.TopCenter),
-            onClick = { showPicker = true },
+            onClick = { showDatePicker = true },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color.Blue),
         ) {
@@ -315,12 +309,12 @@ private fun SelectDatePicker(
                 color = Color.White
                 )
         }
-        if (showPicker) {
+        if (showDatePicker) {
             Picker(
                 modifier = Modifier.align(Alignment.BottomCenter),
                 date = date,
                 onDone = {
-                    showPicker = false
+                    showDatePicker = false
                     if (it != null) {
                         date = it
                     }
