@@ -404,10 +404,9 @@ private fun PickerView(
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         // Year
         FVerticalWheelPicker(
