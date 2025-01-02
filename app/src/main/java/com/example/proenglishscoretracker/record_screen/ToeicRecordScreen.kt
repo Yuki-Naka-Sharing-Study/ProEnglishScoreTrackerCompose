@@ -9,19 +9,25 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DisplayMode.Companion.Picker
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -42,9 +48,20 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
+import com.example.proenglishscoretracker.wheel_picker.CurrentIndex
+import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
+import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
+import com.sd.lib.date.FDate
+import com.sd.lib.date.FDateSelector
+import com.sd.lib.date.fCurrentDate
+import com.sd.lib.date.fDate
+import com.sd.lib.date.selectDayOfMonthWithIndex
+import com.sd.lib.date.selectMonthWithIndex
+import com.sd.lib.date.selectYearWithIndex
 import java.util.Calendar
 
 @Composable
@@ -74,14 +91,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
-            Column {
-                SelectDatePicker(LocalContext.current) { date->
-                    selectedDate = date
-                    selectedDateEmptyErrorText = ""
-                }
-                Text(selectedDate)
-                if (selectedDate.isEmpty()) ErrorText(selectedDateEmptyErrorText)
-            }
+            SelectDatePicker()
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -284,27 +294,156 @@ private fun SelectDayTextPreview() {
 }
 
 @Composable
-private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit) {
-    val calendar = Calendar.getInstance()
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-    val datePickerDialog = android.app.DatePickerDialog(
-        context,
-        { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate =
-                String.format("%04d年%02d月%02d日", selectedYear, selectedMonth + 1, selectedDay)
-            onDateSelected(formattedDate)
-        }, year, month, day
-    )
-    datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-    Button(onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
-        containerColor = Color.Blue
-    ), shape = RoundedCornerShape(8.dp)) {
-        Text(
-            text = "受験日を選択する",
-            color = Color.White,
+private fun SelectDatePicker(
+    modifier: Modifier = Modifier,
+) {
+    var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+    var showPicker by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = modifier
+            .navigationBarsPadding()
+    ) {
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { showPicker = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Blue),
+        ) {
+            Text(
+                text = date.toString(),
+                color = Color.White
+                )
+        }
+        if (showPicker) {
+            Picker(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                date = date,
+                onDone = {
+                    showPicker = false
+                    if (it != null) {
+                        date = it
+                    }
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun Picker(
+    modifier: Modifier = Modifier,
+    date: FDate,
+    onDone: (FDate?) -> Unit,
+) {
+    val selector = remember {
+        FDateSelector(
+            startDate = fDate(2016, 1, 1),
+            endDate = fCurrentDate(),
         )
+    }
+    val state by selector.stateFlow.collectAsStateWithLifecycle()
+
+    LaunchedEffect(selector, date) {
+        selector.setDate(date)
+    }
+    Column(modifier = modifier.fillMaxWidth()) {
+        PickerView(
+            listYear = state.listYear,
+            listMonth = state.listMonth,
+            listDayOfMonth = state.listDayOfMonth,
+            indexOfYear = state.indexOfYear,
+            indexOfMonth = state.indexOfMonth,
+            indexOfDayOfMonth = state.indexOfDayOfMonth,
+            onYearIndexChange = {
+                selector.selectYearWithIndex(it)
+            },
+            onMonthIndexChange = {
+                selector.selectMonthWithIndex(it)
+            },
+            onDayOfMonthIndexChange = {
+                selector.selectDayOfMonthWithIndex(it)
+            },
+        )
+        Button(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            onClick = { onDone(selector.date) },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Blue),
+        ) {
+            Text(
+                text = "完了",
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+private fun PickerView(
+    modifier: Modifier = Modifier,
+    listYear: List<Int>,
+    listMonth: List<Int>,
+    listDayOfMonth: List<Int>,
+    indexOfYear: Int,
+    indexOfMonth: Int,
+    indexOfDayOfMonth: Int,
+    onYearIndexChange: suspend (Int) -> Unit,
+    onMonthIndexChange: suspend (Int) -> Unit,
+    onDayOfMonthIndexChange: suspend (Int) -> Unit,
+) {
+    if (indexOfYear < 0) return
+    if (indexOfMonth < 0) return
+    if (indexOfDayOfMonth < 0) return
+
+    val yearState = rememberFWheelPickerState(indexOfYear)
+    val monthState = rememberFWheelPickerState(indexOfMonth)
+    val dayOfMonthState = rememberFWheelPickerState(indexOfDayOfMonth)
+
+    yearState.CurrentIndex(onYearIndexChange)
+    monthState.CurrentIndex(onMonthIndexChange)
+    dayOfMonthState.CurrentIndex(onDayOfMonthIndexChange)
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        // Year
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = yearState,
+            count = listYear.size,
+        ) { index ->
+            listYear.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
+
+        // Month
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = monthState,
+            count = listMonth.size,
+        ) { index ->
+            listMonth.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
+
+        // Day of month
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = dayOfMonthState,
+            count = listDayOfMonth.size,
+        ) { index ->
+            listDayOfMonth.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
     }
 }
 
