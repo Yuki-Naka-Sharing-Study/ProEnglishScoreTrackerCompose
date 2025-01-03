@@ -21,9 +21,12 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -185,41 +188,28 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        Box{
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-                MemoText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-                MemoInputField(
-                    placeholder = stringResource(id = R.string.memo),
-                    value = memoText,
-                    onValueChange = { memoText = it }
-                )
-            }
-            if (showDatePicker) {
-                DatePicker(
-                    date = date,
-                    onDone = {
-                        showDatePicker = false
-                        if (it != null) {
-                            date = it
-                        }
-                    },
-                )
-            }
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+            MemoText("")
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            MemoInputField(
+                placeholder = stringResource(id = R.string.memo),
+                value = memoText,
+                onValueChange = { memoText = it }
+            )
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         val savable = readingScore.toString().isNotBlank() &&
-                    listeningScore.toString().isNotBlank() &&
-                    !selectedDateEmptyError &&
-                    !readingMaxScoreError &&
-                    !listeningMaxScoreError &&
-                    !readingScoreDivisionError &&
-                    !listeningScoreDivisionError
+                listeningScore.toString().isNotBlank() &&
+                !selectedDateEmptyError &&
+                !readingMaxScoreError &&
+                !listeningMaxScoreError &&
+                !readingScoreDivisionError &&
+                !listeningScoreDivisionError
 
         var showSaved by remember { mutableStateOf("") }
 
@@ -241,7 +231,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                             listeningMaxScoreErrorText = ""
                             readingScoreDivisionErrorText = ""
                             listeningScoreDivisionErrorText = ""
-                            showSaved = "記録しました。"
+                            showSaved = "登録しました。"
                             viewModel.saveToeicValues(
                                 readingScore,
                                 listeningScore,
@@ -276,6 +266,17 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                         }
                     },
                 )
+                if (showDatePicker) {
+                    DatePicker(
+                        date = date,
+                        onDone = {
+                            showDatePicker = false
+                            if (it != null) {
+                                date = it
+                            }
+                        },
+                    )
+                }
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 ShowSavedText(showSaved)
             }
@@ -326,7 +327,7 @@ private fun SelectDatePicker(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Blue),
+            colors = ButtonDefaults.buttonColors(Color.Green),
         ) {
             Text(
                 text = date.toString(),
@@ -353,40 +354,54 @@ private fun DatePicker(
     LaunchedEffect(selector, date) {
         selector.setDate(date)
     }
-    Column(
+    androidx.compose.material3.Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFBB86FC)
+        ),
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        verticalArrangement = Arrangement.Center
-    ) {
-        DatePickerView(
-            listYear = state.listYear,
-            listMonth = state.listMonth,
-            listDayOfMonth = state.listDayOfMonth,
-            indexOfYear = state.indexOfYear,
-            indexOfMonth = state.indexOfMonth,
-            indexOfDayOfMonth = state.indexOfDayOfMonth,
-            onYearIndexChange = {
-                selector.selectYearWithIndex(it)
-            },
-            onMonthIndexChange = {
-                selector.selectMonthWithIndex(it)
-            },
-            onDayOfMonthIndexChange = {
-                selector.selectDayOfMonthWithIndex(it)
-            },
-        )
-        Button(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            onClick = { onDone(selector.date) },
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Blue),
-        ) {
-            Text(
-                text = "完了",
-                color = Color.White
+            .size(
+                width = 240.dp,
+                height = 280.dp
             )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            DatePickerView(
+                listYear = state.listYear,
+                listMonth = state.listMonth,
+                listDayOfMonth = state.listDayOfMonth,
+                indexOfYear = state.indexOfYear,
+                indexOfMonth = state.indexOfMonth,
+                indexOfDayOfMonth = state.indexOfDayOfMonth,
+                onYearIndexChange = {
+                    selector.selectYearWithIndex(it)
+                },
+                onMonthIndexChange = {
+                    selector.selectMonthWithIndex(it)
+                },
+                onDayOfMonthIndexChange = {
+                    selector.selectDayOfMonthWithIndex(it)
+                },
+            )
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Button(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                onClick = { onDone(selector.date) },
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(Color.Green),
+            ) {
+                Text(
+                    text = "確定",
+                    color = Color.White
+                )
+            }
         }
     }
 }
