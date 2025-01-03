@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -67,6 +69,8 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+        var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+        var showDatePicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
         var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
@@ -85,7 +89,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
-            SelectDatePicker()
+            SelectDatePicker(
+                date = date,
+                onShowDatePickerChange = { showDatePicker = it }
+            )
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -178,23 +185,35 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            MemoInputField(
-                placeholder = stringResource(id = R.string.memo),
-                value = memoText,
-                onValueChange = { memoText = it }
-            )
+        Box{
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                MemoText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                MemoInputField(
+                    placeholder = stringResource(id = R.string.memo),
+                    value = memoText,
+                    onValueChange = { memoText = it }
+                )
+            }
+            if (showDatePicker) {
+                DatePicker(
+                    date = date,
+                    onDone = {
+                        showDatePicker = false
+                        if (it != null) {
+                            date = it
+                        }
+                    },
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val savable =
-            readingScore.toString().isNotBlank() &&
+        val savable = readingScore.toString().isNotBlank() &&
                     listeningScore.toString().isNotBlank() &&
                     !selectedDateEmptyError &&
                     !readingMaxScoreError &&
@@ -233,16 +252,20 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                 selectedDateEmptyErrorText = "受験日が記入されていません。"
                             }
                             if (readingMaxScoreError) {
-                                readingMaxScoreErrorText = "Readingスコアは496未満である必要があります。"
+                                readingMaxScoreErrorText =
+                                    "Readingスコアは496未満である必要があります。"
                             }
                             if (listeningMaxScoreError) {
-                                listeningMaxScoreErrorText = "Listeningスコアは496未満である必要があります。"
+                                listeningMaxScoreErrorText =
+                                    "Listeningスコアは496未満である必要があります。"
                             }
                             if (readingScoreDivisionError) {
-                                readingScoreDivisionErrorText = "Readingスコアはである5の倍数である必要があります。"
+                                readingScoreDivisionErrorText =
+                                    "Readingスコアはである5の倍数である必要があります。"
                             }
                             if (listeningScoreDivisionError) {
-                                listeningScoreDivisionErrorText = "Listeningスコアはである5の倍数である必要があります。"
+                                listeningScoreDivisionErrorText =
+                                    "Listeningスコアはである5の倍数である必要があります。"
                             }
                             if (!readingScoreDivisionError) {
                                 readingScoreDivisionErrorText = ""
@@ -290,38 +313,24 @@ private fun SelectDayTextPreview() {
 // TODO : 「状態ホイスティング」を活用してDatePickerの表示位置を調整
 @Composable
 private fun SelectDatePicker(
+    date: FDate,
+    onShowDatePickerChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // おそらく以下の変数をホイスティング
-    var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-    var showDatePicker by remember { mutableStateOf(false) }
-
     Box(
         modifier = modifier
             .navigationBarsPadding()
     ) {
+        // 年月日を表示するボタン
         Button(
             modifier = Modifier.align(Alignment.TopCenter),
-            onClick = { showDatePicker = true },
+            onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color.Blue),
         ) {
             Text(
                 text = date.toString(),
                 color = Color.White
-                )
-        }
-        // おそらく以下のif文をホイスティング
-        if (showDatePicker) {
-            DatePicker(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                date = date,
-                onDone = {
-                    showDatePicker = false
-                    if (it != null) {
-                        date = it
-                    }
-                },
             )
         }
     }
@@ -344,7 +353,12 @@ private fun DatePicker(
     LaunchedEffect(selector, date) {
         selector.setDate(date)
     }
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.Center
+    ) {
         DatePickerView(
             listYear = state.listYear,
             listMonth = state.listMonth,
@@ -501,7 +515,7 @@ private fun ReadingInputField(modifier: Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -567,7 +581,7 @@ private fun ListeningInputField(modifier: Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -614,7 +628,7 @@ private fun MemoTextField(modifier: Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -720,7 +734,11 @@ private fun ListeningScoreInputField(
 }
 
 @Composable
-private fun MemoInputField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun MemoInputField(
+    placeholder: String,
+    value: String,
+    onValueChange: (String) -> Unit = {}
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
