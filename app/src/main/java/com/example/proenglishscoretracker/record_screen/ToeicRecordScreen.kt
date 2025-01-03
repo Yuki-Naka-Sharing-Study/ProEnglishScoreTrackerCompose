@@ -276,6 +276,9 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                 date = it
                             }
                         },
+                        onDismissRequest = {
+                            showDatePicker = false
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
@@ -343,7 +346,7 @@ private fun DatePicker(
     modifier: Modifier = Modifier,
     date: FDate,
     onDone: (FDate?) -> Unit,
-//    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit
 ) {
     val selector = remember {
         FDateSelector(
@@ -356,8 +359,8 @@ private fun DatePicker(
     LaunchedEffect(selector, date) {
         selector.setDate(date)
     }
-//    Dialog(onDismissRequest = { onDismissRequest() }) {
-    Dialog(onDismissRequest = {}) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+//    Dialog(onDismissRequest = {}) {
         androidx.compose.material3.Card(
             colors = CardDefaults.cardColors(
                 containerColor = Color(0xFFBB86FC)
