@@ -48,6 +48,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.R
@@ -342,6 +343,7 @@ private fun DatePicker(
     modifier: Modifier = Modifier,
     date: FDate,
     onDone: (FDate?) -> Unit,
+//    onDismissRequest: () -> Unit
 ) {
     val selector = remember {
         FDateSelector(
@@ -354,53 +356,56 @@ private fun DatePicker(
     LaunchedEffect(selector, date) {
         selector.setDate(date)
     }
-    androidx.compose.material3.Card(
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFBB86FC)
-        ),
-        modifier = Modifier
-            .size(
-                width = 240.dp,
-                height = 280.dp
-            )
-    ) {
-        Column(
+//    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(onDismissRequest = {}) {
+        androidx.compose.material3.Card(
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFBB86FC)
+            ),
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            DatePickerView(
-                listYear = state.listYear,
-                listMonth = state.listMonth,
-                listDayOfMonth = state.listDayOfMonth,
-                indexOfYear = state.indexOfYear,
-                indexOfMonth = state.indexOfMonth,
-                indexOfDayOfMonth = state.indexOfDayOfMonth,
-                onYearIndexChange = {
-                    selector.selectYearWithIndex(it)
-                },
-                onMonthIndexChange = {
-                    selector.selectMonthWithIndex(it)
-                },
-                onDayOfMonthIndexChange = {
-                    selector.selectDayOfMonthWithIndex(it)
-                },
-            )
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Button(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                onClick = { onDone(selector.date) },
-                shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(Color.Green),
-            ) {
-                Text(
-                    text = "確定",
-                    color = Color.White
+                .size(
+                    width = 240.dp,
+                    height = 280.dp
                 )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                DatePickerView(
+                    listYear = state.listYear,
+                    listMonth = state.listMonth,
+                    listDayOfMonth = state.listDayOfMonth,
+                    indexOfYear = state.indexOfYear,
+                    indexOfMonth = state.indexOfMonth,
+                    indexOfDayOfMonth = state.indexOfDayOfMonth,
+                    onYearIndexChange = {
+                        selector.selectYearWithIndex(it)
+                    },
+                    onMonthIndexChange = {
+                        selector.selectMonthWithIndex(it)
+                    },
+                    onDayOfMonthIndexChange = {
+                        selector.selectDayOfMonthWithIndex(it)
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    onClick = { onDone(selector.date) },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(Color.Green),
+                ) {
+                    Text(
+                        text = "確定",
+                        color = Color.White
+                    )
+                }
             }
         }
     }
