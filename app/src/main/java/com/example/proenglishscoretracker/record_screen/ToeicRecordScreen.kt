@@ -94,6 +94,20 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 date = date,
                 onShowDatePickerChange = { showDatePicker = it }
             )
+            if (showDatePicker) {
+                DatePicker(
+                    date = date,
+                    onDone = {
+                        showDatePicker = false
+                        if (it != null) {
+                            date = it
+                        }
+                    },
+                    onDismissRequest = {
+                        showDatePicker = false
+                    }
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -264,20 +278,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                         }
                     },
                 )
-                if (showDatePicker) {
-                    DatePicker(
-                        date = date,
-                        onDone = {
-                            showDatePicker = false
-                            if (it != null) {
-                                date = it
-                            }
-                        },
-                        onDismissRequest = {
-                            showDatePicker = false
-                        }
-                    )
-                }
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 ShowSavedText(showSaved)
             }
