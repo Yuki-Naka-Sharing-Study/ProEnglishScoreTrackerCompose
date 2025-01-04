@@ -1,6 +1,5 @@
 package com.example.proenglishscoretracker.record_screen
 
-import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -45,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,7 +60,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.R
-import java.util.*
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import com.example.proenglishscoretracker.wheel_picker.CurrentIndex
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
