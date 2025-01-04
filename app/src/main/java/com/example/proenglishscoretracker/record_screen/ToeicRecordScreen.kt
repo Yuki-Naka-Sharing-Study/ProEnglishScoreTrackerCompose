@@ -129,16 +129,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                ReadingScoreInputField(
-                    placeholder = stringResource(id = R.string.toeic_reading_score),
-                    value = readingScore,
-                    onValueChange = { readingScore = it },
-                    onFocusChanged = {
-                        focusStateOfReading = it
-                    }
-                )
-            }
+
         }
 
         Row {
@@ -528,36 +519,7 @@ private fun ReadingImageViewPreview() {
 }
 
 // TODO : 「ReadingInputField」をドラムロール型にし、3桁目の数字は0か5のみしか入力不可にする。
-@Composable
-private fun ReadingInputField(modifier: Modifier) {
-    var number by remember { mutableStateOf("") }
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
-            value = number,
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    number = newValue
-                }
-            },
-            label = { Text("495") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-    }
-}
 
-@Preview(showBackground = true)
-@Composable
-private fun ReadingInputFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        ReadingInputField(modifier = Modifier)
-    }
-}
 
 @Composable
 private fun ListeningText(listeningText: String, modifier: Modifier = Modifier) {
@@ -669,46 +631,6 @@ private fun MemoTextField(modifier: Modifier) {
 private fun MemoTextFieldPreview() {
     ProEnglishScoreTrackerTheme {
         MemoTextField(modifier = Modifier)
-    }
-}
-
-@Composable
-private fun ReadingScoreInputField(
-    placeholder: String,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
     }
 }
 
