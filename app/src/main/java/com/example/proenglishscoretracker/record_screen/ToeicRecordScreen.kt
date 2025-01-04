@@ -131,6 +131,13 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
             ShowReadingPicker(onShowReadingPickerChange = { showReadingPicker = it })
+            if (showReadingPicker) {
+                ReadingPicker(
+                    onDismissRequest = {
+                        showDatePicker = false
+                    }
+                )
+            }
         }
 
         Row {
@@ -540,6 +547,50 @@ private fun ShowReadingPicker(
                 text = "495",
                 color = Color.White
             )
+        }
+    }
+}
+
+@Composable
+private fun ReadingPicker(
+    onDismissRequest: () -> Unit
+) {
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        androidx.compose.material3.Card(
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFBB86FC)
+            ),
+            modifier = Modifier
+                .size(
+                    width = 240.dp,
+                    height = 280.dp
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+//                ReadingPickerView(
+//
+//                )
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+//                Button(
+//                    modifier = Modifier
+//                        .align(Alignment.CenterHorizontally),
+//                    onClick = { onDone(selector.) },
+//                    shape = RoundedCornerShape(8.dp),
+//                    colors = ButtonDefaults.buttonColors(Color.Green),
+//                ) {
+//                    Text(
+//                        text = "確定",
+//                        color = Color.White
+//                    )
+//                }
+            }
         }
     }
 }
