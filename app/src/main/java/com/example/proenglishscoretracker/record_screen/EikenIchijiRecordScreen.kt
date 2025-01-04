@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -25,12 +27,15 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -53,10 +58,22 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.R
 import java.util.*
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
+import com.example.proenglishscoretracker.wheel_picker.CurrentIndex
+import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
+import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
+import com.sd.lib.date.FDate
+import com.sd.lib.date.FDateSelector
+import com.sd.lib.date.fCurrentDate
+import com.sd.lib.date.fDate
+import com.sd.lib.date.selectDayOfMonthWithIndex
+import com.sd.lib.date.selectMonthWithIndex
+import com.sd.lib.date.selectYearWithIndex
 
 @Composable
 fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
@@ -69,6 +86,8 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
+        var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+        var showDatePicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
         var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
@@ -87,14 +106,22 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                SelectDatePicker(LocalContext.current) { date ->
-                    selectedDate = date
-                    selectedDateEmptyErrorText = ""
-                }
-                Text(selectedDate)
-                if (selectedDate.isEmpty()) ErrorText(
-                    selectedDateEmptyErrorText
+            SelectDatePicker(
+                date = date,
+                onShowDatePickerChange = { showDatePicker = it }
+            )
+            if (showDatePicker) {
+                DatePicker(
+                    date = date,
+                    onDone = {
+                        showDatePicker = false
+                        if (it != null) {
+                            date = it
+                        }
+                    },
+                    onDismissRequest = {
+                        showDatePicker = false
+                    }
                 )
             }
         }
@@ -335,34 +362,165 @@ private fun SelectDayTextPreview() {
 }
 
 @Composable
-private fun SelectDatePicker(context: Context, onDateSelected: (String) -> Unit) {
-    val calendar = Calendar.getInstance()
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-    val datePickerDialog = android.app.DatePickerDialog(
-        context,
-        { _, selectedYear, selectedMonth, selectedDay ->
-            val formattedDate =
-                String.format(
-                    "%04d年%02d月%02d日",
-                    selectedYear,
-                    selectedMonth + 1,
-                    selectedDay
-                )
-            onDateSelected(formattedDate)
-        }, year, month, day
-    )
-    datePickerDialog.datePicker.maxDate = calendar.timeInMillis
-    Button(
-        onClick = { datePickerDialog.show() }, colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Blue
-        ), shape = RoundedCornerShape(8.dp)
+private fun SelectDatePicker(
+    date: FDate,
+    onShowDatePickerChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .navigationBarsPadding()
     ) {
-        Text(
-            text = "受験日を選択する",
-            color = Color.White,
+        // 年月日を表示するボタン
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { onShowDatePickerChange(true) },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Green),
+        ) {
+            Text(
+                text = date.toString(),
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+private fun DatePicker(
+    modifier: Modifier = Modifier,
+    date: FDate,
+    onDone: (FDate?) -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    val selector = remember {
+        FDateSelector(
+            startDate = fDate(2016, 1, 1),
+            endDate = fCurrentDate(),
         )
+    }
+    val state by selector.stateFlow.collectAsStateWithLifecycle()
+
+    LaunchedEffect(selector, date) {
+        selector.setDate(date)
+    }
+    Dialog(onDismissRequest = { onDismissRequest() }) {
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFBB86FC)
+            ),
+            modifier = Modifier
+                .size(
+                    width = 240.dp,
+                    height = 280.dp
+                )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                DatePickerView(
+                    listYear = state.listYear,
+                    listMonth = state.listMonth,
+                    listDayOfMonth = state.listDayOfMonth,
+                    indexOfYear = state.indexOfYear,
+                    indexOfMonth = state.indexOfMonth,
+                    indexOfDayOfMonth = state.indexOfDayOfMonth,
+                    onYearIndexChange = {
+                        selector.selectYearWithIndex(it)
+                    },
+                    onMonthIndexChange = {
+                        selector.selectMonthWithIndex(it)
+                    },
+                    onDayOfMonthIndexChange = {
+                        selector.selectDayOfMonthWithIndex(it)
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+                Button(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    onClick = { onDone(selector.date) },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(Color.Green),
+                ) {
+                    Text(
+                        text = "確定",
+                        color = Color.White
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DatePickerView(
+    modifier: Modifier = Modifier,
+    listYear: List<Int>,
+    listMonth: List<Int>,
+    listDayOfMonth: List<Int>,
+    indexOfYear: Int,
+    indexOfMonth: Int,
+    indexOfDayOfMonth: Int,
+    onYearIndexChange: suspend (Int) -> Unit,
+    onMonthIndexChange: suspend (Int) -> Unit,
+    onDayOfMonthIndexChange: suspend (Int) -> Unit,
+) {
+    if (indexOfYear < 0) return
+    if (indexOfMonth < 0) return
+    if (indexOfDayOfMonth < 0) return
+
+    val yearState = rememberFWheelPickerState(indexOfYear)
+    val monthState = rememberFWheelPickerState(indexOfMonth)
+    val dayOfMonthState = rememberFWheelPickerState(indexOfDayOfMonth)
+
+    yearState.CurrentIndex(onYearIndexChange)
+    monthState.CurrentIndex(onMonthIndexChange)
+    dayOfMonthState.CurrentIndex(onDayOfMonthIndexChange)
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        // Year
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = yearState,
+            count = listYear.size,
+        ) { index ->
+            listYear.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
+
+        // Month
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = monthState,
+            count = listMonth.size,
+        ) { index ->
+            listMonth.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
+
+        // Day of month
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = dayOfMonthState,
+            count = listDayOfMonth.size,
+        ) { index ->
+            listDayOfMonth.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
     }
 }
 
