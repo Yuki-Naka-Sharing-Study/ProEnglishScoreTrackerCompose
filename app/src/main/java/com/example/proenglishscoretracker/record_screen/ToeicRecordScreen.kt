@@ -553,8 +553,12 @@ private fun ShowReadingPicker(
 
 @Composable
 private fun ReadingPicker(
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
+    val listThreeDigits: List<Int> = (1..4).toList()
+    val listTwoDigits: List<Int> = (1..9).toList()
+    val listOneDigit: List<Int> = listOf(0, 5)
+
     Dialog(onDismissRequest = { onDismissRequest() }) {
         androidx.compose.material3.Card(
             colors = CardDefaults.cardColors(
@@ -572,9 +576,17 @@ private fun ReadingPicker(
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Center
             ) {
-//                ReadingPickerView(
-//
-//                )
+                ReadingPickerView(
+                    listThreeDigits = listThreeDigits,
+                    listTwoDigits = listTwoDigits,
+                    listOneDigit = listOneDigit,
+                    indexOfThreeDigits = 4,
+                    indexOfTwoDigits = 9,
+                    indexOfOneDigit = 5,
+                    onThreeDigitsIndexChange = {},
+                    onTwoDigitsIndexChange = {},
+                    onOneDigitIndexChange = {}
+                )
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
@@ -658,63 +670,6 @@ private fun ReadingPickerView(
                 Text(text = value.toString())
             }
         }
-    }
-}
-
-@Composable
-private fun ThreeDigits() {
-    FVerticalWheelPicker(
-        modifier = Modifier.width(64.dp),
-        // Set item count.
-        count = 5,
-        // Set item height.
-        itemHeight = 48.dp,
-        // Set unfocused count.
-        unfocusedCount = 3,
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
-private fun TwoDigits() {
-    FVerticalWheelPicker(
-        modifier = Modifier.width(64.dp),
-        // Set item count.
-        count = 10,
-        // Set item height.
-        itemHeight = 48.dp,
-        // Set unfocused count.
-        unfocusedCount = 3,
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-// 三桁目の数字は0か5のみしか入力不可
-@Composable
-private fun OneDigit() {
-    val items = listOf(0, 5)
-
-    FVerticalWheelPicker(
-        modifier = Modifier.width(64.dp),
-        // Set item count.
-        count = items.size,
-        // Set item height.
-        itemHeight = 48.dp,
-        // Set unfocused count.
-        unfocusedCount = 3,
-    ) { index ->
-        Text(
-            items[index].toString(),
-            color = Color.Black
-        )
     }
 }
 
