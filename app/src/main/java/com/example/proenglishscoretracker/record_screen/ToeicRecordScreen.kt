@@ -135,6 +135,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 ReadingPicker(
                     onDismissRequest = {
                         showDatePicker = false
+                    },
+                    score = readingScore,
+                    onScoreChange = { newScore ->
+                        readingScore = newScore
                     }
                 )
             }
@@ -544,7 +548,7 @@ private fun ShowReadingPicker(
             colors = ButtonDefaults.buttonColors(Color.Green),
         ) {
             Text(
-                text = "495",
+                text = "Readingスコアを入力",
                 color = Color.White
             )
         }
@@ -554,119 +558,68 @@ private fun ShowReadingPicker(
 @Composable
 private fun ReadingPicker(
     onDismissRequest: () -> Unit,
-) {
-    val listThreeDigits: List<Int> = (1..4).toList()
-    val listTwoDigits: List<Int> = (1..9).toList()
-    val listOneDigit: List<Int> = listOf(0, 5)
-
-    Dialog(onDismissRequest = { onDismissRequest() }) {
-        androidx.compose.material3.Card(
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFBB86FC)
-            ),
-            modifier = Modifier
-                .size(
-                    width = 240.dp,
-                    height = 280.dp
-                )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                ReadingPickerView(
-                    listThreeDigits = listThreeDigits,
-                    listTwoDigits = listTwoDigits,
-                    listOneDigit = listOneDigit,
-                    indexOfThreeDigits = 4,
-                    indexOfTwoDigits = 9,
-                    indexOfOneDigit = 5,
-                    onThreeDigitsIndexChange = {},
-                    onTwoDigitsIndexChange = {},
-                    onOneDigitIndexChange = {}
-                )
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-//                Button(
-//                    modifier = Modifier
-//                        .align(Alignment.CenterHorizontally),
-//                    onClick = { onDone(selector.) },
-//                    shape = RoundedCornerShape(8.dp),
-//                    colors = ButtonDefaults.buttonColors(Color.Green),
-//                ) {
-//                    Text(
-//                        text = "確定",
-//                        color = Color.White
-//                    )
-//                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ReadingPickerView(
+    score: Int,
+    onScoreChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    listThreeDigits: List<Int>,
-    listTwoDigits: List<Int>,
-    listOneDigit: List<Int>,
-    indexOfThreeDigits: Int,
-    indexOfTwoDigits: Int,
-    indexOfOneDigit: Int,
-    onThreeDigitsIndexChange: suspend (Int) -> Unit,
-    onTwoDigitsIndexChange: suspend (Int) -> Unit,
-    onOneDigitIndexChange: suspend (Int) -> Unit,
 ) {
-    if (indexOfThreeDigits < 0) return
-    if (indexOfTwoDigits < 0) return
-    if (indexOfOneDigit < 0) return
+    val firstDigitOptions = listOf(0, 5)
+    val secondDigitOptions = (0..9).toList()
+    val thirdDigitOptions = (0..4).toList()
 
-    val threeDigitsState = rememberFWheelPickerState(indexOfThreeDigits)
-    val twoDigitsState = rememberFWheelPickerState(indexOfTwoDigits)
-    val oneDigitState = rememberFWheelPickerState(indexOfOneDigit)
+    val firstDigit = score / 100
+    val secondDigit = (score % 100) / 10
+    val thirdDigit = score % 10
 
-    threeDigitsState.CurrentIndex(onThreeDigitsIndexChange)
-    twoDigitsState.CurrentIndex(onTwoDigitsIndexChange)
-    oneDigitState.CurrentIndex(onOneDigitIndexChange)
+    val firstDigitState = rememberFWheelPickerState(firstDigit)
+    val secondDigitState = rememberFWheelPickerState(secondDigit)
+    val thirdDigitState = rememberFWheelPickerState(thirdDigit)
+
+    firstDigitState.CurrentIndex {
+        onScoreChange(firstDigitOptions[it] * 100 + secondDigit * 10 + thirdDigit)
+    }
+    secondDigitState.CurrentIndex {
+        onScoreChange(firstDigit * 100 + secondDigitOptions[it] * 10 + thirdDigit)
+    }
+    thirdDigitState.CurrentIndex {
+        onScoreChange(firstDigit * 100 + secondDigit * 10 + thirdDigitOptions[it])
+    }
 
     Row(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        // threeDigits
+        // First digit (0 or 5)
         FVerticalWheelPicker(
             modifier = Modifier.weight(1f),
-            state = threeDigitsState,
-            count = listThreeDigits.size,
+            state = firstDigitState,
+            count = firstDigitOptions.size,
         ) { index ->
-            listThreeDigits.getOrNull(index)?.let { value ->
+            firstDigitOptions.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
             }
         }
 
-        // twoDigits
+        // Second digit (0-9)
         FVerticalWheelPicker(
             modifier = Modifier.weight(1f),
-            state = twoDigitsState,
-            count = listTwoDigits.size,
+            state = secondDigitState,
+            count = secondDigitOptions.size,
         ) { index ->
-            listTwoDigits.getOrNull(index)?.let { value ->
+            secondDigitOptions.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
             }
         }
 
-        // oneDigit
+        // Third digit (0-4)
         FVerticalWheelPicker(
             modifier = Modifier.weight(1f),
-            state = oneDigitState,
-            count = listOneDigit.size,
+            state = thirdDigitState,
+            count = thirdDigitOptions.size,
         ) { index ->
-            listOneDigit.getOrNull(index)?.let { value ->
+            thirdDigitOptions.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
             }
         }
