@@ -596,6 +596,72 @@ private fun ReadingPicker(
 }
 
 @Composable
+private fun ReadingPickerView(
+    modifier: Modifier = Modifier,
+    listThreeDigits: List<Int>,
+    listTwoDigits: List<Int>,
+    listOneDigit: List<Int>,
+    indexOfThreeDigits: Int,
+    indexOfTwoDigits: Int,
+    indexOfOneDigit: Int,
+    onThreeDigitsIndexChange: suspend (Int) -> Unit,
+    onTwoDigitsIndexChange: suspend (Int) -> Unit,
+    onOneDigitIndexChange: suspend (Int) -> Unit,
+) {
+    if (indexOfThreeDigits < 0) return
+    if (indexOfTwoDigits < 0) return
+    if (indexOfOneDigit < 0) return
+
+    val threeDigitsState = rememberFWheelPickerState(indexOfThreeDigits)
+    val twoDigitsState = rememberFWheelPickerState(indexOfTwoDigits)
+    val oneDigitState = rememberFWheelPickerState(indexOfOneDigit)
+
+    threeDigitsState.CurrentIndex(onThreeDigitsIndexChange)
+    twoDigitsState.CurrentIndex(onTwoDigitsIndexChange)
+    oneDigitState.CurrentIndex(onOneDigitIndexChange)
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        // threeDigits
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = threeDigitsState,
+            count = listThreeDigits.size,
+        ) { index ->
+            listThreeDigits.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
+
+        // twoDigits
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = twoDigitsState,
+            count = listTwoDigits.size,
+        ) { index ->
+            listTwoDigits.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
+
+        // oneDigit
+        FVerticalWheelPicker(
+            modifier = Modifier.weight(1f),
+            state = oneDigitState,
+            count = listOneDigit.size,
+        ) { index ->
+            listOneDigit.getOrNull(index)?.let { value ->
+                Text(text = value.toString())
+            }
+        }
+    }
+}
+
+@Composable
 private fun ThreeDigits() {
     FVerticalWheelPicker(
         modifier = Modifier.width(64.dp),
