@@ -72,6 +72,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var showDatePicker by remember { mutableStateOf(false) }
+        var showReadingPicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
         var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
@@ -129,7 +130,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-
+            ShowReadingPicker(onShowReadingPickerChange = { showReadingPicker = it })
         }
 
         Row {
@@ -519,7 +520,86 @@ private fun ReadingImageViewPreview() {
 }
 
 // TODO : 「ReadingInputField」をドラムロール型にし、3桁目の数字は0か5のみしか入力不可にする。
+@Composable
+private fun ShowReadingPicker(
+    onShowReadingPickerChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .navigationBarsPadding()
+    ) {
+        // 年月日を表示するボタン
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { onShowReadingPickerChange(true) },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Green),
+        ) {
+            Text(
+                text = "495",
+                color = Color.White
+            )
+        }
+    }
+}
 
+@Composable
+private fun ThreeDigits() {
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        // Set item count.
+        count = 5,
+        // Set item height.
+        itemHeight = 48.dp,
+        // Set unfocused count.
+        unfocusedCount = 3,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun TwoDigits() {
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        // Set item count.
+        count = 10,
+        // Set item height.
+        itemHeight = 48.dp,
+        // Set unfocused count.
+        unfocusedCount = 3,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+// 三桁目の数字は0か5のみしか入力不可
+@Composable
+private fun OneDigit() {
+    val items = listOf(0, 5)
+
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        // Set item count.
+        count = items.size,
+        // Set item height.
+        itemHeight = 48.dp,
+        // Set unfocused count.
+        unfocusedCount = 3,
+    ) { index ->
+        Text(
+            items[index].toString(),
+            color = Color.Black
+        )
+    }
+}
 
 @Composable
 private fun ListeningText(listeningText: String, modifier: Modifier = Modifier) {
