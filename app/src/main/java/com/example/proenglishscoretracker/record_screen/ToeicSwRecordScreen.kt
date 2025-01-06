@@ -26,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -67,26 +68,21 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by rememberSaveable { mutableStateOf("") }
-        var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-        var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+        var writingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedWritingScore by rememberSaveable { mutableIntStateOf(writingScore) }
+        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedSpeakingScore by rememberSaveable { mutableIntStateOf(speakingScore) }
+        var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
-        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
         var writingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
         var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var writingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
-        var speakingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
 
         //「Error」系
-        val selectedDateEmptyError = selectedDate.isEmpty()
         val writingMaxScoreError = writingScore >= 201
         val speakingMaxScoreError = speakingScore >= 201
-        val writingScoreDivisionError = writingScore % 5 != 0
-        val speakingScoreDivisionError = speakingScore % 5 != 0
 
         Row {
             SelectDayText("")
@@ -130,31 +126,19 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                WritingScoreInputField(
-                    placeholder = stringResource(id = R.string.toeic_sw_writing_score),
-                    value = writingScore,
-                    onValueChange = { writingScore = it },
-                    onFocusChanged = {
-                        focusStateOfWriting = it
-                    }
-                )
-            }
+            ToeicSWScorePicker(
+                Modifier,
+                writingScore,
+                selectedWritingScore,
+                { selectedWritingScore = it },
+                { writingScore = selectedWritingScore },
+            )
         }
 
         Row {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             if (writingScore >= 201) {
                 ErrorText("Writingスコアは201未満である必要があります。")
-            }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (showWritingScoreDivisionError) {
-                ErrorText(
-                    "Writingスコアは5の倍数である必要があります。"
-                )
             }
         }
 
@@ -171,31 +155,19 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                SpeakingScoreInputField(
-                    placeholder = stringResource(id = R.string.toeic_sw_speaking_score),
-                    value = speakingScore,
-                    onValueChange = { speakingScore = it },
-                    onFocusChanged = {
-                        focusStateOfSpeaking = it
-                    }
-                )
-            }
+            ToeicSWScorePicker(
+                Modifier,
+                speakingScore,
+                selectedSpeakingScore,
+                { selectedSpeakingScore = it },
+                { speakingScore = selectedSpeakingScore },
+            )
         }
 
         Row {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             if (speakingScore >= 201) {
                 ErrorText("Speakingスコアは201未満である必要があります。")
-            }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (showSpeakingScoreDivisionError) {
-                ErrorText(
-                    "Speakingスコアは5の倍数である必要があります。"
-                )
             }
         }
 
@@ -216,14 +188,11 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val savable = selectedDate.isNotEmpty() &&
+        val savable =
                 writingScore.toString().isNotBlank() &&
                 speakingScore.toString().isNotBlank() &&
-                !selectedDateEmptyError &&
                 !writingMaxScoreError &&
-                !speakingMaxScoreError &&
-                !writingScoreDivisionError &&
-                !speakingScoreDivisionError
+                !speakingMaxScoreError
 
         var showSaved by remember { mutableStateOf("") }
 
@@ -239,11 +208,8 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 SaveButton(
                     onClick = {
                         if (savable) {
-                            selectedDateEmptyErrorText = ""
                             writingMaxScoreErrorText = ""
                             speakingMaxScoreErrorText = ""
-                            writingScoreDivisionErrorText = ""
-                            speakingScoreDivisionErrorText = ""
                             showSaved = "記録しました。"
                             viewModel.saveToeicValues(
                                 writingScore,
@@ -251,32 +217,17 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                 memoText
                             )
                         } else {
-                            if (selectedDateEmptyError) {
-                                selectedDateEmptyErrorText = "受験日が記入されていません。"
-                            }
                             if (writingMaxScoreError) {
                                 writingMaxScoreErrorText = "Writingスコアは201未満である必要があります。"
                             }
                             if (speakingMaxScoreError) {
                                 speakingMaxScoreErrorText = "Speakingスコアは201未満である必要があります。"
                             }
-                            if (writingScoreDivisionError) {
-                                writingScoreDivisionErrorText = "Writingスコアはである5の倍数である必要があります。"
-                            }
-                            if (speakingScoreDivisionError) {
-                                speakingScoreDivisionErrorText = "Speakingスコアはである5の倍数である必要があります。"
-                            }
                             if (!writingMaxScoreError) {
                                 writingMaxScoreErrorText = ""
                             }
                             if (!speakingMaxScoreError) {
                                 speakingMaxScoreErrorText = ""
-                            }
-                            if (!writingScoreDivisionError) {
-                                writingScoreDivisionErrorText = ""
-                            }
-                            if (!speakingScoreDivisionError) {
-                                speakingScoreDivisionErrorText = ""
                             }
                         }
                     },
@@ -565,6 +516,186 @@ private fun SpeakingImageViewPreview() {
 }
 
 @Composable
+private fun ToeicSWScorePicker(
+    modifier: Modifier = Modifier,
+    toeicSWScore: Int,
+    selectedToeicSWScore: Int,
+    onScoreChange: (Int) -> Unit,
+    onConfirm: () -> Unit
+) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        // スコア入力ボタン
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Green),
+        ) {
+            Text(
+                text = "$toeicSWScore",
+                color = Color.White
+            )
+        }
+    }
+
+    // スコア入力ダイアログ
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // スコア選択のWheel Picker
+                    ToeicSWScorePickerView(
+                        score = selectedToeicSWScore,
+                        onScoreChange = onScoreChange
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 確定ボタン
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm() // 確定時にスコアを親に渡す
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color.Green),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ToeicSWScorePickerView(
+    score: Int,
+    onScoreChange: (Int) -> Unit
+) {
+    val hundred = score / 100 // 100の位
+    val ten = (score % 100) / 10 // 10の位
+    val one = score % 10 // 1の位
+
+    // 状態管理のためにrememberを使う
+    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
+    val tenState = rememberSaveable { mutableIntStateOf(ten) }
+    val oneState = rememberSaveable { mutableIntStateOf(one) }
+
+    // スコア変更をトリガーする
+    LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
+        onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement
+            .SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // 100の位
+        ThreeDigits(hundredState)
+        // 10の位
+        TwoDigits(tenState)
+        // 1の位
+        OneDigit(oneState)
+    }
+}
+
+@Composable
+private fun ThreeDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 3,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun TwoDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 1,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+// 三桁目の数字は0か5のみしか入力不可
+@Composable
+private fun OneDigit(state: MutableIntState) {
+    val items = listOf(0, 5)
+
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // currentIndex が items のサイズを超えないことを確認
+        val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = items[currentItemIndex]
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = items.size,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            items[index].toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
 private fun MemoText(memoText: String, modifier: Modifier = Modifier) {
     Text(
         text = "Memo",
@@ -608,86 +739,6 @@ private fun MemoTextField(modifier: Modifier) {
 private fun MemoTextFieldPreview() {
     ProEnglishScoreTrackerTheme {
         MemoTextField(modifier = Modifier)
-    }
-}
-
-@Composable
-private fun WritingScoreInputField(
-    placeholder: String,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
-    }
-}
-
-@Composable
-private fun SpeakingScoreInputField(
-    placeholder: String,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
     }
 }
 
