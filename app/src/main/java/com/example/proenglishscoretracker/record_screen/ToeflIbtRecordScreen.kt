@@ -25,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -65,14 +66,18 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by rememberSaveable { mutableStateOf("") }
-        var overallScore by rememberSaveable { mutableIntStateOf(0) }
-        var readingScore by rememberSaveable { mutableIntStateOf(0) }
-        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-        var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-        var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+        var overallScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedOverallScore by rememberSaveable { mutableIntStateOf(overallScore) }
+        var readingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
+        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedListeningScore by rememberSaveable { mutableIntStateOf(listeningScore) }
+        var writingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedWritingScore by rememberSaveable { mutableIntStateOf(writingScore) }
+        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedSpeakingScore by rememberSaveable { mutableIntStateOf(speakingScore) }
+        var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
@@ -84,7 +89,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
 
         //「Error」系
-        val selectedDateEmptyError = selectedDate.isEmpty()
         val overallMaxScoreError = overallScore >= 121
         val readingMaxScoreError = readingScore >= 31
         val listeningMaxScoreError = listeningScore >= 31
@@ -128,13 +132,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             OverallScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                OverallScoreInputField(
-                    placeholder = stringResource(id = R.string.toefl_ibt_overall_score),
-                    value = overallScore,
-                    onValueChange = { overallScore = it }
-                )
-            }
+            ToeflOverallScorePicker(
+                Modifier,
+                overallScore,
+                selectedOverallScore,
+                { selectedOverallScore = it },
+                { overallScore = selectedOverallScore },
+            )
         }
 
         Row {
@@ -154,13 +158,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                RLWSScoreInputField(
-                    placeholder = stringResource(id = R.string.toefl_ibt_reading_score),
-                    value = readingScore,
-                    onValueChange = { readingScore = it }
-                )
-            }
+            ToeflRLWSScorePicker(
+                Modifier,
+                readingScore,
+                selectedReadingScore,
+                { selectedReadingScore = it },
+                { readingScore = selectedReadingScore },
+            )
         }
 
         Row {
@@ -180,13 +184,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                RLWSScoreInputField(
-                    placeholder = stringResource(id = R.string.toefl_ibt_listening_score),
-                    value = listeningScore,
-                    onValueChange = { listeningScore = it }
-                )
-            }
+            ToeflRLWSScorePicker(
+                Modifier,
+                listeningScore,
+                selectedListeningScore,
+                { selectedListeningScore = it },
+                { listeningScore = selectedListeningScore },
+            )
         }
 
         Row {
@@ -206,13 +210,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                RLWSScoreInputField(
-                    placeholder = stringResource(id = R.string.toefl_ibt_writing_score),
-                    value = writingScore,
-                    onValueChange = { writingScore = it }
-                )
-            }
+            ToeflRLWSScorePicker(
+                Modifier,
+                writingScore,
+                selectedWritingScore,
+                { selectedWritingScore = it },
+                { writingScore = selectedWritingScore },
+            )
         }
 
         Row {
@@ -232,13 +236,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                RLWSScoreInputField(
-                    placeholder = stringResource(id = R.string.toefl_ibt_speaking_score),
-                    value = speakingScore,
-                    onValueChange = { speakingScore = it }
-                )
-            }
+            ToeflRLWSScorePicker(
+                Modifier,
+                speakingScore,
+                selectedSpeakingScore,
+                { selectedSpeakingScore = it },
+                { speakingScore = selectedSpeakingScore },
+            )
         }
 
         Row {
@@ -270,7 +274,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 listeningScore.toString().isNotBlank() &&
                 writingScore.toString().isNotBlank() &&
                 speakingScore.toString().isNotBlank() &&
-                !selectedDateEmptyError &&
                 !overallMaxScoreError &&
                 !readingMaxScoreError &&
                 !listeningMaxScoreError &&
@@ -306,9 +309,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                 speakingScore,
                                 memoText)
                         } else {
-                            if (selectedDateEmptyError) {
-                                selectedDateEmptyErrorText = "受験日が記入されていません。"
-                            }
                             if (overallMaxScoreError) {
                                 overallMaxScoreErrorText = "Overallスコアは121未満である必要があります。"
                             }
@@ -728,69 +728,325 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun OverallScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun ToeflOverallScorePicker(
+    modifier: Modifier = Modifier,
+    toeflOverallScore: Int,
+    selectedToeflOverallScore: Int,
+    onScoreChange: (Int) -> Unit,
+    onConfirm: () -> Unit
+) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        // スコア入力ボタン
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Green),
+        ) {
+            Text(
+                text = "$toeflOverallScore",
+                color = Color.White
+            )
+        }
+    }
+
+    // スコア入力ダイアログ
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // スコア選択のWheel Picker
+                    ToeflOverallScorePickerView(
+                        score = selectedToeflOverallScore,
+                        onScoreChange = onScoreChange
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 確定ボタン
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm() // 確定時にスコアを親に渡す
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color.Green),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ToeflOverallScorePickerView(
+    score: Int,
+    onScoreChange: (Int) -> Unit
+) {
+    val hundred = score / 100 // 100の位
+    val ten = (score % 100) / 10 // 10の位
+    val one = score % 10 // 1の位
+
+    // 状態管理のためにrememberを使う
+    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
+    val tenState = rememberSaveable { mutableIntStateOf(ten) }
+    val oneState = rememberSaveable { mutableIntStateOf(one) }
+
+    // スコア変更をトリガーする
+    LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
+        onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
+    }
+
     Row(
-        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement
+            .SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 121) ErrorText("")
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
+        // 100の位
+        ToeflOverallThreeDigits(hundredState)
+        // 10の位
+        ToeflOverallTwoDigits(tenState)
+        // 1の位
+        ToeflOverallOneDigit(oneState)
+    }
+}
+
+@Composable
+private fun ToeflOverallThreeDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 2,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
         )
     }
 }
 
 @Composable
-private fun RLWSScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun ToeflOverallTwoDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 3,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun ToeflOverallOneDigit(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 3,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun ToeflRLWSScorePicker(
+    modifier: Modifier = Modifier,
+    toeflRLWSScore: Int,
+    selectedToeflRLWSScore: Int,
+    onScoreChange: (Int) -> Unit,
+    onConfirm: () -> Unit
+) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        // スコア入力ボタン
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Green),
+        ) {
+            Text(
+                text = "$toeflRLWSScore",
+                color = Color.White
+            )
+        }
+    }
+
+    // スコア入力ダイアログ
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // スコア選択のWheel Picker
+                    ToeflRLWSScorePickerView(
+                        score = selectedToeflRLWSScore,
+                        onScoreChange = onScoreChange
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 確定ボタン
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm() // 確定時にスコアを親に渡す
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color.Green),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ToeflRLWSScorePickerView(
+    score: Int,
+    onScoreChange: (Int) -> Unit
+) {
+    val ten = score / 10 // 10の位
+    val one = (score % 10) / 1 // 1の位
+
+    // 状態管理のためにrememberを使う
+    val tenState = rememberSaveable { mutableIntStateOf(ten) }
+    val oneState = rememberSaveable { mutableIntStateOf(one) }
+
+    // スコア変更をトリガーする
+    LaunchedEffect(tenState.intValue, oneState.intValue) {
+        onScoreChange(tenState.intValue * 10 + oneState.intValue)
+    }
+
     Row(
-        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement
+            .SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 31) ErrorText("")
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
+        // 10の位
+        ToeflRLWSTwoDigits(tenState)
+        // 1の位
+        ToeflRLWSOneDigit(oneState)
+    }
+}
+
+@Composable
+private fun ToeflRLWSTwoDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 4,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun ToeflRLWSOneDigit(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
         )
     }
 }
