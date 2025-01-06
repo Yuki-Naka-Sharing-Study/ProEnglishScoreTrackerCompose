@@ -37,7 +37,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -73,6 +72,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
         var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedListeningScore by rememberSaveable { mutableIntStateOf(listeningScore) }
         var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var showDatePicker by remember { mutableStateOf(false) }
@@ -133,7 +133,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            ReadingScorePicker(
+            TOEICRLScorePicker(
                 Modifier,
                 readingScore,
                 selectedReadingScore,
@@ -171,16 +171,13 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                ListeningScoreInputField(
-                    placeholder = stringResource(id = R.string.toeic_listening_score),
-                    value = listeningScore,
-                    onValueChange = { listeningScore = it },
-                    onFocusChanged = {
-                        focusStateOfListening = it
-                    }
-                )
-            }
+            TOEICRLScorePicker(
+                Modifier,
+                listeningScore,
+                selectedListeningScore,
+                { selectedListeningScore = it },
+                { listeningScore = selectedListeningScore },
+            )
         }
 
         Row {
@@ -313,7 +310,6 @@ private fun SelectDayTextPreview() {
     }
 }
 
-// TODO : 「状態ホイスティング」を活用してDatePickerの表示位置を調整
 @Composable
 private fun SelectDatePicker(
     date: FDate,
@@ -528,12 +524,11 @@ private fun ReadingImageViewPreview() {
     }
 }
 
-// TODO : 「ReadingInputField」をドラムロール型にし、3桁目の数字は0か5のみしか入力不可にする。
 @Composable
-fun ReadingScorePicker(
+private fun TOEICRLScorePicker(
     modifier: Modifier = Modifier,
-    readingScore: Int,
-    selectedReadingScore: Int,
+    toeicRLScore: Int,
+    selectedToeicRLScore: Int,
     onScoreChange: (Int) -> Unit,
     onConfirm: () -> Unit
 ) {
@@ -548,7 +543,7 @@ fun ReadingScorePicker(
             colors = ButtonDefaults.buttonColors(Color.Green),
         ) {
             Text(
-                text = "$readingScore",
+                text = "$toeicRLScore",
                 color = Color.White
             )
         }
@@ -569,8 +564,8 @@ fun ReadingScorePicker(
                     verticalArrangement = Arrangement.Center
                 ) {
                     // スコア選択のWheel Picker
-                    ReadingScorePickerView(
-                        score = selectedReadingScore,
+                    TOEICRLScorePickerView(
+                        score = selectedToeicRLScore,
                         onScoreChange = onScoreChange
                     )
 
@@ -600,7 +595,7 @@ fun ReadingScorePicker(
 }
 
 @Composable
-fun ReadingScorePickerView(
+private fun TOEICRLScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
@@ -745,37 +740,6 @@ private fun ListeningImageViewPreview() {
 }
 
 @Composable
-private fun ListeningInputField(modifier: Modifier) {
-    var number by remember { mutableStateOf("") }
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
-            value = number,
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    number = newValue
-                }
-            },
-            label = { Text("495") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ListeningInputFieldPreview() {
-    ProEnglishScoreTrackerTheme {
-        ListeningInputField(modifier = Modifier)
-    }
-}
-
-@Composable
 private fun MemoText(memoText: String, modifier: Modifier = Modifier) {
     Text(
         text = "Memo",
@@ -819,46 +783,6 @@ private fun MemoTextField(modifier: Modifier) {
 private fun MemoTextFieldPreview() {
     ProEnglishScoreTrackerTheme {
         MemoTextField(modifier = Modifier)
-    }
-}
-
-@Composable
-private fun ListeningScoreInputField(
-    placeholder: String,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
     }
 }
 
