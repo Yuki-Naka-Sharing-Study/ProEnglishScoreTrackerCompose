@@ -1,5 +1,6 @@
 package com.example.proenglishscoretracker.record_screen
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.material.Text
@@ -23,9 +24,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -68,11 +71,11 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
     ) {
         var selectedDate by rememberSaveable { mutableStateOf("") }
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var showDatePicker by remember { mutableStateOf(false) }
-        var showReadingPicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
         var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
@@ -130,18 +133,13 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            ShowReadingPicker(onShowReadingPickerChange = { showReadingPicker = it })
-            if (showReadingPicker) {
-                ReadingPicker(
-                    onDismissRequest = {
-                        showDatePicker = false
-                    },
-                    score = readingScore,
-                    onScoreChange = { newScore ->
-                        readingScore = newScore
-                    }
-                )
-            }
+            ReadingScorePicker(
+                Modifier,
+                readingScore,
+                selectedReadingScore,
+                { selectedReadingScore = it },
+                { readingScore = selectedReadingScore },
+            )
         }
 
         Row {
@@ -532,97 +530,182 @@ private fun ReadingImageViewPreview() {
 
 // TODO : 「ReadingInputField」をドラムロール型にし、3桁目の数字は0か5のみしか入力不可にする。
 @Composable
-private fun ShowReadingPicker(
-    onShowReadingPickerChange: (Boolean) -> Unit,
+fun ReadingScorePicker(
     modifier: Modifier = Modifier,
+    readingScore: Int,
+    selectedReadingScore: Int,
+    onScoreChange: (Int) -> Unit,
+    onConfirm: () -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .navigationBarsPadding()
-    ) {
-        // 年月日を表示するボタン
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        // スコア入力ボタン
         Button(
             modifier = Modifier.align(Alignment.TopCenter),
-            onClick = { onShowReadingPickerChange(true) },
+            onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color.Green),
         ) {
             Text(
-                text = "Readingスコアを入力",
+                text = "$readingScore",
                 color = Color.White
             )
+        }
+    }
+
+    // スコア入力ダイアログ
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // スコア選択のWheel Picker
+                    ReadingScorePickerView(
+                        score = selectedReadingScore,
+                        onScoreChange = onScoreChange
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 確定ボタン
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm() // 確定時にスコアを親に渡す
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color.Green),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
         }
     }
 }
 
 @Composable
-private fun ReadingPicker(
-    onDismissRequest: () -> Unit,
+fun ReadingScorePickerView(
     score: Int,
-    onScoreChange: (Int) -> Unit,
-    modifier: Modifier = Modifier,
+    onScoreChange: (Int) -> Unit
 ) {
-    val firstDigitOptions = listOf(0, 5)
-    val secondDigitOptions = (0..9).toList()
-    val thirdDigitOptions = (0..4).toList()
+    val hundred = score / 100 // 100の位
+    val ten = (score % 100) / 10 // 10の位
+    val one = score % 10 // 1の位
 
-    val firstDigit = score / 100
-    val secondDigit = (score % 100) / 10
-    val thirdDigit = score % 10
+    // 状態管理のためにrememberを使う
+    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
+    val tenState = rememberSaveable { mutableIntStateOf(ten) }
+    val oneState = rememberSaveable { mutableIntStateOf(one) }
 
-    val firstDigitState = rememberFWheelPickerState(firstDigit)
-    val secondDigitState = rememberFWheelPickerState(secondDigit)
-    val thirdDigitState = rememberFWheelPickerState(thirdDigit)
-
-    firstDigitState.CurrentIndex {
-        onScoreChange(firstDigitOptions[it] * 100 + secondDigit * 10 + thirdDigit)
-    }
-    secondDigitState.CurrentIndex {
-        onScoreChange(firstDigit * 100 + secondDigitOptions[it] * 10 + thirdDigit)
-    }
-    thirdDigitState.CurrentIndex {
-        onScoreChange(firstDigit * 100 + secondDigit * 10 + thirdDigitOptions[it])
+    // スコア変更をトリガーする
+    LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
+        onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
     }
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement
+            .SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        // First digit (0 or 5)
-        FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
-            state = firstDigitState,
-            count = firstDigitOptions.size,
-        ) { index ->
-            firstDigitOptions.getOrNull(index)?.let { value ->
-                Text(text = value.toString())
-            }
-        }
+        // 100の位
+        ThreeDigits(hundredState)
+        // 10の位
+        TwoDigits(tenState)
+        // 1の位
+        OneDigit(oneState)
+    }
+}
 
-        // Second digit (0-9)
-        FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
-            state = secondDigitState,
-            count = secondDigitOptions.size,
-        ) { index ->
-            secondDigitOptions.getOrNull(index)?.let { value ->
-                Text(text = value.toString())
-            }
-        }
+@Composable
+private fun ThreeDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
 
-        // Third digit (0-4)
-        FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
-            state = thirdDigitState,
-            count = thirdDigitOptions.size,
-        ) { index ->
-            thirdDigitOptions.getOrNull(index)?.let { value ->
-                Text(text = value.toString())
-            }
-        }
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 5,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun TwoDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+// 三桁目の数字は0か5のみしか入力不可
+@Composable
+private fun OneDigit(state: MutableIntState) {
+    val items = listOf(0, 5)
+
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // currentIndex が items のサイズを超えないことを確認
+        val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = items[currentItemIndex]
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = items.size,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            items[index].toString(),
+            color = Color.Black
+        )
     }
 }
 
@@ -850,7 +933,7 @@ private fun SaveButton(
 //    }
 //}
 
-private fun showToast(context: android.content.Context, message: String) {
+private fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
