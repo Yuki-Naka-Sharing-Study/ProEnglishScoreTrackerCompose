@@ -68,28 +68,13 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by rememberSaveable { mutableStateOf("") }
+        var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
         var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var selectedListeningScore by rememberSaveable { mutableIntStateOf(listeningScore) }
         var memoText by rememberSaveable { mutableStateOf("") }
-        var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var showDatePicker by remember { mutableStateOf(false) }
-
-        //「ErrorText」系
-        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
-        var readingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var listeningMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var readingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
-        var listeningScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
-
-        //「Error」系
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val readingMaxScoreError = readingScore >= 496
-        val listeningMaxScoreError = listeningScore >= 496
-        val readingScoreDivisionError = readingScore % 5 != 0
-        val listeningScoreDivisionError = listeningScore % 5 != 0
 
         Row {
             SelectDayText("")
@@ -122,9 +107,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfReading by rememberSaveable { mutableStateOf(false) }
-        val showReadingScoreDivisionError = readingScore % 5 != 0 && !focusStateOfReading
-
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -142,26 +124,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (readingScore >= 496) {
-                ErrorText("Readingスコアは496未満である必要があります。")
-            }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (showReadingScoreDivisionError) {
-                ErrorText(
-                    "Readingスコアは5の倍数である必要があります。"
-                )
-            }
-        }
-
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        var focusStateOfListening by rememberSaveable { mutableStateOf(false) }
-        val showListeningScoreDivisionError = listeningScore % 5 != 0 && !focusStateOfListening
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -178,22 +141,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 { selectedListeningScore = it },
                 { listeningScore = selectedListeningScore },
             )
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (listeningScore >= 496) {
-                ErrorText("Listeningスコアは496未満である必要があります。")
-            }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (showListeningScoreDivisionError) {
-                ErrorText(
-                    "Listeningスコアは5の倍数である必要があります。"
-                )
-            }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -213,14 +160,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val savable = readingScore.toString().isNotBlank() &&
-                listeningScore.toString().isNotBlank() &&
-                !selectedDateEmptyError &&
-                !readingMaxScoreError &&
-                !listeningMaxScoreError &&
-                !readingScoreDivisionError &&
-                !listeningScoreDivisionError
-
         var showSaved by remember { mutableStateOf("") }
 
         Row(
@@ -234,46 +173,12 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             ) {
                 SaveButton(
                     onClick = {
-                        // 修正後のコード（when文 → if文）
-                        if (savable) {
-                            selectedDateEmptyErrorText = ""
-                            readingMaxScoreErrorText = ""
-                            listeningMaxScoreErrorText = ""
-                            readingScoreDivisionErrorText = ""
-                            listeningScoreDivisionErrorText = ""
-                            showSaved = "登録しました。"
-                            viewModel.saveToeicValues(
-                                readingScore,
-                                listeningScore,
-                                memoText
-                            )
-                        } else {
-                            if (selectedDateEmptyError) {
-                                selectedDateEmptyErrorText = "受験日が記入されていません。"
-                            }
-                            if (readingMaxScoreError) {
-                                readingMaxScoreErrorText =
-                                    "Readingスコアは496未満である必要があります。"
-                            }
-                            if (listeningMaxScoreError) {
-                                listeningMaxScoreErrorText =
-                                    "Listeningスコアは496未満である必要があります。"
-                            }
-                            if (readingScoreDivisionError) {
-                                readingScoreDivisionErrorText =
-                                    "Readingスコアはである5の倍数である必要があります。"
-                            }
-                            if (listeningScoreDivisionError) {
-                                listeningScoreDivisionErrorText =
-                                    "Listeningスコアはである5の倍数である必要があります。"
-                            }
-                            if (!readingScoreDivisionError) {
-                                readingScoreDivisionErrorText = ""
-                            }
-                            if (!listeningScoreDivisionError) {
-                                listeningScoreDivisionErrorText = ""
-                            }
-                        }
+                        showSaved = "登録しました。"
+                        viewModel.saveToeicValues(
+                            readingScore,
+                            listeningScore,
+                            memoText
+                        )
                     },
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
