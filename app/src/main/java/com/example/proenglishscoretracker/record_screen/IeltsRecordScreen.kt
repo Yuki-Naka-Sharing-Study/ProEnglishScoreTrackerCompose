@@ -25,6 +25,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -33,7 +34,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -66,14 +66,18 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by rememberSaveable { mutableStateOf("") }
-        var overallScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var readingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var listeningScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var writingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var speakingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+        var overallScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var selectedOverallScore by rememberSaveable { mutableFloatStateOf(overallScore) }
+        var readingScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var selectedReadingScore by rememberSaveable { mutableFloatStateOf(readingScore) }
+        var listeningScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var selectedListeningScore by rememberSaveable { mutableFloatStateOf(listeningScore) }
+        var writingScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var selectedWritingScore by rememberSaveable { mutableFloatStateOf(writingScore) }
+        var speakingScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var selectedSpeakingScore by rememberSaveable { mutableFloatStateOf(speakingScore) }
+        var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
@@ -90,7 +94,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         var speakingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
 
         //「Error」系
-        val selectedDateEmptyError = selectedDate.isEmpty()
         val overallMaxScoreError = overallScore >= 36.1
         val readingMaxScoreError = readingScore >= 9.1
         val listeningMaxScoreError = listeningScore >= 9.1
@@ -143,16 +146,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             OverallScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                OverallScoreInputField(
-                    placeholder = stringResource(id = R.string.ielts_overall_score),
-                    value = overallScore,
-                    onValueChange = { overallScore = it },
-                    onFocusChanged = {
-                        focusStateOfOverall = it
-                    }
-                )
-            }
+            IeltsOverallScorePicker(
+                Modifier,
+                overallScore,
+                selectedOverallScore,
+                { selectedOverallScore = it },
+                { overallScore = selectedOverallScore },
+            )
         }
 
         Row {
@@ -184,16 +184,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                ReadingScoreInputField(
-                    placeholder = stringResource(id = R.string.ielts_reading_score),
-                    value = readingScore,
-                    onValueChange = { readingScore = it },
-                    onFocusChanged = {
-                        focusStateOfReading = it
-                    }
-                )
-            }
+            IeltsRLWSScorePicker(
+                Modifier,
+                readingScore,
+                selectedReadingScore,
+                { selectedReadingScore = it },
+                { readingScore = selectedReadingScore },
+            )
         }
 
         Row {
@@ -225,16 +222,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                ListeningScoreInputField(
-                    placeholder = stringResource(id = R.string.ielts_listening_score),
-                    value = listeningScore,
-                    onValueChange = { listeningScore = it },
-                    onFocusChanged = {
-                        focusStateOfListening = it
-                    }
-                )
-            }
+            IeltsRLWSScorePicker(
+                Modifier,
+                listeningScore,
+                selectedListeningScore,
+                { selectedListeningScore = it },
+                { listeningScore = selectedListeningScore },
+            )
         }
 
         Row {
@@ -266,16 +260,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                WritingScoreInputField(
-                    placeholder = stringResource(id = R.string.ielts_writing_score),
-                    value = writingScore,
-                    onValueChange = { writingScore = it },
-                    onFocusChanged = {
-                        focusStateOfWriting = it
-                    }
-                )
-            }
+            IeltsRLWSScorePicker(
+                Modifier,
+                writingScore,
+                selectedWritingScore,
+                { selectedWritingScore = it },
+                { writingScore = selectedWritingScore },
+            )
         }
 
         Row {
@@ -307,16 +298,13 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            Column {
-                SpeakingScoreInputField(
-                    placeholder = stringResource(id = R.string.ielts_speaking_score),
-                    value = speakingScore,
-                    onValueChange = { speakingScore = it },
-                    onFocusChanged = {
-                        focusStateOfSpeaking = it
-                    }
-                )
-            }
+            IeltsRLWSScorePicker(
+                Modifier,
+                speakingScore,
+                selectedSpeakingScore,
+                { selectedSpeakingScore = it },
+                { speakingScore = selectedSpeakingScore },
+            )
         }
 
         Row {
@@ -357,7 +345,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                 listeningScore.toString().isNotBlank() &&
                 writingScore.toString().isNotBlank() &&
                 speakingScore.toString().isNotBlank() &&
-                !selectedDateEmptyError &&
                 !overallMaxScoreError &&
                 !readingMaxScoreError &&
                 !listeningMaxScoreError &&
@@ -403,9 +390,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                                 speakingScore,
                                 memoText)
                         } else {
-                            if (selectedDateEmptyError) {
-                                selectedDateEmptyErrorText = "受験日が記入されていません。"
-                            }
                             if (overallMaxScoreError) {
                                 overallMaxScoreErrorText = "Overallスコアは36.1未満である必要があります。"
                             }
@@ -855,211 +839,267 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun OverallScoreInputField(
-    placeholder: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
+private fun IeltsOverallScorePicker(
+    modifier: Modifier = Modifier,
+    ieltsOverallScore: Float,
+    selectedIeltsOverallScore: Float,
+    onScoreChange: (Float) -> Unit,
+    onConfirm: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                // 小数点や符号も許可する
-                val regex = "^-?\\d*\\.?\\d*$".toRegex()
-                if (newValue.isEmpty() || newValue.matches(regex)) {
-                    onValueChange(newValue.toFloatOrNull() ?: 0f)
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        // スコア入力ボタン
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Green),
+        ) {
+            Text(
+                text = "$ieltsOverallScore",
+                color = Color.White
             )
+        }
+    }
+
+    // スコア入力ダイアログ
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // スコア選択のWheel Picker
+                    IeltsOverallScorePickerView(
+                        score = selectedIeltsOverallScore,
+                        onScoreChange = onScoreChange
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 確定ボタン
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm() // 確定時にスコアを親に渡す
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color.Green),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun IeltsOverallScorePickerView(
+    score: Float,
+    onScoreChange: (Float) -> Unit
+) {
+    val ten = score / 10.0 // 10の位
+    val one = (score % 10.0) / 1.0 // 1の位
+
+    // 状態管理のためにrememberを使う
+    val tenState = rememberSaveable { mutableFloatStateOf(ten.toFloat()) }
+    val oneState = rememberSaveable { mutableFloatStateOf(one.toFloat()) }
+
+    // スコア変更をトリガーする
+    LaunchedEffect(tenState.floatValue, oneState.floatValue) {
+        onScoreChange((tenState.floatValue * 10.0 + oneState.floatValue).toFloat())
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement
+            .SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // 10の位
+        IeltsOverallTwoDigits(tenState)
+        // 1の位
+        IeltsOverallOneDigit(oneState)
+    }
+}
+
+@Composable
+private fun IeltsOverallTwoDigits(state: MutableFloatState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.floatValue = listState.currentIndex.toFloat()
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 4,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
         )
     }
 }
 
 @Composable
-private fun ReadingScoreInputField(
-    placeholder: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                // 小数点や符号も許可する
-                val regex = "^-?\\d*\\.?\\d*$".toRegex()
-                if (newValue.isEmpty() || newValue.matches(regex)) {
-                    onValueChange(newValue.toFloatOrNull() ?: 0f)
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
+private fun IeltsOverallOneDigit(state: MutableFloatState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.floatValue = listState.currentIndex.toFloat()
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
         )
     }
 }
 
 @Composable
-private fun ListeningScoreInputField(
-    placeholder: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
+private fun IeltsRLWSScorePicker(
+    modifier: Modifier = Modifier,
+    ieltsRLWSScore: Float,
+    selectedIeltsRLWSScore: Float,
+    onScoreChange: (Float) -> Unit,
+    onConfirm: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                // 小数点や符号も許可する
-                val regex = "^-?\\d*\\.?\\d*$".toRegex()
-                if (newValue.isEmpty() || newValue.matches(regex)) {
-                    onValueChange(newValue.toFloatOrNull() ?: 0f)
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        // スコア入力ボタン
+        Button(
+            modifier = Modifier.align(Alignment.TopCenter),
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color.Green),
+        ) {
+            Text(
+                text = "$ieltsRLWSScore",
+                color = Color.White
             )
-        )
+        }
+    }
+
+    // スコア入力ダイアログ
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    // スコア選択のWheel Picker
+                    IeltsRLWSScorePickerView(
+                        score = selectedIeltsRLWSScore,
+                        onScoreChange = onScoreChange
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // 確定ボタン
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm() // 確定時にスコアを親に渡す
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color.Green),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
     }
 }
 
 @Composable
-private fun WritingScoreInputField(
-    placeholder: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
+private fun IeltsRLWSScorePickerView(
+    score: Float,
+    onScoreChange: (Float) -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
+    // 状態管理のためにrememberを使う
+    val scoreState = rememberSaveable { mutableFloatStateOf(score) }
+
+    // スコア変更をトリガーする
+    LaunchedEffect(scoreState.floatValue) {
+        onScoreChange((scoreState.floatValue))
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement
+            .SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                // 小数点や符号も許可する
-                val regex = "^-?\\d*\\.?\\d*$".toRegex()
-                if (newValue.isEmpty() || newValue.matches(regex)) {
-                    onValueChange(newValue.toFloatOrNull() ?: 0f)
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
+        // 1の位
+        IeltsRLWSScore(scoreState)
     }
 }
 
 @Composable
-private fun SpeakingScoreInputField(
-    placeholder: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    onFocusChanged: (Boolean) -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(dimensionResource(id = R.dimen.space_52_dp))
-                .onFocusChanged {
-                    onFocusChanged(it.isFocused)
-                },
-            value = value.toString(),
-            onValueChange = { newValue ->
-                // 小数点や符号も許可する
-                val regex = "^-?\\d*\\.?\\d*$".toRegex()
-                if (newValue.isEmpty() || newValue.matches(regex)) {
-                    onValueChange(newValue.toFloatOrNull() ?: 0f)
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
+private fun IeltsRLWSScore(state: MutableFloatState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.floatValue = listState.currentIndex.toFloat()
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
         )
     }
 }
