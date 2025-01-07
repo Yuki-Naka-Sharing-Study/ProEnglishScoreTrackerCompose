@@ -52,8 +52,8 @@ private fun Tabs(
     val scope = rememberCoroutineScope()
     TabRow(
         selectedTabIndex = pagerState.currentPage,
-        backgroundColor = Color.LightGray,
-        contentColor = Color.Gray,
+        backgroundColor = Color(0xFF6A1B9A),
+        contentColor = Color.Yellow,
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
@@ -63,7 +63,7 @@ private fun Tabs(
         tabs.forEachIndexed { index, tab ->
             LeadingIconTab(
                 icon = { /* アイコンを表示しない */ },
-                text = { Text(text = tab.title) },
+                text = { Text(text = tab.title, color = Color.White) },
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {

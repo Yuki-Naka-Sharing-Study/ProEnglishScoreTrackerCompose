@@ -54,6 +54,7 @@ import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import com.example.proenglishscoretracker.wheel_picker.CurrentIndex
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
+import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
 import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
 import com.sd.lib.date.FDate
 import com.sd.lib.date.FDateSelector
@@ -281,11 +282,11 @@ private fun SelectDatePicker(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = date.toString(),
-                color = Color.White
+                color = Color.Black
             )
         }
     }
@@ -312,7 +313,7 @@ private fun DatePicker(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFBB86FC)
+                containerColor = Color(0xFFd3d3d3)
             ),
             modifier = Modifier
                 .size(
@@ -351,7 +352,7 @@ private fun DatePicker(
                         .align(Alignment.CenterHorizontally),
                     onClick = { onDone(selector.date) },
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Green),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
                 ) {
                     Text(
                         text = "確定",
@@ -392,13 +393,16 @@ private fun DatePickerView(
         modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         // Year
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = yearState,
             count = listYear.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listYear.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -407,9 +411,12 @@ private fun DatePickerView(
 
         // Month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = monthState,
             count = listMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -418,9 +425,12 @@ private fun DatePickerView(
 
         // Day of month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = dayOfMonthState,
             count = listDayOfMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listDayOfMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -528,14 +538,16 @@ private fun ToeicSWScorePicker(
     Box(modifier = modifier) {
         // スコア入力ボタン
         Button(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(width = 80.dp, height = 40.dp),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = "$toeicSWScore",
-                color = Color.White
+                color = Color.Black
             )
         }
     }
@@ -544,7 +556,7 @@ private fun ToeicSWScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -570,7 +582,7 @@ private fun ToeicSWScorePicker(
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(Color.Green),
+                        colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
                     ) {
                         Text(
                             text = "確定",
@@ -635,6 +647,9 @@ private fun ThreeDigits(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
     ) { index ->
         Text(
             index.toString(),
@@ -659,6 +674,9 @@ private fun TwoDigits(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
     ) { index ->
         Text(
             index.toString(),
@@ -687,6 +705,9 @@ private fun OneDigit(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
     ) { index ->
         Text(
             items[index].toString(),

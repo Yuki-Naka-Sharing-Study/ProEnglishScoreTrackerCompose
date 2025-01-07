@@ -162,7 +162,7 @@ fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
     BottomNavigation(
-        backgroundColor = Color(0xFFE0F7FA), // ナビゲーションバーの背景色
+        backgroundColor = Color(0xFFCE93D8), // ナビゲーションバーの背景色
         contentColor = Color(0xFF00796B) // デフォルトのコンテンツカラー（アイコン・テキスト）
     ) {
         BottomNavigationItem(

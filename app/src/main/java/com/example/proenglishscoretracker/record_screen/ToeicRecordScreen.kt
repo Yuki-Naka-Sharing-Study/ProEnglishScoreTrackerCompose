@@ -26,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -54,6 +55,7 @@ import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import com.example.proenglishscoretracker.wheel_picker.CurrentIndex
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
+import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
 import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
 import com.sd.lib.date.FDate
 import com.sd.lib.date.FDateSelector
@@ -161,6 +163,9 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         var showSaved by remember { mutableStateOf("") }
+        // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
+        var showAlertDialogOfZero by remember { mutableStateOf(false) }
+        var result by remember { mutableStateOf("Result") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -171,15 +176,50 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (showAlertDialogOfZero) {
+                    androidx.compose.material.AlertDialog(
+                        onDismissRequest = {
+                            result = "Dismiss"
+                            showAlertDialogOfZero = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "はい"
+                                    showAlertDialogOfZero = false
+                                    showSaved = "登録しました。"
+                                    viewModel.saveToeicValues(readingScore, listeningScore, memoText)
+                                }
+                            ) {
+                                Text("はい")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "いいえ"
+                                    showAlertDialogOfZero = false
+                                }
+                            ) {
+                                Text("いいえ")
+                            }
+                        },
+                        text = {
+                            Text("ReadingスコアもしくはListeningスコアが０ですが登録しますか？")
+                        },
+                        contentColor = Color.Black,
+                        backgroundColor = Color(0xFFd3d3d3)
+                    )
+                }
                 SaveButton(
                     onClick = {
-                        showSaved = "登録しました。"
-                        viewModel.saveToeicValues(
-                            readingScore,
-                            listeningScore,
-                            memoText
-                        )
-                    },
+                        if (readingScore == 0 || listeningScore == 0) {
+                            showAlertDialogOfZero = true
+                        } else {
+                            showSaved = "登録しました。"
+                            viewModel.saveToeicValues(readingScore, listeningScore, memoText)
+                        }
+                    }
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 ShowSavedText(showSaved)
@@ -230,11 +270,11 @@ private fun SelectDatePicker(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = date.toString(),
-                color = Color.White
+                color = Color.Black
             )
         }
     }
@@ -261,7 +301,7 @@ private fun DatePicker(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         androidx.compose.material3.Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFBB86FC)
+                containerColor = Color(0xFFd3d3d3)
             ),
             modifier = Modifier
                 .size(
@@ -273,7 +313,7 @@ private fun DatePicker(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 DatePickerView(
                     listYear = state.listYear,
@@ -300,7 +340,7 @@ private fun DatePicker(
                         .align(Alignment.CenterHorizontally),
                     onClick = { onDone(selector.date) },
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Green),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
                 ) {
                     Text(
                         text = "確定",
@@ -341,13 +381,16 @@ private fun DatePickerView(
         modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         // Year
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = yearState,
             count = listYear.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listYear.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -356,9 +399,12 @@ private fun DatePickerView(
 
         // Month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = monthState,
             count = listMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -367,9 +413,12 @@ private fun DatePickerView(
 
         // Day of month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = dayOfMonthState,
             count = listDayOfMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listDayOfMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -442,14 +491,16 @@ private fun TOEICRLScorePicker(
     Box(modifier = modifier) {
         // スコア入力ボタン
         Button(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(width = 80.dp, height = 40.dp),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = "$toeicRLScore",
-                color = Color.White
+                color = Color.Black
             )
         }
     }
@@ -458,7 +509,7 @@ private fun TOEICRLScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -484,7 +535,7 @@ private fun TOEICRLScorePicker(
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(Color.Green),
+                        colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
                     ) {
                         Text(
                             text = "確定",
@@ -520,8 +571,7 @@ private fun TOEICRLScorePickerView(
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement
-            .SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 100の位
@@ -549,6 +599,9 @@ private fun ThreeDigits(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
     ) { index ->
         Text(
             index.toString(),
@@ -573,6 +626,9 @@ private fun TwoDigits(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
     ) { index ->
         Text(
             index.toString(),
@@ -601,6 +657,9 @@ private fun OneDigit(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
     ) { index ->
         Text(
             items[index].toString(),
