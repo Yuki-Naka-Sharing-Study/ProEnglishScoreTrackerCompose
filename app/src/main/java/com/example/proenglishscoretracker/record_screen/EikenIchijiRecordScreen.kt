@@ -392,11 +392,11 @@ private fun SelectDatePicker(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = date.toString(),
-                color = Color.White
+                color = Color.Black
             )
         }
     }
