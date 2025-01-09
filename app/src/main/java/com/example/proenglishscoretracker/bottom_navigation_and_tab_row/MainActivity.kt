@@ -22,6 +22,7 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
@@ -47,8 +48,9 @@ import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScree
 class MainActivity : ComponentActivity() {
     private val repository: EnglishInfoRepository = EnglishInfoRepository()
     private lateinit var englishInfoDao: EnglishInfoDao
+    private val dataStore by preferencesDataStore(name = "examDataScreen")
     private val viewModel: EnglishInfoViewModel by viewModels {
-        EnglishInfoViewModelFactory(repository, englishInfoDao)
+        EnglishInfoViewModelFactory(repository, englishInfoDao, dataStore)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
