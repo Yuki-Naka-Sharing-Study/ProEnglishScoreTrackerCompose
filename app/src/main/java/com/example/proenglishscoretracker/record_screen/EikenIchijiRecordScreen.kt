@@ -31,8 +31,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -82,6 +80,16 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
+
+        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+        val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
+        var selectedGrade by rememberSaveable { mutableStateOf("") }
+        var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
+        // グレードが選ばれたときにisSpeakingPickerVisibleを設定する
+        isSpeakingPickerVisible = when (selectedGrade) {
+            "3級", "準2級", "2級", "準1級", "1級" -> true
+            else -> false
+        }
         var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var showDatePicker by remember { mutableStateOf(false) }
@@ -126,9 +134,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row {
-            SelectGradeText("")
-            DropdownMenuWithIcon()
+            SelectGradeText(selectedGrade)
+            DropdownMenuWithIcon(grades, onGradeSelected = { grade ->
+                selectedGrade = grade // gradeが選択されたらselectedGradeを更新
+            })
         }
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
@@ -239,6 +251,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+        SpeakingScoreArea(
+            Modifier,
+            isVisible = isSpeakingPickerVisible,
+            speakingScore = speakingScore,
+            onValueChange = { speakingScore = it },
+        )
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -538,10 +557,12 @@ private fun SelectGradeTextPreview() {
 }
 
 @Composable
-private fun DropdownMenuWithIcon() {
-    val items = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
+private fun DropdownMenuWithIcon(
+    grades: List<String>,
+    onGradeSelected: (String) -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableStateOf(0) }
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
     Box(
         modifier = Modifier
@@ -559,7 +580,7 @@ private fun DropdownMenuWithIcon() {
                     .padding(8.dp)
             ) {
                 Text(
-                    text = items[selectedIndex],
+                    text = grades[selectedIndex],
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
@@ -572,34 +593,22 @@ private fun DropdownMenuWithIcon() {
                     modifier = Modifier.size(24.dp)
                 )
             }
-
             DropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
                 offset = DpOffset(0.dp, 8.dp)
             ) {
-                items.forEachIndexed { index, item ->
+                grades.forEachIndexed { index, item ->
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
                             selectedIndex = index
+                            onGradeSelected(item)
                             expanded = false
                         }
                     )
                 }
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DropdownMenuWithIconPreview() {
-    ProEnglishScoreTrackerTheme {
-        Surface(
-            color = MaterialTheme.colorScheme.background
-        ) {
-            DropdownMenuWithIcon()
         }
     }
 }
@@ -806,6 +815,92 @@ private fun RLWScoreInputField(placeholder: String, value: Int, onValueChange: (
             value = value.toString(),
             onValueChange = { newValue ->
                 // 数字のみ受け付ける
+                if (newValue.all { it.isDigit() }) {
+                    onValueChange(newValue.toInt())
+                }
+            },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
+                    color = Color.Gray
+                )
+            },
+            shape = RoundedCornerShape(10),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            )
+        )
+    }
+}
+
+@Composable
+private fun SpeakingScoreArea(
+    modifier: Modifier,
+    isVisible: Boolean,
+    speakingScore: Int,
+    onValueChange: (Int) -> Unit
+) {
+    // レイアウト内で完全に消えるように設定
+    if (isVisible) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = dimensionResource(id = R.dimen.space_36_dp))
+        ) {
+            SpeakingImageView(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp)))
+            SpeakingText("", modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp)))
+            SpeakingScoreInputField(
+                modifier = Modifier.fillMaxWidth(),
+                placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
+                value = speakingScore,
+                onValueChange = { onValueChange(it) }
+            )
+        }
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+    }
+}
+
+@Composable
+private fun SpeakingImageView(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.speaking),
+        contentDescription = "",
+        modifier = modifier
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
+            .aspectRatio(1f)
+    )
+}
+
+@Composable
+private fun SpeakingText(speakingText: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Speaking",
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun SpeakingScoreInputField(
+    modifier: Modifier = Modifier,
+    placeholder: String,
+    value: Int,
+    onValueChange: (Int) -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (value >= 851) ErrorText("")
+        androidx.compose.material.OutlinedTextField(
+            modifier = Modifier
+                .weight(1f)
+                .height(dimensionResource(id = R.dimen.space_52_dp)),
+            value = value.toString(),
+            onValueChange = { newValue ->
                 if (newValue.all { it.isDigit() }) {
                     onValueChange(newValue.toInt())
                 }
