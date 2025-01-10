@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
@@ -20,13 +23,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
-import com.example.proenglishscoretracker.chart_screen.EikenNijiChartScreen
 import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeicChartScreen
@@ -43,7 +48,11 @@ import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
 import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.IeltsIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.ToeflIbtIndividualScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
+import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScreen
+import com.example.proenglishscoretracker.onboard.OnboardingScreen
 
 class MainActivity : ComponentActivity() {
     private val repository: EnglishInfoRepository = EnglishInfoRepository()
@@ -68,94 +77,69 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
     val navController = rememberNavController()
+    val isFirstLaunchState = viewModel.isFirstLaunch.collectAsState(initial = null)
 
     Scaffold(
-        bottomBar = { BottomNavigationBar(
-            navController
-        ) }
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            if (isFirstLaunchState.value == false) {
+                BottomNavigationBar(navController = navController)
+            }
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = "examDataScreen",
-            Modifier.padding(innerPadding)
+            startDestination = if (isFirstLaunchState.value == true) "onboarding" else "examDataScreen",
+            modifier = Modifier.padding(innerPadding)
         ) {
-            // 以下、「BottomNavigationBar」
+            composable("onboarding") {
+                OnboardingScreen(
+                    onFinish = {
+                        viewModel.completeOnboarding()
+                        navController.navigate("examDataScreen") {
+                            popUpTo("onboarding") { inclusive = true }
+                        }
+                    }
+                )
+            }
             composable("examDataScreen") { ExamDataScreen() }
             composable("examRecordScreen") { ExamRecordScreen(viewModel) }
             composable("setting") { SettingScreen() }
 
-
-            // 以下、「SelectEikenIchijiFragment」
-            composable("eikenIchijiIndividualScreen") {
-                EikenIndividualScreen()
-            }
-            composable("eikenIchijiChartScreen") {
-                EikenChartScreen()
-            }
-
-
-            // 以下、「SelectEikenNijiFragment」
-            composable("eikenNijiIndividualScreen") {
-//                EikenNijiIndividualScreen()
-            }
-            composable("eikenIchijiChartScreen") {
-                EikenNijiChartScreen()
-            }
-
-
-            // 以下、「SelectToeicFragment」
+            // XxxIndividualScreen
             composable("toeicIndividualScreen") { ToeicIndividualScreen() }
+            composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen() }
+            composable("eikenIchijiIndividualScreen") { EikenIndividualScreen() }
+            composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen() }
+            composable("ieltsIndividualScreen") { IeltsIndividualScreen() }
+
+            // XxxChartScreen
             composable("toeicChartScreen") { ToeicChartScreen() }
+            composable("toeicSwChartScreen") { ToeicSwChartScreen() }
+            composable("eikenIchijiChartScreen") { EikenChartScreen() }
+            composable("toeflIbtChartScreen") { ToeflIbtChartScreen() }
+            composable("ieltsIbtChartScreen") { IeltsChartScreen() }
 
-
-            // 以下、「SelectToeicSwFragment」
-            composable("toeicSwIndividualScreen") {
-//                ToeicSwIndividualScreen()
-            }
-            composable("toeicSwChartScreen") {
-                ToeicSwChartScreen()
-            }
-
-
-            // 以下、「SelectToeflIbtFragment」
-            composable("toeflIbtIndividualScreen") {
-//                ToeflIbtIndividualScreen()
-            }
-            composable("toeflIbtChartScreen") {
-                ToeflIbtChartScreen()
-            }
-
-
-            // 以下、「SelectIeltsFragment」
-            composable("ieltsIndividualScreen") {
-//                IeltsIndividualScreen()
-            }
-            composable("ieltsIbtChartScreen") {
-                IeltsChartScreen()
-            }
-
-
-            // 以下、「XxxRecordScreen」
-            composable("eikenIchijiRecordScreen") {
-                EikenIchijiRecordScreen(viewModel = viewModel)
-            }
-            composable("eikenNijiRecordScreen") {
-                EikenNijiRecordScreen(viewModel = viewModel)
-            }
-            composable("toeicRecordScreen") {
-                ToeicRecordScreen(viewModel = viewModel)
-            }
-            composable("toeicSwRecordScreen") {
-                ToeicSwRecordScreen(viewModel = viewModel)
-            }
-            composable("toeflIbtRecordScreen") {
-                ToeflIbtRecordScreen(viewModel = viewModel)
-            }
-            composable("ieltsRecordScreen") {
-                IeltsRecordScreen(viewModel = viewModel)
-            }
-
+            // XxxRecordScreen
+            composable("toeicRecordScreen") { ToeicRecordScreen(viewModel = viewModel) }
+            composable("toeicSwRecordScreen") { ToeicSwRecordScreen(viewModel = viewModel) }
+            composable("eikenIchijiRecordScreen") { EikenIchijiRecordScreen(viewModel = viewModel) }
+            composable("eikenNijiRecordScreen") { EikenNijiRecordScreen(viewModel = viewModel) }
+            composable("toeflIbtRecordScreen") { ToeflIbtRecordScreen(viewModel = viewModel) }
+            composable("ieltsRecordScreen") { IeltsRecordScreen(viewModel = viewModel) }
         }
+    }
+}
+
+@Composable
+fun LoadingScreen(modifier: Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Loading...", fontSize = 20.sp)
     }
 }
 
@@ -164,15 +148,13 @@ fun BottomNavigationBar(navController: NavController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
     BottomNavigation(
-        backgroundColor = Color(0xFFCE93D8), // ナビゲーションバーの背景色
-        contentColor = Color(0xFF00796B) // デフォルトのコンテンツカラー（アイコン・テキスト）
+        backgroundColor = Color(0xFFCE93D8),
+        contentColor = Color(0xFF00796B)
     ) {
         BottomNavigationItem(
-//            icon = { Icon(Icons.Default.StackedLineChart, contentDescription = "examDataScreen") },
             icon = {
-                // 自作のアイコンを表示
                 Icon(
-                    painter = painterResource(id = R.drawable.chart), // ここを自作のアイコンに変更
+                    painter = painterResource(id = R.drawable.chart),
                     contentDescription = "examDataScreen"
                 )
             },
@@ -184,8 +166,8 @@ fun BottomNavigationBar(navController: NavController) {
                     restoreState = true
                 }
             },
-            selectedContentColor = Color(0xFF004D40), // 選択中のタブの色
-            unselectedContentColor = Color(0xFFB2DFDB) // 非選択中のタブの色
+            selectedContentColor = Color(0xFF004D40),
+            unselectedContentColor = Color(0xFFB2DFDB)
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Edit, contentDescription = "Record") },
