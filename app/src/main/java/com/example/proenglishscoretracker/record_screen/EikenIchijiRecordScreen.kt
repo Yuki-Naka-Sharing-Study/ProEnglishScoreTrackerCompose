@@ -188,13 +188,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            Column {
-                RLWScoreInputField(
-                    placeholder = stringResource(id = R.string.eiken_ichiji_reading_score),
-                    value = readingScore,
-                    onValueChange = { readingScore = it }
-                )
-            }
+            EikenRLWSScorePicker(
+                Modifier,
+                readingScore,
+                selectedReadingScore,
+                { selectedReadingScore = it },
+                { readingScore = selectedReadingScore },
+            )
         }
 
         Row {
@@ -214,13 +214,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            Column {
-                RLWScoreInputField(
-                    placeholder = stringResource(id = R.string.eiken_ichiji_listening_score),
-                    value = listeningScore,
-                    onValueChange = { listeningScore = it }
-                )
-            }
+            EikenRLWSScorePicker(
+                Modifier,
+                listeningScore,
+                selectedListeningScore,
+                { selectedListeningScore = it },
+                { listeningScore = selectedListeningScore },
+            )
         }
 
         Row {
@@ -240,13 +240,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            Column {
-                RLWScoreInputField(
-                    placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
-                    value = writingScore,
-                    onValueChange = { writingScore = it }
-                )
-            }
+            EikenRLWSScorePicker(
+                Modifier,
+                writingScore,
+                selectedWritingScore,
+                { selectedWritingScore = it },
+                { writingScore = selectedWritingScore },
+            )
         }
 
         Row {
@@ -985,36 +985,179 @@ private fun EiekenCseOneDigit(state: MutableIntState) {
 }
 
 @Composable
-private fun RLWScoreInputField(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun EikenRLWSScorePicker(
+    modifier: Modifier = Modifier,
+    eikenRLWSScore: Int,
+    selectedEikenRLWSScore: Int,
+    onScoreChange: (Int) -> Unit,
+    onConfirm: () -> Unit
+) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        Button(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(width = 80.dp, height = 40.dp),
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
+        ) {
+            Text(
+                text = "$eikenRLWSScore",
+                color = Color.Black
+            )
+        }
+    }
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    EikenRLWSScorePickerView(
+                        score = selectedEikenRLWSScore,
+                        onScoreChange = onScoreChange
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm()
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun EikenRLWSScorePickerView(
+    score: Int,
+    onScoreChange: (Int) -> Unit
+) {
+    val hundred = score / 100 // 100の位
+    val ten = (score % 100) / 10 // 10の位
+    val one = score % 10 // 1の位
+
+    // 状態管理のためにrememberを使う
+    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
+    val tenState = rememberSaveable { mutableIntStateOf(ten) }
+    val oneState = rememberSaveable { mutableIntStateOf(one) }
+
+    // スコア変更をトリガーする
+    LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
+        onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
+    }
+
     Row(
-        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 851) ErrorText("")
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
-            value = value.toString(),
-            onValueChange = { newValue ->
-                // 数字のみ受け付ける
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
+        // 100の位
+        EikenThreeDigits(hundredState)
+        // 10の位
+        EikenTwoDigits(tenState)
+        // 1の位
+        EikenOneDigit(oneState)
+    }
+}
+
+@Composable
+private fun EikenThreeDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 9,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun EikenTwoDigits(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun EikenOneDigit(state: MutableIntState) {
+    // FWheelPickerStateを利用してスクロール状態を管理
+    val listState = rememberFWheelPickerState()
+
+    // currentIndex の変化を監視
+    LaunchedEffect(listState.currentIndex) {
+        // listState.currentIndex が変わったときに state.intValue を更新
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
         )
     }
 }
