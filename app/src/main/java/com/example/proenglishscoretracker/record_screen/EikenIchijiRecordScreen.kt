@@ -61,6 +61,7 @@ import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import com.example.proenglishscoretracker.wheel_picker.CurrentIndex
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
+import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
 import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
 import com.sd.lib.date.FDate
 import com.sd.lib.date.FDateSelector
@@ -139,8 +140,6 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 selectedGrade = grade // gradeが選択されたらselectedGradeを更新
             })
         }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
@@ -423,7 +422,7 @@ private fun DatePicker(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFBB86FC)
+                containerColor = Color(0xFFd3d3d3)
             ),
             modifier = Modifier
                 .size(
@@ -462,7 +461,7 @@ private fun DatePicker(
                         .align(Alignment.CenterHorizontally),
                     onClick = { onDone(selector.date) },
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Green),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
                 ) {
                     Text(
                         text = "確定",
@@ -503,13 +502,16 @@ private fun DatePickerView(
         modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         // Year
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = yearState,
             count = listYear.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listYear.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -518,9 +520,12 @@ private fun DatePickerView(
 
         // Month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = monthState,
             count = listMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -529,9 +534,12 @@ private fun DatePickerView(
 
         // Day of month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = dayOfMonthState,
             count = listDayOfMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            },
         ) { index ->
             listDayOfMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())

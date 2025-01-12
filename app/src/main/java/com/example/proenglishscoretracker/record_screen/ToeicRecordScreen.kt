@@ -299,7 +299,7 @@ private fun DatePicker(
         selector.setDate(date)
     }
     Dialog(onDismissRequest = { onDismissRequest() }) {
-        androidx.compose.material3.Card(
+        Card(
             colors = CardDefaults.cardColors(
                 containerColor = Color(0xFFd3d3d3)
             ),
