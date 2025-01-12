@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -77,10 +78,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
         var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
-        //「ErrorText」系
-        var writingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-
         //「Error」系
         val writingMaxScoreError = writingScore >= 201
         val speakingMaxScoreError = speakingScore >= 201
@@ -116,8 +113,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfWriting by rememberSaveable { mutableStateOf(false) }
-
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -143,8 +138,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        var focusStateOfSpeaking by rememberSaveable { mutableStateOf(false) }
 
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -187,12 +180,8 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val savable =
-                writingScore.toString().isNotBlank() &&
-                speakingScore.toString().isNotBlank() &&
-                !writingMaxScoreError &&
-                !speakingMaxScoreError
-
+        var showAlertDialogOfZero by remember { mutableStateOf(false) }
+        var result by remember { mutableStateOf("Result") }
         var showSaved by remember { mutableStateOf("") }
 
         Row(
@@ -204,32 +193,52 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (showAlertDialogOfZero) {
+                    androidx.compose.material.AlertDialog(
+                        onDismissRequest = {
+                            result = "Dismiss"
+                            showAlertDialogOfZero = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "はい"
+                                    showAlertDialogOfZero = false
+                                    showSaved = "登録しました。"
+                                    viewModel.saveToeicSwValues(writingScore, speakingScore, memoText)
+                                }
+                            ) {
+                                Text("はい")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "いいえ"
+                                    showAlertDialogOfZero = false
+                                }
+                            ) {
+                                Text("いいえ")
+                            }
+                        },
+                        text = {
+                            Text("WritingスコアもしくはSpeakingスコアが０ですが登録しますか？")
+                        },
+                        contentColor = Color.Black,
+                        backgroundColor = Color(0xFFd3d3d3)
+                    )
+                }
                 SaveButton(
                     onClick = {
-                        if (savable) {
-                            writingMaxScoreErrorText = ""
-                            speakingMaxScoreErrorText = ""
-                            showSaved = "記録しました。"
-                            viewModel.saveToeicValues(
-                                writingScore,
-                                speakingScore,
-                                memoText
-                            )
+                        if (writingScore == 0 || speakingScore == 0) {
+                            showAlertDialogOfZero = true
+                        } else if (writingMaxScoreError || speakingMaxScoreError) {
+
                         } else {
-                            if (writingMaxScoreError) {
-                                writingMaxScoreErrorText = "Writingスコアは201未満である必要があります。"
-                            }
-                            if (speakingMaxScoreError) {
-                                speakingMaxScoreErrorText = "Speakingスコアは201未満である必要があります。"
-                            }
-                            if (!writingMaxScoreError) {
-                                writingMaxScoreErrorText = ""
-                            }
-                            if (!speakingMaxScoreError) {
-                                speakingMaxScoreErrorText = ""
-                            }
+                            showSaved = "登録しました。"
+                            viewModel.saveToeicSwValues(writingScore, speakingScore, memoText)
                         }
-                    },
+                    }
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 ShowSavedText(showSaved)
