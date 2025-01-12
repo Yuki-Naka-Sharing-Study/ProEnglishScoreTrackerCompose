@@ -1169,24 +1169,31 @@ private fun SpeakingScoreArea(
     speakingScore: Int,
     onValueChange: (Int) -> Unit
 ) {
-    // レイアウト内で完全に消えるように設定
     if (isVisible) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(start = dimensionResource(id = R.dimen.space_36_dp))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            SpeakingImageView(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp)))
-            SpeakingText("", modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp)))
-            SpeakingScoreInputField(
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = stringResource(id = R.string.eiken_ichiji_writing_score),
-                value = speakingScore,
-                onValueChange = { onValueChange(it) }
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = dimensionResource(id = R.dimen.space_36_dp))
+            ) {
+                SpeakingImageView(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp)))
+                SpeakingText(
+                    speakingText = "Speaking",
+                    modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp))
+                )
+                EikenRLWSScorePicker(
+                    eikenRLWSScore = speakingScore,
+                    selectedEikenRLWSScore = speakingScore,
+                    onScoreChange = onValueChange,
+                    onConfirm = { /* 確定時の処理 */ }
+                )
+            }
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
         }
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
     }
 }
 
