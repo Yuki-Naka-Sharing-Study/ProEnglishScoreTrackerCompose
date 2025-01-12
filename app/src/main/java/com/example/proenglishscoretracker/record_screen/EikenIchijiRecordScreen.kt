@@ -1171,7 +1171,6 @@ private fun SpeakingScoreArea(
 ) {
     if (isVisible) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Row(
@@ -1191,6 +1190,12 @@ private fun SpeakingScoreArea(
                     onScoreChange = onValueChange,
                     onConfirm = { /* 確定時の処理 */ }
                 )
+            }
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                if (speakingScore >= 851) {
+                    ErrorText("Speakingスコアは851未満である必要があります。")
+                }
             }
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
         }
