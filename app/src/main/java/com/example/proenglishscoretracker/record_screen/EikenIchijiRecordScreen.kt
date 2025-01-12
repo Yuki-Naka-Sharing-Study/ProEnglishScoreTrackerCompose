@@ -162,7 +162,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             CSEScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            CseScorePicker(
+            EikenCseScorePicker(
                 Modifier,
                 cseScore,
                 selectedCseScore,
@@ -782,7 +782,7 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun CseScorePicker(
+private fun EikenCseScorePicker(
     modifier: Modifier = Modifier,
     cseScore: Int,
     selectedCseScore: Int,
@@ -819,7 +819,7 @@ private fun CseScorePicker(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    CseScorePickerView(
+                    EikenCseScorePickerView(
                         score = selectedCseScore,
                         onScoreChange = onScoreChange
                     )
@@ -846,7 +846,7 @@ private fun CseScorePicker(
 }
 
 @Composable
-private fun CseScorePickerView(
+private fun EikenCseScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
@@ -878,18 +878,18 @@ private fun CseScorePickerView(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 1000の位
-        CseFourDigits(thousandState)
+        EikenCseFourDigits(thousandState)
         // 100の位
-        CseThreeDigits(hundredState)
+        EikenCseThreeDigits(hundredState)
         // 10の位
-        CseTwoDigits(tenState)
+        EikenCseTwoDigits(tenState)
         // 1の位
-        CseOneDigit(oneState)
+        EiekenCseOneDigit(oneState)
     }
 }
 
 @Composable
-private fun CseFourDigits(state: MutableIntState) {
+private fun EikenCseFourDigits(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
@@ -913,7 +913,7 @@ private fun CseFourDigits(state: MutableIntState) {
 }
 
 @Composable
-private fun CseThreeDigits(state: MutableIntState) {
+private fun EikenCseThreeDigits(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
@@ -937,7 +937,7 @@ private fun CseThreeDigits(state: MutableIntState) {
 }
 
 @Composable
-private fun CseTwoDigits(state: MutableIntState) {
+private fun EikenCseTwoDigits(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
@@ -961,7 +961,7 @@ private fun CseTwoDigits(state: MutableIntState) {
 }
 
 @Composable
-private fun CseOneDigit(state: MutableIntState) {
+private fun EiekenCseOneDigit(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
