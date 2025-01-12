@@ -78,13 +78,18 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var selectedDate by rememberSaveable { mutableStateOf("") }
+
+        // スコア系
         var cseScore by rememberSaveable { mutableIntStateOf(0) }
         var selectedCseScore by rememberSaveable { mutableIntStateOf(cseScore) }
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedListeningScore by rememberSaveable { mutableIntStateOf(listeningScore) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
-
+        var selectedWritingScore by rememberSaveable { mutableIntStateOf(writingScore) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedSpeakingScore by rememberSaveable { mutableIntStateOf(speakingScore) }
         val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
         var selectedGrade by rememberSaveable { mutableStateOf("") }
         var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
@@ -656,22 +661,6 @@ private fun CSEScoreTextPreview() {
 }
 
 @Composable
-private fun ReadingText(readingText: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Reading",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ReadingTextPreview() {
-    ProEnglishScoreTrackerTheme {
-        ReadingText("Reading")
-    }
-}
-
-@Composable
 private fun ReadingImageView(modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(id = R.drawable.reading),
@@ -691,18 +680,18 @@ private fun ReadingImageViewPreview() {
 }
 
 @Composable
-private fun ListeningText(listeningText: String, modifier: Modifier = Modifier) {
+private fun ReadingText(readingText: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Listening",
+        text = "Reading",
         modifier = modifier
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListeningTextPreview() {
+private fun ReadingTextPreview() {
     ProEnglishScoreTrackerTheme {
-        ListeningText("Listening")
+        ReadingText("Reading")
     }
 }
 
@@ -726,18 +715,18 @@ private fun ListeningImageViewPreview() {
 }
 
 @Composable
-private fun WritingText(writingText: String, modifier: Modifier = Modifier) {
+private fun ListeningText(listeningText: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Writing",
+        text = "Listening",
         modifier = modifier
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun WritingTextPreview() {
+private fun ListeningTextPreview() {
     ProEnglishScoreTrackerTheme {
-        WritingText("Writing")
+        ListeningText("Listening")
     }
 }
 
@@ -757,6 +746,22 @@ private fun WritingImageView(modifier: Modifier = Modifier) {
 private fun WritingImageViewPreview() {
     ProEnglishScoreTrackerTheme {
         WritingImageView(modifier = Modifier)
+    }
+}
+
+@Composable
+private fun WritingText(writingText: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Writing",
+        modifier = modifier
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun WritingTextPreview() {
+    ProEnglishScoreTrackerTheme {
+        WritingText("Writing")
     }
 }
 
@@ -873,18 +878,18 @@ private fun CseScorePickerView(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // 1000の位
-        FourDigits(thousandState)
+        CseFourDigits(thousandState)
         // 100の位
-        ThreeDigits(hundredState)
+        CseThreeDigits(hundredState)
         // 10の位
-        TwoDigits(tenState)
+        CseTwoDigits(tenState)
         // 1の位
-        OneDigit(oneState)
+        CseOneDigit(oneState)
     }
 }
 
 @Composable
-private fun FourDigits(state: MutableIntState) {
+private fun CseFourDigits(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
@@ -908,7 +913,7 @@ private fun FourDigits(state: MutableIntState) {
 }
 
 @Composable
-private fun ThreeDigits(state: MutableIntState) {
+private fun CseThreeDigits(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
@@ -932,7 +937,7 @@ private fun ThreeDigits(state: MutableIntState) {
 }
 
 @Composable
-private fun TwoDigits(state: MutableIntState) {
+private fun CseTwoDigits(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
@@ -956,7 +961,7 @@ private fun TwoDigits(state: MutableIntState) {
 }
 
 @Composable
-private fun OneDigit(state: MutableIntState) {
+private fun CseOneDigit(state: MutableIntState) {
     val listState = rememberFWheelPickerState()
 
     LaunchedEffect(listState.currentIndex) {
