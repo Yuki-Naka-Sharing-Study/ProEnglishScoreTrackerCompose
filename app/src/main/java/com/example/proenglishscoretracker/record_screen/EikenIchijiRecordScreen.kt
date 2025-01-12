@@ -33,6 +33,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -78,6 +79,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
     ) {
         var selectedDate by rememberSaveable { mutableStateOf("") }
         var cseScore by rememberSaveable { mutableIntStateOf(0) }
+        var selectedCseScore by rememberSaveable { mutableIntStateOf(cseScore) }
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
@@ -137,7 +139,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         Row {
             SelectGradeText(selectedGrade)
             DropdownMenuWithIcon(grades, onGradeSelected = { grade ->
-                selectedGrade = grade // gradeが選択されたらselectedGradeを更新
+                selectedGrade = grade
             })
         }
 
@@ -155,13 +157,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             CSEScoreText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            Column {
-                CseInputScoreRow(
-                    placeholder = stringResource(id = R.string.cse_score),
-                    value = cseScore,
-                    onValueChange = { cseScore = it }
-                )
-            }
+            CseScorePicker(
+                Modifier,
+                cseScore,
+                selectedCseScore,
+                { selectedCseScore = it },
+                { cseScore = selectedCseScore },
+            )
         }
 
         Row {
@@ -775,36 +777,204 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun CseInputScoreRow(placeholder: String, value: Int, onValueChange: (Int) -> Unit) {
+private fun CseScorePicker(
+    modifier: Modifier = Modifier,
+    cseScore: Int,
+    selectedCseScore: Int,
+    onScoreChange: (Int) -> Unit,
+    onConfirm: () -> Unit
+) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        Button(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(width = 80.dp, height = 40.dp),
+            onClick = { showDialog = true },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
+        ) {
+            Text(
+                text = "$cseScore",
+                color = Color.Black
+            )
+        }
+    }
+    if (showDialog) {
+        Dialog(onDismissRequest = { showDialog = false }) {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                modifier = Modifier
+                    .size(width = 240.dp, height = 320.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CseScorePickerView(
+                        score = selectedCseScore,
+                        onScoreChange = onScoreChange
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        onClick = {
+                            onConfirm()
+                            showDialog = false
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
+                    ) {
+                        Text(
+                            text = "確定",
+                            color = Color.White
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun CseScorePickerView(
+    score: Int,
+    onScoreChange: (Int) -> Unit
+) {
+    val thousand = score / 1000 // 1000の位
+    val hundred = (score % 1000) / 100 // 100の位
+    val ten = (score % 100) / 10 // 10の位
+    val one = score % 10 // 10の位
+
+    val thousandState = rememberSaveable { mutableIntStateOf(thousand) }
+    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
+    val tenState = rememberSaveable { mutableIntStateOf(ten) }
+    val oneState = rememberSaveable { mutableIntStateOf(one) }
+
+    LaunchedEffect(
+        thousandState.intValue,
+        hundredState.intValue,
+        tenState.intValue,
+        oneState.intValue) {
+        onScoreChange(
+            thousandState.intValue * 1000 +
+                    hundredState.intValue * 100 +
+                    tenState.intValue * 10 +
+                    oneState.intValue
+        )
+    }
     Row(
-        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (value >= 2551) ErrorText("")
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
-            value = value.toString(),
-            onValueChange = { newValue ->
-                // 数字のみ受け付ける
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
+        // 1000の位
+        FourDigits(thousandState)
+        // 100の位
+        ThreeDigits(hundredState)
+        // 10の位
+        TwoDigits(tenState)
+        // 1の位
+        OneDigit(oneState)
+    }
+}
+
+@Composable
+private fun FourDigits(state: MutableIntState) {
+    val listState = rememberFWheelPickerState()
+
+    LaunchedEffect(listState.currentIndex) {
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(48.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun ThreeDigits(state: MutableIntState) {
+    val listState = rememberFWheelPickerState()
+
+    LaunchedEffect(listState.currentIndex) {
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(48.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun TwoDigits(state: MutableIntState) {
+    val listState = rememberFWheelPickerState()
+
+    LaunchedEffect(listState.currentIndex) {
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(48.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+private fun OneDigit(state: MutableIntState) {
+    val listState = rememberFWheelPickerState()
+
+    LaunchedEffect(listState.currentIndex) {
+        state.intValue = listState.currentIndex
+    }
+    FVerticalWheelPicker(
+        modifier = Modifier.width(48.dp),
+        count = 10,
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = listState,
+        focus = {
+            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+        },
+    ) { index ->
+        Text(
+            index.toString(),
+            color = Color.Black
         )
     }
 }
