@@ -670,7 +670,7 @@ private fun TwoDigits(state: MutableIntState) {
     }
     FVerticalWheelPicker(
         modifier = Modifier.width(64.dp),
-        count = 1,
+        count = 10,
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
