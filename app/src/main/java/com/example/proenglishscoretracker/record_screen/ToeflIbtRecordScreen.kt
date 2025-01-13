@@ -82,21 +82,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
-        //「ErrorText」系
-        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
-        var overallMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var readingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var listeningMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var writingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-
-        //「Error」系
-        val overallMaxScoreError = overallScore >= 121
-        val readingMaxScoreError = readingScore >= 31
-        val listeningMaxScoreError = listeningScore >= 31
-        val writingMaxScoreError = writingScore >= 31
-        val speakingMaxScoreError = speakingScore >= 31
-
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
