@@ -295,6 +295,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var showSaved by remember { mutableStateOf("") }
         var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
         var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
+        var ZeroCaseIchiji by remember { mutableStateOf(false) }
         var result by remember { mutableStateOf("Result") }
 
         Row(
@@ -384,7 +385,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                         },
                         text = {
-                            Text("Speakingスコアが０ですが登録しますか？")
+                            Text("CSEスコア, Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
                         },
                         contentColor = Color.Black,
                         backgroundColor = Color(0xFFd3d3d3)
@@ -393,6 +394,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 SaveButton(
                     onClick = {
                         if (
+                            ZeroCaseIchiji &&
+                            speakingScore == 0 &&
+                            isSpeakingPickerVisible
+                            )
+                        {
+                            showAlertDialogOfZeroCaseNiji = true
+                        } else if (
                             cseScore == 0 ||
                             readingScore == 0 ||
                             listeningScore == 0 ||
@@ -400,12 +408,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                             )
                         {
                             showAlertDialogOfZeroCaseIchiji = true
-                        } else if (
-                            speakingScore == 0 &&
-                            isSpeakingPickerVisible
-                            )
-                        {
-                            showAlertDialogOfZeroCaseNiji = true
+                            ZeroCaseIchiji = true
                         } else {
                             showSaved = "登録しました。"
                             viewModel.saveEikenValues(
