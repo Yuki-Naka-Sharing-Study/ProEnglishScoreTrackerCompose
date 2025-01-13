@@ -268,6 +268,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
         var showSaved by remember { mutableStateOf("") }
         var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
         var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
+        var showAlertDialogOfSum by remember { mutableStateOf(false) }
         var zeroCaseIchiji by remember { mutableStateOf(false) }
         var result by remember { mutableStateOf("Result") }
 
@@ -364,6 +365,28 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                         backgroundColor = Color(0xFFd3d3d3)
                     )
                 }
+                if (showAlertDialogOfSum) {
+                    androidx.compose.material.AlertDialog(
+                        onDismissRequest = {
+                            result = "Dismiss"
+                            showAlertDialogOfSum = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    showAlertDialogOfSum = false
+                                }
+                            ) {
+                                Text("はい")
+                            }
+                        },
+                        text = {
+                            Text("CSEスコアがReadingスコア, Listeningスコア, Writingスコア, Speakingスコアの合計と一致していません。")
+                        },
+                        contentColor = Color.Black,
+                        backgroundColor = Color(0xFFd3d3d3)
+                    )
+                }
                 SaveButton(
                     onClick = {
                         if (
@@ -382,6 +405,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                         {
                             showAlertDialogOfZeroCaseIchiji = true
                             zeroCaseIchiji = true
+                        } else if(
+                            cseScore
+                            !=
+                            readingScore + listeningScore + writingScore + speakingScore
+                        ){
+                            showAlertDialogOfSum = true
                         } else {
                             showSaved = "登録しました。"
                             viewModel.saveEikenValues(
