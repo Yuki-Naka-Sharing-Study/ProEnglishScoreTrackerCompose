@@ -281,17 +281,6 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val savable = selectedDate.isNotBlank() &&
-                cseScore.toString().isNotBlank() &&
-                readingScore.toString().isNotBlank() &&
-                listeningScore.toString().isNotBlank() &&
-                writingScore.toString().isNotBlank() &&
-                !selectedDateEmptyError &&
-                !cseMaxScoreError &&
-                !readingMaxScoreError &&
-                !listeningMaxScoreError &&
-                !writingMaxScoreError
-
         var showSaved by remember { mutableStateOf("") }
         var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
         var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
