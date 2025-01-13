@@ -258,6 +258,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
         var showSaved by remember { mutableStateOf("") }
         var showAlertDialogOfZero by remember { mutableStateOf(false) }
+        var showAlertDialogOfSum by remember { mutableStateOf(false) }
         var result by remember { mutableStateOf("Result") }
 
         Row(
@@ -311,6 +312,28 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                         backgroundColor = Color(0xFFd3d3d3)
                     )
                 }
+                if (showAlertDialogOfSum) {
+                    androidx.compose.material.AlertDialog(
+                        onDismissRequest = {
+                            result = "Dismiss"
+                            showAlertDialogOfSum = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    showAlertDialogOfSum = false
+                                }
+                            ) {
+                                Text("はい")
+                            }
+                        },
+                        text = {
+                            Text("OverallスコアがReadingスコア, Listeningスコア, Writingスコア, Speakingスコアの合計と一致していません。")
+                        },
+                        contentColor = Color.Black,
+                        backgroundColor = Color(0xFFd3d3d3)
+                    )
+                }
                 SaveButton(
                     onClick = {
                         if (
@@ -322,6 +345,12 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                             )
                         {
                             showAlertDialogOfZero = true
+                        } else if(
+                            overallScore
+                            !=
+                            readingScore + listeningScore + writingScore + speakingScore
+                        ) {
+                            showAlertDialogOfSum = true
                         } else {
                             showSaved = "登録しました。"
                             viewModel.saveToeflIbtValues(
