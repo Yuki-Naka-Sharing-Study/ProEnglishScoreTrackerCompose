@@ -72,9 +72,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
     ) {
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedListeningScore by rememberSaveable { mutableIntStateOf(listeningScore) }
         var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
@@ -120,10 +118,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             TOEICRLScorePicker(
                 Modifier,
                 readingScore,
-                selectedReadingScore,
-                { selectedReadingScore = it },
-                { readingScore = selectedReadingScore },
-            )
+            ) { readingScore = it }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -139,10 +134,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             TOEICRLScorePicker(
                 Modifier,
                 listeningScore,
-                selectedListeningScore,
-                { selectedListeningScore = it },
-                { listeningScore = selectedListeningScore },
-            )
+            ) { listeningScore = it }
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -482,11 +474,10 @@ private fun ReadingImageViewPreview() {
 private fun TOEICRLScorePicker(
     modifier: Modifier = Modifier,
     toeicRLScore: Int,
-    selectedToeicRLScore: Int,
-    onScoreChange: (Int) -> Unit,
-    onConfirm: () -> Unit
+    onScoreConfirm: (Int) -> Unit, // スコア更新用のコールバック
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
 
     Box(modifier = modifier) {
         // スコア入力ボタン
@@ -521,8 +512,8 @@ private fun TOEICRLScorePicker(
                 ) {
                     // スコア選択のWheel Picker
                     TOEICRLScorePickerView(
-                        score = selectedToeicRLScore,
-                        onScoreChange = onScoreChange
+                        score = tempScore,
+                        onScoreChange = { tempScore = it } // 一時的なスコアを更新
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -531,7 +522,7 @@ private fun TOEICRLScorePicker(
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm() // 確定時にスコアを親に渡す
+                            onScoreConfirm(tempScore) // 確定時にスコアを親に渡す
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
