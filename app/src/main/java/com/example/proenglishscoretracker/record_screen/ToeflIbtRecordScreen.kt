@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -282,6 +283,8 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 !speakingMaxScoreError
 
         var showSaved by remember { mutableStateOf("") }
+        var showAlertDialogOfZero by remember { mutableStateOf(false) }
+        var result by remember { mutableStateOf("Result") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -292,56 +295,71 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (showAlertDialogOfZero) {
+                    androidx.compose.material.AlertDialog(
+                        onDismissRequest = {
+                            result = "Dismiss"
+                            showAlertDialogOfZero = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "はい"
+                                    showAlertDialogOfZero = false
+                                    showSaved = "登録しました。"
+                                    viewModel.saveToeflIbtValues(
+                                        overallScore,
+                                        readingScore,
+                                        listeningScore,
+                                        writingScore,
+                                        speakingScore,
+                                        memoText
+                                    )
+                                }
+                            ) {
+                                Text("はい")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "いいえ"
+                                    showAlertDialogOfZero = false
+                                }
+                            ) {
+                                Text("いいえ")
+                            }
+                        },
+                        text = {
+                            Text("Overallスコア, Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
+                        },
+                        contentColor = Color.Black,
+                        backgroundColor = Color(0xFFd3d3d3)
+                    )
+                }
                 SaveButton(
                     onClick = {
-                        if (savable) {
-                            selectedDateEmptyErrorText = ""
-                            overallMaxScoreErrorText = ""
-                            readingMaxScoreErrorText = ""
-                            listeningMaxScoreErrorText = ""
-                            writingMaxScoreErrorText = ""
-                            speakingMaxScoreErrorText = ""
-                            showSaved = "記録しました。"
+                        if (
+                            overallScore == 0 ||
+                            readingScore == 0 ||
+                            listeningScore == 0 ||
+                            writingScore == 0 ||
+                            speakingScore == 0
+                            )
+                        {
+                            showAlertDialogOfZero = true
+                        } else {
+                            showSaved = "登録しました。"
                             viewModel.saveToeflIbtValues(
                                 overallScore,
                                 readingScore,
                                 listeningScore,
                                 writingScore,
                                 speakingScore,
-                                memoText)
-                        } else {
-                            if (overallMaxScoreError) {
-                                overallMaxScoreErrorText = "Overallスコアは121未満である必要があります。"
-                            }
-                            if (readingMaxScoreError) {
-                                readingMaxScoreErrorText = "Readingスコアは31未満である必要があります。"
-                            }
-                            if (listeningMaxScoreError) {
-                                listeningMaxScoreErrorText = "Listeningスコアは31未満である必要があります。"
-                            }
-                            if (writingMaxScoreError) {
-                                writingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
-                            }
-                            if (speakingMaxScoreError) {
-                                speakingMaxScoreErrorText = "Writingスコアは31未満である必要があります。"
-                            }
-                            if (!overallMaxScoreError) {
-                                overallMaxScoreErrorText = ""
-                            }
-                            if (!readingMaxScoreError) {
-                                readingMaxScoreErrorText = ""
-                            }
-                            if (!listeningMaxScoreError) {
-                                listeningMaxScoreErrorText = ""
-                            }
-                            if (!writingMaxScoreError) {
-                                writingMaxScoreErrorText = ""
-                            }
-                            if (!speakingMaxScoreError) {
-                                speakingMaxScoreErrorText = ""
-                            }
+                                memoText
+                            )
                         }
-                    },
+                    }
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 ShowSavedText(showSaved)
