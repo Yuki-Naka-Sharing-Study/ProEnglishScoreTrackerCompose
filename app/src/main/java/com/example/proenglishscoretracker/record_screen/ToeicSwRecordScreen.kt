@@ -72,9 +72,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
     ) {
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedWritingScore by rememberSaveable { mutableIntStateOf(writingScore) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedSpeakingScore by rememberSaveable { mutableIntStateOf(speakingScore) }
         var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
@@ -121,13 +119,10 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            ToeicSWScorePicker(
+            TOEICSWScorePicker(
                 Modifier,
                 writingScore,
-                selectedWritingScore,
-                { selectedWritingScore = it },
-                { writingScore = selectedWritingScore },
-            )
+            ) { writingScore = it }
         }
 
         Row {
@@ -147,13 +142,10 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            ToeicSWScorePicker(
+            TOEICSWScorePicker(
                 Modifier,
                 speakingScore,
-                selectedSpeakingScore,
-                { selectedSpeakingScore = it },
-                { speakingScore = selectedSpeakingScore },
-            )
+            ) { speakingScore = it }
         }
 
         Row {
@@ -533,17 +525,15 @@ private fun SpeakingImageViewPreview() {
 }
 
 @Composable
-private fun ToeicSWScorePicker(
+private fun TOEICSWScorePicker(
     modifier: Modifier = Modifier,
-    toeicSWScore: Int,
-    selectedToeicSWScore: Int,
-    onScoreChange: (Int) -> Unit,
-    onConfirm: () -> Unit
+    toeicRLScore: Int,
+    onScoreConfirm: (Int) -> Unit,
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) }
 
     Box(modifier = modifier) {
-        // スコア入力ボタン
         Button(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -553,13 +543,11 @@ private fun ToeicSWScorePicker(
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "$toeicSWScore",
+                text = "$toeicRLScore",
                 color = Color.Black
             )
         }
     }
-
-    // スコア入力ダイアログ
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -573,19 +561,17 @@ private fun ToeicSWScorePicker(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    // スコア選択のWheel Picker
-                    ToeicSWScorePickerView(
-                        score = selectedToeicSWScore,
-                        onScoreChange = onScoreChange
+                    TOEICSWScorePickerView(
+                        score = tempScore,
+                        onScoreChange = { tempScore = it }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 確定ボタン
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm() // 確定時にスコアを親に渡す
+                            onScoreConfirm(tempScore)
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -596,7 +582,6 @@ private fun ToeicSWScorePicker(
                             color = Color.White
                         )
                     }
-
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -605,7 +590,7 @@ private fun ToeicSWScorePicker(
 }
 
 @Composable
-private fun ToeicSWScorePickerView(
+private fun TOEICSWScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
