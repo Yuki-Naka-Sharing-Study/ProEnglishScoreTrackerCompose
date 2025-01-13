@@ -78,8 +78,6 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
-        var selectedDate by rememberSaveable { mutableStateOf("") }
-
         // スコア系
         var cseScore by rememberSaveable { mutableIntStateOf(0) }
         var selectedCseScore by rememberSaveable { mutableIntStateOf(cseScore) }
@@ -94,11 +92,11 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
         var selectedGrade by rememberSaveable { mutableStateOf("") }
         var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
-        // グレードが選ばれたときにisSpeakingPickerVisibleを設定する
         isSpeakingPickerVisible = when (selectedGrade) {
             "3級", "準2級", "2級", "準1級", "1級" -> true
             else -> false
         }
+
         var memoText by rememberSaveable { mutableStateOf("") }
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var showDatePicker by remember { mutableStateOf(false) }
@@ -270,7 +268,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var showSaved by remember { mutableStateOf("") }
         var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
         var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
-        var ZeroCaseIchiji by remember { mutableStateOf(false) }
+        var zeroCaseIchiji by remember { mutableStateOf(false) }
         var result by remember { mutableStateOf("Result") }
 
         Row(
@@ -369,7 +367,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 SaveButton(
                     onClick = {
                         if (
-                            ZeroCaseIchiji &&
+                            zeroCaseIchiji &&
                             speakingScore == 0 &&
                             isSpeakingPickerVisible
                             )
@@ -383,7 +381,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                             )
                         {
                             showAlertDialogOfZeroCaseIchiji = true
-                            ZeroCaseIchiji = true
+                            zeroCaseIchiji = true
                         } else {
                             showSaved = "登録しました。"
                             viewModel.saveEikenValues(
@@ -441,7 +439,6 @@ private fun SelectDatePicker(
         modifier = modifier
             .navigationBarsPadding()
     ) {
-        // 年月日を表示するボタン
         Button(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { onShowDatePickerChange(true) },
@@ -559,7 +556,6 @@ private fun DatePickerView(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        // Year
         FVerticalWheelPicker(
             modifier = Modifier.width(64.dp),
             state = yearState,
@@ -573,7 +569,6 @@ private fun DatePickerView(
             }
         }
 
-        // Month
         FVerticalWheelPicker(
             modifier = Modifier.width(64.dp),
             state = monthState,
@@ -587,7 +582,6 @@ private fun DatePickerView(
             }
         }
 
-        // Day of month
         FVerticalWheelPicker(
             modifier = Modifier.width(64.dp),
             state = dayOfMonthState,
@@ -898,10 +892,10 @@ private fun EikenCseScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
-    val thousand = score / 1000 // 1000の位
-    val hundred = (score % 1000) / 100 // 100の位
-    val ten = (score % 100) / 10 // 10の位
-    val one = score % 10 // 10の位
+    val thousand = score / 1000
+    val hundred = (score % 1000) / 100
+    val ten = (score % 100) / 10
+    val one = score % 10
 
     val thousandState = rememberSaveable { mutableIntStateOf(thousand) }
     val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
@@ -925,13 +919,9 @@ private fun EikenCseScorePickerView(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 1000の位
         EikenCseFourDigits(thousandState)
-        // 100の位
         EikenCseThreeDigits(hundredState)
-        // 10の位
         EikenCseTwoDigits(tenState)
-        // 1の位
         EiekenCseOneDigit(oneState)
     }
 }
@@ -1101,16 +1091,14 @@ private fun EikenRLWSScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
-    val hundred = score / 100 // 100の位
-    val ten = (score % 100) / 10 // 10の位
-    val one = score % 10 // 1の位
+    val hundred = score / 100
+    val ten = (score % 100) / 10
+    val one = score % 10
 
-    // 状態管理のためにrememberを使う
     val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
     val tenState = rememberSaveable { mutableIntStateOf(ten) }
     val oneState = rememberSaveable { mutableIntStateOf(one) }
 
-    // スコア変更をトリガーする
     LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
         onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
     }
@@ -1120,23 +1108,17 @@ private fun EikenRLWSScorePickerView(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 100の位
         EikenThreeDigits(hundredState)
-        // 10の位
         EikenTwoDigits(tenState)
-        // 1の位
         EikenOneDigit(oneState)
     }
 }
 
 @Composable
 private fun EikenThreeDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -1158,12 +1140,9 @@ private fun EikenThreeDigits(state: MutableIntState) {
 
 @Composable
 private fun EikenTwoDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -1185,12 +1164,9 @@ private fun EikenTwoDigits(state: MutableIntState) {
 
 @Composable
 private fun EikenOneDigit(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -1267,45 +1243,6 @@ private fun SpeakingText(speakingText: String, modifier: Modifier = Modifier) {
         text = "Speaking",
         modifier = modifier
     )
-}
-
-@Composable
-private fun SpeakingScoreInputField(
-    modifier: Modifier = Modifier,
-    placeholder: String,
-    value: Int,
-    onValueChange: (Int) -> Unit
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (value >= 851) ErrorText("")
-        androidx.compose.material.OutlinedTextField(
-            modifier = Modifier
-                .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
-            value = value.toString(),
-            onValueChange = { newValue ->
-                if (newValue.all { it.isDigit() }) {
-                    onValueChange(newValue.toInt())
-                }
-            },
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(fontSize = dimensionResource(id = R.dimen.space_16_sp).value.sp),
-                    color = Color.Gray
-                )
-            },
-            shape = RoundedCornerShape(10),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            )
-        )
-    }
 }
 
 @Composable
