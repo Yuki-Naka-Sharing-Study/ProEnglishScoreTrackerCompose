@@ -103,20 +103,6 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
         var showDatePicker by remember { mutableStateOf(false) }
 
-        //「ErrorText」系
-        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
-        var cseMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var readingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var listeningMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var writingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-
-        //「Error」系
-        val selectedDateEmptyError = selectedDate.isEmpty()
-        val cseMaxScoreError = cseScore >= 2551
-        val readingMaxScoreError = readingScore >= 851
-        val listeningMaxScoreError = listeningScore >= 851
-        val writingMaxScoreError = writingScore >= 851
-
         Row {
             SelectDayText("")
             Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
