@@ -293,7 +293,8 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 !writingMaxScoreError
 
         var showSaved by remember { mutableStateOf("") }
-        var showAlertDialogOfZero by remember { mutableStateOf(false) }
+        var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
+        var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
         var result by remember { mutableStateOf("Result") }
 
         Row(
@@ -305,17 +306,17 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (showAlertDialogOfZero) {
+                if (showAlertDialogOfZeroCaseIchiji) {
                     androidx.compose.material.AlertDialog(
                         onDismissRequest = {
                             result = "Dismiss"
-                            showAlertDialogOfZero = false
+                            showAlertDialogOfZeroCaseIchiji = false
                         },
                         confirmButton = {
                             TextButton(
                                 onClick = {
                                     result = "はい"
-                                    showAlertDialogOfZero = false
+                                    showAlertDialogOfZeroCaseIchiji = false
                                     showSaved = "登録しました。"
                                     viewModel.saveEikenValues(
                                         cseScore,
@@ -334,7 +335,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                             TextButton(
                                 onClick = {
                                     result = "いいえ"
-                                    showAlertDialogOfZero = false
+                                    showAlertDialogOfZeroCaseIchiji = false
                                 }
                             ) {
                                 Text("いいえ")
@@ -342,6 +343,48 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                         },
                         text = {
                             Text("CSEスコア,Readingスコア, Listeningスコア, Writingスコアのいずれかが０ですが登録しますか？")
+                        },
+                        contentColor = Color.Black,
+                        backgroundColor = Color(0xFFd3d3d3)
+                    )
+                }
+                if (showAlertDialogOfZeroCaseNiji) {
+                    androidx.compose.material.AlertDialog(
+                        onDismissRequest = {
+                            result = "Dismiss"
+                            showAlertDialogOfZeroCaseNiji = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "はい"
+                                    showAlertDialogOfZeroCaseNiji = false
+                                    showSaved = "登録しました。"
+                                    viewModel.saveEikenValues(
+                                        cseScore,
+                                        readingScore,
+                                        listeningScore,
+                                        writingScore,
+                                        speakingScore,
+                                        memoText
+                                    )
+                                }
+                            ) {
+                                Text("はい")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "いいえ"
+                                    showAlertDialogOfZeroCaseNiji = false
+                                }
+                            ) {
+                                Text("いいえ")
+                            }
+                        },
+                        text = {
+                            Text("Speakingスコアが０ですが登録しますか？")
                         },
                         contentColor = Color.Black,
                         backgroundColor = Color(0xFFd3d3d3)
@@ -356,7 +399,13 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                             writingScore == 0
                             )
                         {
-                            showAlertDialogOfZero = true
+                            showAlertDialogOfZeroCaseIchiji = true
+                        } else if (
+                            speakingScore == 0 &&
+                            isSpeakingPickerVisible
+                            )
+                        {
+                            showAlertDialogOfZeroCaseNiji = true
                         } else {
                             showSaved = "登録しました。"
                             viewModel.saveEikenValues(
