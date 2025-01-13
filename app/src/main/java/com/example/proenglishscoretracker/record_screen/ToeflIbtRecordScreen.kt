@@ -69,16 +69,12 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+
         var overallScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedOverallScore by rememberSaveable { mutableIntStateOf(overallScore) }
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedListeningScore by rememberSaveable { mutableIntStateOf(listeningScore) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedWritingScore by rememberSaveable { mutableIntStateOf(writingScore) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedSpeakingScore by rememberSaveable { mutableIntStateOf(speakingScore) }
         var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
@@ -122,10 +118,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ToeflOverallScorePicker(
                 Modifier,
                 overallScore,
-                selectedOverallScore,
-                { selectedOverallScore = it },
-                { overallScore = selectedOverallScore },
-            )
+            ) { overallScore = it }
         }
 
         Row {
@@ -148,10 +141,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ToeflRLWSScorePicker(
                 Modifier,
                 readingScore,
-                selectedReadingScore,
-                { selectedReadingScore = it },
-                { readingScore = selectedReadingScore },
-            )
+            ) { readingScore = it }
         }
 
         Row {
@@ -174,10 +164,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ToeflRLWSScorePicker(
                 Modifier,
                 listeningScore,
-                selectedListeningScore,
-                { selectedListeningScore = it },
-                { listeningScore = selectedListeningScore },
-            )
+            ) { listeningScore = it }
         }
 
         Row {
@@ -200,10 +187,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ToeflRLWSScorePicker(
                 Modifier,
                 writingScore,
-                selectedWritingScore,
-                { selectedWritingScore = it },
-                { writingScore = selectedWritingScore },
-            )
+            ) { writingScore = it }
         }
 
         Row {
@@ -226,10 +210,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             ToeflRLWSScorePicker(
                 Modifier,
                 speakingScore,
-                selectedSpeakingScore,
-                { selectedSpeakingScore = it },
-                { speakingScore = selectedSpeakingScore },
-            )
+            ) { speakingScore = it }
         }
 
         Row {
@@ -761,12 +742,11 @@ private fun MemoTextPreview() {
 @Composable
 private fun ToeflOverallScorePicker(
     modifier: Modifier = Modifier,
-    toeflOverallScore: Int,
-    selectedToeflOverallScore: Int,
-    onScoreChange: (Int) -> Unit,
-    onConfirm: () -> Unit
+    toeicRLScore: Int,
+    onScoreConfirm: (Int) -> Unit, // スコア更新用のコールバック
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
 
     Box(modifier = modifier) {
         // スコア入力ボタン
@@ -779,7 +759,7 @@ private fun ToeflOverallScorePicker(
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "$toeflOverallScore",
+                text = "$toeicRLScore",
                 color = Color.Black
             )
         }
@@ -801,8 +781,8 @@ private fun ToeflOverallScorePicker(
                 ) {
                     // スコア選択のWheel Picker
                     ToeflOverallScorePickerView(
-                        score = selectedToeflOverallScore,
-                        onScoreChange = onScoreChange
+                        score = tempScore,
+                        onScoreChange = { tempScore = it } // 一時的なスコアを更新
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -811,7 +791,7 @@ private fun ToeflOverallScorePicker(
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm() // 確定時にスコアを親に渡す
+                            onScoreConfirm(tempScore) // 確定時にスコアを親に渡す
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -947,23 +927,24 @@ private fun ToeflOverallOneDigit(state: MutableIntState) {
 @Composable
 private fun ToeflRLWSScorePicker(
     modifier: Modifier = Modifier,
-    toeflRLWSScore: Int,
-    selectedToeflRLWSScore: Int,
-    onScoreChange: (Int) -> Unit,
-    onConfirm: () -> Unit
+    toeicRLScore: Int,
+    onScoreConfirm: (Int) -> Unit, // スコア更新用のコールバック
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
 
     Box(modifier = modifier) {
         // スコア入力ボタン
         Button(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(width = 80.dp, height = 40.dp),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "$toeflRLWSScore",
+                text = "$toeicRLScore",
                 color = Color.Black
             )
         }
@@ -973,7 +954,7 @@ private fun ToeflRLWSScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -985,8 +966,8 @@ private fun ToeflRLWSScorePicker(
                 ) {
                     // スコア選択のWheel Picker
                     ToeflRLWSScorePickerView(
-                        score = selectedToeflRLWSScore,
-                        onScoreChange = onScoreChange
+                        score = tempScore,
+                        onScoreChange = { tempScore = it } // 一時的なスコアを更新
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -995,7 +976,7 @@ private fun ToeflRLWSScorePicker(
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm() // 確定時にスコアを親に渡す
+                            onScoreConfirm(tempScore) // 確定時にスコアを親に渡す
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
