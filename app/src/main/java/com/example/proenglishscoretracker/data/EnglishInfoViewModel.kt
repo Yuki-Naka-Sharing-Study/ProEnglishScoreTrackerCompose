@@ -6,9 +6,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.proenglishscoretracker.data.EnglishInfo
-import com.example.proenglishscoretracker.data.EnglishInfoDao
-import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,17 +43,19 @@ class EnglishInfoViewModel(
         }
     }
 
-    fun saveEikenIchijiValues(cseScore: Int,
-                              readingScore: Int,
-                              listeningScore: Int,
-                              writingScore: Int,
-                              memoText: String) {
+    fun saveEikenValues(cseScore: Int,
+                        readingScore: Int,
+                        listeningScore: Int,
+                        writingScore: Int,
+                        speakingScore: Int,
+                        memoText: String) {
         viewModelScope.launch {
-            repository.saveEikenIchijiInfo(
+            repository.saveEikenInfo(
                 cseScore,
                 readingScore,
                 listeningScore,
                 writingScore,
+                speakingScore,
                 memoText
             )
         }

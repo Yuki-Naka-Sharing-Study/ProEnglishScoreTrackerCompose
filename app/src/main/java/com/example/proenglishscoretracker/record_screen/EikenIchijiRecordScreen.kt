@@ -31,6 +31,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
@@ -292,6 +293,8 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 !writingMaxScoreError
 
         var showSaved by remember { mutableStateOf("") }
+        var showAlertDialogOfZero by remember { mutableStateOf(false) }
+        var result by remember { mutableStateOf("Result") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -302,52 +305,70 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                if (showAlertDialogOfZero) {
+                    androidx.compose.material.AlertDialog(
+                        onDismissRequest = {
+                            result = "Dismiss"
+                            showAlertDialogOfZero = false
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "はい"
+                                    showAlertDialogOfZero = false
+                                    showSaved = "登録しました。"
+                                    viewModel.saveEikenValues(
+                                        cseScore,
+                                        readingScore,
+                                        listeningScore,
+                                        writingScore,
+                                        speakingScore,
+                                        memoText
+                                    )
+                                }
+                            ) {
+                                Text("はい")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(
+                                onClick = {
+                                    result = "いいえ"
+                                    showAlertDialogOfZero = false
+                                }
+                            ) {
+                                Text("いいえ")
+                            }
+                        },
+                        text = {
+                            Text("CSEスコア,Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
+                        },
+                        contentColor = Color.Black,
+                        backgroundColor = Color(0xFFd3d3d3)
+                    )
+                }
                 SaveButton(
                     onClick = {
-                        if (savable) {
-                            selectedDateEmptyErrorText = ""
-                            cseMaxScoreErrorText = ""
-                            readingMaxScoreErrorText = ""
-                            listeningMaxScoreErrorText = ""
-                            writingMaxScoreErrorText = ""
-                            showSaved = "記録しました。"
-                            viewModel.saveEikenIchijiValues(
+                        if (cseScore == 0 ||
+                            readingScore == 0 ||
+                            listeningScore == 0 ||
+                            writingScore == 0 ||
+                            speakingScore == 0
+                            )
+                        {
+                            showAlertDialogOfZero = true
+                        } else {
+                            showSaved = "登録しました。"
+                            viewModel.saveEikenValues(
                                 cseScore,
                                 readingScore,
                                 listeningScore,
                                 writingScore,
+                                speakingScore,
                                 memoText
                             )
-                        } else {
-                            if (selectedDateEmptyError) {
-                                selectedDateEmptyErrorText = "受験日が記入されていません。"
-                            }
-                            if (cseMaxScoreError) {
-                                cseMaxScoreErrorText = "CSEスコアは3401未満である必要があります。"
-                            }
-                            if (readingMaxScoreError) {
-                                readingMaxScoreErrorText = "Readingスコアは851未満である必要があります。"
-                            }
-                            if (listeningMaxScoreError) {
-                                listeningMaxScoreErrorText = "Listeningスコアは11未満である必要があります。"
-                            }
-                            if (writingMaxScoreError) {
-                                writingMaxScoreErrorText = "Writingスコアは11未満である必要があります。"
-                            }
-                            if (!cseMaxScoreError) {
-                                cseMaxScoreErrorText = ""
-                            }
-                            if (!readingMaxScoreError) {
-                                readingMaxScoreErrorText = ""
-                            }
-                            if (!listeningMaxScoreError) {
-                                listeningMaxScoreErrorText = ""
-                            }
-                            if (!writingMaxScoreError) {
-                                writingMaxScoreErrorText = ""
-                            }
                         }
-                    },
+                    }
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 ShowSavedText(showSaved)
