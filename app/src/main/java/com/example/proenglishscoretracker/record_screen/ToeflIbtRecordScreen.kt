@@ -271,17 +271,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        val savable = overallScore.toString().isNotBlank() &&
-                readingScore.toString().isNotBlank() &&
-                listeningScore.toString().isNotBlank() &&
-                writingScore.toString().isNotBlank() &&
-                speakingScore.toString().isNotBlank() &&
-                !overallMaxScoreError &&
-                !readingMaxScoreError &&
-                !listeningMaxScoreError &&
-                !writingMaxScoreError &&
-                !speakingMaxScoreError
-
         var showSaved by remember { mutableStateOf("") }
         var showAlertDialogOfZero by remember { mutableStateOf(false) }
         var result by remember { mutableStateOf("Result") }
