@@ -341,7 +341,7 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                         },
                         text = {
-                            Text("CSEスコア,Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
+                            Text("CSEスコア,Readingスコア, Listeningスコア, Writingスコアのいずれかが０ですが登録しますか？")
                         },
                         contentColor = Color.Black,
                         backgroundColor = Color(0xFFd3d3d3)
@@ -349,11 +349,11 @@ fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
                 SaveButton(
                     onClick = {
-                        if (cseScore == 0 ||
+                        if (
+                            cseScore == 0 ||
                             readingScore == 0 ||
                             listeningScore == 0 ||
-                            writingScore == 0 ||
-                            speakingScore == 0
+                            writingScore == 0
                             )
                         {
                             showAlertDialogOfZero = true
