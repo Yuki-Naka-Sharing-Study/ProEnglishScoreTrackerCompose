@@ -8,7 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
-import com.example.proenglishscoretracker.record_screen.EikenIchijiRecordScreen
+import com.example.proenglishscoretracker.record_screen.EikenRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
@@ -34,7 +34,7 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
         when (pagerState.currentPage) {
             0 -> IeltsRecordScreen(viewModel = viewModel)
             1 -> ToeflIbtRecordScreen(viewModel = viewModel)
-            2 -> EikenIchijiRecordScreen(viewModel = viewModel)
+            2 -> EikenRecordScreen(viewModel = viewModel)
             3 -> ToeicSwRecordScreen(viewModel = viewModel)
             4 -> ToeicRecordScreen(viewModel = viewModel)
         }

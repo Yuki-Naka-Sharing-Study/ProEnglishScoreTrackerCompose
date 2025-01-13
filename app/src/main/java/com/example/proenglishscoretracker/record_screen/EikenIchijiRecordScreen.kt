@@ -74,7 +74,7 @@ import com.sd.lib.date.selectMonthWithIndex
 import com.sd.lib.date.selectYearWithIndex
 
 @Composable
-fun EikenIchijiRecordScreen(viewModel: EnglishInfoViewModel) {
+fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
     Column(
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
@@ -409,7 +409,7 @@ private fun EikenIchijiRecordScreenPreview(
     viewModel: EnglishInfoViewModel
 ) {
     ProEnglishScoreTrackerTheme {
-        EikenIchijiRecordScreen(viewModel = viewModel)
+        EikenRecordScreen(viewModel = viewModel)
     }
 }
 
