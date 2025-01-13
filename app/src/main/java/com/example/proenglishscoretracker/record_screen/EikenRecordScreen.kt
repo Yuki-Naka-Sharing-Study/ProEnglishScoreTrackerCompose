@@ -80,15 +80,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
     ) {
         // スコア系
         var cseScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedCseScore by rememberSaveable { mutableIntStateOf(cseScore) }
         var readingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedReadingScore by rememberSaveable { mutableIntStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedListeningScore by rememberSaveable { mutableIntStateOf(listeningScore) }
         var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedWritingScore by rememberSaveable { mutableIntStateOf(writingScore) }
         var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-        var selectedSpeakingScore by rememberSaveable { mutableIntStateOf(speakingScore) }
         val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
         var selectedGrade by rememberSaveable { mutableStateOf("") }
         var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
@@ -150,10 +145,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             EikenCseScorePicker(
                 Modifier,
                 cseScore,
-                selectedCseScore,
-                { selectedCseScore = it },
-                { cseScore = selectedCseScore },
-            )
+            ) { cseScore = it }
         }
 
         Row {
@@ -176,10 +168,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             EikenRLWSScorePicker(
                 Modifier,
                 readingScore,
-                selectedReadingScore,
-                { selectedReadingScore = it },
-                { readingScore = selectedReadingScore },
-            )
+            ) { readingScore = it }
         }
 
         Row {
@@ -202,10 +191,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             EikenRLWSScorePicker(
                 Modifier,
                 listeningScore,
-                selectedListeningScore,
-                { selectedListeningScore = it },
-                { listeningScore = selectedListeningScore },
-            )
+            ) { listeningScore = it }
         }
 
         Row {
@@ -228,10 +214,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             EikenRLWSScorePicker(
                 Modifier,
                 writingScore,
-                selectedWritingScore,
-                { selectedWritingScore = it },
-                { writingScore = selectedWritingScore },
-            )
+            ) { writingScore = it }
         }
 
         Row {
@@ -855,12 +838,11 @@ private fun MemoTextPreview() {
 @Composable
 private fun EikenCseScorePicker(
     modifier: Modifier = Modifier,
-    cseScore: Int,
-    selectedCseScore: Int,
-    onScoreChange: (Int) -> Unit,
-    onConfirm: () -> Unit
+    toeicRLScore: Int,
+    onScoreConfirm: (Int) -> Unit,
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) }
 
     Box(modifier = modifier) {
         Button(
@@ -872,11 +854,12 @@ private fun EikenCseScorePicker(
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "$cseScore",
+                text = "$toeicRLScore",
                 color = Color.Black
             )
         }
     }
+
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -891,14 +874,16 @@ private fun EikenCseScorePicker(
                     verticalArrangement = Arrangement.Center
                 ) {
                     EikenCseScorePickerView(
-                        score = selectedCseScore,
-                        onScoreChange = onScoreChange
+                        score = tempScore,
+                        onScoreChange = { tempScore = it }
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
+
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm()
+                            onScoreConfirm(tempScore)
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -1054,12 +1039,11 @@ private fun EiekenCseOneDigit(state: MutableIntState) {
 @Composable
 private fun EikenRLWSScorePicker(
     modifier: Modifier = Modifier,
-    eikenRLWSScore: Int,
-    selectedEikenRLWSScore: Int,
-    onScoreChange: (Int) -> Unit,
-    onConfirm: () -> Unit
+    toeicRLScore: Int,
+    onScoreConfirm: (Int) -> Unit,
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
+    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) }
 
     Box(modifier = modifier) {
         Button(
@@ -1071,7 +1055,7 @@ private fun EikenRLWSScorePicker(
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "$eikenRLWSScore",
+                text = "$toeicRLScore",
                 color = Color.Black
             )
         }
@@ -1090,14 +1074,16 @@ private fun EikenRLWSScorePicker(
                     verticalArrangement = Arrangement.Center
                 ) {
                     EikenRLWSScorePickerView(
-                        score = selectedEikenRLWSScore,
-                        onScoreChange = onScoreChange
+                        score = tempScore,
+                        onScoreChange = { tempScore = it }
                     )
+
                     Spacer(modifier = Modifier.height(8.dp))
+
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm()
+                            onScoreConfirm(tempScore)
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -1238,10 +1224,9 @@ private fun SpeakingScoreArea(
                     modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp))
                 )
                 EikenRLWSScorePicker(
-                    eikenRLWSScore = speakingScore,
-                    selectedEikenRLWSScore = speakingScore,
-                    onScoreChange = onValueChange,
-                    onConfirm = { /* 確定時の処理 */ }
+                    Modifier,
+                    speakingScore,
+                    onScoreConfirm = onValueChange
                 )
             }
             Row {
