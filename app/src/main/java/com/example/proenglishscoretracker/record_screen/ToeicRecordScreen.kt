@@ -213,6 +213,8 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                         } else {
                             showSaved = "登録しました。"
                             viewModel.saveToeicValues(readingScore, listeningScore, memoText)
+                            viewModel.setMemoText("")
+                            memoText = ""
                         }
                     }
                 )
