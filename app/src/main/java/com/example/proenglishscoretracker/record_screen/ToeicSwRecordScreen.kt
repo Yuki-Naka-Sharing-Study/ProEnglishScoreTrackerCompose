@@ -2,6 +2,8 @@ package com.example.proenglishscoretracker.record_screen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -38,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,173 +71,193 @@ import com.sd.lib.date.selectYearWithIndex
 
 @Composable
 fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
-    Column(
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
+    val focusManager = LocalFocusManager.current
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(interactionSource = interactionSource, indication = null) {
+                focusManager.clearFocus()
+            }
     ) {
-        var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-        var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-        var memoText by rememberSaveable { mutableStateOf("") }
-        var showDatePicker by remember { mutableStateOf(false) }
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
+        ) {
+            var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+            var writingScore by rememberSaveable { mutableIntStateOf(0) }
+            var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+            var memoText by rememberSaveable { mutableStateOf("") }
+            var showDatePicker by remember { mutableStateOf(false) }
 
-        //「Error」系
-        val writingMaxScoreError = writingScore >= 201
-        val speakingMaxScoreError = speakingScore >= 201
+            //「Error」系
+            val writingMaxScoreError = writingScore >= 201
+            val speakingMaxScoreError = speakingScore >= 201
 
-        Row {
-            SelectDayText("")
-            Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
-            SelectDatePicker(
-                date = date,
-                onShowDatePickerChange = { showDatePicker = it }
-            )
-            if (showDatePicker) {
-                DatePicker(
+            Row {
+                SelectDayText("")
+                Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
+                SelectDatePicker(
                     date = date,
-                    onDone = {
-                        showDatePicker = false
-                        if (it != null) {
-                            date = it
-                        }
-                    },
-                    onDismissRequest = {
-                        showDatePicker = false
-                    }
+                    onShowDatePickerChange = { showDatePicker = it }
                 )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row {
-            EnterScoreText("")
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            WritingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            TOEICSWScorePicker(
-                Modifier,
-                writingScore,
-            ) { writingScore = it }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (writingScore >= 201) {
-                ErrorText("Writingスコアは201未満である必要があります。")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            SpeakingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            SpeakingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            TOEICSWScorePicker(
-                Modifier,
-                speakingScore,
-            ) { speakingScore = it }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (speakingScore >= 201) {
-                ErrorText("Speakingスコアは201未満である必要があります。")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            MemoInputField(
-                placeholder = stringResource(id = R.string.memo),
-                value = memoText,
-                onValueChange = { memoText = it }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        var showAlertDialogOfZero by remember { mutableStateOf(false) }
-        var result by remember { mutableStateOf("Result") }
-        var showSaved by remember { mutableStateOf("") }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (showAlertDialogOfZero) {
-                    androidx.compose.material.AlertDialog(
+                if (showDatePicker) {
+                    DatePicker(
+                        date = date,
+                        onDone = {
+                            showDatePicker = false
+                            if (it != null) {
+                                date = it
+                            }
+                        },
                         onDismissRequest = {
-                            result = "Dismiss"
-                            showAlertDialogOfZero = false
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "はい"
-                                    showAlertDialogOfZero = false
-                                    showSaved = "登録しました。"
-                                    viewModel.saveToeicSwValues(writingScore, speakingScore, memoText)
-                                }
-                            ) {
-                                Text("はい")
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "いいえ"
-                                    showAlertDialogOfZero = false
-                                }
-                            ) {
-                                Text("いいえ")
-                            }
-                        },
-                        text = {
-                            Text("WritingスコアもしくはSpeakingスコアが０ですが登録しますか？")
-                        },
-                        contentColor = Color.Black,
-                        backgroundColor = Color(0xFFd3d3d3)
+                            showDatePicker = false
+                        }
                     )
                 }
-                SaveButton(
-                    onClick = {
-                        if (writingScore == 0 || speakingScore == 0) {
-                            showAlertDialogOfZero = true
-                        } else if (writingMaxScoreError || speakingMaxScoreError) {
+            }
 
-                        } else {
-                            showSaved = "登録しました。"
-                            viewModel.saveToeicSwValues(writingScore, speakingScore, memoText)
-                        }
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row {
+                EnterScoreText("")
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                WritingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                WritingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                TOEICSWScorePicker(
+                    Modifier,
+                    writingScore,
+                ) { writingScore = it }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                if (writingScore >= 201) {
+                    ErrorText("Writingスコアは201未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                SpeakingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                SpeakingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                TOEICSWScorePicker(
+                    Modifier,
+                    speakingScore,
+                ) { speakingScore = it }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                if (speakingScore >= 201) {
+                    ErrorText("Speakingスコアは201未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                MemoText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                MemoInputField(
+                    placeholder = stringResource(id = R.string.memo),
+                    value = memoText,
+                    onValueChange = {
+                        memoText = it
+                        viewModel.setMemoText(it)
                     }
                 )
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                ShowSavedText(showSaved)
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            var showAlertDialogOfZero by remember { mutableStateOf(false) }
+            var result by remember { mutableStateOf("Result") }
+            var showSaved by remember { mutableStateOf("") }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (showAlertDialogOfZero) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                result = "Dismiss"
+                                showAlertDialogOfZero = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "はい"
+                                        showAlertDialogOfZero = false
+                                        showSaved = "登録しました。"
+                                        viewModel.saveToeicSwValues(
+                                            writingScore,
+                                            speakingScore,
+                                            memoText
+                                        )
+                                    }
+                                ) {
+                                    Text("はい")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "いいえ"
+                                        showAlertDialogOfZero = false
+                                    }
+                                ) {
+                                    Text("いいえ")
+                                }
+                            },
+                            text = {
+                                Text("WritingスコアもしくはSpeakingスコアが０ですが登録しますか？")
+                            },
+                            contentColor = Color.Black,
+                            backgroundColor = Color(0xFFd3d3d3)
+                        )
+                    }
+                    SaveButton(
+                        onClick = {
+                            if (writingScore == 0 || speakingScore == 0) {
+                                showAlertDialogOfZero = true
+                            } else if (writingMaxScoreError || speakingMaxScoreError) {
+
+                            } else {
+                                showSaved = "登録しました。"
+                                viewModel.saveToeicSwValues(writingScore, speakingScore, memoText)
+                                viewModel.setMemoText("")
+                                memoText = ""
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                }
             }
         }
     }
@@ -730,7 +754,7 @@ private fun MemoTextField(modifier: Modifier) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -756,7 +780,11 @@ private fun MemoTextFieldPreview() {
 }
 
 @Composable
-private fun MemoInputField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun MemoInputField(
+    placeholder: String,
+    value: String,
+    onValueChange: (String) -> Unit = {}
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -827,8 +855,18 @@ private fun showToast(context: android.content.Context, message: String) {
 }
 
 @Composable
-private fun ShowSavedText(saved: String) {
-    Text(
-        text = saved, fontSize = 16.sp, color = Color.Green
-    )
+private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
+    if (saved.isNotEmpty()) {
+        Text(
+            text = saved,
+            fontSize = 16.sp,
+            color = Color.Green
+        )
+
+        // メッセージを非表示にするためのタイマーを設定
+        LaunchedEffect(saved) {
+            kotlinx.coroutines.delay(2000) // 2秒間待機
+            onTimeout()
+        }
+    }
 }
