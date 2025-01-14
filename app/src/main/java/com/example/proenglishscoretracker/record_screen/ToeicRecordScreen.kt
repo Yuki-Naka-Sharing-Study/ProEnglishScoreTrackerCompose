@@ -148,7 +148,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             MemoInputField(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
-                onValueChange = { memoText = it }
+                onValueChange = {
+                    memoText = it
+                    viewModel.setMemoText(it)
+                }
             )
         }
 

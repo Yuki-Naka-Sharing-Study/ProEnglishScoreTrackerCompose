@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
@@ -23,7 +24,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -83,7 +89,7 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
             if (isFirstLaunchState.value == false) {
-                BottomNavigationBar(navController = navController)
+                BottomNavigationBar(navController = navController, viewModel)
             }
         }
     ) { innerPadding ->
@@ -144,9 +150,44 @@ fun LoadingScreen(modifier: Modifier) {
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavController) {
-    val navBackStackEntry = navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry.value?.destination
+fun BottomNavigationBar(
+    navController: NavController,
+    viewModel: EnglishInfoViewModel
+) {
+    val unsavedChanges by viewModel.unsavedChanges.collectAsState()
+    val memoText by viewModel.memoText.collectAsState() // ViewModelからmemoTextを取得
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var targetRoute by rememberSaveable { mutableStateOf<String?>(null) }
+
+    // memoTextが空の場合、AlertDialogを表示しない
+    if (showDialog && memoText.isNotEmpty()) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = "確認") },
+            text = { Text("入力途中で画面を切り替えると情報が失われますが大丈夫でしょうか？") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                    targetRoute?.let {
+                        // 遷移前にmemoTextをリセット
+                        viewModel.setMemoText("")
+                        navController.navigate(it) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }) {
+                    Text(text = "OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text(text = "キャンセル")
+                }
+            }
+        )
+    }
+
     BottomNavigation(
         backgroundColor = Color(0xFFCE93D8),
         contentColor = Color(0xFF00796B)
@@ -159,11 +200,18 @@ fun BottomNavigationBar(navController: NavController) {
                 )
             },
             label = { Text("記録確認") },
-            selected = currentDestination?.route == "examDataScreen",
+            selected = navController.currentBackStackEntry?.destination?.route == "examDataScreen",
             onClick = {
-                navController.navigate("examDataScreen") {
-                    launchSingleTop = true
-                    restoreState = true
+                if (unsavedChanges && memoText.isNotEmpty()) { // memoTextが空でない場合のみダイアログを表示
+                    targetRoute = "examDataScreen"
+                    showDialog = true
+                } else {
+                    // 遷移前にmemoTextをリセット
+                    viewModel.setMemoText("")
+                    navController.navigate("examDataScreen") {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             },
             selectedContentColor = Color(0xFF004D40),
@@ -172,11 +220,18 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Edit, contentDescription = "Record") },
             label = { Text("記録") },
-            selected = currentDestination?.route == "examRecordScreen",
+            selected = navController.currentBackStackEntry?.destination?.route == "examRecordScreen",
             onClick = {
-                navController.navigate("examRecordScreen") {
-                    launchSingleTop = true
-                    restoreState = true
+                if (unsavedChanges && memoText.isNotEmpty()) { // memoTextが空でない場合のみダイアログを表示
+                    targetRoute = "examRecordScreen"
+                    showDialog = true
+                } else {
+                    // 遷移前にmemoTextをリセット
+                    viewModel.setMemoText("")
+                    navController.navigate("examRecordScreen") {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             },
             selectedContentColor = Color(0xFF004D40),
@@ -185,11 +240,18 @@ fun BottomNavigationBar(navController: NavController) {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
             label = { Text("設定") },
-            selected = currentDestination?.route == "setting",
+            selected = navController.currentBackStackEntry?.destination?.route == "setting",
             onClick = {
-                navController.navigate("setting") {
-                    launchSingleTop = true
-                    restoreState = true
+                if (unsavedChanges && memoText.isNotEmpty()) { // memoTextが空でない場合のみダイアログを表示
+                    targetRoute = "setting"
+                    showDialog = true
+                } else {
+                    // 遷移前にmemoTextをリセット
+                    viewModel.setMemoText("")
+                    navController.navigate("setting") {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
             },
             selectedContentColor = Color(0xFF004D40),

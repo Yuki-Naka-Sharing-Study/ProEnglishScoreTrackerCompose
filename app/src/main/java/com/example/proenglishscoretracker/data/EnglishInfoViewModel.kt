@@ -17,16 +17,18 @@ class EnglishInfoViewModel(
     private val englishInfoDao: EnglishInfoDao,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
-
     private val _englishInfo = MutableStateFlow<List<EnglishInfo>>(emptyList())
     val englishInfo: StateFlow<List<EnglishInfo>> = _englishInfo
-
     private val ONBOARDING_COMPLETED_KEY = booleanPreferencesKey("onboarding_completed")
 
     // 初回起動かどうかを監視するFlow
     val isFirstLaunch: Flow<Boolean> = dataStore.data.map { preferences ->
         preferences[ONBOARDING_COMPLETED_KEY] ?: true
     }
+    private val _memoText = MutableStateFlow("")
+    val memoText: StateFlow<String> = _memoText
+    private val _unsavedChanges = MutableStateFlow(false)
+    val unsavedChanges: StateFlow<Boolean> = _unsavedChanges
 
     // Onboarding 完了時にフラグを保存
     fun completeOnboarding() {
@@ -35,6 +37,11 @@ class EnglishInfoViewModel(
                 preferences[ONBOARDING_COMPLETED_KEY] = false
             }
         }
+    }
+
+    fun setMemoText(value: String) {
+        _memoText.value = value
+        _unsavedChanges.value = value.isNotEmpty()
     }
 
     init {
