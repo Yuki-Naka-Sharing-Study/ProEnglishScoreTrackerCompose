@@ -3,6 +3,8 @@ package com.example.proenglishscoretracker.record_screen
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.text.input.KeyboardType
@@ -15,12 +17,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -38,7 +42,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,159 +73,175 @@ import com.sd.lib.date.selectYearWithIndex
 
 @Composable
 fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
-    Column(
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
-    ) {
-        var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-        var readingScore by rememberSaveable { mutableIntStateOf(0) }
-        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-        var memoText by rememberSaveable { mutableStateOf("") }
-        var showDatePicker by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+    // 以下の変数「interactionSource」は「rememberSaveable」だとクラッシュする。
+    val interactionSource = remember { MutableInteractionSource() }
 
-        Row {
-            SelectDayText("")
-            Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
-            SelectDatePicker(
-                date = date,
-                onShowDatePickerChange = { showDatePicker = it }
-            )
-            if (showDatePicker) {
-                DatePicker(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(interactionSource = interactionSource, indication = null) {
+                focusManager.clearFocus()
+            }
+    ) {
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
+        ) {
+            var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+            var readingScore by rememberSaveable { mutableIntStateOf(0) }
+            var listeningScore by rememberSaveable { mutableIntStateOf(0) }
+            var memoText by rememberSaveable { mutableStateOf("") }
+            var showDatePicker by remember { mutableStateOf(false) }
+
+            Row {
+                SelectDayText("")
+                Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
+                SelectDatePicker(
                     date = date,
-                    onDone = {
-                        showDatePicker = false
-                        if (it != null) {
-                            date = it
+                    onShowDatePickerChange = { showDatePicker = it }
+                )
+                if (showDatePicker) {
+                    DatePicker(
+                        date = date,
+                        onDone = {
+                            showDatePicker = false
+                            if (it != null) {
+                                date = it
+                            }
+                        },
+                        onDismissRequest = {
+                            showDatePicker = false
                         }
-                    },
-                    onDismissRequest = {
-                        showDatePicker = false
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row {
+                EnterScoreText("")
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                ReadingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ReadingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                TOEICRLScorePicker(
+                    Modifier,
+                    readingScore,
+                ) { readingScore = it }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                ListeningImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ListeningText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                TOEICRLScorePicker(
+                    Modifier,
+                    listeningScore,
+                ) { listeningScore = it }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                MemoText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                MemoInputField(
+                    placeholder = stringResource(id = R.string.memo),
+                    value = memoText,
+                    onValueChange = {
+                        memoText = it
+                        viewModel.setMemoText(it)
                     }
                 )
             }
-        }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        Row {
-            EnterScoreText("")
-        }
+            var showSaved by rememberSaveable { mutableStateOf("") }
+            // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
+            var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
+            var result by rememberSaveable { mutableStateOf("Result") }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            ReadingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            TOEICRLScorePicker(
-                Modifier,
-                readingScore,
-            ) { readingScore = it }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            ListeningImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            TOEICRLScorePicker(
-                Modifier,
-                listeningScore,
-            ) { listeningScore = it }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            MemoInputField(
-                placeholder = stringResource(id = R.string.memo),
-                value = memoText,
-                onValueChange = {
-                    memoText = it
-                    viewModel.setMemoText(it)
-                }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        var showSaved by rememberSaveable { mutableStateOf("") }
-        // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
-        var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
-        var result by rememberSaveable { mutableStateOf("Result") }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (showAlertDialogOfZero) {
-                    androidx.compose.material.AlertDialog(
-                        onDismissRequest = {
-                            result = "Dismiss"
-                            showAlertDialogOfZero = false
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "はい"
-                                    showAlertDialogOfZero = false
-                                    showSaved = "登録しました。"
-                                    viewModel.saveToeicValues(readingScore, listeningScore, memoText)
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (showAlertDialogOfZero) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                result = "Dismiss"
+                                showAlertDialogOfZero = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "はい"
+                                        showAlertDialogOfZero = false
+                                        showSaved = "登録しました。"
+                                        viewModel.saveToeicValues(
+                                            readingScore,
+                                            listeningScore,
+                                            memoText
+                                        )
+                                    }
+                                ) {
+                                    Text("はい")
                                 }
-                            ) {
-                                Text("はい")
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "いいえ"
-                                    showAlertDialogOfZero = false
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "いいえ"
+                                        showAlertDialogOfZero = false
+                                    }
+                                ) {
+                                    Text("いいえ")
                                 }
-                            ) {
-                                Text("いいえ")
-                            }
-                        },
-                        text = {
-                            Text("ReadingスコアもしくはListeningスコアが０ですが登録しますか？")
-                        },
-                        contentColor = Color.Black,
-                        backgroundColor = Color(0xFFd3d3d3)
-                    )
-                }
-                SaveButton(
-                    onClick = {
-                        if (readingScore == 0 || listeningScore == 0) {
-                            showAlertDialogOfZero = true
-                        } else {
-                            showSaved = "登録しました。"
-                            viewModel.saveToeicValues(readingScore, listeningScore, memoText)
-                            viewModel.setMemoText("")
-                            memoText = ""
-                        }
+                            },
+                            text = {
+                                Text("ReadingスコアもしくはListeningスコアが０ですが登録しますか？")
+                            },
+                            contentColor = Color.Black,
+                            backgroundColor = Color(0xFFd3d3d3)
+                        )
                     }
-                )
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                ShowSavedText(saved= showSaved, onTimeout = { showSaved = "" })
+                    SaveButton(
+                        onClick = {
+                            if (readingScore == 0 || listeningScore == 0) {
+                                showAlertDialogOfZero = true
+                            } else {
+                                showSaved = "登録しました。"
+                                viewModel.saveToeicValues(readingScore, listeningScore, memoText)
+                                viewModel.setMemoText("")
+                                memoText = ""
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                }
             }
         }
     }
@@ -752,6 +774,8 @@ private fun MemoInputField(
     value: String,
     onValueChange: (String) -> Unit = {}
 ) {
+    val focusManager = LocalFocusManager.current
+
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -761,10 +785,22 @@ private fun MemoInputField(
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
+                .height(dimensionResource(id = R.dimen.space_52_dp))
+                .onFocusChanged { focusState ->
+                    // フォーカスが外れたときにキーボードを閉じる
+                    if (!focusState.isFocused) {
+                        focusManager.clearFocus()
+                    }
+                },
             value = value,
             onValueChange = onValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    // "Done" アクションでキーボードを閉じる
+                    focusManager.clearFocus()
+                }
+            ),
             placeholder = {
                 Text(
                     text = placeholder,
