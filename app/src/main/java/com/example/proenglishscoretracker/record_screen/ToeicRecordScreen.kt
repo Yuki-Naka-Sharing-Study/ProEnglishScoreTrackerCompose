@@ -157,10 +157,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var showSaved by remember { mutableStateOf("") }
+        var showSaved by rememberSaveable { mutableStateOf("") }
         // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
-        var showAlertDialogOfZero by remember { mutableStateOf(false) }
-        var result by remember { mutableStateOf("Result") }
+        var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
+        var result by rememberSaveable { mutableStateOf("Result") }
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -219,7 +219,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     }
                 )
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                ShowSavedText(showSaved)
+                ShowSavedText(saved= showSaved, onTimeout = { showSaved = "" })
             }
         }
     }
@@ -822,8 +822,18 @@ private fun showToast(context: Context, message: String) {
 }
 
 @Composable
-private fun ShowSavedText(saved: String) {
-    Text(
-        text = saved, fontSize = 16.sp, color = Color.Green
-    )
+private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
+    if (saved.isNotEmpty()) {
+        Text(
+            text = saved,
+            fontSize = 16.sp,
+            color = Color.Green
+        )
+
+        // メッセージを非表示にするためのタイマーを設定
+        LaunchedEffect(saved) {
+            kotlinx.coroutines.delay(2000) // 2秒間待機
+            onTimeout()
+        }
+    }
 }
