@@ -3,6 +3,7 @@ package com.example.proenglishscoretracker.record_screen
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -44,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -75,340 +78,354 @@ import com.sd.lib.date.selectYearWithIndex
 
 @Composable
 fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
-    Column(
-        modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
+    val focusManager = LocalFocusManager.current
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(interactionSource = interactionSource, indication = null) {
+                focusManager.clearFocus()
+            }
     ) {
-        // スコア系
-        var cseScore by rememberSaveable { mutableIntStateOf(0) }
-        var readingScore by rememberSaveable { mutableIntStateOf(0) }
-        var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-        var writingScore by rememberSaveable { mutableIntStateOf(0) }
-        var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-        val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
-        var selectedGrade by rememberSaveable { mutableStateOf("") }
-        var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
-        isSpeakingPickerVisible = when (selectedGrade) {
-            "3級", "準2級", "2級", "準1級", "1級" -> true
-            else -> false
-        }
+        Column(
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
+        ) {
+            // スコア系
+            var cseScore by rememberSaveable { mutableIntStateOf(0) }
+            var readingScore by rememberSaveable { mutableIntStateOf(0) }
+            var listeningScore by rememberSaveable { mutableIntStateOf(0) }
+            var writingScore by rememberSaveable { mutableIntStateOf(0) }
+            var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+            val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
+            var selectedGrade by rememberSaveable { mutableStateOf("") }
+            var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
+            isSpeakingPickerVisible = when (selectedGrade) {
+                "3級", "準2級", "2級", "準1級", "1級" -> true
+                else -> false
+            }
 
-        var memoText by rememberSaveable { mutableStateOf("") }
-        var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-        var showDatePicker by remember { mutableStateOf(false) }
+            var memoText by rememberSaveable { mutableStateOf("") }
+            var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+            var showDatePicker by remember { mutableStateOf(false) }
 
-        Row {
-            SelectDayText("")
-            Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
-            SelectDatePicker(
-                date = date,
-                onShowDatePickerChange = { showDatePicker = it }
-            )
-            if (showDatePicker) {
-                DatePicker(
+            Row {
+                SelectDayText("")
+                Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
+                SelectDatePicker(
                     date = date,
-                    onDone = {
-                        showDatePicker = false
-                        if (it != null) {
-                            date = it
-                        }
-                    },
-                    onDismissRequest = {
-                        showDatePicker = false
-                    }
+                    onShowDatePickerChange = { showDatePicker = it }
                 )
+                if (showDatePicker) {
+                    DatePicker(
+                        date = date,
+                        onDone = {
+                            showDatePicker = false
+                            if (it != null) {
+                                date = it
+                            }
+                        },
+                        onDismissRequest = {
+                            showDatePicker = false
+                        }
+                    )
+                }
             }
-        }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        Row {
-            SelectGradeText(selectedGrade)
-            DropdownMenuWithIcon(grades, onGradeSelected = { grade ->
-                selectedGrade = grade
-            })
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row {
-            EnterScoreText("")
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
-            CSEScoreText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            EikenCseScorePicker(
-                Modifier,
-                cseScore,
-            ) { cseScore = it }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
-            if (cseScore >= 2551) {
-                ErrorText("CSEスコアは2551未満である必要があります。")
+            Row {
+                SelectGradeText(selectedGrade)
+                DropdownMenuWithIcon(grades, onGradeSelected = { grade ->
+                    selectedGrade = grade
+                })
             }
-        }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-            ReadingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            EikenRLWSScorePicker(
-                Modifier,
-                readingScore,
-            ) { readingScore = it }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-            if (readingScore >= 851) {
-                ErrorText("Readingスコアは851未満である必要があります。")
+            Row {
+                EnterScoreText("")
             }
-        }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-            ListeningImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            EikenRLWSScorePicker(
-                Modifier,
-                listeningScore,
-            ) { listeningScore = it }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-            if (listeningScore >= 851) {
-                ErrorText("Listeningスコアは851未満である必要があります。")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-            WritingImageView()
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            EikenRLWSScorePicker(
-                Modifier,
-                writingScore,
-            ) { writingScore = it }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-            if (writingScore >= 851) {
-                ErrorText("Writingスコアは851未満である必要があります。")
-            }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        SpeakingScoreArea(
-            Modifier,
-            isVisible = isSpeakingPickerVisible,
-            speakingScore = speakingScore,
-            onValueChange = { speakingScore = it },
-        )
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
-            MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            MemoInputField(
-                placeholder = stringResource(id = R.string.memo),
-                value = memoText,
-                onValueChange = { memoText = it }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-        var showSaved by remember { mutableStateOf("") }
-        var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
-        var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
-        var showAlertDialogOfSum by remember { mutableStateOf(false) }
-        var zeroCaseIchiji by remember { mutableStateOf(false) }
-        var result by remember { mutableStateOf("Result") }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (showAlertDialogOfZeroCaseIchiji) {
-                    androidx.compose.material.AlertDialog(
-                        onDismissRequest = {
-                            result = "Dismiss"
-                            showAlertDialogOfZeroCaseIchiji = false
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "はい"
-                                    showAlertDialogOfZeroCaseIchiji = false
-                                    showSaved = "登録しました。"
-                                    viewModel.saveEikenValues(
-                                        cseScore,
-                                        readingScore,
-                                        listeningScore,
-                                        writingScore,
-                                        speakingScore,
-                                        memoText
-                                    )
-                                }
-                            ) {
-                                Text("はい")
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "いいえ"
-                                    showAlertDialogOfZeroCaseIchiji = false
-                                }
-                            ) {
-                                Text("いいえ")
-                            }
-                        },
-                        text = {
-                            Text("CSEスコア,Readingスコア, Listeningスコア, Writingスコアのいずれかが０ですが登録しますか？")
-                        },
-                        contentColor = Color.Black,
-                        backgroundColor = Color(0xFFd3d3d3)
-                    )
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                CSEScoreText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                EikenCseScorePicker(
+                    Modifier,
+                    cseScore,
+                ) { cseScore = it }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (cseScore >= 2551) {
+                    ErrorText("CSEスコアは2551未満である必要があります。")
                 }
-                if (showAlertDialogOfZeroCaseNiji) {
-                    androidx.compose.material.AlertDialog(
-                        onDismissRequest = {
-                            result = "Dismiss"
-                            showAlertDialogOfZeroCaseNiji = false
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "はい"
-                                    showAlertDialogOfZeroCaseNiji = false
-                                    showSaved = "登録しました。"
-                                    viewModel.saveEikenValues(
-                                        cseScore,
-                                        readingScore,
-                                        listeningScore,
-                                        writingScore,
-                                        speakingScore,
-                                        memoText
-                                    )
-                                }
-                            ) {
-                                Text("はい")
-                            }
-                        },
-                        dismissButton = {
-                            TextButton(
-                                onClick = {
-                                    result = "いいえ"
-                                    showAlertDialogOfZeroCaseNiji = false
-                                }
-                            ) {
-                                Text("いいえ")
-                            }
-                        },
-                        text = {
-                            Text("CSEスコア, Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
-                        },
-                        contentColor = Color.Black,
-                        backgroundColor = Color(0xFFd3d3d3)
-                    )
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                ReadingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ReadingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                EikenRLWSScorePicker(
+                    Modifier,
+                    readingScore,
+                ) { readingScore = it }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                if (readingScore >= 851) {
+                    ErrorText("Readingスコアは851未満である必要があります。")
                 }
-                if (showAlertDialogOfSum) {
-                    androidx.compose.material.AlertDialog(
-                        onDismissRequest = {
-                            result = "Dismiss"
-                            showAlertDialogOfSum = false
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    showAlertDialogOfSum = false
-                                }
-                            ) {
-                                Text("はい")
-                            }
-                        },
-                        text = {
-                            Text("CSEスコアがReadingスコア, Listeningスコア, Writingスコア, Speakingスコアの合計と一致していません。")
-                        },
-                        contentColor = Color.Black,
-                        backgroundColor = Color(0xFFd3d3d3)
-                    )
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                ListeningImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ListeningText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                EikenRLWSScorePicker(
+                    Modifier,
+                    listeningScore,
+                ) { listeningScore = it }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                if (listeningScore >= 851) {
+                    ErrorText("Listeningスコアは851未満である必要があります。")
                 }
-                SaveButton(
-                    onClick = {
-                        if (
-                            zeroCaseIchiji &&
-                            speakingScore == 0 &&
-                            isSpeakingPickerVisible
-                            )
-                        {
-                            showAlertDialogOfZeroCaseNiji = true
-                        } else if (
-                            cseScore == 0 ||
-                            readingScore == 0 ||
-                            listeningScore == 0 ||
-                            writingScore == 0
-                            )
-                        {
-                            showAlertDialogOfZeroCaseIchiji = true
-                            zeroCaseIchiji = true
-                        } else if(
-                            cseScore
-                            !=
-                            readingScore + listeningScore + writingScore + speakingScore
-                        ){
-                            showAlertDialogOfSum = true
-                        } else {
-                            showSaved = "登録しました。"
-                            viewModel.saveEikenValues(
-                                cseScore,
-                                readingScore,
-                                listeningScore,
-                                writingScore,
-                                speakingScore,
-                                memoText
-                            )
-                        }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                WritingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                WritingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                EikenRLWSScorePicker(
+                    Modifier,
+                    writingScore,
+                ) { writingScore = it }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                if (writingScore >= 851) {
+                    ErrorText("Writingスコアは851未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            SpeakingScoreArea(
+                Modifier,
+                isVisible = isSpeakingPickerVisible,
+                speakingScore = speakingScore,
+                onValueChange = { speakingScore = it },
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                MemoText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                MemoInputField(
+                    placeholder = stringResource(id = R.string.memo),
+                    value = memoText,
+                    onValueChange = {
+                        memoText = it
+                        viewModel.setMemoText(it)
                     }
                 )
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                ShowSavedText(showSaved)
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            var showSaved by remember { mutableStateOf("") }
+            var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
+            var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
+            var showAlertDialogOfSum by remember { mutableStateOf(false) }
+            var zeroCaseIchiji by remember { mutableStateOf(false) }
+            var result by remember { mutableStateOf("Result") }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    if (showAlertDialogOfZeroCaseIchiji) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                result = "Dismiss"
+                                showAlertDialogOfZeroCaseIchiji = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "はい"
+                                        showAlertDialogOfZeroCaseIchiji = false
+                                        showSaved = "登録しました。"
+                                        viewModel.saveEikenValues(
+                                            cseScore,
+                                            readingScore,
+                                            listeningScore,
+                                            writingScore,
+                                            speakingScore,
+                                            memoText
+                                        )
+                                    }
+                                ) {
+                                    Text("はい")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "いいえ"
+                                        showAlertDialogOfZeroCaseIchiji = false
+                                    }
+                                ) {
+                                    Text("いいえ")
+                                }
+                            },
+                            text = {
+                                Text("CSEスコア,Readingスコア, Listeningスコア, Writingスコアのいずれかが０ですが登録しますか？")
+                            },
+                            contentColor = Color.Black,
+                            backgroundColor = Color(0xFFd3d3d3)
+                        )
+                    }
+                    if (showAlertDialogOfZeroCaseNiji) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                result = "Dismiss"
+                                showAlertDialogOfZeroCaseNiji = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "はい"
+                                        showAlertDialogOfZeroCaseNiji = false
+                                        showSaved = "登録しました。"
+                                        viewModel.saveEikenValues(
+                                            cseScore,
+                                            readingScore,
+                                            listeningScore,
+                                            writingScore,
+                                            speakingScore,
+                                            memoText
+                                        )
+                                    }
+                                ) {
+                                    Text("はい")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "いいえ"
+                                        showAlertDialogOfZeroCaseNiji = false
+                                    }
+                                ) {
+                                    Text("いいえ")
+                                }
+                            },
+                            text = {
+                                Text("CSEスコア, Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
+                            },
+                            contentColor = Color.Black,
+                            backgroundColor = Color(0xFFd3d3d3)
+                        )
+                    }
+                    if (showAlertDialogOfSum) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                result = "Dismiss"
+                                showAlertDialogOfSum = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showAlertDialogOfSum = false
+                                    }
+                                ) {
+                                    Text("はい")
+                                }
+                            },
+                            text = {
+                                Text("CSEスコアがReadingスコア, Listeningスコア, Writingスコア, Speakingスコアの合計と一致していません。")
+                            },
+                            contentColor = Color.Black,
+                            backgroundColor = Color(0xFFd3d3d3)
+                        )
+                    }
+                    SaveButton(
+                        onClick = {
+                            if (
+                                zeroCaseIchiji &&
+                                speakingScore == 0 &&
+                                isSpeakingPickerVisible
+                            ) {
+                                showAlertDialogOfZeroCaseNiji = true
+                            } else if (
+                                cseScore == 0 ||
+                                readingScore == 0 ||
+                                listeningScore == 0 ||
+                                writingScore == 0
+                            ) {
+                                showAlertDialogOfZeroCaseIchiji = true
+                                zeroCaseIchiji = true
+                            } else if (
+                                cseScore
+                                !=
+                                readingScore + listeningScore + writingScore + speakingScore
+                            ) {
+                                showAlertDialogOfSum = true
+                            } else {
+                                showSaved = "登録しました。"
+                                viewModel.saveEikenValues(
+                                    cseScore,
+                                    readingScore,
+                                    listeningScore,
+                                    writingScore,
+                                    speakingScore,
+                                    memoText
+                                )
+                                viewModel.setMemoText("")
+                                memoText = ""
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                    ShowSavedText(saved= showSaved, onTimeout = { showSaved = "" })
+                }
             }
         }
     }
@@ -920,7 +937,8 @@ private fun EikenCseScorePickerView(
         thousandState.intValue,
         hundredState.intValue,
         tenState.intValue,
-        oneState.intValue) {
+        oneState.intValue
+    ) {
         onScoreChange(
             thousandState.intValue * 1000 +
                     hundredState.intValue * 100 +
@@ -1260,7 +1278,11 @@ private fun SpeakingText(speakingText: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun MemoInputField(placeholder: String, value: String, onValueChange: (String) -> Unit = {}) {
+private fun MemoInputField(
+    placeholder: String,
+    value: String,
+    onValueChange: (String) -> Unit = {}
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
@@ -1330,8 +1352,18 @@ private fun showToast(context: android.content.Context, message: String) {
 }
 
 @Composable
-private fun ShowSavedText(saved: String) {
-    Text(
-        text = saved, fontSize = 16.sp, color = Color.Green
-    )
+private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
+    if (saved.isNotEmpty()) {
+        Text(
+            text = saved,
+            fontSize = 16.sp,
+            color = Color.Green
+        )
+
+        // メッセージを非表示にするためのタイマーを設定
+        LaunchedEffect(saved) {
+            kotlinx.coroutines.delay(2000) // 2秒間待機
+            onTimeout()
+        }
+    }
 }
