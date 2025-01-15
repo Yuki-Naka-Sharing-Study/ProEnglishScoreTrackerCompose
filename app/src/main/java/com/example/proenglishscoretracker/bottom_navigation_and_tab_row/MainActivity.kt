@@ -155,12 +155,16 @@ fun BottomNavigationBar(
     viewModel: EnglishInfoViewModel
 ) {
     val unsavedChanges by viewModel.unsavedChanges.collectAsState()
-    val memoText by viewModel.memoText.collectAsState() // ViewModelからmemoTextを取得
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var targetRoute by rememberSaveable { mutableStateOf<String?>(null) }
+    val sumScore by viewModel.readingScore.collectAsState()
+    val readingScore by viewModel.readingScore.collectAsState()
+    val listeningScore by viewModel.listeningScore.collectAsState()
+    val writingScore by viewModel.listeningScore.collectAsState()
+    val speakingScore by viewModel.listeningScore.collectAsState()
+    val memoText by viewModel.memoText.collectAsState()
 
-    // memoTextが空の場合、AlertDialogを表示しない
-    if (showDialog && memoText.isNotEmpty()) {
+    if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text(text = "確認") },
@@ -170,6 +174,11 @@ fun BottomNavigationBar(
                     showDialog = false
                     targetRoute?.let {
                         // 遷移前にmemoTextをリセット
+                        viewModel.setSumScore(0)
+                        viewModel.setReadingScore(0)
+                        viewModel.setListeningScore(0)
+                        viewModel.setWritingScore(0)
+                        viewModel.setSpeakingScore(0)
                         viewModel.setMemoText("")
                         navController.navigate(it) {
                             launchSingleTop = true
@@ -202,11 +211,16 @@ fun BottomNavigationBar(
             label = { Text("記録確認") },
             selected = navController.currentBackStackEntry?.destination?.route == "examDataScreen",
             onClick = {
-                if (unsavedChanges && memoText.isNotEmpty()) { // memoTextが空でない場合のみダイアログを表示
+                if (unsavedChanges && sumScore > 0 || readingScore > 0 || listeningScore > 0 || writingScore > 0 || speakingScore > 0 || memoText.isNotEmpty()) {
                     targetRoute = "examDataScreen"
                     showDialog = true
                 } else {
                     // 遷移前にmemoTextをリセット
+                    viewModel.setSumScore(0)
+                    viewModel.setReadingScore(0)
+                    viewModel.setListeningScore(0)
+                    viewModel.setWritingScore(0)
+                    viewModel.setSpeakingScore(0)
                     viewModel.setMemoText("")
                     navController.navigate("examDataScreen") {
                         launchSingleTop = true
@@ -222,11 +236,16 @@ fun BottomNavigationBar(
             label = { Text("記録") },
             selected = navController.currentBackStackEntry?.destination?.route == "examRecordScreen",
             onClick = {
-                if (unsavedChanges && memoText.isNotEmpty()) { // memoTextが空でない場合のみダイアログを表示
+                if (unsavedChanges && sumScore > 0 || readingScore > 0 || listeningScore > 0 || writingScore > 0 || speakingScore > 0 || memoText.isNotEmpty()) {
                     targetRoute = "examRecordScreen"
                     showDialog = true
                 } else {
                     // 遷移前にmemoTextをリセット
+                    viewModel.setSumScore(0)
+                    viewModel.setReadingScore(0)
+                    viewModel.setListeningScore(0)
+                    viewModel.setWritingScore(0)
+                    viewModel.setSpeakingScore(0)
                     viewModel.setMemoText("")
                     navController.navigate("examRecordScreen") {
                         launchSingleTop = true
@@ -242,11 +261,16 @@ fun BottomNavigationBar(
             label = { Text("設定") },
             selected = navController.currentBackStackEntry?.destination?.route == "setting",
             onClick = {
-                if (unsavedChanges && memoText.isNotEmpty()) { // memoTextが空でない場合のみダイアログを表示
+                if (unsavedChanges && sumScore > 0 || readingScore > 0 || listeningScore > 0 || writingScore > 0 || speakingScore > 0 || memoText.isNotEmpty()) {
                     targetRoute = "setting"
                     showDialog = true
                 } else {
                     // 遷移前にmemoTextをリセット
+                    viewModel.setSumScore(0)
+                    viewModel.setReadingScore(0)
+                    viewModel.setListeningScore(0)
+                    viewModel.setWritingScore(0)
+                    viewModel.setSpeakingScore(0)
                     viewModel.setMemoText("")
                     navController.navigate("setting") {
                         launchSingleTop = true

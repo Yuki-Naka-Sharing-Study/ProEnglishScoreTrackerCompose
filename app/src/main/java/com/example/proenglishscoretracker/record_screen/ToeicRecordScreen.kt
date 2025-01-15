@@ -88,10 +88,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
         ) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+            var showDatePicker by remember { mutableStateOf(false) }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var memoText by rememberSaveable { mutableStateOf("") }
-            var showDatePicker by remember { mutableStateOf(false) }
 
             Row {
                 SelectDayText("")
@@ -135,7 +135,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 TOEICRLScorePicker(
                     Modifier,
                     readingScore,
-                ) { readingScore = it }
+                ) {
+                    readingScore = it
+                    viewModel.setReadingScore(it)
+                }
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -151,7 +154,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 TOEICRLScorePicker(
                     Modifier,
                     listeningScore,
-                ) { listeningScore = it }
+                ) {
+                    listeningScore = it
+                    viewModel.setListeningScore(it)
+                }
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -205,6 +211,12 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                             listeningScore,
                                             memoText
                                         )
+                                        viewModel.setReadingScore(0)
+                                        viewModel.setListeningScore(0)
+                                        viewModel.setMemoText("")
+                                        readingScore = 0
+                                        listeningScore = 0
+                                        memoText = ""
                                     }
                                 ) {
                                     Text("はい")
@@ -234,7 +246,11 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                             } else {
                                 showSaved = "登録しました。"
                                 viewModel.saveToeicValues(readingScore, listeningScore, memoText)
+                                viewModel.setReadingScore(0)
+                                viewModel.setListeningScore(0)
                                 viewModel.setMemoText("")
+                                readingScore = 0
+                                listeningScore = 0
                                 memoText = ""
                             }
                         }

@@ -25,10 +25,26 @@ class EnglishInfoViewModel(
     val isFirstLaunch: Flow<Boolean> = dataStore.data.map { preferences ->
         preferences[ONBOARDING_COMPLETED_KEY] ?: true
     }
-    private val _memoText = MutableStateFlow("")
-    val memoText: StateFlow<String> = _memoText
     private val _unsavedChanges = MutableStateFlow(false)
     val unsavedChanges: StateFlow<Boolean> = _unsavedChanges
+    private val _sumScore = MutableStateFlow(0)
+    val sumScore: StateFlow<Int> = _sumScore
+    private val _readingScore = MutableStateFlow(0)
+    val readingScore: StateFlow<Int> = _readingScore
+    private val _listeningScore = MutableStateFlow(0)
+    val listeningScore: StateFlow<Int> = _listeningScore
+    private val _writingScore = MutableStateFlow(0)
+    val writingScore: StateFlow<Int> = _writingScore
+    private val _speakingScore = MutableStateFlow(0)
+    val speakingScore: StateFlow<Int> = _speakingScore
+    private val _memoText = MutableStateFlow("")
+    val memoText: StateFlow<String> = _memoText
+
+    init {
+        viewModelScope.launch {
+            _englishInfo.value = englishInfoDao.getAllEnglishInfo()
+        }
+    }
 
     // Onboarding 完了時にフラグを保存
     fun completeOnboarding() {
@@ -38,24 +54,38 @@ class EnglishInfoViewModel(
             }
         }
     }
-
+    fun setSumScore(value: Int) {
+        _sumScore.value = value
+        _unsavedChanges.value = value > 0
+    }
+    fun setReadingScore(value: Int) {
+        _readingScore.value = value
+        _unsavedChanges.value = value > 0
+    }
+    fun setListeningScore(value: Int) {
+        _listeningScore.value = value
+        _unsavedChanges.value = value > 0
+    }
+    fun setWritingScore(value: Int) {
+        _writingScore.value = value
+        _unsavedChanges.value = value > 0
+    }
+    fun setSpeakingScore(value: Int) {
+        _speakingScore.value = value
+        _unsavedChanges.value = value > 0
+    }
     fun setMemoText(value: String) {
         _memoText.value = value
         _unsavedChanges.value = value.isNotEmpty()
     }
-
-    init {
-        viewModelScope.launch {
-            _englishInfo.value = englishInfoDao.getAllEnglishInfo()
-        }
-    }
-
-    fun saveEikenValues(cseScore: Int,
-                        readingScore: Int,
-                        listeningScore: Int,
-                        writingScore: Int,
-                        speakingScore: Int,
-                        memoText: String) {
+    fun saveEikenValues(
+        cseScore: Int,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        memoText: String
+    ) {
         viewModelScope.launch {
             repository.saveEikenInfo(
                 cseScore,
@@ -67,14 +97,15 @@ class EnglishInfoViewModel(
             )
         }
     }
-
-    fun saveEikenNijiValues(cseScore: Int,
-                            speakingScore: Int,
-                            shortSpeechScore: Int,
-                            interactionScore: Int,
-                            grammarAndVocabularyScore: Int,
-                            pronunciationScore: Int,
-                            memoText: String) {
+    fun saveEikenNijiValues(
+        cseScore: Int,
+        speakingScore: Int,
+        shortSpeechScore: Int,
+        interactionScore: Int,
+        grammarAndVocabularyScore: Int,
+        pronunciationScore: Int,
+        memoText: String
+    ) {
         viewModelScope.launch {
             repository.saveEikenNijiInfo(
                 cseScore,
@@ -87,10 +118,11 @@ class EnglishInfoViewModel(
             )
         }
     }
-
-    fun saveToeicValues(readingScore: Int,
-                        listeningScore: Int,
-                        memoText: String) {
+    fun saveToeicValues(
+        readingScore: Int,
+        listeningScore: Int,
+        memoText: String
+    ) {
         viewModelScope.launch {
             repository.saveToeicInfo(
                 readingScore,
@@ -99,10 +131,11 @@ class EnglishInfoViewModel(
             )
         }
     }
-
-    fun saveToeicSwValues(writingScore: Int,
-                          speakingScore: Int,
-                          memoText: String) {
+    fun saveToeicSwValues(
+        writingScore: Int,
+        speakingScore: Int,
+        memoText: String
+    ) {
         viewModelScope.launch {
             repository.saveToeicSwInfo(
                 writingScore,
@@ -111,13 +144,14 @@ class EnglishInfoViewModel(
             )
         }
     }
-
-    fun saveToeflIbtValues(overallScore: Int,
-                           readingScore: Int,
-                           listeningScore: Int,
-                           writingScore: Int,
-                           speakingScore: Int,
-                           memoText: String) {
+    fun saveToeflIbtValues(
+        overallScore: Int,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        memoText: String
+    ) {
         viewModelScope.launch {
             repository.saveToeflIbtInfo(
                 overallScore,
@@ -129,13 +163,14 @@ class EnglishInfoViewModel(
             )
         }
     }
-
-    fun saveIeltsValues(overallScore: Float,
-                        readingScore: Float,
-                        listeningScore: Float,
-                        writingScore: Float,
-                        speakingScore: Float,
-                        memoText: String) {
+    fun saveIeltsValues(
+        overallScore: Float,
+        readingScore: Float,
+        listeningScore: Float,
+        writingScore: Float,
+        speakingScore: Float,
+        memoText: String
+    ) {
         viewModelScope.launch {
             repository.saveIeltsInfo(
                 overallScore,
@@ -147,14 +182,12 @@ class EnglishInfoViewModel(
             )
         }
     }
-
     fun insertMusicInfo(musicInfo: EnglishInfo) {
         viewModelScope.launch {
             englishInfoDao.insertEnglishInfo(musicInfo)
             _englishInfo.value = englishInfoDao.getAllEnglishInfo()
         }
     }
-
     fun deleteMusicInfo(musicInfo: EnglishInfo) {
         viewModelScope.launch {
             englishInfoDao.deleteEnglishInfo(musicInfo)
