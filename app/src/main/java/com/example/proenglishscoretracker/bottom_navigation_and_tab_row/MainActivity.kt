@@ -140,7 +140,7 @@ fun BottomNavigationBar(
     val unsavedChanges by viewModel.unsavedChanges.collectAsState()
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var targetRoute by rememberSaveable { mutableStateOf<String?>(null) }
-    val sumScore by viewModel.readingScore.collectAsState()
+    val sumScore by viewModel.sumScore.collectAsState()
     val readingScore by viewModel.readingScore.collectAsState()
     val listeningScore by viewModel.listeningScore.collectAsState()
     val writingScore by viewModel.writingScore.collectAsState()

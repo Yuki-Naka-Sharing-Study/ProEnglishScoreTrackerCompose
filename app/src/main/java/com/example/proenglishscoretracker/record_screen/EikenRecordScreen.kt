@@ -92,22 +92,21 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
         ) {
             // スコア系
+            var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+            var showDatePicker by remember { mutableStateOf(false) }
+            val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
+            var selectedGrade by rememberSaveable { mutableStateOf("") }
             var cseScore by rememberSaveable { mutableIntStateOf(0) }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-            val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
-            var selectedGrade by rememberSaveable { mutableStateOf("") }
             var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
             isSpeakingPickerVisible = when (selectedGrade) {
                 "3級", "準2級", "2級", "準1級", "1級" -> true
                 else -> false
             }
-
             var memoText by rememberSaveable { mutableStateOf("") }
-            var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-            var showDatePicker by remember { mutableStateOf(false) }
 
             Row {
                 SelectDayText("")
@@ -158,7 +157,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 EikenCseScorePicker(
                     Modifier,
                     cseScore,
-                ) { cseScore = it }
+                ) {
+                    cseScore = it
+                    viewModel.setSumScore(it)
+                }
             }
 
             Row {
@@ -181,7 +183,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 EikenRLWSScorePicker(
                     Modifier,
                     readingScore,
-                ) { readingScore = it }
+                ) {
+                    readingScore = it
+                    viewModel.setReadingScore(it)
+                }
             }
 
             Row {
@@ -204,7 +209,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 EikenRLWSScorePicker(
                     Modifier,
                     listeningScore,
-                ) { listeningScore = it }
+                ) {
+                    listeningScore = it
+                    viewModel.setListeningScore(it)
+                }
             }
 
             Row {
@@ -227,7 +235,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 EikenRLWSScorePicker(
                     Modifier,
                     writingScore,
-                ) { writingScore = it }
+                ) {
+                    writingScore = it
+                    viewModel.setWritingScore(it)
+                }
             }
 
             Row {
@@ -243,7 +254,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Modifier,
                 isVisible = isSpeakingPickerVisible,
                 speakingScore = speakingScore,
-                onValueChange = { speakingScore = it },
+                onValueChange = {
+                    speakingScore = it
+                    viewModel.setSpeakingScore(it)
+                }
             )
 
             Row(
@@ -300,6 +314,16 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                             speakingScore,
                                             memoText
                                         )
+                                        viewModel.setReadingScore(0)
+                                        viewModel.setListeningScore(0)
+                                        viewModel.setWritingScore(0)
+                                        viewModel.setSpeakingScore(0)
+                                        viewModel.setMemoText("")
+                                        readingScore = 0
+                                        listeningScore = 0
+                                        writingScore = 0
+                                        speakingScore = 0
+                                        memoText = ""
                                     }
                                 ) {
                                     Text("はい")
@@ -342,6 +366,16 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                             speakingScore,
                                             memoText
                                         )
+                                        viewModel.setReadingScore(0)
+                                        viewModel.setListeningScore(0)
+                                        viewModel.setWritingScore(0)
+                                        viewModel.setSpeakingScore(0)
+                                        viewModel.setMemoText("")
+                                        readingScore = 0
+                                        listeningScore = 0
+                                        writingScore = 0
+                                        speakingScore = 0
+                                        memoText = ""
                                     }
                                 ) {
                                     Text("はい")
@@ -418,7 +452,15 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     speakingScore,
                                     memoText
                                 )
+                                viewModel.setReadingScore(0)
+                                viewModel.setListeningScore(0)
+                                viewModel.setWritingScore(0)
+                                viewModel.setSpeakingScore(0)
                                 viewModel.setMemoText("")
+                                readingScore = 0
+                                listeningScore = 0
+                                writingScore = 0
+                                speakingScore = 0
                                 memoText = ""
                             }
                         }
