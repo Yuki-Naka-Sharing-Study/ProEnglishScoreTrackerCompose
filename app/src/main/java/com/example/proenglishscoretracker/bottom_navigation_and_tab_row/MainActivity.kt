@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
@@ -20,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -30,10 +27,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.example.proenglishscoretracker.R
@@ -138,18 +133,6 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
 }
 
 @Composable
-fun LoadingScreen(modifier: Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Loading...", fontSize = 20.sp)
-    }
-}
-
-@Composable
 fun BottomNavigationBar(
     navController: NavController,
     viewModel: EnglishInfoViewModel
@@ -160,8 +143,8 @@ fun BottomNavigationBar(
     val sumScore by viewModel.readingScore.collectAsState()
     val readingScore by viewModel.readingScore.collectAsState()
     val listeningScore by viewModel.listeningScore.collectAsState()
-    val writingScore by viewModel.listeningScore.collectAsState()
-    val speakingScore by viewModel.listeningScore.collectAsState()
+    val writingScore by viewModel.writingScore.collectAsState()
+    val speakingScore by viewModel.speakingScore.collectAsState()
     val memoText by viewModel.memoText.collectAsState()
 
     if (showDialog) {
@@ -211,7 +194,14 @@ fun BottomNavigationBar(
             label = { Text("記録確認") },
             selected = navController.currentBackStackEntry?.destination?.route == "examDataScreen",
             onClick = {
-                if (unsavedChanges && sumScore > 0 || readingScore > 0 || listeningScore > 0 || writingScore > 0 || speakingScore > 0 || memoText.isNotEmpty()) {
+                if (unsavedChanges &&
+                    sumScore > 0 ||
+                    readingScore > 0 ||
+                    listeningScore > 0 ||
+                    writingScore > 0 ||
+                    speakingScore > 0 ||
+                    memoText.isNotEmpty())
+                {
                     targetRoute = "examDataScreen"
                     showDialog = true
                 } else {
@@ -236,7 +226,14 @@ fun BottomNavigationBar(
             label = { Text("記録") },
             selected = navController.currentBackStackEntry?.destination?.route == "examRecordScreen",
             onClick = {
-                if (unsavedChanges && sumScore > 0 || readingScore > 0 || listeningScore > 0 || writingScore > 0 || speakingScore > 0 || memoText.isNotEmpty()) {
+                if (unsavedChanges &&
+                    sumScore > 0 ||
+                    readingScore > 0 ||
+                    listeningScore > 0 ||
+                    writingScore > 0 ||
+                    speakingScore > 0 ||
+                    memoText.isNotEmpty())
+                {
                     targetRoute = "examRecordScreen"
                     showDialog = true
                 } else {
@@ -261,7 +258,14 @@ fun BottomNavigationBar(
             label = { Text("設定") },
             selected = navController.currentBackStackEntry?.destination?.route == "setting",
             onClick = {
-                if (unsavedChanges && sumScore > 0 || readingScore > 0 || listeningScore > 0 || writingScore > 0 || speakingScore > 0 || memoText.isNotEmpty()) {
+                if (unsavedChanges &&
+                    sumScore > 0 ||
+                    readingScore > 0 ||
+                    listeningScore > 0 ||
+                    writingScore > 0 ||
+                    speakingScore > 0 ||
+                    memoText.isNotEmpty())
+                {
                     targetRoute = "setting"
                     showDialog = true
                 } else {

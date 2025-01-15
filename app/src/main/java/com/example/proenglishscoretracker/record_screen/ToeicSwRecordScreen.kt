@@ -39,7 +39,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
@@ -85,10 +84,10 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
         ) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
+            var showDatePicker by remember { mutableStateOf(false) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
             var memoText by rememberSaveable { mutableStateOf("") }
-            var showDatePicker by remember { mutableStateOf(false) }
 
             //「Error」系
             val writingMaxScoreError = writingScore >= 201
@@ -135,8 +134,11 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 TOEICSWScorePicker(
                     Modifier,
-                    writingScore,
-                ) { writingScore = it }
+                    writingScore
+                ) {
+                    writingScore = it
+                    viewModel.setWritingScore(it)
+                }
             }
 
             Row {
@@ -158,8 +160,11 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 TOEICSWScorePicker(
                     Modifier,
-                    speakingScore,
-                ) { speakingScore = it }
+                    speakingScore
+                ) {
+                    speakingScore = it
+                    viewModel.setSpeakingScore(it)
+                }
             }
 
             Row {
@@ -219,6 +224,12 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                             speakingScore,
                                             memoText
                                         )
+                                        viewModel.setWritingScore(0)
+                                        viewModel.setSpeakingScore(0)
+                                        viewModel.setMemoText("")
+                                        writingScore = 0
+                                        speakingScore = 0
+                                        memoText = ""
                                     }
                                 ) {
                                     Text("はい")
@@ -250,7 +261,11 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                             } else {
                                 showSaved = "登録しました。"
                                 viewModel.saveToeicSwValues(writingScore, speakingScore, memoText)
+                                viewModel.setWritingScore(0)
+                                viewModel.setSpeakingScore(0)
                                 viewModel.setMemoText("")
+                                writingScore = 0
+                                speakingScore = 0
                                 memoText = ""
                             }
                         }
