@@ -83,14 +83,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
         ) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-
+            var showDatePicker by remember { mutableStateOf(false) }
             var overallScore by rememberSaveable { mutableIntStateOf(0) }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
             var memoText by rememberSaveable { mutableStateOf("") }
-            var showDatePicker by remember { mutableStateOf(false) }
 
             Row {
                 SelectDayText("")
@@ -132,7 +131,10 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 ToeflOverallScorePicker(
                     Modifier,
                     overallScore,
-                ) { overallScore = it }
+                ) {
+                    overallScore = it
+                    viewModel.setSumScore(it)
+                }
             }
 
             Row {
@@ -155,7 +157,10 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 ToeflRLWSScorePicker(
                     Modifier,
                     readingScore,
-                ) { readingScore = it }
+                ) {
+                    readingScore = it
+                    viewModel.setReadingScore(it)
+                }
             }
 
             Row {
@@ -178,7 +183,10 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 ToeflRLWSScorePicker(
                     Modifier,
                     listeningScore,
-                ) { listeningScore = it }
+                ) {
+                    listeningScore = it
+                    viewModel.setListeningScore(it)
+                }
             }
 
             Row {
@@ -201,7 +209,10 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 ToeflRLWSScorePicker(
                     Modifier,
                     writingScore,
-                ) { writingScore = it }
+                ) {
+                    writingScore = it
+                    viewModel.setWritingScore(it)
+                }
             }
 
             Row {
@@ -224,7 +235,10 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 ToeflRLWSScorePicker(
                     Modifier,
                     speakingScore,
-                ) { speakingScore = it }
+                ) {
+                    speakingScore = it
+                    viewModel.setSpeakingScore(it)
+                }
             }
 
             Row {
@@ -288,6 +302,16 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                             speakingScore,
                                             memoText
                                         )
+                                        viewModel.setReadingScore(0)
+                                        viewModel.setListeningScore(0)
+                                        viewModel.setWritingScore(0)
+                                        viewModel.setSpeakingScore(0)
+                                        viewModel.setMemoText("")
+                                        readingScore = 0
+                                        listeningScore = 0
+                                        writingScore = 0
+                                        speakingScore = 0
+                                        memoText = ""
                                     }
                                 ) {
                                     Text("はい")
@@ -358,7 +382,15 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                     speakingScore,
                                     memoText
                                 )
+                                viewModel.setReadingScore(0)
+                                viewModel.setListeningScore(0)
+                                viewModel.setWritingScore(0)
+                                viewModel.setSpeakingScore(0)
                                 viewModel.setMemoText("")
+                                readingScore = 0
+                                listeningScore = 0
+                                writingScore = 0
+                                speakingScore = 0
                                 memoText = ""
                             }
                         }
