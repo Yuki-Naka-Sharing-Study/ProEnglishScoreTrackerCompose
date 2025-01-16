@@ -317,15 +317,15 @@ fun EikenNijiRecordScreen(viewModel: EnglishInfoViewModel) {
                             grammarAndVocabularyMaxScoreErrorText = ""
                             pronunciationMaxScoreErrorText = ""
                             showSaved = "記録しました。"
-                            viewModel.saveEikenNijiValues(
-                                cseScore,
-                                speakingScore,
-                                shortSpeechScore,
-                                interactionScore,
-                                grammarAndVocabularyScore,
-                                pronunciationScore,
-                                memoText
-                            )
+//                            viewModel.saveEikenNijiValues(
+//                                cseScore,
+//                                speakingScore,
+//                                shortSpeechScore,
+//                                interactionScore,
+//                                grammarAndVocabularyScore,
+//                                pronunciationScore,
+//                                memoText
+//                            )
                         } else {
                             if (selectedDateEmptyError) {
                                 selectedDateEmptyErrorText = "受験日が記入されていません。"

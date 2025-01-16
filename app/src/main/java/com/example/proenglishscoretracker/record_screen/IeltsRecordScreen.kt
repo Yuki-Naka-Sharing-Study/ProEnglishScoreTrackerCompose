@@ -382,13 +382,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                             writingScoreDivisionErrorText = ""
                             speakingScoreDivisionErrorText = ""
                             showSaved = "記録しました。"
-                            viewModel.saveIeltsValues(
-                                overallScore,
-                                readingScore,
-                                listeningScore,
-                                writingScore,
-                                speakingScore,
-                                memoText)
+//                            viewModel.saveIeltsValues(
+//                                overallScore,
+//                                readingScore,
+//                                listeningScore,
+//                                writingScore,
+//                                speakingScore,
+//                                memoText
+//                            )
                         } else {
                             if (overallMaxScoreError) {
                                 overallMaxScoreErrorText = "Overallスコアは36.1未満である必要があります。"

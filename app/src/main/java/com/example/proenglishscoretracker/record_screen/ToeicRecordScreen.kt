@@ -207,6 +207,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                         showAlertDialogOfZero = false
                                         showSaved = "登録しました。"
                                         viewModel.saveToeicValues(
+                                            date.toString(),
                                             readingScore,
                                             listeningScore,
                                             memoText
@@ -245,7 +246,12 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                 showAlertDialogOfZero = true
                             } else {
                                 showSaved = "登録しました。"
-                                viewModel.saveToeicValues(readingScore, listeningScore, memoText)
+                                viewModel.saveToeicValues(
+                                    date.toString(),
+                                    readingScore,
+                                    listeningScore,
+                                    memoText
+                                )
                                 viewModel.setReadingScore(0)
                                 viewModel.setListeningScore(0)
                                 viewModel.setMemoText("")

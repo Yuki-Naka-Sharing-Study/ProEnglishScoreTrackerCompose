@@ -17,8 +17,22 @@ class EnglishInfoViewModel(
     private val englishInfoDao: EnglishInfoDao,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    private val _englishInfo = MutableStateFlow<List<EnglishInfo>>(emptyList())
-    val englishInfo: StateFlow<List<EnglishInfo>> = _englishInfo
+    private val _toeicInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC>>(emptyList())
+    val toeicInfo: StateFlow<List<EnglishTestInfo.TOEIC>> = _toeicInfo
+
+    private val _toeicSwInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC_SW>>(emptyList())
+    val toeicSwInfo: StateFlow<List<EnglishTestInfo.TOEIC_SW>> = _toeicSwInfo
+
+    private val _eikenFirstInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_FIRST>>(emptyList())
+    val eikenFirstInfo: StateFlow<List<EnglishTestInfo.EIKEN_FIRST>> = _eikenFirstInfo
+
+    private val _toeflInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
+    val toeflInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflInfo
+
+    private val _ieltsInfo = MutableStateFlow<List<EnglishTestInfo.IELTS>>(emptyList())
+    val ieltsInfo: StateFlow<List<EnglishTestInfo.IELTS>> = _ieltsInfo
+
+
     private val ONBOARDING_COMPLETED_KEY = booleanPreferencesKey("onboarding_completed")
 
     // 初回起動かどうかを監視するFlow
@@ -40,9 +54,22 @@ class EnglishInfoViewModel(
     private val _memoText = MutableStateFlow("")
     val memoText: StateFlow<String> = _memoText
 
-    init {
+    // TOEICデータの保存
+    fun saveToeicValues(
+        date: String,
+        readingScore: Int,
+        listeningScore: Int,
+        memo: String
+    ) {
         viewModelScope.launch {
-            _englishInfo.value = englishInfoDao.getAllEnglishInfo()
+            repository.saveToeicInfo(date, readingScore, listeningScore, memo)
+            loadAllToeicInfo() // データを保存後に再読み込み
+        }
+    }
+    // TOEIC情報を取得
+    fun loadAllToeicInfo() {
+        viewModelScope.launch {
+            _toeicInfo.value = repository.getAllToeicInfo()
         }
     }
 
@@ -77,121 +104,5 @@ class EnglishInfoViewModel(
     fun setMemoText(value: String) {
         _memoText.value = value
         _unsavedChanges.value = value.isNotEmpty()
-    }
-    fun saveEikenValues(
-        cseScore: Int,
-        readingScore: Int,
-        listeningScore: Int,
-        writingScore: Int,
-        speakingScore: Int,
-        memoText: String
-    ) {
-        viewModelScope.launch {
-            repository.saveEikenInfo(
-                cseScore,
-                readingScore,
-                listeningScore,
-                writingScore,
-                speakingScore,
-                memoText
-            )
-        }
-    }
-    fun saveEikenNijiValues(
-        cseScore: Int,
-        speakingScore: Int,
-        shortSpeechScore: Int,
-        interactionScore: Int,
-        grammarAndVocabularyScore: Int,
-        pronunciationScore: Int,
-        memoText: String
-    ) {
-        viewModelScope.launch {
-            repository.saveEikenNijiInfo(
-                cseScore,
-                speakingScore,
-                shortSpeechScore,
-                interactionScore,
-                grammarAndVocabularyScore,
-                pronunciationScore,
-                memoText
-            )
-        }
-    }
-    fun saveToeicValues(
-        readingScore: Int,
-        listeningScore: Int,
-        memoText: String
-    ) {
-        viewModelScope.launch {
-            repository.saveToeicInfo(
-                readingScore,
-                listeningScore,
-                memoText
-            )
-        }
-    }
-    fun saveToeicSwValues(
-        writingScore: Int,
-        speakingScore: Int,
-        memoText: String
-    ) {
-        viewModelScope.launch {
-            repository.saveToeicSwInfo(
-                writingScore,
-                speakingScore,
-                memoText
-            )
-        }
-    }
-    fun saveToeflIbtValues(
-        overallScore: Int,
-        readingScore: Int,
-        listeningScore: Int,
-        writingScore: Int,
-        speakingScore: Int,
-        memoText: String
-    ) {
-        viewModelScope.launch {
-            repository.saveToeflIbtInfo(
-                overallScore,
-                readingScore,
-                listeningScore,
-                writingScore,
-                speakingScore,
-                memoText
-            )
-        }
-    }
-    fun saveIeltsValues(
-        overallScore: Float,
-        readingScore: Float,
-        listeningScore: Float,
-        writingScore: Float,
-        speakingScore: Float,
-        memoText: String
-    ) {
-        viewModelScope.launch {
-            repository.saveIeltsInfo(
-                overallScore,
-                readingScore,
-                listeningScore,
-                writingScore,
-                speakingScore,
-                memoText
-            )
-        }
-    }
-    fun insertMusicInfo(musicInfo: EnglishInfo) {
-        viewModelScope.launch {
-            englishInfoDao.insertEnglishInfo(musicInfo)
-            _englishInfo.value = englishInfoDao.getAllEnglishInfo()
-        }
-    }
-    fun deleteMusicInfo(musicInfo: EnglishInfo) {
-        viewModelScope.launch {
-            englishInfoDao.deleteEnglishInfo(musicInfo)
-            _englishInfo.value = englishInfoDao.getAllEnglishInfo()
-        }
     }
 }

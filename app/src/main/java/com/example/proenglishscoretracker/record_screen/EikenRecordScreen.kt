@@ -306,14 +306,14 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseIchiji = false
                                         showSaved = "登録しました。"
-                                        viewModel.saveEikenValues(
-                                            cseScore,
-                                            readingScore,
-                                            listeningScore,
-                                            writingScore,
-                                            speakingScore,
-                                            memoText
-                                        )
+//                                        viewModel.saveEikenValues(
+//                                            cseScore,
+//                                            readingScore,
+//                                            listeningScore,
+//                                            writingScore,
+//                                            speakingScore,
+//                                            memoText
+//                                        )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setWritingScore(0)
@@ -358,14 +358,14 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseNiji = false
                                         showSaved = "登録しました。"
-                                        viewModel.saveEikenValues(
-                                            cseScore,
-                                            readingScore,
-                                            listeningScore,
-                                            writingScore,
-                                            speakingScore,
-                                            memoText
-                                        )
+//                                        viewModel.saveEikenValues(
+//                                            cseScore,
+//                                            readingScore,
+//                                            listeningScore,
+//                                            writingScore,
+//                                            speakingScore,
+//                                            memoText
+//                                        )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setWritingScore(0)
@@ -444,14 +444,14 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 showAlertDialogOfSum = true
                             } else {
                                 showSaved = "登録しました。"
-                                viewModel.saveEikenValues(
-                                    cseScore,
-                                    readingScore,
-                                    listeningScore,
-                                    writingScore,
-                                    speakingScore,
-                                    memoText
-                                )
+//                                viewModel.saveEikenValues(
+//                                    cseScore,
+//                                    readingScore,
+//                                    listeningScore,
+//                                    writingScore,
+//                                    speakingScore,
+//                                    memoText
+//                                )
                                 viewModel.setReadingScore(0)
                                 viewModel.setListeningScore(0)
                                 viewModel.setWritingScore(0)

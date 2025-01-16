@@ -4,16 +4,13 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.proenglishscoretracker.data.EnglishInfo
 
 @Dao
 interface EnglishInfoDao {
     @Insert
-    suspend fun insertEnglishInfo(item: EnglishInfo)
-
+    suspend fun insertToeicInfo(item: EnglishTestInfo.TOEIC)
     @Delete
-    suspend fun deleteEnglishInfo(item: EnglishInfo)
-
-    @Query("SELECT * FROM english_info")
-    suspend fun getAllEnglishInfo(): List<EnglishInfo>
+    suspend fun deleteToeicInfo(item: EnglishTestInfo.TOEIC)
+    @Query("SELECT * FROM toeic")
+    suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC>
 }

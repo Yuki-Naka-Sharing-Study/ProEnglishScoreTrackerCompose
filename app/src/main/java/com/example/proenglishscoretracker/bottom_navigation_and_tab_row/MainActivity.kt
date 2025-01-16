@@ -3,7 +3,6 @@ package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
@@ -56,19 +55,22 @@ import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScr
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
 
 class MainActivity : ComponentActivity() {
-    private val repository: EnglishInfoRepository = EnglishInfoRepository()
     private lateinit var englishInfoDao: EnglishInfoDao
+    private lateinit var repository: EnglishInfoRepository
     private val dataStore by preferencesDataStore(name = "examDataScreen")
-    private val viewModel: EnglishInfoViewModel by viewModels {
-        EnglishInfoViewModelFactory(repository, englishInfoDao, dataStore)
+    private val viewModel: EnglishInfoViewModel by lazy {
+        EnglishInfoViewModelFactory(repository, englishInfoDao, dataStore).create(EnglishInfoViewModel::class.java)
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        englishInfoDao = Room.databaseBuilder(
+        // Roomデータベースの初期化
+        val database = Room.databaseBuilder(
             application,
             EnglishInfoDatabase::class.java, "english_info_database"
-        ).build().englishInfoDao()
+        ).build()
+        // DaoとRepositoryの初期化
+        englishInfoDao = database.englishInfoDao()
+        repository = EnglishInfoRepository(englishInfoDao)
         setContent {
             EnglishScoreTracker(viewModel = viewModel)
         }
@@ -103,12 +105,12 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
                     }
                 )
             }
-            composable("examDataScreen") { ExamDataScreen() }
+            composable("examDataScreen") { ExamDataScreen(viewModel) }
             composable("examRecordScreen") { ExamRecordScreen(viewModel) }
             composable("setting") { SettingScreen() }
 
             // XxxIndividualScreen
-            composable("toeicIndividualScreen") { ToeicIndividualScreen() }
+            composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel) }
             composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen() }
             composable("eikenIchijiIndividualScreen") { EikenIndividualScreen() }
             composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen() }

@@ -219,11 +219,11 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                         result = "はい"
                                         showAlertDialogOfZero = false
                                         showSaved = "登録しました。"
-                                        viewModel.saveToeicSwValues(
-                                            writingScore,
-                                            speakingScore,
-                                            memoText
-                                        )
+//                                        viewModel.saveToeicSwValues(
+//                                            writingScore,
+//                                            speakingScore,
+//                                            memoText
+//                                        )
                                         viewModel.setWritingScore(0)
                                         viewModel.setSpeakingScore(0)
                                         viewModel.setMemoText("")
@@ -260,7 +260,11 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
                             } else {
                                 showSaved = "登録しました。"
-                                viewModel.saveToeicSwValues(writingScore, speakingScore, memoText)
+//                                viewModel.saveToeicSwValues(
+//                                    writingScore,
+//                                    speakingScore,
+//                                    memoText
+//                                )
                                 viewModel.setWritingScore(0)
                                 viewModel.setSpeakingScore(0)
                                 viewModel.setMemoText("")

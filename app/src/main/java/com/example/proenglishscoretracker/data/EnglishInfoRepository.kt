@@ -1,58 +1,24 @@
 package com.example.proenglishscoretracker.data
 
-class EnglishInfoRepository {
-    fun saveEikenInfo(cseScore: Int,
-                      readingScore: Int,
-                      listeningScore: Int,
-                      writingScore: Int,
-                      speakingScore: Int,
-                      memoText: String
-    ){
-
+class EnglishInfoRepository(private val dao: EnglishInfoDao) {
+    // TOEICデータの保存
+    suspend fun saveToeicInfo(
+        date: String,
+        readingScore: Int,
+        listeningScore: Int,
+        memo: String
+    ) {
+        val toeicInfo = EnglishTestInfo.TOEIC(
+            id = 0,
+            date = date,
+            readingScore = readingScore,
+            listeningScore = listeningScore,
+            memo = memo
+        )
+        dao.insertToeicInfo(toeicInfo)
     }
-
-    fun saveEikenNijiInfo(cseScore: Int,
-                          speakingScore: Int,
-                          shortSpeechScore: Int,
-                          interactionScore: Int,
-                          grammarAndVocabularyScore: Int,
-                          pronunciationScore: Int,
-                          memoText: String
-    ){
-
-    }
-
-    fun saveToeicInfo(readingScore: Int,
-                      listeningScore: Int,
-                      memoText: String
-    ){
-
-    }
-
-    fun saveToeicSwInfo(writingScore: Int,
-                        speakingScore: Int,
-                        memoText: String
-    ){
-
-    }
-
-    fun saveToeflIbtInfo(overallScore: Int,
-                         readingScore: Int,
-                         listeningScore: Int,
-                         writingScore: Int,
-                         speakingScore: Int,
-                         memoText: String
-    ){
-
-    }
-
-    fun saveIeltsInfo(overallScore: Float,
-                      readingScore: Float,
-                      listeningScore: Float,
-                      writingScore: Float,
-                      speakingScore: Float,
-                      memoText: String
-    ){
-
+    // TOEICデータの取得
+    suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC> {
+        return dao.getAllToeicInfo()
     }
 }
