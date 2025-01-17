@@ -24,6 +24,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.mutableStateOf
@@ -51,11 +52,12 @@ fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {
     }
 }
 @Composable
-fun ToeicItem(
+private fun ToeicItem(
     toeicInfo: EnglishTestInfo.TOEIC,
     viewModel: EnglishInfoViewModel
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -92,13 +94,15 @@ fun ToeicItem(
     }
 }
 @Composable
-fun Menu(
+private fun Menu(
     modifier: Modifier = Modifier,
     viewModel: EnglishInfoViewModel,
     toeicInfo: EnglishTestInfo.TOEIC,
     onEdit: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,
@@ -137,8 +141,8 @@ fun Menu(
             }
             DropdownMenuItem(
                 onClick = {
-                    viewModel.deleteToeicValues(toeicInfo)
                     expanded = false
+                    showDialog = true
                 }
             ) {
                 Text(
@@ -149,9 +153,32 @@ fun Menu(
             }
         }
     }
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("削除確認") },
+            text = { Text("このデータを削除しますか？") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteToeicValues(toeicInfo)
+                        showDialog = false
+                    }
+                ) {
+                    Text("削除", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("キャンセル")
+                }
+            }
+        )
+    }
 }
+
 @Composable
-fun EditToeicDialog(
+private fun EditToeicDialog(
     toeicInfo: EnglishTestInfo.TOEIC,
     viewModel: EnglishInfoViewModel,
     onDismiss: () -> Unit
@@ -160,6 +187,7 @@ fun EditToeicDialog(
     var newReadingScore by remember { mutableStateOf(toeicInfo.readingScore.toString()) }
     var newListeningScore by remember { mutableStateOf(toeicInfo.listeningScore.toString()) }
     var newMemo by remember { mutableStateOf(toeicInfo.memo) }
+
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text("TOEICデータを編集") },
