@@ -17,8 +17,26 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         )
         dao.insertToeicInfo(toeicInfo)
     }
-    // TOEICデータの取得
+
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC> {
         return dao.getAllToeicInfo()
+    }
+    suspend fun saveToeicSwInfo(
+        date: String,
+        writingScore: Int,
+        speakingScore: Int,
+        memo: String
+    ) {
+        val toeicSwInfo = EnglishTestInfo.TOEIC_SW(
+            id = 0,
+            date = date,
+            writingScore = writingScore,
+            speakingScore = speakingScore,
+            memo = memo
+        )
+        dao.insertToeicSwInfo(toeicSwInfo)
+    }
+    suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW> {
+        return dao.getAllToeicSwInfo()
     }
 }

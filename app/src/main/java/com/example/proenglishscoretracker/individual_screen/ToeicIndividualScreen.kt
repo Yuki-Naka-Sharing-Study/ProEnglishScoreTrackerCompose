@@ -30,7 +30,7 @@ fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {
 }
 // 個別のTOEICデータを表示
 @Composable
-fun ToeicItem(toeicInfo: EnglishTestInfo.TOEIC) {
+private fun ToeicItem(toeicInfo: EnglishTestInfo.TOEIC) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,8 +39,8 @@ fun ToeicItem(toeicInfo: EnglishTestInfo.TOEIC) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "受験日: ${toeicInfo.date}")
-            Text(text = "リーディングスコア: ${toeicInfo.readingScore}")
-            Text(text = "リスニングスコア: ${toeicInfo.listeningScore}")
+            Text(text = "Readingスコア: ${toeicInfo.readingScore}")
+            Text(text = "Listeningスコア: ${toeicInfo.listeningScore}")
             Text(text = "メモ: ${toeicInfo.memo}")
         }
     }

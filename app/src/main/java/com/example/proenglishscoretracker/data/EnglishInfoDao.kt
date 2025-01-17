@@ -13,4 +13,8 @@ interface EnglishInfoDao {
     suspend fun deleteToeicInfo(item: EnglishTestInfo.TOEIC)
     @Query("SELECT * FROM toeic")
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC>
+    @Insert
+    suspend fun insertToeicSwInfo(item: EnglishTestInfo.TOEIC_SW)
+    @Query("SELECT * FROM toeic_sw")
+    suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW>
 }

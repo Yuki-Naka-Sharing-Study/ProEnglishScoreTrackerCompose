@@ -48,7 +48,7 @@ fun ExamDataScreen(viewModel: EnglishInfoViewModel) {
             0 -> IeltsSegmentedButton()
             1 -> ToeflIbtSegmentedButton()
             2 -> EikenSegmentedButton()
-            3 -> ToeicSwSegmentedButton()
+            3 -> ToeicSwSegmentedButton(viewModel)
             4 -> ToeicSegmentedButton(viewModel)
         }
         TabsContent(tabs = tabs, pagerState = pagerState)
@@ -125,7 +125,7 @@ private fun ToeicSegmentedButton(viewModel: EnglishInfoViewModel) {
 }
 
 @Composable
-private fun ToeicSwSegmentedButton() {
+private fun ToeicSwSegmentedButton(viewModel: EnglishInfoViewModel) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("個別", "グラフ")
 
@@ -154,7 +154,7 @@ private fun ToeicSwSegmentedButton() {
             }
         }
         when (selectedIndex) {
-            0 -> ToeicSwIndividualScreen()
+            0 -> ToeicSwIndividualScreen(viewModel)
             1 -> ToeicSwChartScreen()
         }
     }

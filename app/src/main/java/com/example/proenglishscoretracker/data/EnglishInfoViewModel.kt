@@ -54,25 +54,6 @@ class EnglishInfoViewModel(
     private val _memoText = MutableStateFlow("")
     val memoText: StateFlow<String> = _memoText
 
-    // TOEICデータの保存
-    fun saveToeicValues(
-        date: String,
-        readingScore: Int,
-        listeningScore: Int,
-        memo: String
-    ) {
-        viewModelScope.launch {
-            repository.saveToeicInfo(date, readingScore, listeningScore, memo)
-            loadAllToeicInfo() // データを保存後に再読み込み
-        }
-    }
-    // TOEIC情報を取得
-    fun loadAllToeicInfo() {
-        viewModelScope.launch {
-            _toeicInfo.value = repository.getAllToeicInfo()
-        }
-    }
-
     // Onboarding 完了時にフラグを保存
     fun completeOnboarding() {
         viewModelScope.launch {
@@ -81,6 +62,55 @@ class EnglishInfoViewModel(
             }
         }
     }
+
+    // TOEICデータの保存
+    fun saveToeicValues(
+        date: String,
+        readingScore: Int,
+        listeningScore: Int,
+        memo: String
+    ) {
+        viewModelScope.launch {
+            repository.saveToeicInfo(
+                date,
+                readingScore,
+                listeningScore,
+                memo
+            )
+            loadAllToeicInfo() // データを保存後に再読み込み
+        }
+    }
+
+    // TOEIC情報を取得
+    fun loadAllToeicInfo() {
+        viewModelScope.launch {
+            _toeicInfo.value = repository.getAllToeicInfo()
+        }
+    }
+
+    fun saveToeicSwValues(
+        date: String,
+        writingScore: Int,
+        speakingScore: Int,
+        memo: String
+    ) {
+        viewModelScope.launch {
+            repository.saveToeicSwInfo(
+                date,
+                writingScore,
+                speakingScore,
+                memo
+            )
+            loadAllToeicSwInfo() // データを保存後に再読み込み
+        }
+    }
+
+    fun loadAllToeicSwInfo() {
+        viewModelScope.launch {
+            _toeicSwInfo.value = repository.getAllToeicSwInfo()
+        }
+    }
+
     fun setSumScore(value: Int) {
         _sumScore.value = value
         _unsavedChanges.value = value > 0
