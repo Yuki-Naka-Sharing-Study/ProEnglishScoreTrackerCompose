@@ -86,21 +86,17 @@ class EnglishInfoViewModel(
             loadAllToeicInfo() // データを保存後に再読み込み
         }
     }
-
-    // TOEIC情報を取得
     fun loadAllToeicInfo() {
         viewModelScope.launch {
             _toeicInfo.value = repository.getAllToeicInfo()
         }
     }
-
     fun deleteToeicValues(toeicInfo: EnglishTestInfo.TOEIC) {
         viewModelScope.launch {
             repository.deleteToeicInfo(toeicInfo)
             this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
         }
     }
-
     fun updateToeicValues(toeicInfo: EnglishTestInfo.TOEIC) {
         viewModelScope.launch {
             repository.updateToeicInfo(toeicInfo)
@@ -108,6 +104,12 @@ class EnglishInfoViewModel(
         }
     }
 
+    // TOEIC SW
+    init {
+        viewModelScope.launch {
+            _toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
+        }
+    }
     fun saveToeicSwValues(
         date: String,
         writingScore: Int,
@@ -124,10 +126,21 @@ class EnglishInfoViewModel(
             loadAllToeicSwInfo() // データを保存後に再読み込み
         }
     }
-
     fun loadAllToeicSwInfo() {
         viewModelScope.launch {
             _toeicSwInfo.value = repository.getAllToeicSwInfo()
+        }
+    }
+    fun deleteToeicSwValues(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
+        viewModelScope.launch {
+            repository.deleteToeicSwInfo(toeicSwInfo)
+            this@EnglishInfoViewModel._toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
+        }
+    }
+    fun updateToeicSwValues(toeicInfo: EnglishTestInfo.TOEIC_SW) {
+        viewModelScope.launch {
+            repository.updateToeicSwInfo(toeicInfo)
+            this@EnglishInfoViewModel._toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
         }
     }
 

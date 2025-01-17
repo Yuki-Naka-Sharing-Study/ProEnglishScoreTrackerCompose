@@ -17,11 +17,11 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         )
         dao.insertToeicInfo(toeicInfo)
     }
-    suspend fun deleteToeicInfo(toeicInfo: EnglishTestInfo.TOEIC) {
-        dao.deleteToeicInfo(toeicInfo)
-    }
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC> {
         return dao.getAllToeicInfo()
+    }
+    suspend fun deleteToeicInfo(toeicInfo: EnglishTestInfo.TOEIC) {
+        dao.deleteToeicInfo(toeicInfo)
     }
     suspend fun updateToeicInfo(toeicInfo: EnglishTestInfo.TOEIC) {
         dao.updateToeicInfo(toeicInfo)
@@ -45,6 +45,12 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     }
     suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW> {
         return dao.getAllToeicSwInfo()
+    }
+    suspend fun deleteToeicSwInfo(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
+        dao.deleteToeicSwInfo(toeicSwInfo)
+    }
+    suspend fun updateToeicSwInfo(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
+        dao.updateToeicSwInfo(toeicSwInfo)
     }
 
     // TOEFL
