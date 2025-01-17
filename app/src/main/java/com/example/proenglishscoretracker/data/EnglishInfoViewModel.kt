@@ -63,7 +63,13 @@ class EnglishInfoViewModel(
         }
     }
 
-    // TOEICデータの保存
+    // TOEIC
+    init {
+        viewModelScope.launch {
+            _toeicInfo.value = englishInfoDao.getAllToeicInfo()
+        }
+    }
+
     fun saveToeicValues(
         date: String,
         readingScore: Int,
@@ -85,6 +91,13 @@ class EnglishInfoViewModel(
     fun loadAllToeicInfo() {
         viewModelScope.launch {
             _toeicInfo.value = repository.getAllToeicInfo()
+        }
+    }
+
+    fun deleteToeicValues(toeicInfo: EnglishTestInfo.TOEIC) {
+        viewModelScope.launch {
+            repository.deleteToeicInfo(toeicInfo)
+            this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
         }
     }
 

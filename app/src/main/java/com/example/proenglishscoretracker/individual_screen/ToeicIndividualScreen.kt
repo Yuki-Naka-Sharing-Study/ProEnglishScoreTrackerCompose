@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
@@ -20,6 +21,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.mutableStateOf
@@ -37,17 +39,21 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {
     val toeicInfoList = viewModel.toeicInfo.collectAsState().value
+
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
         items(items = toeicInfoList) { toeicInfo ->
-            ToeicItem(toeicInfo = toeicInfo)
+            ToeicItem(toeicInfo = toeicInfo, viewModel)
         }
     }
 }
 
 @Composable
-fun ToeicItem(toeicInfo: EnglishTestInfo.TOEIC) {
+fun ToeicItem(
+    toeicInfo: EnglishTestInfo.TOEIC,
+    viewModel: EnglishInfoViewModel
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,20 +69,27 @@ fun ToeicItem(toeicInfo: EnglishTestInfo.TOEIC) {
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Text(text = "受験日: ${toeicInfo.date}")
-                Text(text = "Readingスコア: ${toeicInfo.readingScore}")
-                Text(text = "Listeningスコア: ${toeicInfo.listeningScore}")
+                Text(text = "リーディングスコア: ${toeicInfo.readingScore}")
+                Text(text = "リスニングスコア: ${toeicInfo.listeningScore}")
                 Text(text = "メモ: ${toeicInfo.memo}")
             }
             Menu(
-                modifier = Modifier.align(Alignment.CenterEnd)
+                modifier = Modifier.align(Alignment.CenterEnd),
+                viewModel = viewModel,
+                toeicInfo = toeicInfo
             )
         }
     }
 }
 
 @Composable
-private fun Menu(modifier: Modifier = Modifier) {
+fun Menu(
+    modifier: Modifier = Modifier,
+    viewModel: EnglishInfoViewModel,
+    toeicInfo: EnglishTestInfo.TOEIC
+) {
     var expanded by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier,
@@ -115,7 +128,8 @@ private fun Menu(modifier: Modifier = Modifier) {
             }
             DropdownMenuItem(
                 onClick = {
-                    // データを削除する
+                    expanded = false
+                    showDialog = true
                 }
             ) {
                 Text(
@@ -125,5 +139,29 @@ private fun Menu(modifier: Modifier = Modifier) {
                 )
             }
         }
+    }
+
+    // 削除確認ダイアログ
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("削除確認") },
+            text = { Text("このデータを削除しますか？") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteToeicValues(toeicInfo)
+                        showDialog = false
+                    }
+                ) {
+                    Text("削除", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("キャンセル")
+                }
+            }
+        )
     }
 }
