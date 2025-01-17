@@ -26,8 +26,8 @@ class EnglishInfoViewModel(
     private val _eikenFirstInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_FIRST>>(emptyList())
     val eikenFirstInfo: StateFlow<List<EnglishTestInfo.EIKEN_FIRST>> = _eikenFirstInfo
 
-    private val _toeflInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
-    val toeflInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflInfo
+    private val _toeflIbtInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
+    val toeflIbtInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflIbtInfo
 
     private val _ieltsInfo = MutableStateFlow<List<EnglishTestInfo.IELTS>>(emptyList())
     val ieltsInfo: StateFlow<List<EnglishTestInfo.IELTS>> = _ieltsInfo
@@ -144,6 +144,12 @@ class EnglishInfoViewModel(
         }
     }
 
+    // TOEFL
+    init {
+        viewModelScope.launch {
+            _toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
+        }
+    }
     fun saveToeflValues(
         date: String,
         overallScore: Int,
@@ -166,10 +172,21 @@ class EnglishInfoViewModel(
             loadAllToeflInfo() // データを保存後に再読み込み
         }
     }
-
     fun loadAllToeflInfo() {
         viewModelScope.launch {
-            _toeflInfo.value = repository.getAllToeflInfo()
+            _toeflIbtInfo.value = repository.getAllToeflInfo()
+        }
+    }
+    fun deleteToeflIbtValues(toeflIbtInfo: EnglishTestInfo.TOEFL) {
+        viewModelScope.launch {
+            repository.deleteToeflIbtInfo(toeflIbtInfo)
+            this@EnglishInfoViewModel._toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
+        }
+    }
+    fun updateToeflIbtValues(toeflIbtInfo: EnglishTestInfo.TOEFL) {
+        viewModelScope.launch {
+            repository.updateToeflIbtInfo(toeflIbtInfo)
+            this@EnglishInfoViewModel._toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
         }
     }
 

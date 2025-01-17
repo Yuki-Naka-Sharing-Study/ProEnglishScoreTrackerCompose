@@ -34,7 +34,11 @@ interface EnglishInfoDao {
     // TOEFL
     @Insert
     suspend fun insertToeflInfo(item: EnglishTestInfo.TOEFL)
+    @Delete
+    suspend fun deleteToeflIbtInfo(item: EnglishTestInfo.TOEFL)
+    @Update
+    suspend fun updateToeflIbtInfo(item: EnglishTestInfo.TOEFL)
     @Query("SELECT * FROM toefl")
-    suspend fun getAllToeflInfo(): List<EnglishTestInfo.TOEFL>
+    suspend fun getAllToeflIbtInfo(): List<EnglishTestInfo.TOEFL>
 
 }
