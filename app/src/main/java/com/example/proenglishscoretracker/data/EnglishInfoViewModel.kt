@@ -111,6 +111,35 @@ class EnglishInfoViewModel(
         }
     }
 
+    fun saveToeflValues(
+        date: String,
+        overallScore: Int,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        memo: String
+    ) {
+        viewModelScope.launch {
+            repository.saveToeflInfo(
+                date,
+                overallScore,
+                readingScore,
+                listeningScore,
+                writingScore,
+                speakingScore,
+                memo
+            )
+            loadAllToeflInfo() // データを保存後に再読み込み
+        }
+    }
+
+    fun loadAllToeflInfo() {
+        viewModelScope.launch {
+            _toeflInfo.value = repository.getAllToeflInfo()
+        }
+    }
+
     fun setSumScore(value: Int) {
         _sumScore.value = value
         _unsavedChanges.value = value > 0

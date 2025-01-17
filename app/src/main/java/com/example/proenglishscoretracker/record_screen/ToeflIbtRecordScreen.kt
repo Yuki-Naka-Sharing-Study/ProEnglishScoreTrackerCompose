@@ -294,14 +294,15 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                         result = "はい"
                                         showAlertDialogOfZero = false
                                         showSaved = "登録しました。"
-//                                        viewModel.saveToeflIbtValues(
-//                                            overallScore,
-//                                            readingScore,
-//                                            listeningScore,
-//                                            writingScore,
-//                                            speakingScore,
-//                                            memoText
-//                                        )
+                                        viewModel.saveToeflValues(
+                                            date.toString(),
+                                            overallScore,
+                                            readingScore,
+                                            listeningScore,
+                                            writingScore,
+                                            speakingScore,
+                                            memoText
+                                        )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setWritingScore(0)
@@ -374,14 +375,15 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                 showAlertDialogOfSum = true
                             } else {
                                 showSaved = "登録しました。"
-//                                viewModel.saveToeflIbtValues(
-//                                    overallScore,
-//                                    readingScore,
-//                                    listeningScore,
-//                                    writingScore,
-//                                    speakingScore,
-//                                    memoText
-//                                )
+                                viewModel.saveToeflValues(
+                                    date.toString(),
+                                    overallScore,
+                                    readingScore,
+                                    listeningScore,
+                                    writingScore,
+                                    speakingScore,
+                                    memoText
+                                )
                                 viewModel.setReadingScore(0)
                                 viewModel.setListeningScore(0)
                                 viewModel.setWritingScore(0)

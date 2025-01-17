@@ -7,14 +7,27 @@ import androidx.room.Query
 
 @Dao
 interface EnglishInfoDao {
+    // TOEIC
     @Insert
     suspend fun insertToeicInfo(item: EnglishTestInfo.TOEIC)
     @Delete
     suspend fun deleteToeicInfo(item: EnglishTestInfo.TOEIC)
     @Query("SELECT * FROM toeic")
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC>
+
+    // TOEIC SW
     @Insert
     suspend fun insertToeicSwInfo(item: EnglishTestInfo.TOEIC_SW)
     @Query("SELECT * FROM toeic_sw")
     suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW>
+
+    // EIKEN
+
+
+    // TOEFL
+    @Insert
+    suspend fun insertToeflInfo(item: EnglishTestInfo.TOEFL)
+    @Query("SELECT * FROM toefl")
+    suspend fun getAllToeflInfo(): List<EnglishTestInfo.TOEFL>
+
 }

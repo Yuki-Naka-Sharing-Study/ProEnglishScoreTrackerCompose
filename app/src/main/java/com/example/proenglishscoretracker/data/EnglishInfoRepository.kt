@@ -1,7 +1,7 @@
 package com.example.proenglishscoretracker.data
 
 class EnglishInfoRepository(private val dao: EnglishInfoDao) {
-    // TOEICデータの保存
+    // TOEIC
     suspend fun saveToeicInfo(
         date: String,
         readingScore: Int,
@@ -17,10 +17,11 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         )
         dao.insertToeicInfo(toeicInfo)
     }
-
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC> {
         return dao.getAllToeicInfo()
     }
+
+    // TOEIC SW
     suspend fun saveToeicSwInfo(
         date: String,
         writingScore: Int,
@@ -38,5 +39,31 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     }
     suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW> {
         return dao.getAllToeicSwInfo()
+    }
+
+    // TOEFL
+    suspend fun saveToeflInfo(
+        date: String,
+        overallScore: Int,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        memo: String
+    ) {
+        val toeflInfo = EnglishTestInfo.TOEFL(
+            id = 0,
+            date = date,
+            overallScore = overallScore,
+            readingScore = readingScore,
+            listeningScore = listeningScore,
+            writingScore = writingScore,
+            speakingScore = speakingScore,
+            memo = memo
+        )
+        dao.insertToeflInfo(toeflInfo)
+    }
+    suspend fun getAllToeflInfo(): List<EnglishTestInfo.TOEFL> {
+        return dao.getAllToeflInfo()
     }
 }
