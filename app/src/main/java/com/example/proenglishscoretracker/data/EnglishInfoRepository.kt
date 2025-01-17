@@ -23,6 +23,9 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC> {
         return dao.getAllToeicInfo()
     }
+    suspend fun updateToeicInfo(toeicInfo: EnglishTestInfo.TOEIC) {
+        dao.updateToeicInfo(toeicInfo)
+    }
 
     // TOEIC SW
     suspend fun saveToeicSwInfo(

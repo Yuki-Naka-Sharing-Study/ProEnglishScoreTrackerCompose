@@ -101,6 +101,13 @@ class EnglishInfoViewModel(
         }
     }
 
+    fun updateToeicValues(toeicInfo: EnglishTestInfo.TOEIC) {
+        viewModelScope.launch {
+            repository.updateToeicInfo(toeicInfo)
+            this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
+        }
+    }
+
     fun saveToeicSwValues(
         date: String,
         writingScore: Int,

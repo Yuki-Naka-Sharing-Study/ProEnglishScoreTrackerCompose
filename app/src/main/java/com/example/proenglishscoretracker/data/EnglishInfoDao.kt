@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface EnglishInfoDao {
@@ -14,6 +15,8 @@ interface EnglishInfoDao {
     suspend fun deleteToeicInfo(item: EnglishTestInfo.TOEIC)
     @Query("SELECT * FROM toeic")
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC>
+    @Update
+    suspend fun updateToeicInfo(item: EnglishTestInfo.TOEIC)
 
     // TOEIC SW
     @Insert
