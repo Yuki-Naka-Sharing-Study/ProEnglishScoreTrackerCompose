@@ -155,7 +155,7 @@ private fun ToeicSwSegmentedButton(viewModel: EnglishInfoViewModel) {
         }
         when (selectedIndex) {
             0 -> ToeicSwIndividualScreen(viewModel)
-            1 -> ToeicSwChartScreen()
+            1 -> ToeicSwChartScreen(viewModel)
         }
     }
 }
