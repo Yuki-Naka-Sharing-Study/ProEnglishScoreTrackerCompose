@@ -119,7 +119,7 @@ private fun ToeicSegmentedButton(viewModel: EnglishInfoViewModel) {
         }
         when (selectedIndex) {
             0 -> ToeicIndividualScreen(viewModel)
-            1 -> ToeicChartScreen()
+            1 -> ToeicChartScreen(viewModel)
         }
     }
 }
