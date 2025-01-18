@@ -33,34 +33,47 @@ import androidx.compose.ui.unit.dp
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {
     val toeicInfoList = viewModel.toeicInfo.collectAsState().value
 
-    if (toeicInfoList.isEmpty()) {
+    // 日付の降順でソート
+    val sortedToeicInfoList = rememberSaveable(toeicInfoList) {
+        toeicInfoList.sortedByDescending { it.date }
+    }
+
+    if (sortedToeicInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "まだスコアが登録されていません。", fontSize = 18.sp, color = Color.Gray)
+            Text(
+                text = "まだスコアが登録されていません。",
+                fontSize = 18.sp,
+                color = Color.Gray
+            )
         }
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(items = toeicInfoList) { toeicInfo ->
+            items(items = sortedToeicInfoList) { toeicInfo ->
                 ToeicItem(toeicInfo = toeicInfo, viewModel)
             }
         }
     }
 }
+
 @Composable
 private fun ToeicItem(
     toeicInfo: EnglishTestInfo.TOEIC,
@@ -103,6 +116,7 @@ private fun ToeicItem(
         )
     }
 }
+
 @Composable
 private fun Menu(
     modifier: Modifier = Modifier,
