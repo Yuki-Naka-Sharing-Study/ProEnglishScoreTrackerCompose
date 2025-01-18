@@ -227,7 +227,7 @@ private fun ToeflIbtSegmentedButton(viewModel: EnglishInfoViewModel) {
         }
         when (selectedIndex) {
             0 -> ToeflIbtIndividualScreen(viewModel)
-            1 -> ToeflIbtChartScreen()
+            1 -> ToeflIbtChartScreen(viewModel)
         }
     }
 }

@@ -935,7 +935,7 @@ private fun ToeflOverallTwoDigits(state: MutableIntState) {
     }
     FVerticalWheelPicker(
         modifier = Modifier.width(64.dp),
-        count = 3,
+        count = 10,
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
