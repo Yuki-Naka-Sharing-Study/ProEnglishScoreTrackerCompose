@@ -2,6 +2,8 @@ package com.example.proenglishscoretracker.chart_screen
 
 import android.view.ViewGroup
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,16 +60,22 @@ private fun ToeicScoreChart(viewModel: EnglishInfoViewModel) {
                         ViewGroup.LayoutParams.MATCH_PARENT
                     )
 
-                    val dataSetReading = LineDataSet(entriesReading, "Readingスコア").apply {
+                    val dataSetReading = LineDataSet(
+                        entriesReading,
+                        "Readingスコア").apply {
                         color = Color.RED
                         valueTextColor = Color.BLACK
                     }
-                    val dataSetListening = LineDataSet(entriesListening, "Listeningスコア").apply {
+                    val dataSetListening = LineDataSet(
+                        entriesListening,
+                        "Listeningスコア").apply {
                         color = Color.BLUE
                         valueTextColor = Color.BLACK
                     }
 
-                    val lineData = LineData(dataSetReading, dataSetListening)
+                    val lineData = LineData(
+                        dataSetReading,
+                        dataSetListening)
                     this.data = lineData
 
                     // X軸ラベル設定
@@ -81,7 +89,13 @@ private fun ToeicScoreChart(viewModel: EnglishInfoViewModel) {
                     axisRight.isEnabled = false
                     description.isEnabled = false
                     legend.isEnabled = true
-                    invalidate() // グラフの再描画
+
+                    // グラフの余白設定
+                    setViewPortOffsets(75f, 0f, 75f, 0f)
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        invalidate()
+                    }, 100)
                 }
             },
             modifier = Modifier
