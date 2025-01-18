@@ -44,11 +44,20 @@ import androidx.compose.ui.unit.sp
 fun ToeflIbtIndividualScreen(viewModel: EnglishInfoViewModel) {
     val toeflIbtInfoList = viewModel.toeflIbtInfo.collectAsState().value
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(items = toeflIbtInfoList) { toeflIbtInfo ->
-            ToeflIbtInfo(toeflIbtInfo = toeflIbtInfo, viewModel)
+    if (toeflIbtInfoList.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "まだスコアが登録されていません。", fontSize = 18.sp, color = Color.Gray)
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(items = toeflIbtInfoList) { toeflIbtInfo ->
+                ToeflIbtInfo(toeflIbtInfo = toeflIbtInfo, viewModel)
+            }
         }
     }
 }
