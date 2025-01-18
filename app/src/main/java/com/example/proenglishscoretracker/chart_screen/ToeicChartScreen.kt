@@ -40,10 +40,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
 import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
@@ -57,109 +55,125 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ToeicScoreChart(viewModel)
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
-
+        // 受験年を選択するためのコンポーネント
         Text(text = "受験年を選択", fontSize = 20.sp)
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_32_dp)))
-        
+        Spacer(modifier = Modifier.height(32.dp))
         ExamYearPicker(
-            Modifier,
-            examYear,
-        ) {
-            examYear = it
-            viewModel.setSumScore(it)
-        }
+            modifier = Modifier,
+            selectedExamYear = examYear,
+            onScoreConfirm = { selectedYear ->
+                examYear = selectedYear
+                viewModel.setSumScore(selectedYear)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // TOEICスコアのグラフを表示
+        ToeicScoreChart(viewModel, examYear)
     }
 }
 
 @Composable
-private fun ToeicScoreChart(viewModel: EnglishInfoViewModel) {
+private fun ToeicScoreChart(
+    viewModel: EnglishInfoViewModel,
+    examYear: Int
+) {
     val toeicInfoList by viewModel.toeicInfo.collectAsState()
 
-    if (toeicInfoList.isNotEmpty()) { // データがある場合のみグラフを表示
-        val examDates = toeicInfoList.map { it.date }
-        val readingScores = toeicInfoList.map { it.readingScore.toFloat() }
-        val listeningScores = toeicInfoList.map { it.listeningScore.toFloat() }
-
-        val entriesReading = readingScores.mapIndexed { index, score ->
-            Entry(index.toFloat(), score)
-        }
-        val entriesListening = listeningScores.mapIndexed { index, score ->
-            Entry(index.toFloat(), score)
-        }
-
-        AndroidView(
-            factory = { context ->
-                LineChart(context).apply {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-
-                    val dataSetReading = LineDataSet(
-                        entriesReading,
-                        "Readingスコア").apply {
-                        color = android.graphics.Color.RED
-                        valueTextColor = android.graphics.Color.BLACK
-                        valueTextSize = 15f // スコアのテキストサイズを設定
-                    }
-                    val dataSetListening = LineDataSet(
-                        entriesListening,
-                        "Listeningスコア").apply {
-                        color = android.graphics.Color.BLUE
-                        valueTextColor = android.graphics.Color.BLACK
-                        valueTextSize = 15f // スコアのテキストサイズを設定
-                    }
-
-                    val lineData = LineData(
-                        dataSetReading,
-                        dataSetListening)
-                    this.data = lineData
-
-                    // X軸ラベル設定
-                    xAxis.textSize = 15f
-                    xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
-                    xAxis.position = XAxis.XAxisPosition.BOTTOM
-                    xAxis.granularity = 1f
-                    xAxis.setDrawGridLines(false)
-
-                    // Y軸設定
-                    axisLeft.textSize = 15f
-                    axisLeft.axisMinimum = 0f
-                    axisRight.isEnabled = false
-                    description.isEnabled = false
-                    legend.isEnabled = true
-
-                    // グラフの余白設定
-                    setViewPortOffsets(
-                        100f,
-                        0f,
-                        100f,
-                        0f
-                    )
-
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        invalidate()
-                    }, 100)
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-        )
-    } else {
-        // データがない場合のUI（何も表示しない or メッセージを表示）
+    // データが存在しない場合のメッセージ
+    if (toeicInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            androidx.compose.material.Text(
+            Text(
                 text = "まだスコアが登録されていません。",
                 fontSize = 18.sp,
-                color = androidx.compose.ui.graphics.Color.Gray
+                color = Color.Gray
+            )
+        }
+    } else {
+        // examYear に基づいてデータをフィルタリング
+        val filteredToeicInfo = toeicInfoList.filter {
+            it.date.substring(0, 4).toInt() == examYear }
+
+        if (filteredToeicInfo.isEmpty()) {
+            // 選択した年のデータがない場合のメッセージ
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "選択した年のデータがありません。",
+                    fontSize = 18.sp,
+                    color = Color.Gray
+                )
+            }
+        } else {
+            // データが存在する場合、グラフを表示
+            val examDates = filteredToeicInfo.map { it.date }
+            val readingScores = filteredToeicInfo.map { it.readingScore.toFloat() }
+            val listeningScores = filteredToeicInfo.map { it.listeningScore.toFloat() }
+
+            val entriesReading = readingScores.mapIndexed { index, score ->
+                Entry(index.toFloat(), score)
+            }
+            val entriesListening = listeningScores.mapIndexed { index, score ->
+                Entry(index.toFloat(), score)
+            }
+
+            AndroidView(
+                factory = { context ->
+                    LineChart(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+
+                        val dataSetReading = LineDataSet(
+                            entriesReading, "Readingスコア"
+                        ).apply {
+                            color = android.graphics.Color.RED
+                            valueTextColor = android.graphics.Color.BLACK
+                            valueTextSize = 15f // スコアのテキストサイズを設定
+                        }
+                        val dataSetListening = LineDataSet(
+                            entriesListening, "Listeningスコア"
+                        ).apply {
+                            color = android.graphics.Color.BLUE
+                            valueTextColor = android.graphics.Color.BLACK
+                            valueTextSize = 15f // スコアのテキストサイズを設定
+                        }
+
+                        val lineData = LineData(dataSetReading, dataSetListening)
+                        this.data = lineData
+
+                        // X軸ラベル設定
+                        xAxis.textSize = 15f
+                        xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
+                        xAxis.position = XAxis.XAxisPosition.BOTTOM
+                        xAxis.granularity = 1f
+                        xAxis.setDrawGridLines(false)
+
+                        // Y軸設定
+                        axisLeft.textSize = 15f
+                        axisLeft.axisMinimum = 0f
+                        axisRight.isEnabled = false
+                        description.isEnabled = false
+                        legend.isEnabled = true
+
+                        // グラフの余白設定
+                        setViewPortOffsets(100f, 0f, 100f, 0f)
+
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            invalidate()
+                        }, 100)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
             )
         }
     }
