@@ -65,12 +65,14 @@ private fun ToeicScoreChart(viewModel: EnglishInfoViewModel) {
                         "Readingスコア").apply {
                         color = Color.RED
                         valueTextColor = Color.BLACK
+                        valueTextSize = 15f // スコアのテキストサイズを設定
                     }
                     val dataSetListening = LineDataSet(
                         entriesListening,
                         "Listeningスコア").apply {
                         color = Color.BLUE
                         valueTextColor = Color.BLACK
+                        valueTextSize = 15f // スコアのテキストサイズを設定
                     }
 
                     val lineData = LineData(
@@ -79,19 +81,26 @@ private fun ToeicScoreChart(viewModel: EnglishInfoViewModel) {
                     this.data = lineData
 
                     // X軸ラベル設定
+                    xAxis.textSize = 15f
                     xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
                     xAxis.position = XAxis.XAxisPosition.BOTTOM
                     xAxis.granularity = 1f
                     xAxis.setDrawGridLines(false)
 
                     // Y軸設定
+                    axisLeft.textSize = 15f
                     axisLeft.axisMinimum = 0f
                     axisRight.isEnabled = false
                     description.isEnabled = false
                     legend.isEnabled = true
 
                     // グラフの余白設定
-                    setViewPortOffsets(75f, 0f, 75f, 0f)
+                    setViewPortOffsets(
+                        100f,
+                        0f,
+                        100f,
+                        0f
+                    )
 
                     Handler(Looper.getMainLooper()).postDelayed({
                         invalidate()
