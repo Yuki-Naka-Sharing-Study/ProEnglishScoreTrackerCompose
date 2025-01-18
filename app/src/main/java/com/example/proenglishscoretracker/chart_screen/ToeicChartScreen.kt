@@ -49,13 +49,20 @@ import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
 
 @Composable
 fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
-    var examYear by rememberSaveable { mutableIntStateOf(0) }
+    val toeicInfoList by viewModel.toeicInfo.collectAsState()
+
+    // 最新の受験年を取得
+    val latestExamYear = toeicInfoList
+        .mapNotNull { it.date.substring(0, 4).toIntOrNull() }
+        .maxOrNull() ?: 0 // データがない場合は0を設定
+
+    // examYearの初期値を最新の受験年に設定
+    var examYear by rememberSaveable { mutableIntStateOf(latestExamYear) }
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 受験年を選択するためのコンポーネント
         Text(text = "受験年を選択", fontSize = 20.sp)
         Spacer(modifier = Modifier.height(32.dp))
         ExamYearPicker(
@@ -69,7 +76,6 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // TOEICスコアのグラフを表示
         ToeicScoreChart(viewModel, examYear)
     }
 }
