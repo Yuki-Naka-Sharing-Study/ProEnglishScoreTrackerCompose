@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -44,18 +45,27 @@ import androidx.compose.ui.unit.sp
 fun ToeicSwIndividualScreen(viewModel: EnglishInfoViewModel) {
     val toeicSwInfoList = viewModel.toeicSwInfo.collectAsState().value
 
-    if (toeicSwInfoList.isEmpty()) {
+    // 日付の降順でソート
+    val sortedToeicSwInfoList = rememberSaveable(toeicSwInfoList) {
+        toeicSwInfoList.sortedByDescending { it.date }
+    }
+
+    if (sortedToeicSwInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "まだスコアが登録されていません。", fontSize = 18.sp, color = Color.Gray)
+            Text(
+                text = "まだスコアが登録されていません。",
+                fontSize = 18.sp,
+                color = Color.Gray
+            )
         }
     } else {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(items = toeicSwInfoList) { toeicSwInfo ->
+            items(items = sortedToeicSwInfoList) { toeicSwInfo ->
                 ToeicSwItem(toeicSwInfo = toeicSwInfo, viewModel)
             }
         }
