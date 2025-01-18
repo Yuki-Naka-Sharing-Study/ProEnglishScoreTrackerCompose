@@ -142,6 +142,7 @@ private fun ToeicSwScoreChart(
                             color = android.graphics.Color.RED
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetSpeaking = LineDataSet(
                             entrieSpeaking, "Speakingスコア"
@@ -149,6 +150,7 @@ private fun ToeicSwScoreChart(
                             color = android.graphics.Color.BLUE
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
 
                         val lineData = LineData(dataSetWriting, dataSetSpeaking)
