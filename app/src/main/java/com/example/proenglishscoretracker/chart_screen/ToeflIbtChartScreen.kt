@@ -151,6 +151,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.RED
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetListening = LineDataSet(
                             entriesListening, "Listeningスコア"
@@ -158,6 +159,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.BLUE
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetWriting = LineDataSet(
                             entriesWriting, "Writingスコア"
@@ -165,6 +167,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.GREEN
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetSpeaking = LineDataSet(
                             entriesSpeaking, "Speakingスコア"
@@ -172,6 +175,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.MAGENTA
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
 
                         val lineData = LineData(
@@ -198,6 +202,9 @@ private fun ToeflIbtScoreChart(
 
                         // グラフの余白設定
                         setViewPortOffsets(100f, 0f, 100f, 0f)
+
+                        // 左から右に表示するアニメーションを追加。
+                        this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
 
                         Handler(Looper.getMainLooper()).postDelayed({
                             invalidate()
