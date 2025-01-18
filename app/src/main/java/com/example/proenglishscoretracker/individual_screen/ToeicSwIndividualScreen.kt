@@ -43,11 +43,21 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ToeicSwIndividualScreen(viewModel: EnglishInfoViewModel) {
     val toeicSwInfoList = viewModel.toeicSwInfo.collectAsState().value
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(items = toeicSwInfoList) { toeicSwInfo ->
-            ToeicSwItem(toeicSwInfo = toeicSwInfo, viewModel)
+
+    if (toeicSwInfoList.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "まだスコアが登録されていません。", fontSize = 18.sp, color = Color.Gray)
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(items = toeicSwInfoList) { toeicSwInfo ->
+                ToeicSwItem(toeicSwInfo = toeicSwInfo, viewModel)
+            }
         }
     }
 }
