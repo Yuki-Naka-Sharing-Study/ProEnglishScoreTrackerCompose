@@ -171,6 +171,9 @@ private fun ToeicSwScoreChart(
                         // グラフの余白設定
                         setViewPortOffsets(100f, 0f, 100f, 0f)
 
+                        // 左から右に表示するアニメーションを追加。
+                        this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
+
                         Handler(Looper.getMainLooper()).postDelayed({
                             invalidate()
                         }, 100)
