@@ -446,7 +446,7 @@ private fun ExamYearOneDigit(state: MutableIntState) {
 }
 
 @Composable
-fun ComparePreviousScore(
+private fun ComparePreviousScore(
     currentScore: Int,
     previousScore: Int
 ) {
