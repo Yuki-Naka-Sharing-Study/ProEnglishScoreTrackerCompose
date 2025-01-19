@@ -913,7 +913,10 @@ private fun ToeflOverallThreeDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -940,7 +943,10 @@ private fun ToeflOverallTwoDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -967,7 +973,10 @@ private fun ToeflOverallOneDigit(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -1093,6 +1102,12 @@ private fun ToeflRLWSTwoDigits(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
+        },
     ) { index ->
         Text(
             index.toString(),
@@ -1117,6 +1132,12 @@ private fun ToeflRLWSOneDigit(state: MutableIntState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
+        },
     ) { index ->
         Text(
             index.toString(),
