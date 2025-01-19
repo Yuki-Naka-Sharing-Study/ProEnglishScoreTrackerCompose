@@ -138,6 +138,16 @@ private fun ToeflIbtScoreChart(
             }
 
             AndroidView(
+                update = {
+                    it.data = updateData(
+                        entriesReading,
+                        entriesListening,
+                        entriesWriting,
+                        entriesSpeaking
+                        )
+                    it.notifyDataSetChanged()
+                    it.invalidate()
+                },
                 factory = { context ->
                     LineChart(context).apply {
                         layoutParams = ViewGroup.LayoutParams(
@@ -151,7 +161,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.RED
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
-                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetListening = LineDataSet(
                             entriesListening, "Listeningスコア"
@@ -159,7 +169,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.BLUE
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
-                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetWriting = LineDataSet(
                             entriesWriting, "Writingスコア"
@@ -167,7 +177,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.GREEN
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
-                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetSpeaking = LineDataSet(
                             entriesSpeaking, "Speakingスコア"
@@ -175,7 +185,7 @@ private fun ToeflIbtScoreChart(
                             color = android.graphics.Color.MAGENTA
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
-                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
 
                         val lineData = LineData(
@@ -217,6 +227,48 @@ private fun ToeflIbtScoreChart(
             )
         }
     }
+}
+
+private fun updateData(
+    entriesReading: List<Entry>,
+    entriesListening: List<Entry>,
+    entriesWriting: List<Entry>,
+    entriesSpeaking: List<Entry>
+): LineData {
+    val dataSetReading = LineDataSet(
+        entriesReading, "Readingスコア"
+    ).apply {
+        color = android.graphics.Color.RED
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    val dataSetListening = LineDataSet(
+        entriesListening, "Listeningスコア"
+    ).apply {
+        color = android.graphics.Color.BLUE
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    val dataSetWriting = LineDataSet(
+        entriesWriting, "Writingスコア"
+    ).apply {
+        color = android.graphics.Color.GREEN
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    val dataSetSpeaking = LineDataSet(
+        entriesSpeaking, "Speakingスコア"
+    ).apply {
+        color = android.graphics.Color.MAGENTA
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    return LineData(
+        dataSetReading,
+        dataSetListening,
+        dataSetWriting,
+        dataSetSpeaking
+    )
 }
 
 @Composable
