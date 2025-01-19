@@ -217,7 +217,7 @@ private fun ToeicSwScoreChart(
                 horizontalAlignment = Alignment.Start
             ) {
                 Row (
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Writingスコア:")
                     ComparePreviousScore(
@@ -229,7 +229,7 @@ private fun ToeicSwScoreChart(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row (
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Speakingスコア:")
                     ComparePreviousScore(

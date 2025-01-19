@@ -207,7 +207,7 @@ private fun ToeflIbtScoreChart(
                 horizontalAlignment = Alignment.Start
             ) {
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Overallスコア:")
                     ComparePreviousScore(
@@ -338,7 +338,7 @@ private fun ToeflIbtScoreChart(
                 horizontalAlignment = Alignment.Start
             ) {
                 Row (
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Readingスコア:")
                     ComparePreviousScore(
@@ -350,7 +350,7 @@ private fun ToeflIbtScoreChart(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row (
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Listeningスコア:")
                     ComparePreviousScore(
@@ -362,7 +362,7 @@ private fun ToeflIbtScoreChart(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row (
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Writingスコア:")
                     ComparePreviousScore(
@@ -374,7 +374,7 @@ private fun ToeflIbtScoreChart(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row (
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Speakingスコア:")
                     ComparePreviousScore(
