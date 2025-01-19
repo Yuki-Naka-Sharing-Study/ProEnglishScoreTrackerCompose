@@ -196,7 +196,7 @@ private fun ToeicSwScoreChart(
                     .height(300.dp)
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(64.dp))
 
             // 前回のスコアとの比較を表示
             val currentWritingScore =
@@ -214,7 +214,7 @@ private fun ToeicSwScoreChart(
                 Row (
 
                 ) {
-                    Text(text = "Writingスコアの比較:")
+                    Text(text = "Writingスコア:")
                     ComparePreviousScore(
                         currentScore = currentWritingScore,
                         previousScore = previousWritingScore
@@ -226,7 +226,7 @@ private fun ToeicSwScoreChart(
                 Row (
 
                 ) {
-                    Text(text = "Speakingスコアの比較:")
+                    Text(text = "Speakingスコア:")
                     ComparePreviousScore(
                         currentScore = currentSpeakingScore,
                         previousScore = previousSpeakingScore
