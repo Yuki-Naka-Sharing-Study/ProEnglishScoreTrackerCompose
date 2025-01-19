@@ -139,6 +139,11 @@ private fun ToeicSwScoreChart(
             }
 
             AndroidView(
+                update = {
+                    it.data = updateData(entriesWriting, entriesSpeaking)
+                    it.notifyDataSetChanged()
+                    it.invalidate()
+                },
                 factory = { context ->
                     LineChart(context).apply {
                         layoutParams = ViewGroup.LayoutParams(
@@ -235,6 +240,27 @@ private fun ToeicSwScoreChart(
             }
         }
     }
+}
+
+private fun updateData(
+    entriesWriting: List<Entry>,
+    entriesSpeaking: List<Entry>
+): LineData {
+    val dataSetWriting = LineDataSet(
+        entriesWriting, "Writingスコア"
+    ).apply {
+        color = android.graphics.Color.RED
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    val dataSetSpeaking = LineDataSet(
+        entriesSpeaking, "Speakingスコア"
+    ).apply {
+        color = android.graphics.Color.BLUE
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    return LineData(dataSetWriting, dataSetSpeaking)
 }
 
 @Composable
