@@ -121,13 +121,15 @@ private fun ToeflIbtScoreChart(
                 )
             }
         } else {
-            // データが存在する場合、グラフを表示
-            val examDates = filteredToeflIbtInfo.map { it.date }
-            // 「overallScore」の扱いをどうすべきか？
-            val readingScores = filteredToeflIbtInfo.map { it.readingScore.toFloat() }
-            val listeningScores = filteredToeflIbtInfo.map { it.listeningScore.toFloat() }
-            val writingScores = filteredToeflIbtInfo.map { it.writingScore.toFloat() }
-            val speakingScores = filteredToeflIbtInfo.map { it.speakingScore.toFloat() }
+            // 受験日を昇順（古い順）にソート
+            val sortedToeflIbtInfo = filteredToeflIbtInfo.sortedBy { it.date }
+
+            // ソートされたデータから必要な情報を抽出
+            val examDates = sortedToeflIbtInfo.map { it.date }
+            val readingScores = sortedToeflIbtInfo.map { it.readingScore.toFloat() }
+            val listeningScores = sortedToeflIbtInfo.map { it.listeningScore.toFloat() }
+            val writingScores = sortedToeflIbtInfo.map { it.writingScore.toFloat() }
+            val speakingScores = sortedToeflIbtInfo.map { it.speakingScore.toFloat() }
 
             val entriesReading = readingScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
