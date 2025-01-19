@@ -120,10 +120,13 @@ private fun ToeicScoreChart(
                 )
             }
         } else {
-            // データが存在する場合、グラフを表示
-            val examDates = filteredToeicInfo.map { it.date }
-            val readingScores = filteredToeicInfo.map { it.readingScore.toFloat() }
-            val listeningScores = filteredToeicInfo.map { it.listeningScore.toFloat() }
+            // 受験日を昇順（古い順）にソート
+            val sortedToeicInfo = filteredToeicInfo.sortedBy { it.date }
+
+            // ソートされたデータから必要な情報を抽出
+            val examDates = sortedToeicInfo.map { it.date }
+            val readingScores = sortedToeicInfo.map { it.readingScore.toFloat() }
+            val listeningScores = sortedToeicInfo.map { it.listeningScore.toFloat() }
 
             val entriesReading = readingScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
@@ -146,6 +149,7 @@ private fun ToeicScoreChart(
                             color = android.graphics.Color.RED
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetListening = LineDataSet(
                             entriesListening, "Listeningスコア"
@@ -153,6 +157,7 @@ private fun ToeicScoreChart(
                             color = android.graphics.Color.BLUE
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
+                            // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
 
                         val lineData = LineData(dataSetReading, dataSetListening)
@@ -174,13 +179,14 @@ private fun ToeicScoreChart(
 
                         // グラフの余白設定
                         setViewPortOffsets(100f, 0f, 100f, 0f)
+
+                        // 左から右に表示するアニメーションを追加。
+                        this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
+
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            invalidate()
+                        }, 100)
                     }
-                },
-                update = {
-                    it.notifyDataSetChanged()
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        it.invalidate()
-                    }, 100)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
