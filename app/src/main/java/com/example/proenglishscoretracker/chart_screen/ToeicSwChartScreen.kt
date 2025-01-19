@@ -12,10 +12,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -189,6 +195,44 @@ private fun ToeicSwScoreChart(
                     .fillMaxWidth()
                     .height(300.dp)
             )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // 前回のスコアとの比較を表示
+            val currentWritingScore =
+                writingScores.last().toInt()
+            val previousWritingScore =
+                writingScores.dropLast(1).lastOrNull()?.toInt() ?: currentWritingScore
+            val currentSpeakingScore =
+                speakingScores.last().toInt()
+            val previousSpeakingScore =
+                speakingScores.dropLast(1).lastOrNull()?.toInt() ?: currentSpeakingScore
+
+            Column(
+                horizontalAlignment = Alignment.Start
+            ) {
+                Row (
+
+                ) {
+                    Text(text = "Writingスコアの比較:")
+                    ComparePreviousScore(
+                        currentScore = currentWritingScore,
+                        previousScore = previousWritingScore
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row (
+
+                ) {
+                    Text(text = "Speakingスコアの比較:")
+                    ComparePreviousScore(
+                        currentScore = currentSpeakingScore,
+                        previousScore = previousSpeakingScore
+                    )
+                }
+            }
         }
     }
 }
@@ -398,5 +442,47 @@ private fun ExamYearOneDigit(state: MutableIntState) {
             index.toString(),
             color = androidx.compose.ui.graphics.Color.Black
         )
+    }
+}
+
+@Composable
+fun ComparePreviousScore(
+    currentScore: Int,
+    previousScore: Int
+) {
+    val scoreDifference = currentScore - previousScore
+    val (icon, color, message) = when {
+        scoreDifference > 0 -> {
+            Triple(
+                Icons.Default.KeyboardArrowUp,
+                Color.Green,
+                "前回より${scoreDifference}点上がっています。"
+            )
+        }
+        scoreDifference < 0 -> {
+            Triple(
+                Icons.Default.KeyboardArrowDown,
+                Color.Red,
+                "前回より${-scoreDifference}点下がっています。"
+            )
+        }
+        else -> {
+            Triple(
+                Icons.Default.Minimize,
+                Color.Gray,
+                "前回と同じスコアです。"
+            )
+        }
+    }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = message, color = color)
     }
 }
