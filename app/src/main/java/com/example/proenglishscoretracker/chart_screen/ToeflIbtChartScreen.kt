@@ -146,7 +146,7 @@ private fun ToeflIbtScoreChart(
 
             AndroidView(
                 update = {
-                    it.data = updateData(
+                    it.data = updateRLWSData(
                         entriesReading,
                         entriesListening,
                         entriesWriting,
@@ -306,7 +306,7 @@ private fun ToeflIbtScoreChart(
     }
 }
 
-private fun updateData(
+private fun updateRLWSData(
     entriesReading: List<Entry>,
     entriesListening: List<Entry>,
     entriesWriting: List<Entry>,
