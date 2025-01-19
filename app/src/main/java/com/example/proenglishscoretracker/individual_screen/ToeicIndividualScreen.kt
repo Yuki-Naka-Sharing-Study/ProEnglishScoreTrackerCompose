@@ -40,8 +40,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {

@@ -75,7 +75,6 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
             selectedExamYear = examYear,
             onScoreConfirm = { selectedYear ->
                 examYear = selectedYear
-                viewModel.setSumScore(selectedYear)
             }
         )
 
