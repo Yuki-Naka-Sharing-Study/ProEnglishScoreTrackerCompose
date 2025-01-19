@@ -101,7 +101,8 @@ private fun ToeicSwScoreChart(
     } else {
         // examYear に基づいてデータをフィルタリング
         val filteredToeicSwInfo = toeicSwInfoList.filter {
-            it.date.substring(0, 4).toInt() == examYear }
+            it.date.substring(0, 4).toInt() == examYear
+        }
 
         if (filteredToeicSwInfo.isEmpty()) {
             // 選択した年のデータがない場合のメッセージ
@@ -116,15 +117,18 @@ private fun ToeicSwScoreChart(
                 )
             }
         } else {
-            // データが存在する場合、グラフを表示
-            val examDates = filteredToeicSwInfo.map { it.date }
-            val writingScores = filteredToeicSwInfo.map { it.writingScore.toFloat() }
-            val speakingScores = filteredToeicSwInfo.map { it.speakingScore.toFloat() }
+            // 受験日を昇順（古い順）にソート
+            val sortedToeicSwInfo = filteredToeicSwInfo.sortedBy { it.date }
+
+            // ソートされたデータから必要な情報を抽出
+            val examDates = sortedToeicSwInfo.map { it.date }
+            val writingScores = sortedToeicSwInfo.map { it.writingScore.toFloat() }
+            val speakingScores = sortedToeicSwInfo.map { it.speakingScore.toFloat() }
 
             val entriesWriting = writingScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
             }
-            val entrieSpeaking = speakingScores.mapIndexed { index, score ->
+            val entriesSpeaking = speakingScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
             }
 
@@ -142,15 +146,15 @@ private fun ToeicSwScoreChart(
                             color = android.graphics.Color.RED
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
-                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+                            // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
                         val dataSetSpeaking = LineDataSet(
-                            entrieSpeaking, "Speakingスコア"
+                            entriesSpeaking, "Speakingスコア"
                         ).apply {
                             color = android.graphics.Color.BLUE
                             valueTextColor = android.graphics.Color.BLACK
                             valueTextSize = 15f // スコアのテキストサイズを設定
-                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+                            // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                         }
 
                         val lineData = LineData(dataSetWriting, dataSetSpeaking)
