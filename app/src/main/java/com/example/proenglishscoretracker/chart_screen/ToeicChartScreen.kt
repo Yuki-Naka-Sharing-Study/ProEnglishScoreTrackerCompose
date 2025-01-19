@@ -76,14 +76,17 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        ToeicScoreChart(viewModel, examYear)
+        ToeicScoreChart(
+            viewModel,
+            examYear,
+        )
     }
 }
 
 @Composable
 private fun ToeicScoreChart(
     viewModel: EnglishInfoViewModel,
-    examYear: Int
+    examYear: Int,
 ) {
     val toeicInfoList by viewModel.toeicInfo.collectAsState()
 
@@ -171,11 +174,13 @@ private fun ToeicScoreChart(
 
                         // グラフの余白設定
                         setViewPortOffsets(100f, 0f, 100f, 0f)
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            invalidate()
-                        }, 100)
                     }
+                },
+                update = {
+                    it.notifyDataSetChanged()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        it.invalidate()
+                    }, 100)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
