@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -65,9 +67,13 @@ fun ToeflIbtChartScreen(viewModel: EnglishInfoViewModel) {
     var examYear by rememberSaveable { mutableIntStateOf(latestExamYear) }
 
     Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
         Text(text = "受験年を選択", fontSize = 20.sp)
         Spacer(modifier = Modifier.height(32.dp))
         ExamYearPicker(
@@ -126,11 +132,15 @@ private fun ToeflIbtScoreChart(
 
             // ソートされたデータから必要な情報を抽出
             val examDates = sortedToeflIbtInfo.map { it.date }
+            val overallScores = sortedToeflIbtInfo.map { it.overallScore.toFloat() }
             val readingScores = sortedToeflIbtInfo.map { it.readingScore.toFloat() }
             val listeningScores = sortedToeflIbtInfo.map { it.listeningScore.toFloat() }
             val writingScores = sortedToeflIbtInfo.map { it.writingScore.toFloat() }
             val speakingScores = sortedToeflIbtInfo.map { it.speakingScore.toFloat() }
 
+            val entriesOverall = overallScores.mapIndexed { index, score ->
+                Entry(index.toFloat(), score)
+            }
             val entriesReading = readingScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
             }
@@ -144,6 +154,72 @@ private fun ToeflIbtScoreChart(
                 Entry(index.toFloat(), score)
             }
 
+            // Overallスコアのグラフ
+            AndroidView(
+                update = {
+                    it.data = updateOverallData(
+                        entriesOverall
+                    )
+                    it.notifyDataSetChanged()
+                    it.invalidate()
+                },
+                factory = { context ->
+                    LineChart(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+
+                        xAxis.textSize = 15f
+                        xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
+                        xAxis.position = XAxis.XAxisPosition.BOTTOM
+                        xAxis.granularity = 1f
+                        xAxis.setDrawGridLines(false)
+
+                        axisLeft.textSize = 15f
+                        axisLeft.axisMinimum = 0f
+                        axisRight.isEnabled = false
+                        description.isEnabled = false
+                        legend.isEnabled = true
+
+                        setViewPortOffsets(
+                            120f,
+                            0f,
+                            120f,
+                            0f
+                        )
+                        this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            )
+
+            Spacer(modifier = Modifier.height(64.dp))
+
+            val currentOverallScore =
+                overallScores.last().toInt()
+            val previousOverallScore =
+                overallScores.dropLast(1).lastOrNull()?.toInt() ?: currentOverallScore
+
+            Column(
+                horizontalAlignment = Alignment.Start
+            ) {
+                Row(
+
+                ) {
+                    Text(text = "Overallスコア:")
+                    ComparePreviousScore(
+                        currentScore = currentOverallScore,
+                        previousScore = previousOverallScore
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            // 4技能のグラフ
             AndroidView(
                 update = {
                     it.data = updateRLWSData(
@@ -218,7 +294,12 @@ private fun ToeflIbtScoreChart(
                         legend.isEnabled = true
 
                         // グラフの余白設定
-                        setViewPortOffsets(100f, 0f, 100f, 0f)
+                        setViewPortOffsets(
+                            120f,
+                            0f,
+                            120f,
+                            0f
+                        )
 
                         // 左から右に表示するアニメーションを追加。
                         this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
@@ -301,9 +382,26 @@ private fun ToeflIbtScoreChart(
                         previousScore = previousSpeakingScore
                     )
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
+}
+
+private fun updateOverallData(
+    entriesOverall: List<Entry>,
+): LineData {
+    val dataSetOverall = LineDataSet(
+        entriesOverall, "Overallスコア"
+    ).apply {
+        color = android.graphics.Color.CYAN
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    return LineData(
+        dataSetOverall,
+    )
 }
 
 private fun updateRLWSData(
