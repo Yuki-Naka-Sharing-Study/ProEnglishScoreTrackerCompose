@@ -136,6 +136,11 @@ private fun ToeicScoreChart(
             }
 
             AndroidView(
+                update = {
+                    it.data = updateData(entriesReading, entriesListening)
+                    it.notifyDataSetChanged()
+                    it.invalidate()
+                         },
                 factory = { context ->
                     LineChart(context).apply {
                         layoutParams = ViewGroup.LayoutParams(
@@ -162,6 +167,7 @@ private fun ToeicScoreChart(
 
                         val lineData = LineData(dataSetReading, dataSetListening)
                         this.data = lineData
+                        this.data = updateData(entriesReading, entriesListening)
 
                         // X軸ラベル設定
                         xAxis.textSize = 15f
@@ -194,6 +200,27 @@ private fun ToeicScoreChart(
             )
         }
     }
+}
+
+private fun updateData(
+    entriesReading: List<Entry>,
+    entriesListening: List<Entry>
+): LineData {
+    val dataSetReading = LineDataSet(
+        entriesReading, "Readingスコア"
+    ).apply {
+        color = android.graphics.Color.RED
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    val dataSetListening = LineDataSet(
+        entriesListening, "Listeningスコア"
+    ).apply {
+        color = android.graphics.Color.BLUE
+        valueTextColor = android.graphics.Color.BLACK
+        valueTextSize = 15f // スコアのテキストサイズを設定
+    }
+    return LineData(dataSetReading, dataSetListening)
 }
 
 @Composable
