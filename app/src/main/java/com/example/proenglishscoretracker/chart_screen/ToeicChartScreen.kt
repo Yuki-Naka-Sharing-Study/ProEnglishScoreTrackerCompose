@@ -284,13 +284,14 @@ private fun ExamYearPicker(
         Button(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .size(width = 80.dp, height = 40.dp),
+                .size(width = 100.dp, height = 60.dp),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             androidx.compose.material.Text(
                 text = "$selectedExamYear",
+                fontSize = 20.sp,
                 color = androidx.compose.ui.graphics.Color.Black
             )
         }
