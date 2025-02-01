@@ -75,7 +75,7 @@ fun ToeflIbtChartScreen(viewModel: EnglishInfoViewModel) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "受験年を選択", fontSize = 20.sp)
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         ExamYearPicker(
             modifier = Modifier,
             selectedExamYear = examYear,
