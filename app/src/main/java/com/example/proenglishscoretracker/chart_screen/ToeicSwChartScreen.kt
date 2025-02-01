@@ -69,6 +69,7 @@ fun ToeicSwChartScreen(viewModel: EnglishInfoViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
         Text(text = "受験年を選択", fontSize = 20.sp)
         Spacer(modifier = Modifier.height(16.dp))
         ExamYearPicker(
