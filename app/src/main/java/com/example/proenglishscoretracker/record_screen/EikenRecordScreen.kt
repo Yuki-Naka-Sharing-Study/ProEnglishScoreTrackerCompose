@@ -96,11 +96,11 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var showDatePicker by remember { mutableStateOf(false) }
             val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
             var selectedGrade by rememberSaveable { mutableStateOf("") }
-            var cseScore by rememberSaveable { mutableIntStateOf(0) }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+            var cseScore by rememberSaveable { mutableIntStateOf(0) }
             var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
             isSpeakingPickerVisible = when (selectedGrade) {
                 "3級", "準2級", "2級", "準1級", "1級" -> true
@@ -152,6 +152,94 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                ReadingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ReadingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                EikenRLWSScorePicker(
+                    Modifier,
+                    readingScore,
+                ) {
+                    readingScore = it
+                    viewModel.setReadingScore(it)
+                }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (readingScore >= 851) {
+                    ErrorText("Readingスコアは851未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                ListeningImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ListeningText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                EikenRLWSScorePicker(
+                    Modifier,
+                    listeningScore,
+                ) {
+                    listeningScore = it
+                    viewModel.setListeningScore(it)
+                }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (listeningScore >= 851) {
+                    ErrorText("Listeningスコアは851未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                WritingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                WritingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                EikenRLWSScorePicker(
+                    Modifier,
+                    writingScore,
+                ) {
+                    writingScore = it
+                    viewModel.setWritingScore(it)
+                }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (writingScore >= 851) {
+                    ErrorText("Writingスコアは851未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            SpeakingScoreArea(
+                Modifier,
+                isVisible = isSpeakingPickerVisible,
+                speakingScore = speakingScore,
+                onValueChange = {
+                    speakingScore = it
+                    viewModel.setSpeakingScore(it)
+                }
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
                 CSEScoreText("")
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 EikenCseScorePicker(
@@ -171,94 +259,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-                ReadingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ReadingText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                EikenRLWSScorePicker(
-                    Modifier,
-                    readingScore,
-                ) {
-                    readingScore = it
-                    viewModel.setReadingScore(it)
-                }
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-                if (readingScore >= 851) {
-                    ErrorText("Readingスコアは851未満である必要があります。")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-                ListeningImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ListeningText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                EikenRLWSScorePicker(
-                    Modifier,
-                    listeningScore,
-                ) {
-                    listeningScore = it
-                    viewModel.setListeningScore(it)
-                }
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-                if (listeningScore >= 851) {
-                    ErrorText("Listeningスコアは851未満である必要があります。")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-                WritingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                WritingText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                EikenRLWSScorePicker(
-                    Modifier,
-                    writingScore,
-                ) {
-                    writingScore = it
-                    viewModel.setWritingScore(it)
-                }
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
-                if (writingScore >= 851) {
-                    ErrorText("Writingスコアは851未満である必要があります。")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            SpeakingScoreArea(
-                Modifier,
-                isVisible = isSpeakingPickerVisible,
-                speakingScore = speakingScore,
-                onValueChange = {
-                    speakingScore = it
-                    viewModel.setSpeakingScore(it)
-                }
-            )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -1308,7 +1308,7 @@ private fun SpeakingScoreArea(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(start = dimensionResource(id = R.dimen.space_36_dp))
+                    .padding(start = dimensionResource(id = R.dimen.space_24_dp))
             ) {
                 SpeakingImageView(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp)))
                 SpeakingText(
