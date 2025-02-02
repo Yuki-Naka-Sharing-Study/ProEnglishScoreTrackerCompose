@@ -504,11 +504,11 @@ private fun SelectDatePicker(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = date.toString(),
-                color = Color.White
+                color = Color.Black
             )
         }
     }
@@ -574,7 +574,9 @@ private fun DatePicker(
                         .align(Alignment.CenterHorizontally),
                     onClick = { onDone(selector.date) },
                     shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(Color.Green),
+                    colors = ButtonDefaults.buttonColors(
+                        Color(0xFF9C27B0)
+                    ),
                 ) {
                     Text(
                         text = "確定",
@@ -615,11 +617,11 @@ private fun DatePickerView(
         modifier = modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         // Year
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = yearState,
             count = listYear.size,
             focus = {
@@ -636,7 +638,7 @@ private fun DatePickerView(
 
         // Month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = monthState,
             count = listMonth.size,
             focus = {
@@ -653,7 +655,7 @@ private fun DatePickerView(
 
         // Day of month
         FVerticalWheelPicker(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.width(64.dp),
             state = dayOfMonthState,
             count = listDayOfMonth.size,
             focus = {
@@ -874,11 +876,11 @@ private fun IeltsOverallScorePicker(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = "$ieltsOverallScore",
-                color = Color.White
+                color = Color.Black
             )
         }
     }
@@ -887,7 +889,9 @@ private fun IeltsOverallScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFffffff)
+                ),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -913,7 +917,9 @@ private fun IeltsOverallScorePicker(
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(Color.Green),
+                        colors = ButtonDefaults.buttonColors(
+                            Color(0xFF9C27B0)
+                        ),
                     ) {
                         Text(
                             text = "確定",
@@ -974,6 +980,12 @@ private fun IeltsOverallTwoDigits(state: MutableFloatState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
+        },
     ) { index ->
         Text(
             index.toString(),
@@ -998,6 +1010,12 @@ private fun IeltsOverallOneDigit(state: MutableFloatState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
+        },
     ) { index ->
         Text(
             index.toString(),
@@ -1022,11 +1040,11 @@ private fun IeltsRLWSScorePicker(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color.Green),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
                 text = "$ieltsRLWSScore",
-                color = Color.White
+                color = Color.Black
             )
         }
     }
@@ -1035,7 +1053,9 @@ private fun IeltsRLWSScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFffffff)
+                ),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -1050,7 +1070,6 @@ private fun IeltsRLWSScorePicker(
                         score = selectedIeltsRLWSScore,
                         onScoreChange = onScoreChange
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // 確定ボタン
@@ -1061,14 +1080,15 @@ private fun IeltsRLWSScorePicker(
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(Color.Green),
+                        colors = ButtonDefaults.buttonColors(
+                            Color(0xFF9C27B0)
+                        ),
                     ) {
                         Text(
                             text = "確定",
                             color = Color.White
                         )
                     }
-
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -1116,6 +1136,12 @@ private fun IeltsRLWSScore(state: MutableFloatState) {
         itemHeight = 48.dp,
         unfocusedCount = 2,
         state = listState,
+        focus = {
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
+        },
     ) { index ->
         Text(
             index.toString(),
