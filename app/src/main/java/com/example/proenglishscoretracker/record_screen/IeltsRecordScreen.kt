@@ -68,8 +68,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-        var overallScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var selectedOverallScore by rememberSaveable { mutableFloatStateOf(overallScore) }
         var readingScore by rememberSaveable { mutableFloatStateOf(0F) }
         var selectedReadingScore by rememberSaveable { mutableFloatStateOf(readingScore) }
         var listeningScore by rememberSaveable { mutableFloatStateOf(0F) }
@@ -78,6 +76,8 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         var selectedWritingScore by rememberSaveable { mutableFloatStateOf(writingScore) }
         var speakingScore by rememberSaveable { mutableFloatStateOf(0F) }
         var selectedSpeakingScore by rememberSaveable { mutableFloatStateOf(speakingScore) }
+        var overallScore by rememberSaveable { mutableFloatStateOf(0F) }
+        var selectedOverallScore by rememberSaveable { mutableFloatStateOf(overallScore) }
         var memoText by rememberSaveable { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
@@ -138,53 +138,17 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfOverall by rememberSaveable { mutableStateOf(false) }
-        val showOverallScoreDivisionError = overallScore % 0.5 != 0.0 && !focusStateOfOverall
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            OverallScoreText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-            IeltsOverallScorePicker(
-                Modifier,
-                overallScore,
-                selectedOverallScore,
-                { selectedOverallScore = it },
-                { overallScore = selectedOverallScore },
-            )
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (overallScore >= 36.1) {
-                ErrorText("Overallスコアは36.1未満である必要があります。")
-            }
-        }
-
-        Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-            if (showOverallScoreDivisionError) {
-                ErrorText(
-                    "Overallスコアは0.5の倍数である必要があります。"
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
         var focusStateOfReading by rememberSaveable { mutableStateOf(false) }
         val showReadingScoreDivisionError = readingScore % 0.5 != 0.0 && !focusStateOfReading
 
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             ReadingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ReadingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             IeltsRLWSScorePicker(
                 Modifier,
                 readingScore,
@@ -195,14 +159,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             if (readingScore >= 9.1) {
                 ErrorText("Readingスコアは9.1未満である必要があります。")
             }
         }
 
         Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             if (showReadingScoreDivisionError) {
                 ErrorText(
                     "Readingスコアは0.5の倍数である必要があります。"
@@ -218,11 +182,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             ListeningImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             ListeningText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             IeltsRLWSScorePicker(
                 Modifier,
                 listeningScore,
@@ -233,14 +197,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             if (listeningScore >= 9.1) {
                 ErrorText("Listeningスコアは9.1未満である必要があります。")
             }
         }
 
         Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             if (showListeningScoreDivisionError) {
                 ErrorText(
                     "Listeningスコアは0.5の倍数である必要があります。"
@@ -256,11 +220,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             WritingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             WritingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             IeltsRLWSScorePicker(
                 Modifier,
                 writingScore,
@@ -271,14 +235,14 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         }
 
         Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             if (writingScore >= 9.1) {
                 ErrorText("Writingスコアは9.1未満である必要があります。")
             }
         }
 
         Row {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             if (showWritingScoreDivisionError) {
                 ErrorText(
                     "Writingスコアは0.5の倍数である必要があります。"
@@ -294,11 +258,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             SpeakingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             SpeakingText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             IeltsRLWSScorePicker(
                 Modifier,
                 speakingScore,
@@ -320,6 +284,42 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             if (showSpeakingScoreDivisionError) {
                 ErrorText(
                     "Speakingスコアは0.5の倍数である必要があります。"
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+        var focusStateOfOverall by rememberSaveable { mutableStateOf(false) }
+        val showOverallScoreDivisionError = overallScore % 0.5 != 0.0 && !focusStateOfOverall
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
+            OverallScoreText("")
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            IeltsOverallScorePicker(
+                Modifier,
+                overallScore,
+                selectedOverallScore,
+                { selectedOverallScore = it },
+                { overallScore = selectedOverallScore },
+            )
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
+            if (overallScore >= 36.1) {
+                ErrorText("Overallスコアは36.1未満である必要があります。")
+            }
+        }
+
+        Row {
+            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
+            if (showOverallScoreDivisionError) {
+                ErrorText(
+                    "Overallスコアは0.5の倍数である必要があります。"
                 )
             }
         }
