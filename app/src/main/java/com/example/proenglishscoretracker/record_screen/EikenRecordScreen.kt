@@ -931,7 +931,8 @@ private fun EikenCseScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFffffff)),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -1023,7 +1024,10 @@ private fun EikenCseFourDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -1047,7 +1051,10 @@ private fun EikenCseThreeDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -1071,7 +1078,10 @@ private fun EikenCseTwoDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -1095,7 +1105,10 @@ private fun EiekenCseOneDigit(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -1132,7 +1145,8 @@ private fun EikenRLWSScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFffffff)),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -1212,7 +1226,10 @@ private fun EikenThreeDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -1236,7 +1253,10 @@ private fun EikenTwoDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -1260,7 +1280,10 @@ private fun EikenOneDigit(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
