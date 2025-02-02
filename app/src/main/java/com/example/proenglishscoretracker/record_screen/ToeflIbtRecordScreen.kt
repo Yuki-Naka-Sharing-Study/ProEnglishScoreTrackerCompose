@@ -831,7 +831,9 @@ private fun ToeflOverallScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFffffff)
+                ),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -857,7 +859,9 @@ private fun ToeflOverallScorePicker(
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
+                        colors = ButtonDefaults.buttonColors(
+                            Color(0xFF9C27B0)
+                        ),
                     ) {
                         Text(
                             text = "確定",
@@ -923,7 +927,7 @@ private fun ToeflOverallThreeDigits(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
@@ -953,7 +957,7 @@ private fun ToeflOverallTwoDigits(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
@@ -983,7 +987,7 @@ private fun ToeflOverallOneDigit(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
@@ -1025,7 +1029,9 @@ private fun ToeflRLWSScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFffffff)
+                ),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -1051,7 +1057,9 @@ private fun ToeflRLWSScorePicker(
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
+                        colors = ButtonDefaults.buttonColors(
+                            Color(0xFF9C27B0)
+                        ),
                     ) {
                         Text(
                             text = "確定",
@@ -1113,7 +1121,7 @@ private fun ToeflRLWSTwoDigits(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
@@ -1143,7 +1151,7 @@ private fun ToeflRLWSOneDigit(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
