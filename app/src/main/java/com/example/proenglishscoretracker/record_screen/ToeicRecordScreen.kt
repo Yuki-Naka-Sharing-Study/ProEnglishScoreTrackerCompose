@@ -125,20 +125,22 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 ReadingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ReadingText("")
+                ReadingText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1f),
                     readingScore,
                 ) {
                     readingScore = it
                     viewModel.setReadingScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -149,15 +151,17 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 ListeningImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ListeningText("")
+                ListeningText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1f),
                     listeningScore,
                 ) {
                     listeningScore = it
                     viewModel.setListeningScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
