@@ -52,6 +52,7 @@ import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.ui.theme.ProEnglishScoreTrackerTheme
 import com.example.proenglishscoretracker.wheel_picker.CurrentIndex
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
+import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
 import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
 import com.sd.lib.date.FDate
 import com.sd.lib.date.FDateSelector
@@ -534,7 +535,7 @@ private fun DatePicker(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFBB86FC)
+                containerColor = Color(0xFFffffff)
             ),
             modifier = Modifier
                 .size(
@@ -621,6 +622,12 @@ private fun DatePickerView(
             modifier = Modifier.weight(1f),
             state = yearState,
             count = listYear.size,
+            focus = {
+                FWheelPickerFocusVertical(
+                    dividerColor = Color.LightGray,
+                    dividerSize = 2.dp
+                )
+            },
         ) { index ->
             listYear.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -632,6 +639,12 @@ private fun DatePickerView(
             modifier = Modifier.weight(1f),
             state = monthState,
             count = listMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(
+                    dividerColor = Color.LightGray,
+                    dividerSize = 2.dp
+                )
+            },
         ) { index ->
             listMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())
@@ -643,6 +656,12 @@ private fun DatePickerView(
             modifier = Modifier.weight(1f),
             state = dayOfMonthState,
             count = listDayOfMonth.size,
+            focus = {
+                FWheelPickerFocusVertical(
+                    dividerColor = Color.LightGray,
+                    dividerSize = 2.dp
+                )
+            },
         ) { index ->
             listDayOfMonth.getOrNull(index)?.let { value ->
                 Text(text = value.toString())

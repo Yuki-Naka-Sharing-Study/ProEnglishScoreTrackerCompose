@@ -342,7 +342,7 @@ private fun DatePicker(
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color(0xFFd3d3d3)
+                containerColor = Color(0xFFffffff)
             ),
             modifier = Modifier
                 .size(
@@ -430,7 +430,10 @@ private fun DatePickerView(
             state = yearState,
             count = listYear.size,
             focus = {
-                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+                FWheelPickerFocusVertical(
+                    dividerColor = Color.LightGray,
+                    dividerSize = 2.dp
+                )
             },
         ) { index ->
             listYear.getOrNull(index)?.let { value ->
@@ -444,7 +447,10 @@ private fun DatePickerView(
             state = monthState,
             count = listMonth.size,
             focus = {
-                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+                FWheelPickerFocusVertical(
+                    dividerColor = Color.LightGray,
+                    dividerSize = 2.dp
+                )
             },
         ) { index ->
             listMonth.getOrNull(index)?.let { value ->
@@ -458,7 +464,10 @@ private fun DatePickerView(
             state = dayOfMonthState,
             count = listDayOfMonth.size,
             focus = {
-                FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+                FWheelPickerFocusVertical(
+                    dividerColor = Color.LightGray,
+                    dividerSize = 2.dp
+                )
             },
         ) { index ->
             listDayOfMonth.getOrNull(index)?.let { value ->
