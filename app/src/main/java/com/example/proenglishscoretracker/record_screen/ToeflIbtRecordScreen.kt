@@ -122,30 +122,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-//            Row(
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-//                OverallScoreText("")
-//                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-//                ToeflOverallScorePicker(
-//                    Modifier,
-//                    overallScore,
-//                ) {
-//                    overallScore = it
-//                    viewModel.setSumScore(it)
-//                }
-//            }
-//
-//            Row {
-//                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
-//                if (overallScore >= 121) {
-//                    ErrorText("Overallスコアは121未満である必要があります。")
-//                }
-//            }
-//
-//            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
