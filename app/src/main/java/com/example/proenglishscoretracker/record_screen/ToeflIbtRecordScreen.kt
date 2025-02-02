@@ -84,11 +84,11 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         ) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
-            var overallScore by rememberSaveable { mutableIntStateOf(0) }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
+            var overallScore by rememberSaveable { mutableIntStateOf(0) }
             var memoText by rememberSaveable { mutableStateOf("") }
 
             Row {
@@ -122,10 +122,138 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+//            Row(
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+//                OverallScoreText("")
+//                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+//                ToeflOverallScorePicker(
+//                    Modifier,
+//                    overallScore,
+//                ) {
+//                    overallScore = it
+//                    viewModel.setSumScore(it)
+//                }
+//            }
+//
+//            Row {
+//                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+//                if (overallScore >= 121) {
+//                    ErrorText("Overallスコアは121未満である必要があります。")
+//                }
+//            }
+//
+//            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                ReadingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ReadingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ToeflRLWSScorePicker(
+                    Modifier,
+                    readingScore,
+                ) {
+                    readingScore = it
+                    viewModel.setReadingScore(it)
+                }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (readingScore >= 31) {
+                    ErrorText("Readingスコアは31未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                ListeningImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ListeningText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ToeflRLWSScorePicker(
+                    Modifier,
+                    listeningScore,
+                ) {
+                    listeningScore = it
+                    viewModel.setListeningScore(it)
+                }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (listeningScore >= 31) {
+                    ErrorText("Listeningスコアは31未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                WritingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                WritingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ToeflRLWSScorePicker(
+                    Modifier,
+                    writingScore,
+                ) {
+                    writingScore = it
+                    viewModel.setWritingScore(it)
+                }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (writingScore >= 31) {
+                    ErrorText("Writingスコアは31未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                SpeakingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                SpeakingText("")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                ToeflRLWSScorePicker(
+                    Modifier,
+                    speakingScore,
+                ) {
+                    speakingScore = it
+                    viewModel.setSpeakingScore(it)
+                }
+            }
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (speakingScore >= 31) {
+                    ErrorText("Speakingスコアは31未満である必要があります。")
+                }
+            }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
                 OverallScoreText("")
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 ToeflOverallScorePicker(
@@ -138,113 +266,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             }
 
             Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
                 if (overallScore >= 121) {
                     ErrorText("Overallスコアは121未満である必要があります。")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                ReadingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ReadingText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-                ToeflRLWSScorePicker(
-                    Modifier,
-                    readingScore,
-                ) {
-                    readingScore = it
-                    viewModel.setReadingScore(it)
-                }
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                if (readingScore >= 31) {
-                    ErrorText("Readingスコアは31未満である必要があります。")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                ListeningImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ListeningText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-                ToeflRLWSScorePicker(
-                    Modifier,
-                    listeningScore,
-                ) {
-                    listeningScore = it
-                    viewModel.setListeningScore(it)
-                }
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                if (listeningScore >= 31) {
-                    ErrorText("Listeningスコアは31未満である必要があります。")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                WritingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                WritingText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-                ToeflRLWSScorePicker(
-                    Modifier,
-                    writingScore,
-                ) {
-                    writingScore = it
-                    viewModel.setWritingScore(it)
-                }
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                if (writingScore >= 31) {
-                    ErrorText("Writingスコアは31未満である必要があります。")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                SpeakingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                SpeakingText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-                ToeflRLWSScorePicker(
-                    Modifier,
-                    speakingScore,
-                ) {
-                    speakingScore = it
-                    viewModel.setSpeakingScore(it)
-                }
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_52_dp)))
-                if (speakingScore >= 31) {
-                    ErrorText("Speakingスコアは31未満である必要があります。")
                 }
             }
 
