@@ -558,7 +558,8 @@ private fun TOEICRLScorePicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFffffff)),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
@@ -649,7 +650,10 @@ private fun ThreeDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -676,7 +680,10 @@ private fun TwoDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
@@ -707,7 +714,10 @@ private fun OneDigit(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
