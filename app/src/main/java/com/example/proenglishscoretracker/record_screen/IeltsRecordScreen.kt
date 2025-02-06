@@ -147,15 +147,17 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             ReadingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            ReadingText("")
+            ReadingText("", modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.weight(0.1f))
             IeltsRLWSScorePicker(
-                Modifier,
+                modifier = Modifier.weight(1f),
                 readingScore,
                 selectedReadingScore,
                 { selectedReadingScore = it },
                 { readingScore = selectedReadingScore },
             )
+            Spacer(modifier = Modifier.weight(3f))
         }
 
         Row {
@@ -185,15 +187,17 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             ListeningImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            ListeningText("")
+            ListeningText("", modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.weight(0.1f))
             IeltsRLWSScorePicker(
-                Modifier,
+                modifier = Modifier.weight(1f),
                 listeningScore,
                 selectedListeningScore,
                 { selectedListeningScore = it },
                 { listeningScore = selectedListeningScore },
             )
+            Spacer(modifier = Modifier.weight(3f))
         }
 
         Row {
@@ -223,15 +227,17 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             WritingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            WritingText("")
+            WritingText("", modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.weight(0.1f))
             IeltsRLWSScorePicker(
-                Modifier,
+                modifier = Modifier.weight(1f),
                 writingScore,
                 selectedWritingScore,
                 { selectedWritingScore = it },
                 { writingScore = selectedWritingScore },
             )
+            Spacer(modifier = Modifier.weight(3f))
         }
 
         Row {
@@ -261,15 +267,17 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
             SpeakingImageView()
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-            SpeakingText("")
+            SpeakingText("", modifier = Modifier.weight(1f))
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Spacer(modifier = Modifier.weight(0.1f))
             IeltsRLWSScorePicker(
-                Modifier,
+                modifier = Modifier.weight(1f),
                 speakingScore,
                 selectedSpeakingScore,
                 { selectedSpeakingScore = it },
                 { speakingScore = selectedSpeakingScore },
             )
+            Spacer(modifier = Modifier.weight(3f))
         }
 
         Row {
