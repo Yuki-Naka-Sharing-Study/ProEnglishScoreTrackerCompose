@@ -130,15 +130,17 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 WritingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                WritingText("")
+                WritingText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 TOEICSWScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1f),
                     writingScore
                 ) {
                     writingScore = it
                     viewModel.setWritingScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Row {
@@ -156,15 +158,17 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 SpeakingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                SpeakingText("")
+                SpeakingText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 TOEICSWScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1f),
                     speakingScore
                 ) {
                     speakingScore = it
                     viewModel.setSpeakingScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Row {
