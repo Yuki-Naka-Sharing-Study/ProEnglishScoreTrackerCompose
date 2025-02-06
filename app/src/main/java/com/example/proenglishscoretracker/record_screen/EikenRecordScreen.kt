@@ -154,15 +154,17 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 ReadingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ReadingText("")
+                ReadingText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 EikenRLWSScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1f),
                     readingScore,
                 ) {
                     readingScore = it
                     viewModel.setReadingScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Row {
@@ -180,15 +182,17 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 ListeningImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ListeningText("")
+                ListeningText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 EikenRLWSScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1f),
                     listeningScore,
                 ) {
                     listeningScore = it
                     viewModel.setListeningScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Row {
@@ -206,15 +210,17 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 WritingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                WritingText("")
+                WritingText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 EikenRLWSScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1f),
                     writingScore,
                 ) {
                     writingScore = it
                     viewModel.setWritingScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Row {
