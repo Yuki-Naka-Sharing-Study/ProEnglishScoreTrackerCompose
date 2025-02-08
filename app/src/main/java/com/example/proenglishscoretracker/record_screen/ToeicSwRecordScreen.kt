@@ -134,7 +134,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICSWScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     writingScore
                 ) {
                     writingScore = it
@@ -162,7 +162,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICSWScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     speakingScore
                 ) {
                     speakingScore = it
