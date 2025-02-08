@@ -132,7 +132,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     readingScore,
                 ) {
                     readingScore = it
@@ -160,7 +160,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     listeningScore,
                 ) {
                     listeningScore = it
@@ -188,7 +188,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     writingScore,
                 ) {
                     writingScore = it
@@ -216,7 +216,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     speakingScore,
                 ) {
                     speakingScore = it
