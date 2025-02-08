@@ -134,7 +134,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     readingScore,
                 ) {
                     readingScore = it
@@ -155,7 +155,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1.2f),
                     listeningScore,
                 ) {
                     listeningScore = it
