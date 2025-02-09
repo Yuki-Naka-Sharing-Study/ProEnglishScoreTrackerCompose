@@ -248,13 +248,15 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
                 CSEScoreText("")
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 EikenCseScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1.3f),
                     cseScore,
                 ) {
                     cseScore = it
                     viewModel.setSumScore(it)
                 }
+                Spacer(modifier = Modifier.weight(3f))
             }
 
             Row {
