@@ -295,20 +295,96 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    var showAlertDialogOfZero by remember { mutableStateOf(false) }
                     var showSaved by remember { mutableStateOf("") }
+                    var result by remember { mutableStateOf("Result") }
+
+                    if (showAlertDialogOfZero) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                result = "Dismiss"
+                                showAlertDialogOfZero = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "はい"
+                                        showAlertDialogOfZero = false
+                                        showSaved = "登録しました。"
+                                        viewModel.saveEikenValues(
+                                            date.toString(),
+                                            selectedGrade,
+                                            readingScore,
+                                            listeningScore,
+                                            writingScore,
+                                            speakingScore,
+                                            cseScore,
+                                            memoText
+                                        )
+                                        viewModel.setReadingScore(0)
+                                        viewModel.setListeningScore(0)
+                                        viewModel.setWritingScore(0)
+                                        viewModel.setSpeakingScore(0)
+                                        viewModel.setMemoText("")
+                                        readingScore = 0
+                                        listeningScore = 0
+                                        writingScore = 0
+                                        speakingScore = 0
+                                        memoText = ""
+                                    }
+                                ) {
+                                    Text("はい")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "いいえ"
+                                        showAlertDialogOfZero = false
+                                    }
+                                ) {
+                                    Text("いいえ")
+                                }
+                            },
+                            text = {
+                                Text("Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
+                            },
+                            contentColor = Color.Black,
+                            backgroundColor = Color(0xFFd3d3d3)
+                        )
+                    }
                     SaveButton(
                         onClick = {
-                            showSaved = "登録しました。"
-                            viewModel.saveEikenValues(
-                                date.toString(),
-                                selectedGrade,
-                                readingScore,
-                                listeningScore,
-                                writingScore,
-                                speakingScore,
-                                cseScore,
-                                memoText
-                            )
+                            if (
+                                readingScore == 0 ||
+                                listeningScore == 0 ||
+                                writingScore == 0 ||
+                                speakingScore == 0
+                            ) {
+                                showAlertDialogOfZero = true
+                            } else {
+                                showSaved = "登録しました。"
+                                viewModel.saveEikenValues(
+                                    date.toString(),
+                                    selectedGrade,
+                                    readingScore,
+                                    listeningScore,
+                                    writingScore,
+                                    speakingScore,
+                                    cseScore,
+                                    memoText
+                                )
+                                viewModel.setReadingScore(0)
+                                viewModel.setListeningScore(0)
+                                viewModel.setWritingScore(0)
+                                viewModel.setSpeakingScore(0)
+                                viewModel.setMemoText("")
+                                readingScore = 0
+                                listeningScore = 0
+                                writingScore = 0
+                                speakingScore = 0
+                                memoText = ""
+                            }
                         }
                     )
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
