@@ -259,13 +259,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.weight(3f))
             }
 
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
-                if (cseScore >= 2551) {
-                    ErrorText("CSEスコアは2551未満である必要があります。")
-                }
-            }
-
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
             Row(
