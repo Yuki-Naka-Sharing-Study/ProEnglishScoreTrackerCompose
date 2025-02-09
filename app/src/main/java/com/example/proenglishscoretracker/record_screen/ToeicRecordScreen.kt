@@ -182,7 +182,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 )
             }
 
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
             var showSaved by rememberSaveable { mutableStateOf("") }
             // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名

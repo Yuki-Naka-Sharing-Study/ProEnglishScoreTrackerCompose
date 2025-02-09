@@ -347,7 +347,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             )
         }
 
-        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
         val savable = overallScore.toString().isNotBlank() &&
                 readingScore.toString().isNotBlank() &&
