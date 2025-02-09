@@ -249,13 +249,13 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 CSEScoreText("")
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
-                EikenCseScorePicker(
-                    modifier = Modifier.weight(1.3f),
-                    cseScore,
-                ) {
-                    cseScore = it
-                    viewModel.setSumScore(it)
-                }
+                EikenCseScoreView(
+                    modifier = Modifier,
+                    readingScore,
+                    listeningScore,
+                    writingScore,
+                    speakingScore
+                )
                 Spacer(modifier = Modifier.weight(3f))
             }
 
@@ -474,7 +474,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                         }
                     )
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                    ShowSavedText(saved= showSaved, onTimeout = { showSaved = "" })
+                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
                 }
             }
         }
@@ -912,217 +912,29 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun EikenCseScorePicker(
-    modifier: Modifier = Modifier,
-    toeicRLScore: Int,
-    onScoreConfirm: (Int) -> Unit,
+private fun EikenCseScoreView(
+    modifier: Modifier,
+    readingScore: Int,
+    listeningScore: Int,
+    writingScore: Int,
+    speakingScore: Int,
 ) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) }
+    val cseScore = readingScore + listeningScore + writingScore + speakingScore
 
     Box(modifier = modifier) {
         Button(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .size(width = 80.dp, height = 40.dp),
-            onClick = { showDialog = true },
+            onClick = { },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "$toeicRLScore",
+                text = cseScore.toString(),
                 color = Color.Black
             )
         }
-    }
-
-    if (showDialog) {
-        Dialog(onDismissRequest = { showDialog = false }) {
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFffffff)),
-                modifier = Modifier
-                    .size(width = 240.dp, height = 320.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    EikenCseScorePickerView(
-                        score = tempScore,
-                        onScoreChange = { tempScore = it }
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Button(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        onClick = {
-                            onScoreConfirm(tempScore)
-                            showDialog = false
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(Color(0xFF9C27B0)),
-                    ) {
-                        Text(
-                            text = "確定",
-                            color = Color.White
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun EikenCseScorePickerView(
-    score: Int,
-    onScoreChange: (Int) -> Unit
-) {
-    val thousand = score / 1000
-    val hundred = (score % 1000) / 100
-    val ten = (score % 100) / 10
-    val one = score % 10
-
-    val thousandState = rememberSaveable { mutableIntStateOf(thousand) }
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
-
-    LaunchedEffect(
-        thousandState.intValue,
-        hundredState.intValue,
-        tenState.intValue,
-        oneState.intValue
-    ) {
-        onScoreChange(
-            thousandState.intValue * 1000 +
-                    hundredState.intValue * 100 +
-                    tenState.intValue * 10 +
-                    oneState.intValue
-        )
-    }
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        EikenCseFourDigits(thousandState)
-        EikenCseThreeDigits(hundredState)
-        EikenCseTwoDigits(tenState)
-        EiekenCseOneDigit(oneState)
-    }
-}
-
-@Composable
-private fun EikenCseFourDigits(state: MutableIntState) {
-    val listState = rememberFWheelPickerState()
-
-    LaunchedEffect(listState.currentIndex) {
-        state.intValue = listState.currentIndex
-    }
-    FVerticalWheelPicker(
-        modifier = Modifier.width(48.dp),
-        count = 10,
-        itemHeight = 48.dp,
-        unfocusedCount = 2,
-        state = listState,
-        focus = {
-            FWheelPickerFocusVertical(
-                dividerColor = Color.LightGray,
-                dividerSize = 2.dp
-            )
-        },
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
-private fun EikenCseThreeDigits(state: MutableIntState) {
-    val listState = rememberFWheelPickerState()
-
-    LaunchedEffect(listState.currentIndex) {
-        state.intValue = listState.currentIndex
-    }
-    FVerticalWheelPicker(
-        modifier = Modifier.width(48.dp),
-        count = 10,
-        itemHeight = 48.dp,
-        unfocusedCount = 2,
-        state = listState,
-        focus = {
-            FWheelPickerFocusVertical(
-                dividerColor = Color.LightGray,
-                dividerSize = 2.dp
-            )
-        },
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
-private fun EikenCseTwoDigits(state: MutableIntState) {
-    val listState = rememberFWheelPickerState()
-
-    LaunchedEffect(listState.currentIndex) {
-        state.intValue = listState.currentIndex
-    }
-    FVerticalWheelPicker(
-        modifier = Modifier.width(48.dp),
-        count = 10,
-        itemHeight = 48.dp,
-        unfocusedCount = 2,
-        state = listState,
-        focus = {
-            FWheelPickerFocusVertical(
-                dividerColor = Color.LightGray,
-                dividerSize = 2.dp
-            )
-        },
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
-private fun EiekenCseOneDigit(state: MutableIntState) {
-    val listState = rememberFWheelPickerState()
-
-    LaunchedEffect(listState.currentIndex) {
-        state.intValue = listState.currentIndex
-    }
-    FVerticalWheelPicker(
-        modifier = Modifier.width(48.dp),
-        count = 10,
-        itemHeight = 48.dp,
-        unfocusedCount = 2,
-        state = listState,
-        focus = {
-            FWheelPickerFocusVertical(
-                dividerColor = Color.LightGray,
-                dividerSize = 2.dp
-            )
-        },
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
     }
 }
 
@@ -1154,7 +966,8 @@ private fun EikenRLWSScorePicker(
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFffffff)),
+                    containerColor = Color(0xFFffffff)
+                ),
                 modifier = Modifier
                     .size(width = 240.dp, height = 320.dp)
             ) {
