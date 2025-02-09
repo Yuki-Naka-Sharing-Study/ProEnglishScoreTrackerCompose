@@ -27,6 +27,7 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         dao.updateToeicInfo(toeicInfo)
     }
 
+
     // TOEIC SW
     suspend fun saveToeicSwInfo(
         date: String,
@@ -52,6 +53,42 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     suspend fun updateToeicSwInfo(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
         dao.updateToeicSwInfo(toeicSwInfo)
     }
+
+
+    // 英検
+    suspend fun saveEikenInfo(
+        date: String,
+        grade: String,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        cseScore: Int,
+        memo: String,
+    ) {
+        val eikenInfo = EnglishTestInfo.EIKEN_SECOND(
+            id = 0,
+            date = date,
+            grade = grade,
+            readingScore = readingScore,
+            listeningScore = listeningScore,
+            writingScore = writingScore,
+            speakingScore = speakingScore,
+            cseScore = cseScore,
+            memo = memo
+        )
+        dao.insertEikenInfo(eikenInfo)
+    }
+    suspend fun getAllEikenInfo(): List<EnglishTestInfo.EIKEN_SECOND> {
+        return dao.getAllEikenInfo()
+    }
+    suspend fun deleteEikenInfo(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+        dao.deleteEikenInfo(eikenInfo)
+    }
+    suspend fun updateEikenInfo(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+        dao.updateEikenInfo(eikenInfo)
+    }
+
 
     // TOEFL
     suspend fun saveToeflInfo(

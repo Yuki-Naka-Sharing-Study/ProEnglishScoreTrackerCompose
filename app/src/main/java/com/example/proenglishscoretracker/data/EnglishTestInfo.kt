@@ -39,11 +39,11 @@ sealed class EnglishTestInfo {
         @PrimaryKey(autoGenerate = true) val id: Int,
         val date: String,
         val grade: String,
-        val cseScore: Int,
         val readingScore: Int,
         val listeningScore: Int,
         val writingScore: Int,
         val speakingScore: Int,
+        val cseScore: Int,
         val memo: String
     ) : EnglishTestInfo()
 

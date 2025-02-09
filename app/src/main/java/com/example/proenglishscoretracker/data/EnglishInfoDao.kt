@@ -18,6 +18,7 @@ interface EnglishInfoDao {
     @Query("SELECT * FROM toeic")
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC>
 
+
     // TOEIC SW
     @Insert
     suspend fun insertToeicSwInfo(item: EnglishTestInfo.TOEIC_SW)
@@ -28,7 +29,16 @@ interface EnglishInfoDao {
     @Query("SELECT * FROM toeic_sw")
     suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW>
 
+
     // EIKEN
+    @Insert
+    suspend fun insertEikenInfo(item: EnglishTestInfo.EIKEN_SECOND)
+    @Delete
+    suspend fun deleteEikenInfo(item: EnglishTestInfo.EIKEN_SECOND)
+    @Update
+    suspend fun updateEikenInfo(item: EnglishTestInfo.EIKEN_SECOND)
+    @Query("SELECT * FROM eiken_second")
+    suspend fun getAllEikenInfo(): List<EnglishTestInfo.EIKEN_SECOND>
 
 
     // TOEFL

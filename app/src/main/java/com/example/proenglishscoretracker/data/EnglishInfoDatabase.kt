@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [EnglishTestInfo.TOEIC::class,
     EnglishTestInfo.TOEIC_SW::class,
+    EnglishTestInfo.EIKEN_SECOND::class,
     EnglishTestInfo.TOEFL::class], version = 1)
 abstract class EnglishInfoDatabase : RoomDatabase() {
     abstract fun englishInfoDao(): EnglishInfoDao

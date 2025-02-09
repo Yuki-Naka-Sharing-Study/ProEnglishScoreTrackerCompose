@@ -26,6 +26,9 @@ class EnglishInfoViewModel(
     private val _eikenFirstInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_FIRST>>(emptyList())
     val eikenFirstInfo: StateFlow<List<EnglishTestInfo.EIKEN_FIRST>> = _eikenFirstInfo
 
+    private val _eikenSecondInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_SECOND>>(emptyList())
+    val eikenSecondInfo: StateFlow<List<EnglishTestInfo.EIKEN_SECOND>> = _eikenSecondInfo
+
     private val _toeflIbtInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
     val toeflIbtInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflIbtInfo
 
@@ -104,6 +107,7 @@ class EnglishInfoViewModel(
         }
     }
 
+
     // TOEIC SW
     init {
         viewModelScope.launch {
@@ -141,6 +145,58 @@ class EnglishInfoViewModel(
         viewModelScope.launch {
             repository.updateToeicSwInfo(toeicInfo)
             this@EnglishInfoViewModel._toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
+        }
+    }
+
+
+    // 英検
+    init {
+        viewModelScope.launch {
+            _eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
+        }
+    }
+
+    fun saveEikenValues(
+        date: String,
+        grade: String,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        cseScore: Int,
+        memo: String
+    ) {
+        viewModelScope.launch {
+            repository.saveEikenInfo(
+                date,
+                grade,
+                readingScore,
+                listeningScore,
+                writingScore,
+                speakingScore,
+                cseScore,
+                memo
+            )
+            loadAllEikenInfo() // データを保存後に再読み込み
+        }
+    }
+    fun loadAllEikenInfo() {
+        viewModelScope.launch {
+//            _toeicInfo.value = repository.getAllToeicInfo()
+            _eikenSecondInfo.value = repository.getAllEikenInfo()
+        }
+    }
+    fun deleteEikenValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+        viewModelScope.launch {
+            repository.deleteEikenInfo(eikenInfo)
+//            this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
+            this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
+        }
+    }
+    fun updateToeicValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+        viewModelScope.launch {
+            repository.updateEikenInfo(eikenInfo)
+            this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
         }
     }
 
