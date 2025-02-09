@@ -1316,16 +1316,20 @@ private fun SpeakingScoreArea(
                     .fillMaxWidth()
                     .padding(start = dimensionResource(id = R.dimen.space_24_dp))
             ) {
-                SpeakingImageView(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp)))
+                SpeakingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 SpeakingText(
                     speakingText = "Speaking",
-                    modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_8_dp))
+                    modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = Modifier.weight(0.1f))
                 EikenRLWSScorePicker(
-                    Modifier,
+                    modifier = Modifier.weight(1.2f),
                     speakingScore,
                     onScoreConfirm = onValueChange
                 )
+                Spacer(modifier = Modifier.weight(3f))
             }
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
