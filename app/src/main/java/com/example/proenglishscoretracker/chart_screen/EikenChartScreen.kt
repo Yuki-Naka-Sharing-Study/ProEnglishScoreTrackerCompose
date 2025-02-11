@@ -54,7 +54,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
 import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
@@ -123,6 +122,7 @@ fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
                 }
             )
 
+            // TODO : 以下の「DropdownMenuWithIcon」をPiano Appのコードから拝借して修正予定。
             DropdownMenuWithIcon(
                 modifier = Modifier.constrainAs(gradeDropdown) {
                     start.linkTo(gradeText.end, margin = 20.dp)
