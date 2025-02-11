@@ -193,7 +193,7 @@ class EnglishInfoViewModel(
             this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
         }
     }
-    fun updateToeicValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+    fun updateEikenValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
         viewModelScope.launch {
             repository.updateEikenInfo(eikenInfo)
             this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
