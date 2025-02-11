@@ -75,6 +75,7 @@ fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "受験年を選択", fontSize = 20.sp)
+        // TODO : 「受験級を選択」も後で実装
         Spacer(modifier = Modifier.height(16.dp))
         ExamYearPicker(
             modifier = Modifier,
