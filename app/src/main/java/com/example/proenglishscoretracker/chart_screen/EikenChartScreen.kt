@@ -74,19 +74,29 @@ fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "受験年を選択", fontSize = 20.sp)
-        // TODO : 「受験級を選択」も後で実装
-        Spacer(modifier = Modifier.height(16.dp))
-        ExamYearPicker(
-            modifier = Modifier,
-            selectedExamYear = examYear,
-            onScoreConfirm = { selectedYear ->
-                examYear = selectedYear
+        Row(
+
+        ) {
+            Spacer(modifier = Modifier.weight(1f))
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "受験年を選択", fontSize = 20.sp)
+                Spacer(modifier = Modifier.height(8.dp))
+                ExamYearPicker(
+                    modifier = Modifier,
+                    selectedExamYear = examYear,
+                    onScoreConfirm = { selectedYear ->
+                        examYear = selectedYear
+                    }
+                )
             }
-        )
-
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = "受験級を選択", fontSize = 20.sp)
+            Spacer(modifier = Modifier.weight(1f))
+        }
         Spacer(modifier = Modifier.height(32.dp))
-
         EikenScoreChart(viewModel, examYear)
     }
 }
