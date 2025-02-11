@@ -100,7 +100,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-            var cseScore by rememberSaveable { mutableIntStateOf(0) }
             var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
             isSpeakingPickerVisible = when (selectedGrade) {
                 "3級", "準2級", "2級", "準1級", "1級" -> true
@@ -288,6 +287,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    val cseScore = readingScore + listeningScore + writingScore + speakingScore
                     var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
                     var zeroCaseIchiji by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
