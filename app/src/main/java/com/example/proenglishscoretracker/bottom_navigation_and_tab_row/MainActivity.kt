@@ -124,7 +124,7 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
             // XxxChartScreen
             composable("toeicChartScreen") { ToeicChartScreen(viewModel) }
             composable("toeicSwChartScreen") { ToeicSwChartScreen(viewModel) }
-            composable("eikenIchijiChartScreen") { EikenChartScreen() }
+            composable("eikenIchijiChartScreen") { EikenChartScreen(viewModel) }
             composable("toeflIbtChartScreen") { ToeflIbtChartScreen(viewModel) }
             composable("ieltsIbtChartScreen") { IeltsChartScreen() }
 

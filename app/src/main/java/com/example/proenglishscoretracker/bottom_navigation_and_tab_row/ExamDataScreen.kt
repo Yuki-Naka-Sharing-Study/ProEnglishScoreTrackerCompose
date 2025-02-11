@@ -191,7 +191,7 @@ private fun EikenSegmentedButton(viewModel: EnglishInfoViewModel) {
         }
         when (selectedIndex) {
             0 -> EikenIndividualScreen(viewModel)
-            1 -> EikenChartScreen()
+            1 -> EikenChartScreen(viewModel)
         }
     }
 }
