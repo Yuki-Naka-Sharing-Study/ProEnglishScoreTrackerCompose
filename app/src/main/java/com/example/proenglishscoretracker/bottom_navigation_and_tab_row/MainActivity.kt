@@ -107,7 +107,7 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
             }
             composable("examDataScreen") { ExamDataScreen(viewModel) }
             composable("examRecordScreen") { ExamRecordScreen(viewModel) }
-            composable("setting") { SettingScreen() }
+            composable("setting") { SettingsScreen() }
 
             // XxxIndividualScreen
             composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel) }
