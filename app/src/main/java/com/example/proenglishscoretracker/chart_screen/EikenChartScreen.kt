@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
 import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
@@ -85,37 +87,55 @@ fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-
+        ConstraintLayout(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Spacer(modifier = Modifier.weight(1f))
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "受験年を選択", fontSize = 20.sp)
-                Spacer(modifier = Modifier.height(8.dp))
-                ExamYearPicker(
-                    modifier = Modifier,
-                    selectedExamYear = examYear,
-                    onScoreConfirm = { selectedYear ->
-                        examYear = selectedYear
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-            Column {
-                Text(text = "受験級を選択", fontSize = 20.sp)
-                Spacer(modifier = Modifier.height(8.dp))
-                DropdownMenuWithIcon(
-                    grades,
-                    onGradeSelected = { grade ->
-                        selectedGrade = grade
-                    })
-            }
-            Spacer(modifier = Modifier.weight(1f))
+            val guideline = createGuidelineFromStart(0.3f)
+            val (yearText, yearPicker, gradeText, gradeDropdown) = createRefs()
+
+            Text(
+                text = "受験年を選択",
+                fontSize = 20.sp,
+                modifier = Modifier.constrainAs(yearText) {
+                    start.linkTo(guideline)
+                    top.linkTo(parent.top, margin = 28.dp)
+                }
+            )
+
+            ExamYearPicker(
+                selectedExamYear = examYear,
+                onScoreConfirm = { selectedYear ->
+                    examYear = selectedYear
+                },
+                modifier = Modifier.constrainAs(yearPicker) {
+                    start.linkTo(yearText.end, margin = 20.dp)
+                    top.linkTo(yearText.top)
+                    bottom.linkTo(yearText.bottom)
+                }
+            )
+
+            Text(
+                text = "受験級を選択",
+                fontSize = 20.sp,
+                modifier = Modifier.constrainAs(gradeText) {
+                    start.linkTo(guideline)
+                    top.linkTo(yearText.bottom, margin = 28.dp)
+                }
+            )
+
+            DropdownMenuWithIcon(
+                modifier = Modifier.constrainAs(gradeDropdown) {
+                    start.linkTo(gradeText.end, margin = 20.dp)
+                    top.linkTo(gradeText.top)
+                    bottom.linkTo(gradeText.bottom)
+                },
+                grades = grades,
+                onGradeSelected = { grade ->
+                    selectedGrade = grade
+                },
+            )
         }
+
         Spacer(modifier = Modifier.height(32.dp))
         EikenScoreChart(viewModel, examYear)
     }
@@ -123,57 +143,46 @@ fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
 
 @Composable
 private fun DropdownMenuWithIcon(
+    modifier: Modifier = Modifier,
     grades: List<String>,
     onGradeSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableIntStateOf(0) }
 
-    Box(
-        modifier = Modifier
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+    Row(
+        modifier = modifier
+            .clickable { expanded = !expanded }
+            .padding(8.dp)
+    ){
+        Text(
+            text = grades[selectedIndex],
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Icon(
+            imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+            contentDescription = "Dropdown Icon",
+            tint = Color.Black,
+            modifier = Modifier.size(24.dp)
+        )
+    }
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
+        offset = DpOffset(0.dp, 8.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .wrapContentSize(Alignment.Center)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable { expanded = !expanded }
-                    .padding(8.dp)
-            ) {
-                Text(
-                    text = grades[selectedIndex],
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                androidx.compose.material3.Icon(
-                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                    contentDescription = "Dropdown Icon",
-                    tint = Color.Black,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                offset = DpOffset(0.dp, 8.dp)
-            ) {
-                grades.forEachIndexed { index, item ->
-                    DropdownMenuItem(
-                        text = { Text(text = item) },
-                        onClick = {
-                            selectedIndex = index
-                            onGradeSelected(item)
-                            expanded = false
-                        }
-                    )
+        grades.forEachIndexed { index, item ->
+            DropdownMenuItem(
+                text = { Text(text = item) },
+                onClick = {
+                    selectedIndex = index
+                    onGradeSelected(item)
+                    expanded = false
                 }
-            }
+            )
         }
     }
 }
