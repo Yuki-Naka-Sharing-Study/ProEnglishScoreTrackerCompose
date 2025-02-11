@@ -7,8 +7,8 @@ typealias ComposableFun = @Composable () -> Unit
 
 sealed class TabItem(var icon: Int,var title: String, var screen: ComposableFun){
     object IELTS : TabItem(R.drawable.ielts, "IELTS", {})
-    object TOEFL_IBT : TabItem(R.drawable.toefl, "TOEFL iBT", {})
+    object TOEFL_IBT : TabItem(R.drawable.toefl, "TOEFL \n iBT", {})
     object EIKEN : TabItem(R.drawable.eiken, "英検", {})
-    object TOEIC_SW : TabItem(R.drawable.toeic, "TOEIC SW", {})
+    object TOEIC_SW : TabItem(R.drawable.toeic, "TOEIC \n SW", {})
     object TOEIC : TabItem(R.drawable.toeic, "TOEIC", {})
 }
