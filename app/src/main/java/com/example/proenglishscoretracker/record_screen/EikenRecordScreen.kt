@@ -156,7 +156,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 ReadingText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                Spacer(modifier = Modifier.weight(0.1f))
+                Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
                     modifier = Modifier.weight(1.3f),
                     readingScore,
@@ -184,7 +184,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 ListeningText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                Spacer(modifier = Modifier.weight(0.1f))
+                Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
                     modifier = Modifier.weight(1.3f),
                     listeningScore,
@@ -212,7 +212,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 WritingText("", modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                Spacer(modifier = Modifier.weight(0.1f))
+                Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
                     modifier = Modifier.weight(1.3f),
                     writingScore,
@@ -1107,7 +1107,7 @@ private fun SpeakingScoreArea(
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                Spacer(modifier = Modifier.weight(0.1f))
+                Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
                     modifier = Modifier.weight(1.2f),
                     speakingScore,
