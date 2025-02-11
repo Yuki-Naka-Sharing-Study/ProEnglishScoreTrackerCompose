@@ -150,39 +150,51 @@ private fun DropdownMenuWithIcon(
     var expanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableIntStateOf(0) }
 
-    Row(
+    Box(
         modifier = modifier
-            .clickable { expanded = !expanded }
-            .padding(8.dp)
-    ){
-        Text(
-            text = grades[selectedIndex],
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Icon(
-            imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-            contentDescription = "Dropdown Icon",
-            tint = Color.Black,
-            modifier = Modifier.size(24.dp)
-        )
-    }
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false },
-        offset = DpOffset(0.dp, 8.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        grades.forEachIndexed { index, item ->
-            DropdownMenuItem(
-                text = { Text(text = item) },
-                onClick = {
-                    selectedIndex = index
-                    onGradeSelected(item)
-                    expanded = false
+        Box(
+            modifier = modifier
+                .wrapContentSize(Alignment.Center)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .clickable { expanded = !expanded }
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = grades[selectedIndex],
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Spacer(modifier = modifier.width(8.dp))
+                Icon(
+                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                    contentDescription = "Dropdown Icon",
+                    tint = Color.Black,
+                    modifier = modifier.size(24.dp)
+                )
+            }
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                offset = DpOffset(0.dp, 8.dp)
+            ) {
+                grades.forEachIndexed { index, item ->
+                    DropdownMenuItem(
+                        text = { Text(text = item) },
+                        onClick = {
+                            selectedIndex = index
+                            onGradeSelected(item)
+                            expanded = false
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }
