@@ -1,5 +1,6 @@
 package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -63,6 +64,10 @@ class MainActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // 画面の回転を無効にする
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         // Roomデータベースの初期化
         val database = Room.databaseBuilder(
             application,
