@@ -78,24 +78,7 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
                 examYear = selectedYear
             }
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(text = "表示されていないデータを確認したい場合は、\n左から右にスクロールしてください。")
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(
-
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(text = "グラフが見づらい場合は、\n指でつまんで広げてみてください。")
-            Spacer(modifier = Modifier.width(16.dp))
-        }
         Spacer(modifier = Modifier.height(32.dp))
-
         ToeicScoreChart(
             viewModel,
             examYear,
