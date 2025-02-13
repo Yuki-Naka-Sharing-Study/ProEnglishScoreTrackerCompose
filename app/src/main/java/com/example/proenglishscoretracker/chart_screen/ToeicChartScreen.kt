@@ -200,6 +200,7 @@ private fun ToeicScoreChart(
                         this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
 
                         Handler(Looper.getMainLooper()).postDelayed({
+                            setVisibleXRangeMaximum(2f)
                             invalidate()
                         }, 100)
                     }
