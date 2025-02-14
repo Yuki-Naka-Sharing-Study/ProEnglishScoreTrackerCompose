@@ -1,8 +1,10 @@
 package com.example.proenglishscoretracker.chart_screen
 
-import android.view.ViewGroup
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,12 +48,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
 import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
 import com.example.proenglishscoretracker.wheel_picker.rememberFWheelPickerState
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
 
 @Composable
 fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
@@ -87,13 +95,10 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
 }
 
 @Composable
-private fun ToeicScoreChart(
-    viewModel: EnglishInfoViewModel,
-    examYear: Int,
-) {
+fun ToeicScoreChart(viewModel: EnglishInfoViewModel, examYear: Int) {
     val toeicInfoList by viewModel.toeicInfo.collectAsState()
+    var isGraphTapped by rememberSaveable { mutableStateOf(false) }
 
-    // データが存在しない場合のメッセージ
     if (toeicInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -106,12 +111,11 @@ private fun ToeicScoreChart(
             )
         }
     } else {
-        // examYear に基づいてデータをフィルタリング
         val filteredToeicInfo = toeicInfoList.filter {
-            it.date.substring(0, 4).toInt() == examYear }
+            it.date.substring(0, 4).toInt() == examYear
+        }
 
         if (filteredToeicInfo.isEmpty()) {
-            // 選択した年のデータがない場合のメッセージ
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -123,10 +127,7 @@ private fun ToeicScoreChart(
                 )
             }
         } else {
-            // 受験日を昇順（古い順）にソート
             val sortedToeicInfo = filteredToeicInfo.sortedBy { it.date }
-
-            // ソートされたデータから必要な情報を抽出
             val examDates = sortedToeicInfo.map { it.date }
             val readingScores = sortedToeicInfo.map { it.readingScore.toFloat() }
             val listeningScores = sortedToeicInfo.map { it.listeningScore.toFloat() }
@@ -138,111 +139,144 @@ private fun ToeicScoreChart(
                 Entry(index.toFloat(), score)
             }
 
-            AndroidView(
-                update = {
-                    it.data = updateData(entriesReading, entriesListening)
-                    it.notifyDataSetChanged()
-                    it.invalidate()
-                         },
-                factory = { context ->
-                    LineChart(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-
-                        val dataSetReading = LineDataSet(
-                            entriesReading, "Readingスコア"
-                        ).apply {
-                            color = android.graphics.Color.RED
-                            valueTextColor = android.graphics.Color.BLACK
-                            valueTextSize = 15f // スコアのテキストサイズを設定
-                            // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
-                        }
-                        val dataSetListening = LineDataSet(
-                            entriesListening, "Listeningスコア"
-                        ).apply {
-                            color = android.graphics.Color.BLUE
-                            valueTextColor = android.graphics.Color.BLACK
-                            valueTextSize = 15f // スコアのテキストサイズを設定
-                            // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
-                        }
-
-                        val lineData = LineData(dataSetReading, dataSetListening)
-                        this.data = lineData
-                        this.data = updateData(entriesReading, entriesListening)
-
-                        // X軸ラベル設定
-                        xAxis.textSize = 15f
-                        xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
-                        xAxis.position = XAxis.XAxisPosition.BOTTOM
-                        xAxis.granularity = 1f
-                        xAxis.setDrawGridLines(false)
-
-                        // Y軸設定
-                        axisLeft.textSize = 15f
-                        axisLeft.axisMinimum = 0f
-                        axisRight.isEnabled = false
-                        description.isEnabled = false
-                        legend.isEnabled = true
-
-                        // グラフの余白設定
-                        setViewPortOffsets(
-                            120f,
-                            0f,
-                            120f,
-                            0f
-                        )
-
-                        // 左から右に表示するアニメーションを追加。
-                        this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            setVisibleXRangeMaximum(2f)
-                            invalidate()
-                        }, 100)
-                    }
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-            )
+            ) {
+                AndroidView(
+                    update = {
+                        it.data = updateData(entriesReading, entriesListening)
+                        it.notifyDataSetChanged()
+                        it.invalidate()
+                    },
+                    factory = { context ->
+                        LineChart(context).apply {
+                            val dataSetReading = LineDataSet(entriesReading, "Readingスコア").apply {
+                                color = android.graphics.Color.RED
+                                valueTextColor = android.graphics.Color.BLACK
+                                valueTextSize = 15f
+                            }
+                            val dataSetListening = LineDataSet(entriesListening, "Listeningスコア").apply {
+                                color = android.graphics.Color.BLUE
+                                valueTextColor = android.graphics.Color.BLACK
+                                valueTextSize = 15f
+                            }
+
+                            val lineData = LineData(dataSetReading, dataSetListening)
+                            this.data = lineData
+
+                            xAxis.textSize = 15f
+                            xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
+                            xAxis.position = XAxis.XAxisPosition.BOTTOM
+                            xAxis.granularity = 1f
+                            xAxis.setDrawGridLines(false)
+
+                            axisLeft.textSize = 15f
+                            axisLeft.axisMinimum = 0f
+                            axisRight.isEnabled = false
+                            description.isEnabled = false
+                            legend.isEnabled = true
+
+                            setViewPortOffsets(120f, 0f, 120f, 0f)
+
+                            animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
+
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                setVisibleXRangeMaximum(2f)
+                                invalidate()
+                            }, 100)
+
+                            // グラフのタップイベントをリスナーで検知
+                            setOnChartGestureListener(object : OnChartGestureListener {
+                                override fun onChartGestureStart(
+                                    me: MotionEvent?,
+                                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                                ) {
+                                    isGraphTapped = true // タップ開始時に表示
+                                }
+
+                                override fun onChartGestureEnd(
+                                    me: MotionEvent?,
+                                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                                ) {
+                                    isGraphTapped = false // タップ終了時に非表示
+                                }
+
+                                override fun onChartLongPressed(me: MotionEvent?) {}
+                                override fun onChartDoubleTapped(me: MotionEvent?) {}
+                                override fun onChartSingleTapped(me: MotionEvent?) {}
+                                override fun onChartFling(
+                                    me1: MotionEvent?,
+                                    me2: MotionEvent?,
+                                    velocityX: Float,
+                                    velocityY: Float
+                                ) {}
+
+                                override fun onChartScale(
+                                    me: MotionEvent?,
+                                    scaleX: Float,
+                                    scaleY: Float
+                                ) {}
+
+                                override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
+                            })
+                        }
+                    },
+                    modifier = Modifier
+                        .matchParentSize()
+                )
+
+                // タップ時に表示する UI（グラフの上に重ねる）
+                if (isGraphTapped) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(8.dp)
+                            .background(Color.White.copy(alpha = 0.8f), shape = RoundedCornerShape(8.dp))
+                            .padding(8.dp)
+                    ) {
+                        Text(text = "Scroll", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.right_arrow),
+                            contentDescription = "",
+                        )
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Text(text = "Pinch In", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.pinch_in),
+                            contentDescription = "",
+                        )
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Text(text = "Pinch Out", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.pinch_out),
+                            contentDescription = "",
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(64.dp))
 
-            // 前回のスコアとの比較を表示
-            val currentReadingScore =
-                readingScores.last().toInt()
-            val previousReadingScore =
-                readingScores.dropLast(1).lastOrNull()?.toInt() ?: currentReadingScore
-            val currentListeningScore =
-                listeningScores.last().toInt()
-            val previousListeningScore =
-                listeningScores.dropLast(1).lastOrNull()?.toInt() ?: currentListeningScore
+            val currentReadingScore = readingScores.last().toInt()
+            val previousReadingScore = readingScores.dropLast(1).lastOrNull()?.toInt() ?: currentReadingScore
+            val currentListeningScore = listeningScores.last().toInt()
+            val previousListeningScore = listeningScores.dropLast(1).lastOrNull()?.toInt() ?: currentListeningScore
 
             Column(
                 horizontalAlignment = Alignment.Start
             ) {
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "Readingスコア:")
-                    ComparePreviousScore(
-                        currentScore = currentReadingScore,
-                        previousScore = previousReadingScore
-                    )
+                    ComparePreviousScore(currentScore = currentReadingScore, previousScore = previousReadingScore)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "Listeningスコア:")
-                    ComparePreviousScore(
-                        currentScore = currentListeningScore,
-                        previousScore = previousListeningScore
-                    )
+                    ComparePreviousScore(currentScore = currentListeningScore, previousScore = previousListeningScore)
                 }
             }
         }
