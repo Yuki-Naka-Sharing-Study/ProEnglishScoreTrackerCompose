@@ -665,7 +665,7 @@ private fun ComparePreviousScore(
         scoreDifference > 0 -> {
             Triple(
                 Icons.Default.KeyboardArrowUp,
-                Color.Green,
+                Color.Blue,
                 "前回より${scoreDifference}点上がっています。"
             )
         }
