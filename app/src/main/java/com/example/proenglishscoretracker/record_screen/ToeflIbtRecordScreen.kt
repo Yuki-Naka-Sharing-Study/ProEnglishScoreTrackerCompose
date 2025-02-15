@@ -276,39 +276,37 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
-            var showSaved by remember { mutableStateOf("") }
-            var showAlertDialogOfZero by remember { mutableStateOf(false) }
-            var showAlertDialogOfSum by remember { mutableStateOf(false) }
-            var result by remember { mutableStateOf("Result") }
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
-            ) {
+            ){
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    overallScore = readingScore + listeningScore + writingScore + speakingScore
+                    var showAlertDialogOfZero by remember { mutableStateOf(false) }
+                    var showSaved by remember { mutableStateOf("") }
+                    var result by remember { mutableStateOf("Result") }
+
                     if (showAlertDialogOfZero) {
                         androidx.compose.material.AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
-                                showAlertDialogOfZero = false
                             },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
                                         result = "はい"
-                                        showAlertDialogOfZero = false
                                         showSaved = "登録しました。"
                                         viewModel.saveToeflValues(
                                             date.toString(),
-                                            overallScore,
                                             readingScore,
                                             listeningScore,
                                             writingScore,
                                             speakingScore,
+                                            overallScore,
                                             memoText
                                         )
                                         viewModel.setReadingScore(0)
@@ -330,36 +328,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                 TextButton(
                                     onClick = {
                                         result = "いいえ"
-                                        showAlertDialogOfZero = false
                                     }
                                 ) {
                                     Text("いいえ")
                                 }
                             },
                             text = {
-                                Text("Overallスコア, Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが０ですが登録しますか？")
-                            },
-                            contentColor = Color.Black,
-                            backgroundColor = Color(0xFFd3d3d3)
-                        )
-                    }
-                    if (showAlertDialogOfSum) {
-                        androidx.compose.material.AlertDialog(
-                            onDismissRequest = {
-                                result = "Dismiss"
-                                showAlertDialogOfSum = false
-                            },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        showAlertDialogOfSum = false
-                                    }
-                                ) {
-                                    Text("はい")
-                                }
-                            },
-                            text = {
-                                Text("OverallスコアがReadingスコア, Listeningスコア, Writingスコア, Speakingスコアの合計と一致していません。")
+                                Text("Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが0ですが登録しますか？")
                             },
                             contentColor = Color.Black,
                             backgroundColor = Color(0xFFd3d3d3)
@@ -368,28 +343,21 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     SaveButton(
                         onClick = {
                             if (
-                                overallScore == 0 ||
                                 readingScore == 0 ||
                                 listeningScore == 0 ||
                                 writingScore == 0 ||
                                 speakingScore == 0
                             ) {
                                 showAlertDialogOfZero = true
-                            } else if (
-                                overallScore
-                                !=
-                                readingScore + listeningScore + writingScore + speakingScore
-                            ) {
-                                showAlertDialogOfSum = true
                             } else {
                                 showSaved = "登録しました。"
                                 viewModel.saveToeflValues(
                                     date.toString(),
-                                    overallScore,
                                     readingScore,
                                     listeningScore,
                                     writingScore,
                                     speakingScore,
+                                    overallScore,
                                     memoText
                                 )
                                 viewModel.setReadingScore(0)
@@ -406,7 +374,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                         }
                     )
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                    ShowSavedText(saved= showSaved, onTimeout = { showSaved = "" })
+                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
                 }
             }
         }
