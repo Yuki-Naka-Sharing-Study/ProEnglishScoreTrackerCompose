@@ -240,13 +240,13 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
                 OverallScoreText("")
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-                ToeflOverallScorePicker(
-                    Modifier,
-                    overallScore,
-                ) {
-                    overallScore = it
-                    viewModel.setSumScore(it)
-                }
+                ToeflOverallScoreView(
+                    modifier = Modifier,
+                    readingScore,
+                    listeningScore,
+                    writingScore,
+                    speakingScore
+                )
             }
 
             Row {
@@ -650,6 +650,33 @@ private fun OverallScoreText(grade: String, modifier: Modifier = Modifier) {
 private fun OverallScoreTextPreview() {
     ProEnglishScoreTrackerTheme {
         OverallScoreText("Overall")
+    }
+}
+
+@Composable
+private fun ToeflOverallScoreView(
+    modifier: Modifier,
+    readingScore: Int,
+    listeningScore: Int,
+    writingScore: Int,
+    speakingScore: Int,
+) {
+    val cseScore = readingScore + listeningScore + writingScore + speakingScore
+
+    Box(modifier = modifier) {
+        Button(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .size(width = 80.dp, height = 40.dp),
+            onClick = { },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
+        ) {
+            Text(
+                text = cseScore.toString(),
+                color = Color.Black
+            )
+        }
     }
 }
 
