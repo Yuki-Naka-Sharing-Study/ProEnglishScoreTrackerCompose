@@ -181,7 +181,9 @@ private fun DropdownMenuWithIcon(
                 )
                 Spacer(modifier = modifier.width(8.dp))
                 Icon(
-                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                    imageVector =
+                    if (expanded) Icons.Default.ArrowDropUp
+                    else Icons.Default.ArrowDropDown,
                     contentDescription = "Dropdown Icon",
                     tint = Color.Black,
                     modifier = modifier.size(24.dp)
@@ -286,11 +288,6 @@ private fun EikenScoreChart(
                     },
                     factory = { context ->
                         LineChart(context).apply {
-//                            layoutParams = ViewGroup.LayoutParams(
-//                                ViewGroup.LayoutParams.MATCH_PARENT,
-//                                ViewGroup.LayoutParams.MATCH_PARENT
-//                            )
-
                             xAxis.textSize = 15f
                             xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
                             xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -362,22 +359,37 @@ private fun EikenScoreChart(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(8.dp)
-                            .background(Color.White.copy(alpha = 0.8f), shape = RoundedCornerShape(8.dp))
+                            .background(Color.White.copy(
+                                alpha = 0.8f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
                             .padding(8.dp)
                     ) {
-                        Text(text = "Scroll", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Scroll",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.right_arrow),
                             contentDescription = "",
                         )
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
-                        Text(text = "Pinch In", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Pinch In",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_in),
                             contentDescription = "",
                         )
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
-                        Text(text = "Pinch Out", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Pinch Out",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_out),
                             contentDescription = "",
@@ -549,22 +561,37 @@ private fun EikenScoreChart(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(8.dp)
-                            .background(Color.White.copy(alpha = 0.8f), shape = RoundedCornerShape(8.dp))
+                            .background(Color.White.copy(
+                                alpha = 0.8f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
                             .padding(8.dp)
                     ) {
-                        Text(text = "Scroll", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Scroll",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.right_arrow),
                             contentDescription = "",
                         )
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
-                        Text(text = "Pinch In", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Pinch In",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_in),
                             contentDescription = "",
                         )
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
-                        Text(text = "Pinch Out", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Pinch Out",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_out),
                             contentDescription = "",
@@ -718,7 +745,10 @@ private fun ExamYearPicker(
         Button(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .size(width = 100.dp, height = 60.dp),
+                .size(
+                    width = 100.dp,
+                    height = 60.dp
+                ),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
@@ -726,7 +756,7 @@ private fun ExamYearPicker(
             Text(
                 text = "$selectedExamYear",
                 fontSize = 20.sp,
-                color = androidx.compose.ui.graphics.Color.Black
+                color = Color.Black
             )
         }
     }
@@ -736,7 +766,10 @@ private fun ExamYearPicker(
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
                 modifier = Modifier
-                    .size(width = 240.dp, height = 320.dp)
+                    .size(
+                        width = 240.dp,
+                        height = 320.dp
+                    )
             ) {
                 Column(
                     modifier = Modifier
@@ -762,7 +795,7 @@ private fun ExamYearPicker(
                     ) {
                         Text(
                             text = "確定",
-                            color = androidx.compose.ui.graphics.Color.White
+                            color = Color.White
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -832,12 +865,15 @@ private fun ExamYearFourDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             items[index].toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
@@ -856,12 +892,15 @@ private fun ExamYearThreeDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             index.toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
@@ -880,12 +919,15 @@ private fun ExamYearTwoDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             index.toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
@@ -904,12 +946,15 @@ private fun ExamYearOneDigit(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             index.toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
@@ -952,6 +997,9 @@ private fun ComparePreviousScore(
             modifier = Modifier.size(24.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = message, color = color)
+        Text(
+            text = message,
+            color = color
+        )
     }
 }
