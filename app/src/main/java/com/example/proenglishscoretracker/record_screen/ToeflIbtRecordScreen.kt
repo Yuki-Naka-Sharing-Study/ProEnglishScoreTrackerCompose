@@ -90,6 +90,10 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
             var overallScore by rememberSaveable { mutableIntStateOf(0) }
             var memoText by rememberSaveable { mutableStateOf("") }
+            var readingMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var speakingMaxScoreError by rememberSaveable { mutableStateOf(false) }
 
             Row {
                 SelectDayText("")
@@ -145,6 +149,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (readingScore >= 31) {
                     ErrorText("Readingスコアは31未満である必要があります。")
+                    readingMaxScoreError = true
+                } else {
+                    readingMaxScoreError = false
                 }
             }
 
@@ -173,6 +180,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (listeningScore >= 31) {
                     ErrorText("Listeningスコアは31未満である必要があります。")
+                    listeningMaxScoreError = true
+                } else {
+                    listeningMaxScoreError = false
                 }
             }
 
@@ -201,6 +211,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (writingScore >= 31) {
                     ErrorText("Writingスコアは31未満である必要があります。")
+                    writingMaxScoreError = true
+                } else {
+                    writingMaxScoreError = false
                 }
             }
 
@@ -229,6 +242,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (speakingScore >= 31) {
                     ErrorText("Speakingスコアは31未満である必要があります。")
+                    speakingMaxScoreError = true
+                } else {
+                    speakingMaxScoreError = false
                 }
             }
 
@@ -247,13 +263,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     writingScore,
                     speakingScore
                 )
-            }
-
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_64_dp)))
-                if (overallScore >= 121) {
-                    ErrorText("Overallスコアは121未満である必要があります。")
-                }
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -287,6 +296,12 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 ) {
                     overallScore = readingScore + listeningScore + writingScore + speakingScore
                     var showAlertDialogOfZero by remember { mutableStateOf(false) }
+
+                    val savable = !readingMaxScoreError &&
+                            !listeningMaxScoreError &&
+                            !writingMaxScoreError &&
+                            !speakingMaxScoreError
+
                     var showSaved by remember { mutableStateOf("") }
                     var result by remember { mutableStateOf("Result") }
 
@@ -342,34 +357,36 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     }
                     SaveButton(
                         onClick = {
-                            if (
-                                readingScore == 0 ||
-                                listeningScore == 0 ||
-                                writingScore == 0 ||
-                                speakingScore == 0
-                            ) {
-                                showAlertDialogOfZero = true
-                            } else {
-                                showSaved = "登録しました。"
-                                viewModel.saveToeflValues(
-                                    date.toString(),
-                                    readingScore,
-                                    listeningScore,
-                                    writingScore,
-                                    speakingScore,
-                                    overallScore,
-                                    memoText
-                                )
-                                viewModel.setReadingScore(0)
-                                viewModel.setListeningScore(0)
-                                viewModel.setWritingScore(0)
-                                viewModel.setSpeakingScore(0)
-                                viewModel.setMemoText("")
-                                readingScore = 0
-                                listeningScore = 0
-                                writingScore = 0
-                                speakingScore = 0
-                                memoText = ""
+                            if (savable) {
+                                if (
+                                    readingScore == 0 ||
+                                    listeningScore == 0 ||
+                                    writingScore == 0 ||
+                                    speakingScore == 0
+                                ) {
+                                    showAlertDialogOfZero = true
+                                } else {
+                                    showSaved = "登録しました。"
+                                    viewModel.saveToeflValues(
+                                        date.toString(),
+                                        readingScore,
+                                        listeningScore,
+                                        writingScore,
+                                        speakingScore,
+                                        overallScore,
+                                        memoText
+                                    )
+                                    viewModel.setReadingScore(0)
+                                    viewModel.setListeningScore(0)
+                                    viewModel.setWritingScore(0)
+                                    viewModel.setSpeakingScore(0)
+                                    viewModel.setMemoText("")
+                                    readingScore = 0
+                                    listeningScore = 0
+                                    writingScore = 0
+                                    speakingScore = 0
+                                    memoText = ""
+                                }
                             }
                         }
                     )
