@@ -497,7 +497,7 @@ private fun EikenScoreChart(
                             )
 
                             // 左から右に表示するアニメーションを追加。
-                            this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
+                            animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
 
                             Handler(Looper.getMainLooper()).postDelayed({
                                 setVisibleXRangeMaximum(2f)
