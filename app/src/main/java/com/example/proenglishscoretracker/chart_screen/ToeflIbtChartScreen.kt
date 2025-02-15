@@ -178,11 +178,6 @@ private fun ToeflIbtScoreChart(
                     },
                     factory = { context ->
                         LineChart(context).apply {
-//                            layoutParams = ViewGroup.LayoutParams(
-//                                ViewGroup.LayoutParams.MATCH_PARENT,
-//                                ViewGroup.LayoutParams.MATCH_PARENT
-//                            )
-
                             xAxis.textSize = 15f
                             xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
                             xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -533,7 +528,6 @@ private fun ToeflIbtScoreChart(
                         previousScore = previousSpeakingScore
                     )
                 }
-
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
