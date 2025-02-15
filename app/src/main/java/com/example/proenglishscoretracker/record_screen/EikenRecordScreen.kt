@@ -105,6 +105,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 "3級", "準2級", "2級", "準1級", "1級" -> true
                 else -> false
             }
+            var readingMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var speakingMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var memoText by rememberSaveable { mutableStateOf("") }
 
             Row {
@@ -170,6 +174,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (readingScore >= 851) {
                     ErrorText("Readingスコアは851未満である必要があります。")
+                    readingMaxScoreError = true
+                } else {
+                    readingMaxScoreError = false
                 }
             }
 
@@ -198,6 +205,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (listeningScore >= 851) {
                     ErrorText("Listeningスコアは851未満である必要があります。")
+                    listeningMaxScoreError = true
+                } else {
+                    listeningMaxScoreError = false
                 }
             }
 
@@ -226,6 +236,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (writingScore >= 851) {
                     ErrorText("Writingスコアは851未満である必要があります。")
+                    writingMaxScoreError = true
+                } else {
+                    writingMaxScoreError = false
                 }
             }
 
@@ -282,7 +295,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -291,6 +304,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
                     var zeroCaseIchiji by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
+
+                    val savable = !readingMaxScoreError &&
+                            !listeningMaxScoreError &&
+                            !writingMaxScoreError &&
+                            !speakingMaxScoreError
+
                     var showSaved by remember { mutableStateOf("") }
                     var result by remember { mutableStateOf("Result") }
 
@@ -404,41 +423,43 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     }
                     SaveButton(
                         onClick = {
-                            if (
-                                zeroCaseIchiji &&
-                                speakingScore == 0 &&
-                                isSpeakingPickerVisible
-                            ) {
-                                showAlertDialogOfZeroCaseNiji = true
-                            } else if (
-                                readingScore == 0 ||
-                                listeningScore == 0 ||
-                                writingScore == 0
-                            ) {
-                                showAlertDialogOfZeroCaseIchiji = true
-                                zeroCaseIchiji = true
-                            } else {
-                                showSaved = "登録しました。"
-                                viewModel.saveEikenValues(
-                                    date.toString(),
-                                    selectedGrade,
-                                    readingScore,
-                                    listeningScore,
-                                    writingScore,
-                                    speakingScore,
-                                    cseScore,
-                                    memoText
-                                )
-                                viewModel.setReadingScore(0)
-                                viewModel.setListeningScore(0)
-                                viewModel.setWritingScore(0)
-                                viewModel.setSpeakingScore(0)
-                                viewModel.setMemoText("")
-                                readingScore = 0
-                                listeningScore = 0
-                                writingScore = 0
-                                speakingScore = 0
-                                memoText = ""
+                            if (savable) {
+                                if (
+                                    zeroCaseIchiji &&
+                                    speakingScore == 0 &&
+                                    isSpeakingPickerVisible
+                                ) {
+                                    showAlertDialogOfZeroCaseNiji = true
+                                } else if (
+                                    readingScore == 0 ||
+                                    listeningScore == 0 ||
+                                    writingScore == 0
+                                ) {
+                                    showAlertDialogOfZeroCaseIchiji = true
+                                    zeroCaseIchiji = true
+                                } else {
+                                    showSaved = "登録しました。"
+                                    viewModel.saveEikenValues(
+                                        date.toString(),
+                                        selectedGrade,
+                                        readingScore,
+                                        listeningScore,
+                                        writingScore,
+                                        speakingScore,
+                                        cseScore,
+                                        memoText
+                                    )
+                                    viewModel.setReadingScore(0)
+                                    viewModel.setListeningScore(0)
+                                    viewModel.setWritingScore(0)
+                                    viewModel.setSpeakingScore(0)
+                                    viewModel.setMemoText("")
+                                    readingScore = 0
+                                    listeningScore = 0
+                                    writingScore = 0
+                                    speakingScore = 0
+                                    memoText = ""
+                                }
                             }
                         }
                     )
