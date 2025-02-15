@@ -269,14 +269,20 @@ fun ToeicScoreChart(viewModel: EnglishInfoViewModel, examYear: Int) {
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "Readingスコア:")
-                    ComparePreviousScore(currentScore = currentReadingScore, previousScore = previousReadingScore)
+                    ComparePreviousScore(
+                        currentScore = currentReadingScore,
+                        previousScore = previousReadingScore
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(text = "Listeningスコア:")
-                    ComparePreviousScore(currentScore = currentListeningScore, previousScore = previousListeningScore)
+                    ComparePreviousScore(
+                        currentScore = currentListeningScore,
+                        previousScore = previousListeningScore
+                    )
                 }
             }
         }
