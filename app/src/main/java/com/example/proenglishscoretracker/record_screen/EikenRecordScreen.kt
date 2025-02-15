@@ -254,6 +254,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
             )
 
+            if (speakingScore >= 851) {
+                speakingMaxScoreError = true
+            } else {
+                speakingMaxScoreError = false
+            }
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
