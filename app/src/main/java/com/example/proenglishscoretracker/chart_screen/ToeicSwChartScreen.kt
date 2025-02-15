@@ -1,6 +1,5 @@
 package com.example.proenglishscoretracker.chart_screen
 
-import android.view.ViewGroup
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
@@ -78,7 +77,10 @@ fun ToeicSwChartScreen(viewModel: EnglishInfoViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "受験年を選択", fontSize = 20.sp)
+        Text(
+            text = "受験年を選択",
+            fontSize = 20.sp
+        )
         Spacer(modifier = Modifier.height(16.dp))
         ExamYearPicker(
             modifier = Modifier,
@@ -129,7 +131,7 @@ private fun ToeicSwScoreChart(
                 Text(
                     text = "選択した年のデータがありません。",
                     fontSize = 18.sp,
-                    color = androidx.compose.ui.graphics.Color.Gray
+                    color = Color.Gray
                 )
             }
         } else {
@@ -161,11 +163,6 @@ private fun ToeicSwScoreChart(
                     },
                     factory = { context ->
                         LineChart(context).apply {
-//                            layoutParams = ViewGroup.LayoutParams(
-//                                ViewGroup.LayoutParams.MATCH_PARENT,
-//                                ViewGroup.LayoutParams.MATCH_PARENT
-//                            )
-
                             val dataSetWriting = LineDataSet(
                                 entriesWriting, "Writingスコア"
                             ).apply {
@@ -261,22 +258,37 @@ private fun ToeicSwScoreChart(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(8.dp)
-                            .background(Color.White.copy(alpha = 0.8f), shape = RoundedCornerShape(8.dp))
+                            .background(Color.White.copy(
+                                alpha = 0.8f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
                             .padding(8.dp)
                     ) {
-                        Text(text = "Scroll", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Scroll",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.right_arrow),
                             contentDescription = "",
                         )
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
-                        Text(text = "Pinch In", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Pinch In",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_in),
                             contentDescription = "",
                         )
                         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
-                        Text(text = "Pinch Out", fontSize = 12.sp, color = Color.Black)
+                        Text(
+                            text = "Pinch Out",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_out),
                             contentDescription = "",
@@ -360,7 +372,10 @@ private fun ExamYearPicker(
         Button(
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .size(width = 100.dp, height = 60.dp),
+                .size(
+                    width = 100.dp,
+                    height = 60.dp
+                ),
             onClick = { showDialog = true },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
@@ -368,7 +383,7 @@ private fun ExamYearPicker(
             Text(
                 text = "$selectedExamYear",
                 fontSize = 20.sp,
-                color = androidx.compose.ui.graphics.Color.Black
+                color = Color.Black
             )
         }
     }
@@ -378,7 +393,10 @@ private fun ExamYearPicker(
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
                 modifier = Modifier
-                    .size(width = 240.dp, height = 320.dp)
+                    .size(
+                        width = 240.dp,
+                        height = 320.dp
+                    )
             ) {
                 Column(
                     modifier = Modifier
@@ -404,7 +422,7 @@ private fun ExamYearPicker(
                     ) {
                         Text(
                             text = "確定",
-                            color = androidx.compose.ui.graphics.Color.White
+                            color = Color.White
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))
@@ -474,12 +492,15 @@ private fun ExamYearFourDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             items[index].toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
@@ -498,12 +519,15 @@ private fun ExamYearThreeDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             index.toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
@@ -522,12 +546,15 @@ private fun ExamYearTwoDigits(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             index.toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
@@ -546,12 +573,15 @@ private fun ExamYearOneDigit(state: MutableIntState) {
         unfocusedCount = 2,
         state = listState,
         focus = {
-            FWheelPickerFocusVertical(dividerColor = androidx.compose.ui.graphics.Color.White, dividerSize = 2.dp)
+            FWheelPickerFocusVertical(
+                dividerColor = Color.White,
+                dividerSize = 2.dp
+            )
         },
     ) { index ->
         Text(
             index.toString(),
-            color = androidx.compose.ui.graphics.Color.Black
+            color = Color.Black
         )
     }
 }
