@@ -2,7 +2,10 @@ package com.example.proenglishscoretracker.chart_screen
 
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
 import android.view.ViewGroup
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,6 +50,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -54,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
 import com.example.proenglishscoretracker.wheel_picker.FWheelPickerFocusVertical
@@ -64,6 +70,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.listener.ChartTouchListener
+import com.github.mikephil.charting.listener.OnChartGestureListener
 
 @Composable
 fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
@@ -205,6 +213,7 @@ private fun EikenScoreChart(
     examYear: Int
 ) {
     val eikenInfoList by viewModel.eikenSecondInfo.collectAsState()
+    var isGraphTapped by rememberSaveable { mutableStateOf(false) }
 
     // データが存在しない場合のメッセージ
     if (eikenInfoList.isEmpty()) {
@@ -215,7 +224,7 @@ private fun EikenScoreChart(
             Text(
                 text = "まだスコアが登録されていません。",
                 fontSize = 18.sp,
-                color = androidx.compose.ui.graphics.Color.Gray
+                color = Color.Gray
             )
         }
     } else {
@@ -232,7 +241,7 @@ private fun EikenScoreChart(
                 Text(
                     text = "選択した年のデータがありません。",
                     fontSize = 18.sp,
-                    color = androidx.compose.ui.graphics.Color.Gray
+                    color = Color.Gray
                 )
             }
         } else {
@@ -263,47 +272,119 @@ private fun EikenScoreChart(
                 Entry(index.toFloat(), score)
             }
 
-            // CSEスコアのグラフ
-            AndroidView(
-                update = {
-                    it.data = updateCseData(
-                        entriesCse
-                    )
-                    it.notifyDataSetChanged()
-                    it.invalidate()
-                },
-                factory = { context ->
-                    LineChart(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-
-                        xAxis.textSize = 15f
-                        xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
-                        xAxis.position = XAxis.XAxisPosition.BOTTOM
-                        xAxis.granularity = 1f
-                        xAxis.setDrawGridLines(false)
-
-                        axisLeft.textSize = 15f
-                        axisLeft.axisMinimum = 0f
-                        axisRight.isEnabled = false
-                        description.isEnabled = false
-                        legend.isEnabled = true
-
-                        setViewPortOffsets(
-                            120f,
-                            0f,
-                            120f,
-                            0f
-                        )
-                        this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
-                    }
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-            )
+            ) {
+                // CSEスコアのグラフ
+                AndroidView(
+                    update = {
+                        it.data = updateCseData(entriesCse)
+                        it.notifyDataSetChanged()
+                        it.invalidate()
+                    },
+                    factory = { context ->
+                        LineChart(context).apply {
+//                            layoutParams = ViewGroup.LayoutParams(
+//                                ViewGroup.LayoutParams.MATCH_PARENT,
+//                                ViewGroup.LayoutParams.MATCH_PARENT
+//                            )
+
+                            xAxis.textSize = 15f
+                            xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
+                            xAxis.position = XAxis.XAxisPosition.BOTTOM
+                            xAxis.granularity = 1f
+                            xAxis.setDrawGridLines(false)
+
+                            axisLeft.textSize = 15f
+                            axisLeft.axisMinimum = 0f
+                            axisRight.isEnabled = false
+                            description.isEnabled = false
+                            legend.isEnabled = true
+
+                            setViewPortOffsets(
+                                120f,
+                                0f,
+                                120f,
+                                0f
+                            )
+
+                            animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
+
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                setVisibleXRangeMaximum(2f)
+                                invalidate()
+                            }, 100)
+
+                            // グラフのタップイベントをリスナーで検知
+                            setOnChartGestureListener(object : OnChartGestureListener {
+                                override fun onChartGestureStart(
+                                    me: MotionEvent?,
+                                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                                ) {
+                                    isGraphTapped = true // タップ開始時に表示
+                                }
+
+                                override fun onChartGestureEnd(
+                                    me: MotionEvent?,
+                                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                                ) {
+                                    isGraphTapped = false // タップ終了時に非表示
+                                }
+
+                                override fun onChartLongPressed(me: MotionEvent?) {}
+                                override fun onChartDoubleTapped(me: MotionEvent?) {}
+                                override fun onChartSingleTapped(me: MotionEvent?) {}
+                                override fun onChartFling(
+                                    me1: MotionEvent?,
+                                    me2: MotionEvent?,
+                                    velocityX: Float,
+                                    velocityY: Float
+                                ) {}
+
+                                override fun onChartScale(
+                                    me: MotionEvent?,
+                                    scaleX: Float,
+                                    scaleY: Float
+                                ) {}
+
+                                override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
+                            })
+                        }
+                    },
+                    modifier = Modifier
+                        .matchParentSize()
+                )
+                // タップ時に表示する UI（グラフの上に重ねる）
+                if (isGraphTapped) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(8.dp)
+                            .background(Color.White.copy(alpha = 0.8f), shape = RoundedCornerShape(8.dp))
+                            .padding(8.dp)
+                    ) {
+                        Text(text = "Scroll", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.right_arrow),
+                            contentDescription = "",
+                        )
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Text(text = "Pinch In", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.pinch_in),
+                            contentDescription = "",
+                        )
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Text(text = "Pinch Out", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.pinch_out),
+                            contentDescription = "",
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(64.dp))
 
@@ -329,99 +410,168 @@ private fun EikenScoreChart(
             Spacer(modifier = Modifier.height(32.dp))
 
             // 4技能のグラフ
-            AndroidView(
-                update = {
-                    it.data = updateRLWSData(
-                        entriesReading,
-                        entriesListening,
-                        entriesWriting,
-                        entriesSpeaking
-                    )
-                    it.notifyDataSetChanged()
-                    it.invalidate()
-                },
-                factory = { context ->
-                    LineChart(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-
-                        val dataSetReading = LineDataSet(
-                            entriesReading, "Readingスコア"
-                        ).apply {
-                            color = android.graphics.Color.RED
-                            valueTextColor = android.graphics.Color.BLACK
-                            valueTextSize = 15f // スコアのテキストサイズを設定
-//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
-                        }
-                        val dataSetListening = LineDataSet(
-                            entriesListening, "Listeningスコア"
-                        ).apply {
-                            color = android.graphics.Color.BLUE
-                            valueTextColor = android.graphics.Color.BLACK
-                            valueTextSize = 15f // スコアのテキストサイズを設定
-//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
-                        }
-                        val dataSetWriting = LineDataSet(
-                            entriesWriting, "Writingスコア"
-                        ).apply {
-                            color = android.graphics.Color.GREEN
-                            valueTextColor = android.graphics.Color.BLACK
-                            valueTextSize = 15f // スコアのテキストサイズを設定
-//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
-                        }
-                        val dataSetSpeaking = LineDataSet(
-                            entriesSpeaking, "Speakingスコア"
-                        ).apply {
-                            color = android.graphics.Color.MAGENTA
-                            valueTextColor = android.graphics.Color.BLACK
-                            valueTextSize = 15f // スコアのテキストサイズを設定
-//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
-                        }
-
-                        val lineData = LineData(
-                            dataSetReading,
-                            dataSetListening,
-                            dataSetWriting,
-                            dataSetSpeaking
-                        )
-                        this.data = lineData
-
-                        // X軸ラベル設定
-                        xAxis.textSize = 15f
-                        xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
-                        xAxis.position = XAxis.XAxisPosition.BOTTOM
-                        xAxis.granularity = 1f
-                        xAxis.setDrawGridLines(false)
-
-                        // Y軸設定
-                        axisLeft.textSize = 15f
-                        axisLeft.axisMinimum = 0f
-                        axisRight.isEnabled = false
-                        description.isEnabled = false
-                        legend.isEnabled = true
-
-                        // グラフの余白設定
-                        setViewPortOffsets(
-                            120f,
-                            0f,
-                            120f,
-                            0f
-                        )
-
-                        // 左から右に表示するアニメーションを追加。
-                        this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            invalidate()
-                        }, 100)
-                    }
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
-            )
+            ) {
+                AndroidView(
+                    update = {
+                        it.data = updateRLWSData(
+                            entriesReading,
+                            entriesListening,
+                            entriesWriting,
+                            entriesSpeaking
+                        )
+                        it.notifyDataSetChanged()
+                        it.invalidate()
+                    },
+                    factory = { context ->
+                        LineChart(context).apply {
+                            layoutParams = ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+
+                            val dataSetReading = LineDataSet(
+                                entriesReading, "Readingスコア"
+                            ).apply {
+                                color = android.graphics.Color.RED
+                                valueTextColor = android.graphics.Color.BLACK
+                                valueTextSize = 15f // スコアのテキストサイズを設定
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+                            }
+                            val dataSetListening = LineDataSet(
+                                entriesListening, "Listeningスコア"
+                            ).apply {
+                                color = android.graphics.Color.BLUE
+                                valueTextColor = android.graphics.Color.BLACK
+                                valueTextSize = 15f // スコアのテキストサイズを設定
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+                            }
+                            val dataSetWriting = LineDataSet(
+                                entriesWriting, "Writingスコア"
+                            ).apply {
+                                color = android.graphics.Color.GREEN
+                                valueTextColor = android.graphics.Color.BLACK
+                                valueTextSize = 15f // スコアのテキストサイズを設定
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+                            }
+                            val dataSetSpeaking = LineDataSet(
+                                entriesSpeaking, "Speakingスコア"
+                            ).apply {
+                                color = android.graphics.Color.MAGENTA
+                                valueTextColor = android.graphics.Color.BLACK
+                                valueTextSize = 15f // スコアのテキストサイズを設定
+//                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
+                            }
+
+                            val lineData = LineData(
+                                dataSetReading,
+                                dataSetListening,
+                                dataSetWriting,
+                                dataSetSpeaking
+                            )
+                            this.data = lineData
+
+                            // X軸ラベル設定
+                            xAxis.textSize = 15f
+                            xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
+                            xAxis.position = XAxis.XAxisPosition.BOTTOM
+                            xAxis.granularity = 1f
+                            xAxis.setDrawGridLines(false)
+
+                            // Y軸設定
+                            axisLeft.textSize = 15f
+                            axisLeft.axisMinimum = 0f
+                            axisRight.isEnabled = false
+                            description.isEnabled = false
+                            legend.isEnabled = true
+
+                            // グラフの余白設定
+                            setViewPortOffsets(
+                                120f,
+                                0f,
+                                120f,
+                                0f
+                            )
+
+                            // 左から右に表示するアニメーションを追加。
+                            this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
+
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                setVisibleXRangeMaximum(2f)
+                                invalidate()
+                            }, 100)
+
+                            // グラフのタップイベントをリスナーで検知
+                            setOnChartGestureListener(object : OnChartGestureListener {
+                                override fun onChartGestureStart(
+                                    me: MotionEvent?,
+                                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                                ) {
+                                    isGraphTapped = true // タップ開始時に表示
+                                }
+
+                                override fun onChartGestureEnd(
+                                    me: MotionEvent?,
+                                    lastPerformedGesture: ChartTouchListener.ChartGesture?
+                                ) {
+                                    isGraphTapped = false // タップ終了時に非表示
+                                }
+
+                                override fun onChartLongPressed(me: MotionEvent?) {}
+                                override fun onChartDoubleTapped(me: MotionEvent?) {}
+                                override fun onChartSingleTapped(me: MotionEvent?) {}
+                                override fun onChartFling(
+                                    me1: MotionEvent?,
+                                    me2: MotionEvent?,
+                                    velocityX: Float,
+                                    velocityY: Float
+                                ) {}
+
+                                override fun onChartScale(
+                                    me: MotionEvent?,
+                                    scaleX: Float,
+                                    scaleY: Float
+                                ) {}
+
+                                override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
+                            })
+                        }
+                    },
+                    modifier = Modifier
+                        .matchParentSize()
+                )
+                // タップ時に表示する UI（グラフの上に重ねる）
+                if (isGraphTapped) {
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(8.dp)
+                            .background(Color.White.copy(alpha = 0.8f), shape = RoundedCornerShape(8.dp))
+                            .padding(8.dp)
+                    ) {
+                        Text(text = "Scroll", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.right_arrow),
+                            contentDescription = "",
+                        )
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Text(text = "Pinch In", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.pinch_in),
+                            contentDescription = "",
+                        )
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Text(text = "Pinch Out", fontSize = 12.sp, color = Color.Black)
+                        Image(
+                            painter = painterResource(id = R.drawable.pinch_out),
+                            contentDescription = "",
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(64.dp))
 
