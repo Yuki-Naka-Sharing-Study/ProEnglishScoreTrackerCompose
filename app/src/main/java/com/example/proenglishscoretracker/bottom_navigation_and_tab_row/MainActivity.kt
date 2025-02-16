@@ -42,6 +42,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoDatabase
 import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
+import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.record_screen.EikenRecordScreen
 import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
@@ -77,13 +78,17 @@ class MainActivity : ComponentActivity() {
         englishInfoDao = database.englishInfoDao()
         repository = EnglishInfoRepository(englishInfoDao)
         setContent {
-            EnglishScoreTracker(viewModel = viewModel)
+            EnglishScoreTracker(
+                viewModel = viewModel
+            )
         }
     }
 }
 
 @Composable
-fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
+fun EnglishScoreTracker(
+    viewModel: EnglishInfoViewModel
+) {
     val navController = rememberNavController()
     val isFirstLaunchState = viewModel.isFirstLaunch.collectAsState(initial = null)
 
@@ -110,16 +115,25 @@ fun EnglishScoreTracker(viewModel: EnglishInfoViewModel) {
                     }
                 )
             }
-            composable("examDataScreen") { ExamDataScreen(viewModel) }
+            composable("examDataScreen") { ExamDataScreen(viewModel, navController) }
             composable("examRecordScreen") { ExamRecordScreen(viewModel) }
             composable("setting") { SettingsScreen() }
 
             // XxxIndividualScreen
-            composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel) }
+            composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }
             composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen(viewModel) }
             composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel) }
             composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel) }
             composable("ieltsIndividualScreen") { IeltsIndividualScreen() }
+
+            // XxxDetailScreen
+            composable("toeic_detail/{toeicId}") { backStackEntry ->
+                val toeicId = backStackEntry.arguments?.getString("toeicId")
+                // toeicIdを使用して詳細情報を取得し、ToeicDetailScreenに渡す
+                if (toeicId != null) {
+                    ToeicDetailScreen(toeicId = toeicId, viewModel = viewModel)
+                }
+            }
 
             // XxxChartScreen
             composable("toeicChartScreen") { ToeicChartScreen(viewModel) }

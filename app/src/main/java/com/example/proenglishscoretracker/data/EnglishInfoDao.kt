@@ -17,6 +17,8 @@ interface EnglishInfoDao {
     suspend fun updateToeicInfo(item: EnglishTestInfo.TOEIC)
     @Query("SELECT * FROM toeic")
     suspend fun getAllToeicInfo(): List<EnglishTestInfo.TOEIC>
+    @Query("SELECT * FROM toeic WHERE id = :toeicId")
+    suspend fun getToeicInfoById(toeicId: String): EnglishTestInfo.TOEIC?
 
 
     // TOEIC SW

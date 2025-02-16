@@ -17,6 +17,7 @@ import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScree
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
 import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen
@@ -32,7 +33,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class)
 @Composable
-fun ExamDataScreen(viewModel: EnglishInfoViewModel) {
+fun ExamDataScreen(
+    viewModel: EnglishInfoViewModel,
+    navHostController: NavHostController
+) {
     val tabs = listOf(
         TabItem.IELTS,
         TabItem.TOEFL_IBT,
@@ -49,7 +53,7 @@ fun ExamDataScreen(viewModel: EnglishInfoViewModel) {
             1 -> ToeflIbtSegmentedButton(viewModel)
             2 -> EikenSegmentedButton(viewModel)
             3 -> ToeicSwSegmentedButton(viewModel)
-            4 -> ToeicSegmentedButton(viewModel)
+            4 -> ToeicSegmentedButton(viewModel, navHostController)
         }
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
@@ -89,7 +93,10 @@ private fun Tabs(
 }
 
 @Composable
-private fun ToeicSegmentedButton(viewModel: EnglishInfoViewModel) {
+private fun ToeicSegmentedButton(
+    viewModel: EnglishInfoViewModel,
+    navHostController: NavHostController
+) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("個別", "グラフ")
 
@@ -118,7 +125,7 @@ private fun ToeicSegmentedButton(viewModel: EnglishInfoViewModel) {
             }
         }
         when (selectedIndex) {
-            0 -> ToeicIndividualScreen(viewModel)
+            0 -> ToeicIndividualScreen(viewModel, navHostController)
             1 -> ToeicChartScreen(viewModel)
         }
     }

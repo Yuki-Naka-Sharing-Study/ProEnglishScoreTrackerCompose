@@ -1,6 +1,7 @@
 package com.example.proenglishscoretracker.individual_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,9 +41,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {
+fun ToeicIndividualScreen(
+    viewModel: EnglishInfoViewModel,
+    navController: NavHostController
+) {
     val toeicInfoList = viewModel.toeicInfo.collectAsState().value
 
     // 日付の降順でソート
@@ -62,11 +67,23 @@ fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {
             )
         }
     } else {
+//        LazyColumn(
+//            modifier = Modifier.fillMaxSize()
+//        ) {
+//            items(items = sortedToeicInfoList) { toeicInfo ->
+//                ToeicItem(toeicInfo = toeicInfo, viewModel)
+//            }
+//        }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
             items(items = sortedToeicInfoList) { toeicInfo ->
-                ToeicItem(toeicInfo = toeicInfo, viewModel)
+                ToeicItem(
+                    toeicInfo = toeicInfo,
+                    viewModel = viewModel,
+                    navController = navController
+                )
             }
         }
     }
@@ -75,14 +92,19 @@ fun ToeicIndividualScreen(viewModel: EnglishInfoViewModel) {
 @Composable
 private fun ToeicItem(
     toeicInfo: EnglishTestInfo.TOEIC,
-    viewModel: EnglishInfoViewModel
+    viewModel: EnglishInfoViewModel,
+    navController: NavHostController
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {
+                // 詳細画面に遷移
+                navController.navigate("toeic_detail/${toeicInfo.id}")
+            },
         elevation = 4.dp
     ) {
         Box(
@@ -246,7 +268,8 @@ private fun EditToeicDialog(
                         toeicInfo.copy(
                             date = newDate,
                             readingScore = newReadingScore.toIntOrNull() ?: toeicInfo.readingScore,
-                            listeningScore = newListeningScore.toIntOrNull() ?: toeicInfo.listeningScore,
+                            listeningScore = newListeningScore.toIntOrNull()
+                                ?: toeicInfo.listeningScore,
                             memo = newMemo
                         )
                     )
