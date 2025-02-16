@@ -43,7 +43,6 @@ fun ToeicDetailScreen(
     }
 
     val toeicInfo by viewModel.selectedToeicInfo.collectAsState()
-//    val showAlertDialog = rememberSaveable { mutableStateOf(false) }
     var showAlertDialog by rememberSaveable { mutableStateOf(false) }
 
     Box(
