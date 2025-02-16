@@ -23,6 +23,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -101,7 +102,10 @@ fun ToeicSwDetailScreen(
                             navController.popBackStack()
                         }
                     ) {
-                        Text(text = "削除")
+                        Text(
+                            text = "削除",
+                            color = Color.Red
+                        )
                     }
                 },
                 dismissButton = {
