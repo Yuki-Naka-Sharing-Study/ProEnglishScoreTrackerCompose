@@ -131,7 +131,11 @@ fun EnglishScoreTracker(
                 val toeicId = backStackEntry.arguments?.getString("toeicId")
                 // toeicIdを使用して詳細情報を取得し、ToeicDetailScreenに渡す
                 if (toeicId != null) {
-                    ToeicDetailScreen(toeicId = toeicId, viewModel = viewModel)
+                    ToeicDetailScreen(
+                        toeicId = toeicId,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
                 }
             }
 
