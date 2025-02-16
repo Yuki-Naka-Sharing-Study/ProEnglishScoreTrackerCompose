@@ -121,11 +121,11 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         )
         dao.insertToeflInfo(toeflInfo)
     }
-    suspend fun getAllToeflInfo(): List<EnglishTestInfo.TOEFL> {
-        return dao.getAllToeflIbtInfo()
-    }
     suspend fun deleteToeflIbtInfo(toeflIbtInfo: EnglishTestInfo.TOEFL) {
         dao.deleteToeflIbtInfo(toeflIbtInfo)
+    }
+    suspend fun getAllToeflInfo(): List<EnglishTestInfo.TOEFL> {
+        return dao.getAllToeflIbtInfo()
     }
     suspend fun updateToeflIbtInfo(toeflIbtInfo: EnglishTestInfo.TOEFL) {
         dao.updateToeflIbtInfo(toeflIbtInfo)

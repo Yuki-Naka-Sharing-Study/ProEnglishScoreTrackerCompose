@@ -85,7 +85,6 @@ class EnglishInfoViewModel(
             _toeicInfo.value = englishInfoDao.getAllToeicInfo()
         }
     }
-
     fun saveToeicValues(
         date: String,
         readingScore: Int,
@@ -115,12 +114,6 @@ class EnglishInfoViewModel(
     fun loadAllToeicInfo() {
         viewModelScope.launch {
             _toeicInfo.value = repository.getAllToeicInfo()
-        }
-    }
-    fun deleteToeicValues(toeicInfo: EnglishTestInfo.TOEIC) {
-        viewModelScope.launch {
-            repository.deleteToeicInfo(toeicInfo)
-            this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
         }
     }
     fun updateToeicValues(toeicInfo: EnglishTestInfo.TOEIC) {
@@ -173,12 +166,6 @@ class EnglishInfoViewModel(
             _toeicSwInfo.value = repository.getAllToeicSwInfo()
         }
     }
-    fun deleteToeicSwValues(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
-        viewModelScope.launch {
-            repository.deleteToeicSwInfo(toeicSwInfo)
-            this@EnglishInfoViewModel._toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
-        }
-    }
     fun updateToeicSwValues(toeicInfo: EnglishTestInfo.TOEIC_SW) {
         viewModelScope.launch {
             repository.updateToeicSwInfo(toeicInfo)
@@ -199,7 +186,6 @@ class EnglishInfoViewModel(
             _eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
         }
     }
-
     fun saveEikenValues(
         date: String,
         grade: String,
@@ -237,13 +223,6 @@ class EnglishInfoViewModel(
         viewModelScope.launch {
 //            _toeicInfo.value = repository.getAllToeicInfo()
             _eikenSecondInfo.value = repository.getAllEikenInfo()
-        }
-    }
-    fun deleteEikenValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
-        viewModelScope.launch {
-            repository.deleteEikenInfo(eikenInfo)
-//            this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
-            this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
         }
     }
     fun updateEikenValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
@@ -288,15 +267,18 @@ class EnglishInfoViewModel(
             loadAllToeflInfo() // データを保存後に再読み込み
         }
     }
+    fun deleteToeflIbtInfo(toeflIbtId: String) {
+        viewModelScope.launch {
+            val toeflIbtInfo = selectedToeflIbtInfo.value
+            if (toeflIbtInfo != null && toeflIbtInfo.id.toString() == toeflIbtId) {
+                repository.deleteToeflIbtInfo(toeflIbtInfo)
+                loadAllToeflInfo()
+            }
+        }
+    }
     fun loadAllToeflInfo() {
         viewModelScope.launch {
             _toeflIbtInfo.value = repository.getAllToeflInfo()
-        }
-    }
-    fun deleteToeflIbtValues(toeflIbtInfo: EnglishTestInfo.TOEFL) {
-        viewModelScope.launch {
-            repository.deleteToeflIbtInfo(toeflIbtInfo)
-            this@EnglishInfoViewModel._toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
         }
     }
     fun updateToeflIbtValues(toeflIbtInfo: EnglishTestInfo.TOEFL) {
