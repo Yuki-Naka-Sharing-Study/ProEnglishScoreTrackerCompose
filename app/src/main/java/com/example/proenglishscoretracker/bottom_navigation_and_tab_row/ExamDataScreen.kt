@@ -99,7 +99,7 @@ private fun ToeicSegmentedButton(
     navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("個別", "グラフ")
+    val options = listOf("グラフ", "個別")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -126,8 +126,8 @@ private fun ToeicSegmentedButton(
             }
         }
         when (selectedIndex) {
-            0 -> ToeicIndividualScreen(viewModel, navHostController)
-            1 -> ToeicChartScreen(viewModel)
+            0 -> ToeicChartScreen(viewModel)
+            1 -> ToeicIndividualScreen(viewModel, navHostController)
         }
     }
 }
@@ -138,7 +138,7 @@ private fun ToeicSwSegmentedButton(
     navController: NavController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("個別", "グラフ")
+    val options = listOf("グラフ", "個別")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -165,8 +165,8 @@ private fun ToeicSwSegmentedButton(
             }
         }
         when (selectedIndex) {
-            0 -> ToeicSwIndividualScreen(viewModel, navController)
-            1 -> ToeicSwChartScreen(viewModel)
+            0 -> ToeicSwChartScreen(viewModel)
+            1 -> ToeicSwIndividualScreen(viewModel, navController)
         }
     }
 }
@@ -177,7 +177,7 @@ private fun EikenSegmentedButton(
     navController: NavController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("個別", "グラフ")
+    val options = listOf("グラフ", "個別")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -204,8 +204,8 @@ private fun EikenSegmentedButton(
             }
         }
         when (selectedIndex) {
-            0 -> EikenIndividualScreen(viewModel, navController)
-            1 -> EikenChartScreen(viewModel)
+            0 -> EikenChartScreen(viewModel)
+            1 -> EikenIndividualScreen(viewModel, navController)
         }
     }
 }
@@ -216,7 +216,7 @@ private fun ToeflIbtSegmentedButton(
     navController: NavController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("個別", "グラフ")
+    val options = listOf("グラフ", "個別")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -243,8 +243,8 @@ private fun ToeflIbtSegmentedButton(
             }
         }
         when (selectedIndex) {
-            0 -> ToeflIbtIndividualScreen(viewModel, navController)
-            1 -> ToeflIbtChartScreen(viewModel)
+            0 -> ToeflIbtChartScreen(viewModel)
+            1 -> ToeflIbtIndividualScreen(viewModel, navController)
         }
     }
 }
@@ -252,7 +252,7 @@ private fun ToeflIbtSegmentedButton(
 @Composable
 private fun IeltsSegmentedButton() {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("個別", "グラフ")
+    val options = listOf("グラフ", "個別")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -279,8 +279,8 @@ private fun IeltsSegmentedButton() {
             }
         }
         when (selectedIndex) {
-            0 -> IeltsIndividualScreen()
-            1 -> IeltsChartScreen()
+            0 -> IeltsChartScreen()
+            1 -> IeltsIndividualScreen()
         }
     }
 }
