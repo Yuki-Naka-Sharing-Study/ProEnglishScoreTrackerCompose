@@ -2,6 +2,7 @@ package com.example.proenglishscoretracker.detail_screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -54,17 +56,30 @@ fun EikenDetailScreen(
             )
         }
 
-        IconButton(
-            onClick = { /* 捨てる処理を追加 */ },
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
+        // 右上の編集アイコンと削除アイコン
+        Row(
+            modifier = Modifier.align(Alignment.TopEnd),
         ) {
-            Icon(
-                Icons.Default.Delete,
-                contentDescription = "削除する",
-                tint = androidx.compose.ui.graphics.Color.Gray
-            )
+            IconButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = { /* 削除処理を追加 */ }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.delete),
+                    contentDescription = "削除する",
+                    tint = androidx.compose.ui.graphics.Color.Red
+                )
+            }
+            IconButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = { /* 編集処理を追加 */ }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.edit),
+                    contentDescription = "編集する",
+                    tint = androidx.compose.ui.graphics.Color.Gray
+                )
+            }
         }
 
         Column(modifier = Modifier.padding(start = 16.dp)) {
