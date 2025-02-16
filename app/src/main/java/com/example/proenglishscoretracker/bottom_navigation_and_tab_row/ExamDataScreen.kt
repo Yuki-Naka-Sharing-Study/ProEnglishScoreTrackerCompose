@@ -2,6 +2,7 @@ package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -17,6 +18,7 @@ import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScree
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
@@ -103,7 +105,9 @@ private fun ToeicSegmentedButton(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             options.forEachIndexed { index, label ->
                 SegmentedButton(
@@ -142,7 +146,9 @@ private fun ToeicSwSegmentedButton(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             options.forEachIndexed { index, label ->
                 SegmentedButton(
@@ -181,7 +187,9 @@ private fun EikenSegmentedButton(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             options.forEachIndexed { index, label ->
                 SegmentedButton(
@@ -220,7 +228,9 @@ private fun ToeflIbtSegmentedButton(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             options.forEachIndexed { index, label ->
                 SegmentedButton(
@@ -256,7 +266,9 @@ private fun IeltsSegmentedButton() {
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
         ) {
             options.forEachIndexed { index, label ->
                 SegmentedButton(
