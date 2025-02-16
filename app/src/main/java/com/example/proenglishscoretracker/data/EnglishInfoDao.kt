@@ -57,5 +57,8 @@ interface EnglishInfoDao {
     suspend fun updateToeflIbtInfo(item: EnglishTestInfo.TOEFL)
     @Query("SELECT * FROM toefl")
     suspend fun getAllToeflIbtInfo(): List<EnglishTestInfo.TOEFL>
+    @Query("SELECT * FROM toefl WHERE id = :toeflIbtId")
+    suspend fun getToeflIbtInfoById(toeflIbtId: String): EnglishTestInfo.TOEFL?
+
 
 }

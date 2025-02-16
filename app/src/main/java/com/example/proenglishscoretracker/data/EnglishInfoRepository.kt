@@ -130,4 +130,7 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     suspend fun updateToeflIbtInfo(toeflIbtInfo: EnglishTestInfo.TOEFL) {
         dao.updateToeflIbtInfo(toeflIbtInfo)
     }
+    suspend fun getToeflIbtInfoById(toeflIbtId: String): EnglishTestInfo.TOEFL? {
+        return dao.getToeflIbtInfoById(toeflIbtId)
+    }
 }

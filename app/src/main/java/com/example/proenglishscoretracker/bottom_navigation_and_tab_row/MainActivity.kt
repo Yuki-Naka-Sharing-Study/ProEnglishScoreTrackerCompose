@@ -43,6 +43,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
 import com.example.proenglishscoretracker.detail_screen.EikenDetailScreen
+import com.example.proenglishscoretracker.detail_screen.ToeflIbtDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicSwDetailScreen
 import com.example.proenglishscoretracker.record_screen.EikenRecordScreen
@@ -125,7 +126,7 @@ fun EnglishScoreTracker(
             composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }
             composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen(viewModel, navController) }
             composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel, navController) }
-            composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel) }
+            composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel, navController) }
             composable("ieltsIndividualScreen") { IeltsIndividualScreen() }
 
             // XxxDetailScreen
@@ -155,6 +156,16 @@ fun EnglishScoreTracker(
                 if (eikenId != null) {
                     EikenDetailScreen(
                         eikenId = eikenId,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
+                }
+            }
+            composable("toefl_ibt_detail/{toeflIbtId}") { backStackEntry ->
+                val toeflIbtId = backStackEntry.arguments?.getString("toeflIbtId")
+                if (toeflIbtId != null) {
+                    ToeflIbtDetailScreen(
+                        toeflIbtId = toeflIbtId,
                         viewModel = viewModel,
                         navController = navController
                     )

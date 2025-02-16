@@ -51,7 +51,7 @@ fun ExamDataScreen(
         Tabs(tabs = tabs, pagerState = pagerState)
         when (pagerState.currentPage) {
             0 -> IeltsSegmentedButton()
-            1 -> ToeflIbtSegmentedButton(viewModel)
+            1 -> ToeflIbtSegmentedButton(viewModel, navHostController)
             2 -> EikenSegmentedButton(viewModel, navHostController)
             3 -> ToeicSwSegmentedButton(viewModel, navHostController)
             4 -> ToeicSegmentedButton(viewModel, navHostController)
@@ -211,7 +211,10 @@ private fun EikenSegmentedButton(
 }
 
 @Composable
-private fun ToeflIbtSegmentedButton(viewModel: EnglishInfoViewModel) {
+private fun ToeflIbtSegmentedButton(
+    viewModel: EnglishInfoViewModel,
+    navController: NavController
+) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("個別", "グラフ")
 
@@ -240,7 +243,7 @@ private fun ToeflIbtSegmentedButton(viewModel: EnglishInfoViewModel) {
             }
         }
         when (selectedIndex) {
-            0 -> ToeflIbtIndividualScreen(viewModel)
+            0 -> ToeflIbtIndividualScreen(viewModel, navController)
             1 -> ToeflIbtChartScreen(viewModel)
         }
     }

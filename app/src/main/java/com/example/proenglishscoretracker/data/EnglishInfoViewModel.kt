@@ -42,6 +42,9 @@ class EnglishInfoViewModel(
     private val _toeflIbtInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
     val toeflIbtInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflIbtInfo
 
+    private val _selectedToeflIbtInfo = MutableStateFlow<EnglishTestInfo.TOEFL?>(null)
+    val selectedToeflIbtInfo: StateFlow<EnglishTestInfo.TOEFL?> = _selectedToeflIbtInfo
+
     private val _ieltsInfo = MutableStateFlow<List<EnglishTestInfo.IELTS>>(emptyList())
     val ieltsInfo: StateFlow<List<EnglishTestInfo.IELTS>> = _ieltsInfo
 
@@ -274,6 +277,14 @@ class EnglishInfoViewModel(
             this@EnglishInfoViewModel._toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
         }
     }
+    fun loadToeflIbtInfoById(toeflIbtId: String) {
+        viewModelScope.launch {
+            val toeflIbtInfo = repository.getToeflIbtInfoById(toeflIbtId)
+            _selectedToeflIbtInfo.value = toeflIbtInfo
+        }
+    }
+
+
 
     fun setSumScore(value: Int) {
         _sumScore.value = value
