@@ -224,6 +224,15 @@ class EnglishInfoViewModel(
             loadAllEikenInfo() // データを保存後に再読み込み
         }
     }
+    fun deleteEikenInfo(eikenId: String) {
+        viewModelScope.launch {
+            val eikenInfo = selectedEikenInfo.value
+            if (eikenInfo != null && eikenInfo.id.toString() == eikenId) {
+                repository.deleteEikenInfo(eikenInfo)
+                loadAllEikenInfo() // 削除後に全TOEIC情報を再読み込み
+            }
+        }
+    }
     fun loadAllEikenInfo() {
         viewModelScope.launch {
 //            _toeicInfo.value = repository.getAllToeicInfo()

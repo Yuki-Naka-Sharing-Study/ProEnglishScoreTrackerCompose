@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -17,6 +19,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -39,6 +44,7 @@ fun EikenDetailScreen(
     }
 
     val eikenInfo by viewModel.selectedEikenInfo.collectAsState()
+    var showAlertDialog by rememberSaveable { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -62,7 +68,7 @@ fun EikenDetailScreen(
         ) {
             IconButton(
                 modifier = Modifier.padding(16.dp),
-                onClick = { /* 削除処理を追加 */ }
+                onClick = { showAlertDialog = true }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.delete),
@@ -81,6 +87,32 @@ fun EikenDetailScreen(
                 )
             }
         }
+
+        // 削除確認ダイアログ
+        if (showAlertDialog) {
+            AlertDialog(
+                onDismissRequest = { showAlertDialog = false },
+                title = { Text(text = "削除の確認") },
+                text = { Text(text = "この英検データを削除しますか？") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            viewModel.deleteEikenInfo(eikenId)
+                            showAlertDialog = false
+                            navController.popBackStack()
+                        }
+                    ) {
+                        Text(text = "削除")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showAlertDialog = false }) {
+                        Text(text = "キャンセル")
+                    }
+                }
+            )
+        }
+
 
         Column(modifier = Modifier.padding(start = 16.dp)) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
