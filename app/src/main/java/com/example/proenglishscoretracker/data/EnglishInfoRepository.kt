@@ -26,7 +26,6 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     suspend fun updateToeicInfo(toeicInfo: EnglishTestInfo.TOEIC) {
         dao.updateToeicInfo(toeicInfo)
     }
-    // TOEIC情報をIDで取得する関数
     suspend fun getToeicInfoById(toeicId: String): EnglishTestInfo.TOEIC? {
         return dao.getToeicInfoById(toeicId)
     }
@@ -56,6 +55,9 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     }
     suspend fun updateToeicSwInfo(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
         dao.updateToeicSwInfo(toeicSwInfo)
+    }
+    suspend fun getToeicSwInfoById(toeicSwId: String): EnglishTestInfo.TOEIC_SW? {
+        return dao.getToeicSwInfoById(toeicSwId)
     }
 
 

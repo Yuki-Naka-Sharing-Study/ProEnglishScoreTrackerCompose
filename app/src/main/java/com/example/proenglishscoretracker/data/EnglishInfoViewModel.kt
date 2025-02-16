@@ -27,6 +27,9 @@ class EnglishInfoViewModel(
     private val _toeicSwInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC_SW>>(emptyList())
     val toeicSwInfo: StateFlow<List<EnglishTestInfo.TOEIC_SW>> = _toeicSwInfo
 
+    private val _selectedToeicSwInfo = MutableStateFlow<EnglishTestInfo.TOEIC_SW?>(null)
+    val selectedToeicSwInfo: StateFlow<EnglishTestInfo.TOEIC_SW?> = _selectedToeicSwInfo
+
     private val _eikenFirstInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_FIRST>>(emptyList())
     val eikenFirstInfo: StateFlow<List<EnglishTestInfo.EIKEN_FIRST>> = _eikenFirstInfo
 
@@ -110,13 +113,6 @@ class EnglishInfoViewModel(
             this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
         }
     }
-    // TOEIC情報をIDで取得する関数
-    fun getToeicInfoById(toeicId: String) {
-        viewModelScope.launch {
-            val toeicInfo = repository.getToeicInfoById(toeicId)
-            _selectedToeicInfo.value = toeicInfo
-        }
-    }
     fun loadToeicInfoById(toeicId: String) {
         viewModelScope.launch {
             val toeicInfo = repository.getToeicInfoById(toeicId)
@@ -162,6 +158,12 @@ class EnglishInfoViewModel(
         viewModelScope.launch {
             repository.updateToeicSwInfo(toeicInfo)
             this@EnglishInfoViewModel._toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
+        }
+    }
+    fun loadToeicSwInfoById(toeicSwId: String) {
+        viewModelScope.launch {
+            val toeicSwInfo = repository.getToeicSwInfoById(toeicSwId)
+            _selectedToeicSwInfo.value = toeicSwInfo
         }
     }
 

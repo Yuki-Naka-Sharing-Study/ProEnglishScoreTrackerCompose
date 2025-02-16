@@ -67,14 +67,6 @@ fun ToeicIndividualScreen(
             )
         }
     } else {
-//        LazyColumn(
-//            modifier = Modifier.fillMaxSize()
-//        ) {
-//            items(items = sortedToeicInfoList) { toeicInfo ->
-//                ToeicItem(toeicInfo = toeicInfo, viewModel)
-//            }
-//        }
-
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
