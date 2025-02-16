@@ -102,6 +102,16 @@ class EnglishInfoViewModel(
             loadAllToeicInfo() // データを保存後に再読み込み
         }
     }
+    // TOEIC情報を削除するメソッド
+    fun deleteToeicInfo(toeicId: String) {
+        viewModelScope.launch {
+            val toeicInfo = selectedToeicInfo.value
+            if (toeicInfo != null && toeicInfo.id.toString() == toeicId) {
+                repository.deleteToeicInfo(toeicInfo)
+                loadAllToeicInfo() // 削除後に全TOEIC情報を再読み込み
+            }
+        }
+    }
     fun loadAllToeicInfo() {
         viewModelScope.launch {
             _toeicInfo.value = repository.getAllToeicInfo()
