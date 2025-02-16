@@ -47,14 +47,14 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         )
         dao.insertToeicSwInfo(toeicSwInfo)
     }
-    suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW> {
-        return dao.getAllToeicSwInfo()
-    }
     suspend fun deleteToeicSwInfo(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
         dao.deleteToeicSwInfo(toeicSwInfo)
     }
     suspend fun updateToeicSwInfo(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
         dao.updateToeicSwInfo(toeicSwInfo)
+    }
+    suspend fun getAllToeicSwInfo(): List<EnglishTestInfo.TOEIC_SW> {
+        return dao.getAllToeicSwInfo()
     }
     suspend fun getToeicSwInfoById(toeicSwId: String): EnglishTestInfo.TOEIC_SW? {
         return dao.getToeicSwInfoById(toeicSwId)

@@ -159,6 +159,15 @@ class EnglishInfoViewModel(
             loadAllToeicSwInfo() // データを保存後に再読み込み
         }
     }
+    fun deleteToeicSwInfo(toeicSwId: String) {
+        viewModelScope.launch {
+            val toeicSwInfo = selectedToeicSwInfo.value
+            if (toeicSwInfo != null && toeicSwInfo.id.toString() == toeicSwId) {
+                repository.deleteToeicSwInfo(toeicSwInfo)
+                loadAllToeicSwInfo()
+            }
+        }
+    }
     fun loadAllToeicSwInfo() {
         viewModelScope.launch {
             _toeicSwInfo.value = repository.getAllToeicSwInfo()
