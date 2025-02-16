@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -35,20 +36,35 @@ fun ToeicDetailScreen(
         viewModel.loadToeicInfoById(toeicId)
     }
 
-    // selectedToeicInfoを監視
     val toeicInfo by viewModel.selectedToeicInfo.collectAsState()
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // IconButtonを左上に配置
         IconButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
         ) {
-            Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "戻る")
+            Icon(
+                Icons.AutoMirrored.Outlined.ArrowBack,
+                contentDescription = "戻る",
+                tint = androidx.compose.ui.graphics.Color.Gray
+            )
+        }
+
+        IconButton(
+            onClick = { /* 捨てる処理を追加 */ },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            Icon(
+                Icons.Default.Delete,
+                contentDescription = "削除する",
+                tint = androidx.compose.ui.graphics.Color.Gray
+            )
         }
 
         Column(modifier = Modifier.padding(start = 16.dp)) {
