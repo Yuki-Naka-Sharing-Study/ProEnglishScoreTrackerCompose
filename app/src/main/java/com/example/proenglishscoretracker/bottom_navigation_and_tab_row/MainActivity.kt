@@ -42,6 +42,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoDatabase
 import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
+import com.example.proenglishscoretracker.detail_screen.EikenDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicSwDetailScreen
 import com.example.proenglishscoretracker.record_screen.EikenRecordScreen
@@ -123,7 +124,7 @@ fun EnglishScoreTracker(
             // XxxIndividualScreen
             composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }
             composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen(viewModel, navController) }
-            composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel) }
+            composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel, navController) }
             composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel) }
             composable("ieltsIndividualScreen") { IeltsIndividualScreen() }
 
@@ -141,7 +142,6 @@ fun EnglishScoreTracker(
             }
             composable("toeic_sw_detail/{toeicSwId}") { backStackEntry ->
                 val toeicSwId = backStackEntry.arguments?.getString("toeicSwId")
-                // toeicSwIdを使用して詳細情報を取得し、ToeicDetailScreenに渡す
                 if (toeicSwId != null) {
                     ToeicSwDetailScreen(
                         toeicSwId = toeicSwId,
@@ -150,6 +150,17 @@ fun EnglishScoreTracker(
                     )
                 }
             }
+            composable("eiken_detail/{eikenId}") { backStackEntry ->
+                val eikenId = backStackEntry.arguments?.getString("eikenId")
+                if (eikenId != null) {
+                    EikenDetailScreen(
+                        eikenId = eikenId,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
+                }
+            }
+
 
             // XxxChartScreen
             composable("toeicChartScreen") { ToeicChartScreen(viewModel) }

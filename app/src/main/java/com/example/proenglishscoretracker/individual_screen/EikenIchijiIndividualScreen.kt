@@ -1,6 +1,7 @@
 package com.example.proenglishscoretracker.individual_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,12 +38,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 
 @Composable
-fun EikenIndividualScreen(viewModel: EnglishInfoViewModel) {
+fun EikenIndividualScreen(
+    viewModel: EnglishInfoViewModel,
+    navController: NavController
+) {
     val eikenInfoList = viewModel.eikenSecondInfo.collectAsState().value
 
     // 日付の降順でソート
@@ -66,7 +72,11 @@ fun EikenIndividualScreen(viewModel: EnglishInfoViewModel) {
             modifier = Modifier.fillMaxSize()
         ) {
             items(items = sortedEikenInfoList) { eikenInfo ->
-                EikenItem(eikenInfo = eikenInfo, viewModel)
+                EikenItem(
+                    eikenInfo = eikenInfo,
+                    viewModel = viewModel,
+                    navController = navController
+                )
             }
         }
     }
@@ -75,7 +85,8 @@ fun EikenIndividualScreen(viewModel: EnglishInfoViewModel) {
 @Composable
 private fun EikenItem(
     eikenInfo: EnglishTestInfo.EIKEN_SECOND,
-    viewModel: EnglishInfoViewModel
+    viewModel: EnglishInfoViewModel,
+    navController: NavController
 ) {
     var showEditDialog by remember { mutableStateOf(false) }
 
@@ -89,6 +100,10 @@ private fun EikenItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+                .clickable {
+                    // 詳細画面に遷移
+                    navController.navigate("eiken_detail/${eikenInfo.id}")
+                },
         ) {
             Column(
                 modifier = Modifier.align(Alignment.CenterStart)

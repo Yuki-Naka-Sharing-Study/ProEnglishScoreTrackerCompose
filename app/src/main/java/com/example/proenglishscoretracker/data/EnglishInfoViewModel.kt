@@ -36,6 +36,9 @@ class EnglishInfoViewModel(
     private val _eikenSecondInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_SECOND>>(emptyList())
     val eikenSecondInfo: StateFlow<List<EnglishTestInfo.EIKEN_SECOND>> = _eikenSecondInfo
 
+    private val _selectedEikenInfo = MutableStateFlow<EnglishTestInfo.EIKEN_SECOND?>(null)
+    val selectedEikenInfo: StateFlow<EnglishTestInfo.EIKEN_SECOND?> = _selectedEikenInfo
+
     private val _toeflIbtInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
     val toeflIbtInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflIbtInfo
 
@@ -218,6 +221,13 @@ class EnglishInfoViewModel(
             this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
         }
     }
+    fun loadEikenInfoById(eikenId: String) {
+        viewModelScope.launch {
+            val eikenInfo = repository.getEikenInfoById(eikenId)
+            _selectedEikenInfo.value = eikenInfo
+        }
+    }
+
 
     // TOEFL
     init {

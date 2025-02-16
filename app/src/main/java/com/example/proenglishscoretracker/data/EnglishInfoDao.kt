@@ -43,6 +43,9 @@ interface EnglishInfoDao {
     suspend fun updateEikenInfo(item: EnglishTestInfo.EIKEN_SECOND)
     @Query("SELECT * FROM eiken_second")
     suspend fun getAllEikenInfo(): List<EnglishTestInfo.EIKEN_SECOND>
+    @Query("SELECT * FROM eiken_second WHERE id = :eikenId")
+    suspend fun getEikenInfoById(eikenId: String): EnglishTestInfo.EIKEN_SECOND?
+
 
 
     // TOEFL

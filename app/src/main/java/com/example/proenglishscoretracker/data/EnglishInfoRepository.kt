@@ -94,6 +94,9 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     suspend fun updateEikenInfo(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
         dao.updateEikenInfo(eikenInfo)
     }
+    suspend fun getEikenInfoById(eikenId: String): EnglishTestInfo.EIKEN_SECOND? {
+        return dao.getEikenInfoById(eikenId)
+    }
 
 
     // TOEFL
