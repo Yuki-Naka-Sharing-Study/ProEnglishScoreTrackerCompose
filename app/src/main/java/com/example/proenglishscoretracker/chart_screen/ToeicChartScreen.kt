@@ -80,6 +80,8 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
     }
 
     Column(
+        modifier = Modifier
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
