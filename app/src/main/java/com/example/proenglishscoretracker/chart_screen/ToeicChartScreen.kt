@@ -212,6 +212,7 @@ fun ToeicScoreChart(
 
                             Handler(Looper.getMainLooper()).postDelayed({
                                 setVisibleXRangeMaximum(2f)
+                                moveViewToX(data.entryCount.toFloat())
                                 invalidate()
                             }, 100)
 
