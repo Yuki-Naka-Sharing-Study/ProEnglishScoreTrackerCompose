@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
 import androidx.compose.material.Text
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -31,7 +31,7 @@ fun ToeicSwIndividualScreen(
     val toeicSwInfoList = viewModel.toeicSwInfo.collectAsState().value
 
     // 日付の降順でソート
-    val sortedToeicSwInfoList = rememberSaveable(toeicSwInfoList) {
+    val sortedToeicSwInfoList = remember(toeicSwInfoList) {
         toeicSwInfoList.sortedByDescending { it.date }
     }
 

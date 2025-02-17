@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,7 +31,7 @@ fun EikenIndividualScreen(
     val eikenInfoList = viewModel.eikenSecondInfo.collectAsState().value
 
     // 日付の降順でソート
-    val sortedEikenInfoList = rememberSaveable(eikenInfoList) {
+    val sortedEikenInfoList = remember(eikenInfoList) {
         eikenInfoList.sortedByDescending { it.date }
     }
 
