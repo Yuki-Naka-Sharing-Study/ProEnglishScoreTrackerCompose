@@ -257,6 +257,20 @@ class EnglishInfoViewModel(
             _toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
         }
     }
+    init {
+        loadAllToeflInfo()
+    }
+    fun loadAllToeflInfo() {
+        viewModelScope.launch {
+            _toeflIbtInfo.value = repository.getAllToeflInfo()
+        }
+    }
+    fun loadToeflIbtInfoById(toeflIbtId: String) {
+        viewModelScope.launch {
+            val toeflIbtInfo = repository.getToeflIbtInfoById(toeflIbtId)
+            _selectedToeflIbtInfo.value = toeflIbtInfo
+        }
+    }
     fun saveToeflValues(
         date: String,
         overallScore: Int,
@@ -281,28 +295,17 @@ class EnglishInfoViewModel(
     }
     fun deleteToeflIbtInfo(toeflIbtId: String) {
         viewModelScope.launch {
-            val toeflIbtInfo = selectedToeflIbtInfo.value
-            if (toeflIbtInfo != null && toeflIbtInfo.id.toString() == toeflIbtId) {
-                repository.deleteToeflIbtInfo(toeflIbtInfo)
-                loadAllToeflInfo()
+            val info = repository.getToeflIbtInfoById(toeflIbtId)
+            info?.let {
+                repository.deleteToeflIbtInfo(it)
+                loadAllToeflInfo() // データ削除後に最新のリストを取得
             }
-        }
-    }
-    fun loadAllToeflInfo() {
-        viewModelScope.launch {
-            _toeflIbtInfo.value = repository.getAllToeflInfo()
         }
     }
     fun updateToeflIbtValues(toeflIbtInfo: EnglishTestInfo.TOEFL) {
         viewModelScope.launch {
             repository.updateToeflIbtInfo(toeflIbtInfo)
             this@EnglishInfoViewModel._toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
-        }
-    }
-    fun loadToeflIbtInfoById(toeflIbtId: String) {
-        viewModelScope.launch {
-            val toeflIbtInfo = repository.getToeflIbtInfoById(toeflIbtId)
-            _selectedToeflIbtInfo.value = toeflIbtInfo
         }
     }
 
