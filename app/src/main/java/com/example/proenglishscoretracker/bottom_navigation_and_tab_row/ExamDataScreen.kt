@@ -41,22 +41,22 @@ fun ExamDataScreen(
     navHostController: NavHostController
 ) {
     val tabs = listOf(
-        TabItem.IELTS,
-        TabItem.TOEFL_IBT,
-        TabItem.EIKEN,
-        TabItem.TOEIC_SW,
         TabItem.TOEIC,
+        TabItem.TOEIC_SW,
+        TabItem.EIKEN,
+        TabItem.TOEFL_IBT,
+        TabItem.IELTS,
     )
-    val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
+    val pagerState = com.google.accompanist.pager.rememberPagerState(initialPage = 0)
 
     Column {
         Tabs(tabs = tabs, pagerState = pagerState)
         when (pagerState.currentPage) {
-            0 -> IeltsSegmentedButton()
-            1 -> ToeflIbtSegmentedButton(viewModel, navHostController)
+            0 -> ToeicSegmentedButton(viewModel, navHostController)
+            1 -> ToeicSwSegmentedButton(viewModel, navHostController)
             2 -> EikenSegmentedButton(viewModel, navHostController)
-            3 -> ToeicSwSegmentedButton(viewModel, navHostController)
-            4 -> ToeicSegmentedButton(viewModel, navHostController)
+            3 -> ToeflIbtSegmentedButton(viewModel, navHostController)
+            4 -> IeltsSegmentedButton()
         }
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
