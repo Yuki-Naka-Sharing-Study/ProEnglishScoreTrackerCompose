@@ -67,32 +67,41 @@ fun ToeicSwChartScreen(viewModel: EnglishInfoViewModel) {
     // 最新の受験年を取得
     val latestExamYear = toeicSwInfoList
         .mapNotNull { it.date.substring(0, 4).toIntOrNull() }
-        .maxOrNull() ?: 0 // データがない場合は0を設定
+        .maxOrNull()
 
     // examYearの初期値を最新の受験年に設定
-    var examYear by rememberSaveable { mutableIntStateOf(latestExamYear) }
+    var examYear by rememberSaveable { mutableStateOf<Int?>(null) }
+
+    // データが取得できたら examYear を設定
+    LaunchedEffect(latestExamYear) {
+        if (latestExamYear != null && examYear == null) {
+            examYear = latestExamYear
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "受験年を選択",
-            fontSize = 20.sp
-        )
+        Text(text = "受験年を選択", fontSize = 20.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        ExamYearPicker(
-            modifier = Modifier,
-            selectedExamYear = examYear,
-            onScoreConfirm = { selectedYear ->
-                examYear = selectedYear
-            }
-        )
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        ToeicSwScoreChart(viewModel, examYear)
+        // examYear が null の間は表示しない
+        if (examYear != null) {
+            ExamYearPicker(
+                modifier = Modifier,
+                selectedExamYear = examYear!!,
+                onScoreConfirm = { selectedYear ->
+                    examYear = selectedYear
+                }
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+            ToeicSwScoreChart(
+                viewModel,
+                examYear!!,
+            )
+        }
     }
 }
 
