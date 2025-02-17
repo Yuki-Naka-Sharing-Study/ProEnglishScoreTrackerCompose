@@ -79,18 +79,17 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "受験年を選択", fontSize = 20.sp)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // examYear が null の間は表示しない
-        if (examYear != null) {
+    // examYear が null の間は表示しない
+    if (examYear != null) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "受験年を選択", fontSize = 20.sp)
+            Spacer(modifier = Modifier.height(16.dp))
             ExamYearPicker(
                 modifier = Modifier,
                 selectedExamYear = examYear!!,
@@ -102,6 +101,19 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
             ToeicScoreChart(
                 viewModel,
                 examYear!!,
+            )
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "まだスコアが登録されていません。",
+                fontSize = 18.sp,
+                color = Color.Gray
             )
         }
     }
@@ -242,15 +254,22 @@ fun ToeicScoreChart(
                                     me2: MotionEvent?,
                                     velocityX: Float,
                                     velocityY: Float
-                                ) {}
+                                ) {
+                                }
 
                                 override fun onChartScale(
                                     me: MotionEvent?,
                                     scaleX: Float,
                                     scaleY: Float
-                                ) {}
+                                ) {
+                                }
 
-                                override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
+                                override fun onChartTranslate(
+                                    me: MotionEvent?,
+                                    dX: Float,
+                                    dY: Float
+                                ) {
+                                }
                             })
                         }
                     },
@@ -264,8 +283,10 @@ fun ToeicScoreChart(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(8.dp)
-                            .background(Color.White.copy(
-                                alpha = 0.8f),
+                            .background(
+                                Color.White.copy(
+                                    alpha = 0.8f
+                                ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .padding(8.dp)
@@ -316,9 +337,11 @@ fun ToeicScoreChart(
             Spacer(modifier = Modifier.height(64.dp))
 
             val currentReadingScore = readingScores.last().toInt()
-            val previousReadingScore = readingScores.dropLast(1).lastOrNull()?.toInt() ?: currentReadingScore
+            val previousReadingScore =
+                readingScores.dropLast(1).lastOrNull()?.toInt() ?: currentReadingScore
             val currentListeningScore = listeningScores.last().toInt()
-            val previousListeningScore = listeningScores.dropLast(1).lastOrNull()?.toInt() ?: currentListeningScore
+            val previousListeningScore =
+                listeningScores.dropLast(1).lastOrNull()?.toInt() ?: currentListeningScore
 
             Column(
                 horizontalAlignment = Alignment.Start
@@ -607,6 +630,7 @@ private fun ComparePreviousScore(
                 "前回より${scoreDifference}点上がっています。"
             )
         }
+
         scoreDifference < 0 -> {
             Triple(
                 Icons.Default.KeyboardArrowDown,
@@ -614,6 +638,7 @@ private fun ComparePreviousScore(
                 "前回より${-scoreDifference}点下がっています。"
             )
         }
+
         else -> {
             Triple(
                 Icons.Default.Minimize,

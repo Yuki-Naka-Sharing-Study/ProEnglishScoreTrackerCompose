@@ -81,6 +81,8 @@ fun ToeflIbtChartScreen(viewModel: EnglishInfoViewModel) {
         }
     }
 
+    // TODO : 「ToeicChartScreen」のデータ表示ロジックを参考に実装する予定
+
     Column(
         modifier = Modifier
             .fillMaxSize()
