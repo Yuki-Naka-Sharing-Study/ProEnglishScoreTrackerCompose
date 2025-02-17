@@ -19,6 +19,7 @@ import com.example.proenglishscoretracker.data.EnglishTestInfo
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
@@ -87,7 +88,11 @@ private fun ToeflIbtInfo(
                 Text(text = "Listeningスコア: ${toeflIbtInfo.listeningScore}")
                 Text(text = "Writingスコア: ${toeflIbtInfo.writingScore}")
                 Text(text = "Speakingスコア: ${toeflIbtInfo.speakingScore}")
-                Text(text = "メモ: ${toeflIbtInfo.memo}")
+                Text(
+                    text = "メモ: ${toeflIbtInfo.memo}",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }

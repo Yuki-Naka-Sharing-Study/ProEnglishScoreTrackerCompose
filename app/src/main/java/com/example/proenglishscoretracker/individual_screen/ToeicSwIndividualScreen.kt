@@ -19,6 +19,7 @@ import com.example.proenglishscoretracker.data.EnglishTestInfo
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
@@ -84,7 +85,11 @@ private fun ToeicSwItem(
                 Text(text = "受験日: ${toeicSwInfo.date}")
                 Text(text = "Writingスコア: ${toeicSwInfo.writingScore}")
                 Text(text = "Speakingスコア: ${toeicSwInfo.speakingScore}")
-                Text(text = "メモ: ${toeicSwInfo.memo}")
+                Text(
+                    text = "メモ: ${toeicSwInfo.memo}",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
