@@ -194,6 +194,21 @@ class EnglishInfoViewModel(
             _eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
         }
     }
+    init {
+        loadAllEikenInfo()
+    }
+    fun loadAllEikenInfo() {
+        viewModelScope.launch {
+//            _toeicInfo.value = repository.getAllToeicInfo()
+            _eikenSecondInfo.value = repository.getAllEikenInfo()
+        }
+    }
+    fun loadEikenInfoById(eikenId: String) {
+        viewModelScope.launch {
+            val eikenInfo = repository.getEikenInfoById(eikenId)
+            _selectedEikenInfo.value = eikenInfo
+        }
+    }
     fun saveEikenValues(
         date: String,
         grade: String,
@@ -220,17 +235,11 @@ class EnglishInfoViewModel(
     }
     fun deleteEikenInfo(eikenId: String) {
         viewModelScope.launch {
-            val eikenInfo = selectedEikenInfo.value
-            if (eikenInfo != null && eikenInfo.id.toString() == eikenId) {
-                repository.deleteEikenInfo(eikenInfo)
-                loadAllEikenInfo() // 削除後に全TOEIC情報を再読み込み
+            val info = repository.getEikenInfoById(eikenId)
+            info?.let {
+                repository.deleteEikenInfo(it)
+                loadAllEikenInfo() // データ削除後に最新のリストを取得
             }
-        }
-    }
-    fun loadAllEikenInfo() {
-        viewModelScope.launch {
-//            _toeicInfo.value = repository.getAllToeicInfo()
-            _eikenSecondInfo.value = repository.getAllEikenInfo()
         }
     }
     fun updateEikenValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
@@ -239,12 +248,7 @@ class EnglishInfoViewModel(
             this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
         }
     }
-    fun loadEikenInfoById(eikenId: String) {
-        viewModelScope.launch {
-            val eikenInfo = repository.getEikenInfoById(eikenId)
-            _selectedEikenInfo.value = eikenInfo
-        }
-    }
+
 
 
     // TOEFL
