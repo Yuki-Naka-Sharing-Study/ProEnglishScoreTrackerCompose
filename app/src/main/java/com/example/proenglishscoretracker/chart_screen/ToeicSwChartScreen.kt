@@ -282,7 +282,7 @@ private fun ToeicSwScoreChart(
                             painter = painterResource(id = R.drawable.right_arrow),
                             contentDescription = "",
                         )
-                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Spacer(Modifier.weight(1f))
                         Text(
                             text = "Pinch In",
                             fontSize = 12.sp,
@@ -292,7 +292,7 @@ private fun ToeicSwScoreChart(
                             painter = painterResource(id = R.drawable.pinch_in),
                             contentDescription = "",
                         )
-                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Spacer(Modifier.weight(1f))
                         Text(
                             text = "Pinch Out",
                             fontSize = 12.sp,
@@ -300,6 +300,16 @@ private fun ToeicSwScoreChart(
                         )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_out),
+                            contentDescription = "",
+                        )
+                        Spacer(Modifier.weight(1f))
+                        Text(
+                            text = "Scroll",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.left_arrow),
                             contentDescription = "",
                         )
                     }
