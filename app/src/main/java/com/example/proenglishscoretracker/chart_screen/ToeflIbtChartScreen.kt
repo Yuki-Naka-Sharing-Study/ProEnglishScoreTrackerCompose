@@ -212,6 +212,7 @@ private fun ToeflIbtScoreChart(
 
                             Handler(Looper.getMainLooper()).postDelayed({
                                 setVisibleXRangeMaximum(2f)
+                                moveViewToX(data.entryCount.toFloat())
                                 invalidate()
                             }, 100)
 
@@ -414,6 +415,7 @@ private fun ToeflIbtScoreChart(
 
                             Handler(Looper.getMainLooper()).postDelayed({
                                 setVisibleXRangeMaximum(2f)
+                                moveViewToX(data.entryCount.toFloat())
                                 invalidate()
                             }, 100)
 
