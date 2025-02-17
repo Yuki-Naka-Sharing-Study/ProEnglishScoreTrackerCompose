@@ -102,21 +102,21 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     // TOEFL
     suspend fun saveToeflInfo(
         date: String,
-        overallScore: Int,
         readingScore: Int,
         listeningScore: Int,
         writingScore: Int,
         speakingScore: Int,
+        overallScore: Int,
         memo: String
     ) {
         val toeflInfo = EnglishTestInfo.TOEFL(
             id = 0,
             date = date,
-            overallScore = overallScore,
             readingScore = readingScore,
             listeningScore = listeningScore,
             writingScore = writingScore,
             speakingScore = speakingScore,
+            overallScore = overallScore,
             memo = memo
         )
         dao.insertToeflInfo(toeflInfo)

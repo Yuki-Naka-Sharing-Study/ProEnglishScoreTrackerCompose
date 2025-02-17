@@ -273,21 +273,21 @@ class EnglishInfoViewModel(
     }
     fun saveToeflValues(
         date: String,
-        overallScore: Int,
         readingScore: Int,
         listeningScore: Int,
         writingScore: Int,
         speakingScore: Int,
+        overallScore: Int,
         memo: String
     ) {
         viewModelScope.launch {
             repository.saveToeflInfo(
                 date,
-                overallScore,
                 readingScore,
                 listeningScore,
                 writingScore,
                 speakingScore,
+                overallScore,
                 memo
             )
             loadAllToeflInfo() // データを保存後に再読み込み
