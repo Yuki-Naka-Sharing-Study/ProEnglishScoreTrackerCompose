@@ -8,6 +8,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -82,17 +84,64 @@ private fun ToeflIbtInfo(
             Column(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Text(text = "受験日: ${toeflIbtInfo.date}")
-                Text(text = "Overallスコア: ${toeflIbtInfo.overallScore}")
-                Text(text = "Readingスコア: ${toeflIbtInfo.readingScore}")
-                Text(text = "Listeningスコア: ${toeflIbtInfo.listeningScore}")
-                Text(text = "Writingスコア: ${toeflIbtInfo.writingScore}")
-                Text(text = "Speakingスコア: ${toeflIbtInfo.speakingScore}")
-                Text(
-                    text = "メモ: ${toeflIbtInfo.memo}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+
+                ) {
+                    Text(text = "受験日:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.date)
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "Overallスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.overallScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "リーディングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.readingScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "リスニングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.listeningScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "ライティングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.writingScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "スピーキングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.speakingScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(
+                        text = "メモ: ${toeflIbtInfo.memo}",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }
