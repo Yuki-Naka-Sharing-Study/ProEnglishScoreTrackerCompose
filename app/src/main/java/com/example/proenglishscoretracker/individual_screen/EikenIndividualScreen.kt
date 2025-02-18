@@ -3,12 +3,15 @@ package com.example.proenglishscoretracker.individual_screen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
@@ -83,17 +86,64 @@ private fun EikenItem(
             Column(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                androidx.compose.material.Text(text = "受験日: ${eikenInfo.date}")
-                androidx.compose.material.Text(text = "リーディングスコア: ${eikenInfo.readingScore}")
-                androidx.compose.material.Text(text = "リスニングスコア: ${eikenInfo.listeningScore}")
-                androidx.compose.material.Text(text = "ライティングスコア: ${eikenInfo.writingScore}")
-                androidx.compose.material.Text(text = "スピーキングスコア: ${eikenInfo.speakingScore}")
-                androidx.compose.material.Text(text = "CSEスコア: ${eikenInfo.cseScore}")
-                androidx.compose.material.Text(
-                    text = "メモ: ${eikenInfo.memo}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+
+                ) {
+                    Text(text = "受験日:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = eikenInfo.date)
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "Overallスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = eikenInfo.cseScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "リーディングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = eikenInfo.readingScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "リスニングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = eikenInfo.listeningScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "ライティングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = eikenInfo.writingScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "スピーキングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = eikenInfo.speakingScore.toString())
+                }
+
+                Row(
+
+                ) {
+                    Text(
+                        text = "メモ: ${eikenInfo.memo}",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }
