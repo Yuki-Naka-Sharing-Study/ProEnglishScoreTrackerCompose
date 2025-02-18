@@ -82,21 +82,18 @@ fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
         }
     }
 
-    // TODO : 「ToeicChartScreen」のデータ表示ロジックを参考に実装する予定
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "受験年を選択", fontSize = 20.sp)
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // examYear が null の間は表示しない
-        if (examYear != null) {
+    // examYear が null の間は表示しない
+    if (examYear != null) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "受験年を選択", fontSize = 20.sp)
+            Spacer(modifier = Modifier.height(16.dp))
             ExamYearPicker(
                 modifier = Modifier,
                 selectedExamYear = examYear!!,
@@ -108,6 +105,19 @@ fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
             EikenScoreChart(
                 viewModel,
                 examYear!!,
+            )
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "まだスコアが登録されていません。",
+                fontSize = 18.sp,
+                color = Color.Gray
             )
         }
     }
