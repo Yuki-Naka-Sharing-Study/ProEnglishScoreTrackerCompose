@@ -335,26 +335,30 @@ private fun ToeicSwScoreChart(
             Column(
                 horizontalAlignment = Alignment.Start
             ) {
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Writingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentWritingScore,
                         previousScore = previousWritingScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Speakingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentSpeakingScore,
                         previousScore = previousSpeakingScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         }
@@ -611,6 +615,7 @@ private fun ExamYearOneDigit(state: MutableIntState) {
 
 @Composable
 private fun ComparePreviousScore(
+    modifier: Modifier,
     currentScore: Int,
     previousScore: Int
 ) {
