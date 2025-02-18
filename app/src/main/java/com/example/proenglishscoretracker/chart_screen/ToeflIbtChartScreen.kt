@@ -321,11 +321,15 @@ private fun ToeflIbtScoreChart(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Overallスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentOverallScore,
                         previousScore = previousOverallScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
             }
 
@@ -537,11 +541,15 @@ private fun ToeflIbtScoreChart(
                 Row (
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Readingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentReadingScore,
                         previousScore = previousReadingScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -549,11 +557,15 @@ private fun ToeflIbtScoreChart(
                 Row (
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Listeningスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentListeningScore,
                         previousScore = previousListeningScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -561,11 +573,15 @@ private fun ToeflIbtScoreChart(
                 Row (
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Writingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentWritingScore,
                         previousScore = previousWritingScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -573,11 +589,15 @@ private fun ToeflIbtScoreChart(
                 Row (
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Speakingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentSpeakingScore,
                         previousScore = previousSpeakingScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
                 Spacer(modifier = Modifier.height(16.dp))
             }
@@ -871,6 +891,7 @@ private fun ExamYearOneDigit(state: MutableIntState) {
 
 @Composable
 private fun ComparePreviousScore(
+    modifier: Modifier,
     currentScore: Int,
     previousScore: Int
 ) {
