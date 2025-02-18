@@ -347,21 +347,29 @@ fun ToeicScoreChart(
                 horizontalAlignment = Alignment.Start
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Readingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentReadingScore,
                         previousScore = previousReadingScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    Spacer(modifier = Modifier.width(16.dp))
                     Text(text = "Listeningスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
                     ComparePreviousScore(
+                        modifier = Modifier.weight(1f),
                         currentScore = currentListeningScore,
                         previousScore = previousListeningScore
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         }
@@ -618,6 +626,7 @@ private fun ExamYearOneDigit(state: MutableIntState) {
 
 @Composable
 private fun ComparePreviousScore(
+    modifier: Modifier,
     currentScore: Int,
     previousScore: Int
 ) {
