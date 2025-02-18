@@ -52,6 +52,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
@@ -343,35 +344,50 @@ private fun ToeicScoreChart(
             val previousListeningScore =
                 listeningScores.dropLast(1).lastOrNull()?.toInt() ?: currentListeningScore
 
-            // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正できるかも
-            Column(
-                horizontalAlignment = Alignment.Start
+            // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正済
+            ConstraintLayout(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Readingスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    ComparePreviousScore(
-                        modifier = Modifier.weight(1f),
-                        currentScore = currentReadingScore,
-                        previousScore = previousReadingScore
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                val guideline = createGuidelineFromStart(0.4f)
+                val (readingLabel, readingScore, listeningLabel, listeningScore) = createRefs()
 
-                Spacer(modifier = Modifier.height(16.dp))
+                // Readingスコアのラベル
+                Text(
+                    text = "Readingスコア:",
+                    modifier = Modifier.constrainAs(readingLabel) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(parent.top, margin = 16.dp)
+                    }
+                )
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Listeningスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    ComparePreviousScore(
-                        modifier = Modifier.weight(1f),
-                        currentScore = currentListeningScore,
-                        previousScore = previousListeningScore
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                // Readingスコアの比較
+                ComparePreviousScore(
+                    modifier = Modifier.constrainAs(readingScore) {
+                        start.linkTo(guideline)
+                        top.linkTo(readingLabel.top)
+                    },
+                    currentScore = currentReadingScore,
+                    previousScore = previousReadingScore
+                )
+
+                // Listeningスコアのラベル
+                Text(
+                    text = "Listeningスコア:",
+                    modifier = Modifier.constrainAs(listeningLabel) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(readingLabel.bottom, margin = 16.dp)
+                    }
+                )
+
+                // Listeningスコアの比較
+                ComparePreviousScore(
+                    modifier = Modifier.constrainAs(listeningScore) {
+                        start.linkTo(guideline)
+                        top.linkTo(listeningLabel.top)
+                    },
+                    currentScore = currentListeningScore,
+                    previousScore = previousListeningScore
+                )
             }
         }
     }
@@ -640,7 +656,6 @@ private fun ComparePreviousScore(
                 "前回より${scoreDifference}点上がっています。"
             )
         }
-
         scoreDifference < 0 -> {
             Triple(
                 Icons.Default.KeyboardArrowDown,
@@ -648,7 +663,6 @@ private fun ComparePreviousScore(
                 "前回より${-scoreDifference}点下がっています。"
             )
         }
-
         else -> {
             Triple(
                 Icons.Default.Minimize,
@@ -657,18 +671,27 @@ private fun ComparePreviousScore(
             )
         }
     }
-
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    ConstraintLayout(
+        modifier = modifier
+    ) {
+        val (iconRef, textRef) = createRefs()
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = color,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.constrainAs(iconRef) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+            }
         )
-        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = message,
-            color = color
+            color = color,
+            modifier = Modifier.constrainAs(textRef) {
+                start.linkTo(iconRef.end, margin = 8.dp)
+                top.linkTo(parent.top)
+                end.linkTo(parent.end)
+            }
         )
     }
 }
