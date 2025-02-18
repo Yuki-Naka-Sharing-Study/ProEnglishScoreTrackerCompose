@@ -8,6 +8,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -83,14 +85,42 @@ private fun ToeicItem(
             Column(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Text(text = "受験日: ${toeicInfo.date}")
-                Text(text = "リーディングスコア: ${toeicInfo.readingScore}")
-                Text(text = "リスニングスコア: ${toeicInfo.listeningScore}")
-                Text(
-                    text = "メモ: ${toeicInfo.memo}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+
+                ) {
+                    Text(text = "受験日:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeicInfo.date)
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "リーディングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeicInfo.readingScore.toString())
+                }
+
+
+                Row(
+
+                ) {
+                    Text(text = "リスニングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeicInfo.listeningScore.toString())
+                }
+
+
+                Row(
+
+                ) {
+                    Text(
+                        text = "メモ: ${toeicInfo.memo}",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }
