@@ -120,7 +120,7 @@ fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
 }
 
 @Composable
-fun ToeicScoreChart(
+private fun ToeicScoreChart(
     viewModel: EnglishInfoViewModel,
     examYear: Int
 ) {
