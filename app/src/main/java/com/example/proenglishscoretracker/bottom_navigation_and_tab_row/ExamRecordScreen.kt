@@ -26,13 +26,13 @@ import androidx.compose.runtime.setValue
 @Composable
 fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
     val tabs = listOf(
-        TabItem.IELTS,
-        TabItem.TOEFL_IBT,
-        TabItem.EIKEN,
-        TabItem.TOEIC_SW,
         TabItem.TOEIC,
+        TabItem.TOEIC_SW,
+        TabItem.EIKEN,
+        TabItem.TOEFL_IBT,
+        TabItem.IELTS,
     )
-    val pagerState = com.google.accompanist.pager.rememberPagerState(tabs.size)
+    val pagerState = com.google.accompanist.pager.rememberPagerState(initialPage = 0)
     val scope = rememberCoroutineScope()
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var pendingPage by rememberSaveable { mutableIntStateOf(0) }
@@ -49,7 +49,7 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
                     viewModel.writingScore.value > 0 ||
                     viewModel.speakingScore.value  > 0 ||
                     viewModel.memoText.value.isNotEmpty()
-                    )
+                )
                 {
                     showDialog = true
                     pendingPage = index
@@ -59,11 +59,11 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
             }
         )
         when (pagerState.currentPage) {
-            0 -> IeltsRecordScreen(viewModel = viewModel)
-            1 -> ToeflIbtRecordScreen(viewModel = viewModel)
+            0 -> ToeicRecordScreen(viewModel = viewModel)
+            1 -> ToeicSwRecordScreen(viewModel = viewModel)
             2 -> EikenRecordScreen(viewModel = viewModel)
-            3 -> ToeicSwRecordScreen(viewModel = viewModel)
-            4 -> ToeicRecordScreen(viewModel = viewModel)
+            3 -> ToeflIbtRecordScreen(viewModel = viewModel)
+            4 -> IeltsRecordScreen(viewModel = viewModel)
         }
         TabsContent(tabs = tabs, pagerState = pagerState)
     }
