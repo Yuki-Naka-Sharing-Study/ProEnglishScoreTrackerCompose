@@ -343,6 +343,7 @@ private fun ToeicScoreChart(
             val previousListeningScore =
                 listeningScores.dropLast(1).lastOrNull()?.toInt() ?: currentListeningScore
 
+            // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正できるかも
             Column(
                 horizontalAlignment = Alignment.Start
             ) {

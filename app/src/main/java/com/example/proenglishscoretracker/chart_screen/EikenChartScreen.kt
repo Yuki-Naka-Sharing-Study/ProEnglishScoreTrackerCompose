@@ -330,6 +330,7 @@ private fun EikenScoreChart(
             val previousCSEScore =
                 cseScores.dropLast(1).lastOrNull()?.toInt() ?: currentCseScore
 
+            // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正できるかも
             Column(
                 horizontalAlignment = Alignment.Start
             ) {
