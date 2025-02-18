@@ -8,6 +8,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -82,14 +84,42 @@ private fun ToeicSwItem(
             Column(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
-                Text(text = "受験日: ${toeicSwInfo.date}")
-                Text(text = "Writingスコア: ${toeicSwInfo.writingScore}")
-                Text(text = "Speakingスコア: ${toeicSwInfo.speakingScore}")
-                Text(
-                    text = "メモ: ${toeicSwInfo.memo}",
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Row(
+
+                ) {
+                    Text(text = "受験日:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeicSwInfo.date)
+                }
+
+                Row(
+
+                ) {
+                    Text(text = "ライティングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeicSwInfo.writingScore.toString())
+                }
+
+
+                Row(
+
+                ) {
+                    Text(text = "スピーキングスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeicSwInfo.speakingScore.toString())
+                }
+
+
+                Row(
+
+                ) {
+                    Text(
+                        text = "メモ: ${toeicSwInfo.memo}",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
     }
