@@ -49,6 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.wheel_picker.FVerticalWheelPicker
@@ -331,23 +332,32 @@ private fun EikenScoreChart(
                 cseScores.dropLast(1).lastOrNull()?.toInt() ?: currentCseScore
 
             // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正できるかも
-            Column(
-                horizontalAlignment = Alignment.Start
+            ConstraintLayout(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(text = "CSEスコア:")
-                    ComparePreviousScore(
-                        modifier = Modifier.weight(1f),
-                        currentScore = currentCseScore,
-                        previousScore = previousCSEScore
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                val guideline = createGuidelineFromStart(0.4f)
+                val (overAllLabel, overAllScore) = createRefs()
+
+                // CSEスコアのラベル
+                Text(
+                    text = "CSEスコア:",
+                    modifier = Modifier.constrainAs(overAllLabel) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(parent.top, margin = 16.dp)
+                    }
+                )
+
+                // CSEスコアの比較
+                ComparePreviousScore(
+                    modifier = Modifier.constrainAs(overAllScore) {
+                        start.linkTo(guideline)
+                        top.linkTo(overAllLabel.top)
+                    },
+                    currentScore = currentCseScore,
+                    previousScore = previousCSEScore
+                )
             }
+
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -551,72 +561,91 @@ private fun EikenScoreChart(
             val previousSpeakingScore =
                 speakingScores.dropLast(1).lastOrNull()?.toInt() ?: currentSpeakingScore
 
-            Column(
-                horizontalAlignment = Alignment.Start
+            ConstraintLayout(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Readingスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    ComparePreviousScore(
-                        modifier = Modifier.weight(1f),
-                        currentScore = currentReadingScore,
-                        previousScore = previousReadingScore
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                val guideline = createGuidelineFromStart(0.4f)
+                val (readingLabel, readingScore,
+                    listeningLabel, listeningScore,
+                    writingLabel, writingScore,
+                    speakingLabel, speakingScore) = createRefs()
 
-                Spacer(modifier = Modifier.height(16.dp))
+                // Readingスコアのラベル
+                Text(
+                    text = "Readingスコア:",
+                    modifier = Modifier.constrainAs(readingLabel) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(parent.top, margin = 16.dp)
+                    }
+                )
 
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Listeningスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    ComparePreviousScore(
-                        modifier = Modifier.weight(1f),
-                        currentScore = currentListeningScore,
-                        previousScore = previousListeningScore
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                // Readingスコアの比較
+                ComparePreviousScore(
+                    modifier = Modifier.constrainAs(readingScore) {
+                        start.linkTo(guideline)
+                        top.linkTo(readingLabel.top)
+                    },
+                    currentScore = currentReadingScore,
+                    previousScore = previousReadingScore
+                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                // Listeningスコアのラベル
+                Text(
+                    text = "Listeningスコア:",
+                    modifier = Modifier.constrainAs(listeningLabel) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(readingLabel.bottom, margin = 16.dp)
+                    }
+                )
 
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Writingスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    ComparePreviousScore(
-                        modifier = Modifier.weight(1f),
-                        currentScore = currentWritingScore,
-                        previousScore = previousWritingScore
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                // Listeningスコアの比較
+                ComparePreviousScore(
+                    modifier = Modifier.constrainAs(listeningScore) {
+                        start.linkTo(guideline)
+                        top.linkTo(listeningLabel.top)
+                    },
+                    currentScore = currentListeningScore,
+                    previousScore = previousListeningScore
+                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                // Writingスコアのラベル
+                Text(
+                    text = "Writingスコア:",
+                    modifier = Modifier.constrainAs(writingLabel) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(listeningScore.bottom, margin = 16.dp)
+                    }
+                )
 
-                Row (
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(text = "Speakingスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    ComparePreviousScore(
-                        modifier = Modifier.weight(1f),
-                        currentScore = currentSpeakingScore,
-                        previousScore = previousSpeakingScore
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                }
+                // Writingスコアの比較
+                ComparePreviousScore(
+                    modifier = Modifier.constrainAs(writingScore) {
+                        start.linkTo(guideline)
+                        top.linkTo(writingLabel.top)
+                    },
+                    currentScore = currentWritingScore,
+                    previousScore = previousWritingScore
+                )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                // Speakingスコアのラベル
+                Text(
+                    text = "Speakingスコア:",
+                    modifier = Modifier.constrainAs(speakingLabel) {
+                        start.linkTo(parent.start, margin = 16.dp)
+                        top.linkTo(writingLabel.bottom, margin = 16.dp)
+                    }
+                )
+
+                // Speakingスコアの比較
+                ComparePreviousScore(
+                    modifier = Modifier.constrainAs(speakingScore) {
+                        start.linkTo(guideline)
+                        top.linkTo(speakingLabel.top)
+                        bottom.linkTo(parent.bottom, margin =  16.dp)
+                    },
+                    currentScore = currentSpeakingScore,
+                    previousScore = previousSpeakingScore
+                )
             }
         }
     }
@@ -936,18 +965,27 @@ private fun ComparePreviousScore(
             )
         }
     }
-
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    ConstraintLayout(
+        modifier = modifier
+    ) {
+        val (iconRef, textRef) = createRefs()
         Icon(
             imageVector = icon,
             contentDescription = null,
             tint = color,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.constrainAs(iconRef) {
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+            }
         )
-        Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = message,
-            color = color
+            color = color,
+            modifier = Modifier.constrainAs(textRef) {
+                start.linkTo(iconRef.end, margin = 8.dp)
+                top.linkTo(parent.top)
+                end.linkTo(parent.end)
+            }
         )
     }
 }

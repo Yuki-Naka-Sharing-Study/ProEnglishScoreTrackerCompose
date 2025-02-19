@@ -332,7 +332,7 @@ private fun ToeflIbtScoreChart(
                 val guideline = createGuidelineFromStart(0.4f)
                 val (overAllLabel, overAllScore) = createRefs()
 
-                // Readingスコアのラベル
+                // Overallスコアのラベル
                 Text(
                     text = "Overallスコア:",
                     modifier = Modifier.constrainAs(overAllLabel) {
@@ -341,7 +341,7 @@ private fun ToeflIbtScoreChart(
                     }
                 )
 
-                // Readingスコアの比較
+                // Overallスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(overAllScore) {
                         start.linkTo(guideline)
