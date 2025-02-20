@@ -62,6 +62,9 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
 
 
     // 英検
+    suspend fun getEntryCountByGradeAndYear(grade: String, year: String): Int {
+        return dao.countEntriesByGradeAndYear(grade, year)
+    }
     suspend fun saveEikenInfo(
         date: String,
         grade: String,

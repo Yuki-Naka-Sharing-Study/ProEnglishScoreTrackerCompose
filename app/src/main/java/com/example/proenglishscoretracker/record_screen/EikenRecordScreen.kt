@@ -39,6 +39,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -111,7 +112,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var speakingMaxScoreError by rememberSaveable { mutableStateOf(false) }
-
+            val errorMessage by viewModel.eikenErrorMessage.observeAsState()
 
             Row {
                 SelectDayText("")
@@ -320,6 +321,31 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
                     var showSaved by remember { mutableStateOf("") }
                     var result by remember { mutableStateOf("Result") }
+
+                    // エラーメッセージが存在する場合にAlertDialogを表示
+                    errorMessage?.let { message ->
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                // ダイアログがキャンセルされた場合の処理
+                                viewModel.clearErrorMessage()
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        // 確認ボタンが押された場合の処理
+                                        viewModel.clearErrorMessage()
+                                    }
+                                ) {
+                                    Text("OK")
+                                }
+                            },
+                            text = {
+                                Text(message)
+                            },
+                            backgroundColor = Color.White,
+                            contentColor = Color.Black
+                        )
+                    }
 
                     if (showAlertDialogOfZeroCaseIchiji) {
                         androidx.compose.material.AlertDialog(

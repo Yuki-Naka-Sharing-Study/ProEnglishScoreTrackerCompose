@@ -4,6 +4,8 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
@@ -189,6 +191,9 @@ class EnglishInfoViewModel(
 
 
     // 英検
+    private val _eikenErrorMessage = MutableLiveData<String?>()
+    val eikenErrorMessage: LiveData<String?> = _eikenErrorMessage
+
     init {
         viewModelScope.launch {
             _eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
@@ -220,18 +225,28 @@ class EnglishInfoViewModel(
         memo: String
     ) {
         viewModelScope.launch {
-            repository.saveEikenInfo(
-                date,
-                grade,
-                readingScore,
-                listeningScore,
-                writingScore,
-                speakingScore,
-                cseScore,
-                memo
-            )
-            loadAllEikenInfo() // データを保存後に再読み込み
+            val year = date.substring(0, 4) // 'yyyy-MM-dd'形式の日付から年を抽出
+            val count = repository.getEntryCountByGradeAndYear(grade, year)
+            if (count >= 3) {
+                _eikenErrorMessage.value = "同一級は年間で3回までしか登録できません。"
+            } else {
+                repository.saveEikenInfo(
+                    date,
+                    grade,
+                    readingScore,
+                    listeningScore,
+                    writingScore,
+                    speakingScore,
+                    cseScore,
+                    memo
+                )
+                loadAllEikenInfo() // データを保存後に再読み込み
+                _eikenErrorMessage.value = null // エラーメッセージをクリア
+            }
         }
+    }
+    fun clearErrorMessage() {
+        _eikenErrorMessage.value = null
     }
     fun deleteEikenInfo(eikenId: String) {
         viewModelScope.launch {
