@@ -112,7 +112,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var speakingMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            val errorMessage by viewModel.eikenErrorMessage.observeAsState()
+            val eikenSameYearErrorMessage by viewModel.eikenSameYearErrorMessage.observeAsState()
 
             Row {
                 SelectDayText("")
@@ -322,17 +322,14 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     var showSaved by remember { mutableStateOf("") }
                     var result by remember { mutableStateOf("Result") }
 
-                    // エラーメッセージが存在する場合にAlertDialogを表示
-                    errorMessage?.let { message ->
+                    if (eikenSameYearErrorMessage != null) {
                         androidx.compose.material.AlertDialog(
                             onDismissRequest = {
-                                // ダイアログがキャンセルされた場合の処理
                                 viewModel.clearErrorMessage()
                             },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
-                                        // 確認ボタンが押された場合の処理
                                         viewModel.clearErrorMessage()
                                     }
                                 ) {
@@ -340,7 +337,53 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 }
                             },
                             text = {
-                                Text(message)
+                                Text(eikenSameYearErrorMessage!!)
+                            },
+                            backgroundColor = Color.White,
+                            contentColor = Color.Black
+                        )
+                    }
+
+                    if (eikenSameYearErrorMessage != null
+                        && showAlertDialogOfZeroCaseIchiji) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                viewModel.clearErrorMessage()
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        viewModel.clearErrorMessage()
+                                    }
+                                ) {
+                                    Text("OK")
+                                }
+                            },
+                            text = {
+                                Text(eikenSameYearErrorMessage!!)
+                            },
+                            backgroundColor = Color.White,
+                            contentColor = Color.Black
+                        )
+                    }
+
+                    if (eikenSameYearErrorMessage != null
+                        && showAlertDialogOfZeroCaseNiji) {
+                        androidx.compose.material.AlertDialog(
+                            onDismissRequest = {
+                                viewModel.clearErrorMessage()
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        viewModel.clearErrorMessage()
+                                    }
+                                ) {
+                                    Text("OK")
+                                }
+                            },
+                            text = {
+                                Text(eikenSameYearErrorMessage!!)
                             },
                             backgroundColor = Color.White,
                             contentColor = Color.Black
@@ -358,7 +401,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseIchiji = false
-                                        showSaved = "登録しました。"
+                                        if (eikenSameYearErrorMessage == "") {
+                                            showSaved = "登録しました。"
+                                        }
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -401,6 +446,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             backgroundColor = Color(0xFFd3d3d3)
                         )
                     }
+
                     if (showAlertDialogOfZeroCaseNiji) {
                         androidx.compose.material.AlertDialog(
                             onDismissRequest = {
@@ -412,7 +458,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseNiji = false
-                                        showSaved = "登録しました。"
+                                        if (eikenSameYearErrorMessage == "") {
+                                            showSaved = "登録しました。"
+                                        }
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -455,6 +503,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             backgroundColor = Color(0xFFd3d3d3)
                         )
                     }
+
                     SaveButton(
                         onClick = {
                             if (savable) {
@@ -472,7 +521,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     showAlertDialogOfZeroCaseIchiji = true
                                     zeroCaseIchiji = true
                                 } else {
-                                    showSaved = "登録しました。"
+                                    if (eikenSameYearErrorMessage == ""){
+                                        showSaved = "登録しました。"
+                                    }
                                     viewModel.saveEikenValues(
                                         date.toString(),
                                         selectedGrade,

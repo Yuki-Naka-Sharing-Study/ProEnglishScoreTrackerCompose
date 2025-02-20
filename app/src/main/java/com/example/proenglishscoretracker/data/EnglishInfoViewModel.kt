@@ -192,7 +192,7 @@ class EnglishInfoViewModel(
 
     // 英検
     private val _eikenErrorMessage = MutableLiveData<String?>()
-    val eikenErrorMessage: LiveData<String?> = _eikenErrorMessage
+    val eikenSameYearErrorMessage: LiveData<String?> = _eikenErrorMessage
 
     init {
         viewModelScope.launch {
