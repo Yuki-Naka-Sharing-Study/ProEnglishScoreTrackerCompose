@@ -97,6 +97,14 @@ private fun EikenItem(
                 Row(
 
                 ) {
+                    Text(text = "受験級:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = eikenInfo.grade)
+                }
+
+                Row(
+
+                ) {
                     Text(text = "Overallスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.cseScore.toString())
