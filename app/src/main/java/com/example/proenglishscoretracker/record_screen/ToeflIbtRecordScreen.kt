@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -304,9 +305,10 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
 
                     var showSaved by remember { mutableStateOf("") }
                     var result by remember { mutableStateOf("Result") }
+                    var alertMessage by remember { mutableStateOf<String?>(null) }
 
                     if (showAlertDialogOfZero) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
                             },
@@ -322,7 +324,8 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                             writingScore,
                                             speakingScore,
                                             overallScore,
-                                            memoText
+                                            memoText,
+                                            showAlert = { message -> alertMessage = message }
                                         )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
@@ -343,6 +346,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                 TextButton(
                                     onClick = {
                                         result = "いいえ"
+                                        showAlertDialogOfZero = false
                                     }
                                 ) {
                                     Text("いいえ")
@@ -374,7 +378,8 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                         writingScore,
                                         speakingScore,
                                         overallScore,
-                                        memoText
+                                        memoText,
+                                        showAlert = { message -> alertMessage = message }
                                     )
                                     viewModel.setReadingScore(0)
                                     viewModel.setListeningScore(0)
@@ -390,6 +395,18 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                         }
                     )
+                    if (alertMessage != null) {
+                        AlertDialog(
+                            onDismissRequest = { alertMessage = null },
+                            title = { Text("エラー") },
+                            text = { Text(alertMessage!!) },
+                            confirmButton = {
+                                Button(onClick = { alertMessage = null }) {
+                                    Text("OK")
+                                }
+                            }
+                        )
+                    }
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                     ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
                 }

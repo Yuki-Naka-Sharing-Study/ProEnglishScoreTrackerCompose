@@ -63,8 +63,10 @@ interface EnglishInfoDao {
     suspend fun getEikenInfoById(eikenId: String): EnglishTestInfo.EIKEN_SECOND?
 
 
-
     // TOEFL
+    // 指定された受験日と一致するデータの数を取得
+    @Query("SELECT COUNT(*) FROM toefl WHERE date = :date")
+    suspend fun countToeflIbtEntriesByDate(date: String): Int
     @Insert
     suspend fun insertToeflInfo(item: EnglishTestInfo.TOEFL)
     @Delete
@@ -75,6 +77,4 @@ interface EnglishInfoDao {
     suspend fun getAllToeflIbtInfo(): List<EnglishTestInfo.TOEFL>
     @Query("SELECT * FROM toefl WHERE id = :toeflIbtId")
     suspend fun getToeflIbtInfoById(toeflIbtId: String): EnglishTestInfo.TOEFL?
-
-
 }

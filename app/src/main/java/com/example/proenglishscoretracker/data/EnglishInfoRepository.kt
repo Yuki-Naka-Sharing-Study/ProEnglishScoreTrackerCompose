@@ -117,6 +117,9 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
 
 
     // TOEFL
+    suspend fun getToeflIbtEntryCountByDate(date: String): Int {
+        return dao.countToeflIbtEntriesByDate(date)
+    }
     suspend fun saveToeflInfo(
         date: String,
         readingScore: Int,

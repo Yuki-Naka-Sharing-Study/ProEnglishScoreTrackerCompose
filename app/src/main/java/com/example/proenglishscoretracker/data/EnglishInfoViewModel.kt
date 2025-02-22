@@ -206,7 +206,6 @@ class EnglishInfoViewModel(
     }
 
 
-
     // 英検
     private val _eikenErrorMessage = MutableLiveData<String?>()
     val eikenSameYearErrorMessage: LiveData<String?> = _eikenErrorMessage
@@ -282,7 +281,6 @@ class EnglishInfoViewModel(
     }
 
 
-
     // TOEFL
     init {
         viewModelScope.launch {
@@ -310,9 +308,17 @@ class EnglishInfoViewModel(
         writingScore: Int,
         speakingScore: Int,
         overallScore: Int,
-        memo: String
+        memo: String,
+        showAlert: (String) -> Unit
     ) {
         viewModelScope.launch {
+            val dateCount = repository.getToeflIbtEntryCountByDate(date)
+
+            if (dateCount > 0) {
+                showAlert("同一年月日で既に登録済です。")
+                return@launch
+            }
+
             repository.saveToeflInfo(
                 date,
                 readingScore,
