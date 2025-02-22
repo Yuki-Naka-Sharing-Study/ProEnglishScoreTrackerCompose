@@ -144,6 +144,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedGrade = selectedGrade,
                     onGradeSelected = { grade ->
                         selectedGrade = grade
+                    // TODO : setGradeTextを実装
                     }
                 )
             }
@@ -370,6 +371,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         if (alertMessage == null) {
                                             showSaved = "登録しました。"
                                         }
+                                        // TODO : setGradeTextを実装
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setWritingScore(0)
@@ -430,6 +432,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         if (alertMessage == null) {
                                             showSaved = "登録しました。"
                                         }
+                                        // TODO : setGradeTextを実装
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setWritingScore(0)
@@ -498,6 +501,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     if (alertMessage == null) {
                                         showSaved = "登録しました。"
                                     }
+                                    // TODO : setGradeTextを実装
                                     viewModel.setReadingScore(0)
                                     viewModel.setListeningScore(0)
                                     viewModel.setWritingScore(0)
