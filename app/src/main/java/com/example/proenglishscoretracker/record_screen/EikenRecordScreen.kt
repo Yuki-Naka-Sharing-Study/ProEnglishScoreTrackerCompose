@@ -320,8 +320,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     var zeroCaseIchiji by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
 
-                    val savable = selectedGrade == "" &&
-                            !readingMaxScoreError &&
+                    val savableChecker = !readingMaxScoreError &&
                             !listeningMaxScoreError &&
                             !writingMaxScoreError &&
                             !speakingMaxScoreError
@@ -538,8 +537,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
                     SaveButton(
                         onClick = {
-                            if (savable) {
-                                if (selectedGrade == ""){
+                            if (savableChecker) {
+                                if (selectedGrade == "") {
                                     showAlertEmptyGrade = true
                                 } else if (
                                     zeroCaseIchiji &&
