@@ -296,119 +296,147 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     overallScore = readingScore + listeningScore + writingScore + speakingScore
-                    var showAlertDialogOfZero by remember { mutableStateOf(false) }
-
                     val savable = !readingMaxScoreError &&
                             !listeningMaxScoreError &&
                             !writingMaxScoreError &&
                             !speakingMaxScoreError
-
-                    var showSaved by remember { mutableStateOf("") }
-                    var result by remember { mutableStateOf("Result") }
+                    var showSaved by rememberSaveable { mutableStateOf("") }
+                    // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
+                    var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
+                    var result by rememberSaveable { mutableStateOf("Result") }
                     var alertMessage by remember { mutableStateOf<String?>(null) }
 
-                    if (showAlertDialogOfZero) {
-                        AlertDialog(
-                            onDismissRequest = {
-                                result = "Dismiss"
-                            },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        result = "はい"
-                                        showSaved = "登録しました。"
-                                        viewModel.saveToeflValues(
-                                            date.toString(),
-                                            readingScore,
-                                            listeningScore,
-                                            writingScore,
-                                            speakingScore,
-                                            overallScore,
-                                            memoText,
-                                            showAlert = { message -> alertMessage = message }
-                                        )
-                                        viewModel.setReadingScore(0)
-                                        viewModel.setListeningScore(0)
-                                        viewModel.setWritingScore(0)
-                                        viewModel.setSpeakingScore(0)
-                                        viewModel.setMemoText("")
-                                        readingScore = 0
-                                        listeningScore = 0
-                                        writingScore = 0
-                                        speakingScore = 0
-                                        memoText = ""
-                                    }
-                                ) {
-                                    Text("はい")
-                                }
-                            },
-                            dismissButton = {
-                                TextButton(
-                                    onClick = {
-                                        result = "いいえ"
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            if (showAlertDialogOfZero) {
+                                AlertDialog(
+                                    onDismissRequest = {
+                                        result = "Dismiss"
                                         showAlertDialogOfZero = false
+                                    },
+                                    confirmButton = {
+                                        TextButton(
+                                            onClick = {
+                                                result = "はい"
+                                                showAlertDialogOfZero = false
+                                                viewModel.saveToeflValues(
+                                                    date.toString(),
+                                                    readingScore,
+                                                    listeningScore,
+                                                    writingScore,
+                                                    speakingScore,
+                                                    overallScore,
+                                                    memoText,
+                                                    showAlert = { message ->
+                                                        alertMessage = message
+                                                        showSaved = ""
+                                                    }
+                                                )
+                                                viewModel.setReadingScore(0)
+                                                viewModel.setListeningScore(0)
+                                                viewModel.setWritingScore(0)
+                                                viewModel.setSpeakingScore(0)
+                                                viewModel.setMemoText("")
+                                                readingScore = 0
+                                                listeningScore = 0
+                                                writingScore = 0
+                                                speakingScore = 0
+                                                memoText = ""
+                                            }
+                                        ) {
+                                            Text("はい")
+                                        }
+                                    },
+                                    dismissButton = {
+                                        TextButton(
+                                            onClick = {
+                                                result = "いいえ"
+                                                showAlertDialogOfZero = false
+                                            }
+                                        ) {
+                                            Text("いいえ")
+                                        }
+                                    },
+                                    text = {
+                                        Text("Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが0ですが登録しますか？")
+                                    },
+                                    contentColor = Color.Black,
+                                    backgroundColor = Color(0xFFd3d3d3)
+                                )
+                            }
+                            SaveButton(
+                                onClick = {
+                                    if (savable) {
+                                        if (
+                                            readingScore == 0 ||
+                                            listeningScore == 0 ||
+                                            writingScore == 0 ||
+                                            speakingScore == 0
+                                            )
+                                        {
+                                            showAlertDialogOfZero = true
+                                        } else {
+                                            viewModel.saveToeflValues(
+                                                date.toString(),
+                                                readingScore,
+                                                listeningScore,
+                                                writingScore,
+                                                speakingScore,
+                                                overallScore,
+                                                memoText,
+                                                showAlert = { message ->
+                                                    alertMessage = message
+                                                    showSaved = ""
+                                                }
+                                            )
+                                            if (alertMessage == null) {
+                                                showSaved = "登録しました。"
+                                            }
+                                            viewModel.setReadingScore(0)
+                                            viewModel.setListeningScore(0)
+                                            viewModel.setWritingScore(0)
+                                            viewModel.setSpeakingScore(0)
+                                            viewModel.setMemoText("")
+                                            readingScore = 0
+                                            listeningScore = 0
+                                            writingScore = 0
+                                            speakingScore = 0
+                                            memoText = ""
+                                        }
                                     }
-                                ) {
-                                    Text("いいえ")
                                 }
-                            },
-                            text = {
-                                Text("Readingスコア, Listeningスコア, Writingスコア, Speakingスコアのいずれかが0ですが登録しますか？")
-                            },
-                            contentColor = Color.Black,
-                            backgroundColor = Color(0xFFd3d3d3)
-                        )
-                    }
-                    SaveButton(
-                        onClick = {
-                            if (savable) {
-                                if (
-                                    readingScore == 0 ||
-                                    listeningScore == 0 ||
-                                    writingScore == 0 ||
-                                    speakingScore == 0
-                                ) {
-                                    showAlertDialogOfZero = true
-                                } else {
-                                    showSaved = "登録しました。"
-                                    viewModel.saveToeflValues(
-                                        date.toString(),
-                                        readingScore,
-                                        listeningScore,
-                                        writingScore,
-                                        speakingScore,
-                                        overallScore,
-                                        memoText,
-                                        showAlert = { message -> alertMessage = message }
-                                    )
-                                    viewModel.setReadingScore(0)
-                                    viewModel.setListeningScore(0)
-                                    viewModel.setWritingScore(0)
-                                    viewModel.setSpeakingScore(0)
-                                    viewModel.setMemoText("")
-                                    readingScore = 0
-                                    listeningScore = 0
-                                    writingScore = 0
-                                    speakingScore = 0
-                                    memoText = ""
-                                }
+                            )
+                            if (alertMessage != null) {
+                                AlertDialog(
+                                    onDismissRequest = {
+                                        alertMessage = null
+                                        showSaved = ""
+                                    },
+                                    title = { Text("エラー") },
+                                    text = { Text(alertMessage!!) },
+                                    confirmButton = {
+                                        Button(onClick = {
+                                            alertMessage = null
+                                            showSaved = ""
+                                        }) {
+                                            Text("OK")
+                                        }
+                                    }
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                            if (alertMessage == null && showSaved.isNotEmpty()) {
+                                ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
                             }
                         }
-                    )
-                    if (alertMessage != null) {
-                        AlertDialog(
-                            onDismissRequest = { alertMessage = null },
-                            title = { Text("エラー") },
-                            text = { Text(alertMessage!!) },
-                            confirmButton = {
-                                Button(onClick = { alertMessage = null }) {
-                                    Text("OK")
-                                }
-                            }
-                        )
                     }
-                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
                 }
             }
         }
