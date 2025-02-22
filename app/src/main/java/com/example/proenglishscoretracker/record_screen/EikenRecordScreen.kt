@@ -315,11 +315,13 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     cseScore = readingScore + listeningScore + writingScore + speakingScore
+                    var showAlertEmptyGrade by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
                     var zeroCaseIchiji by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
 
-                    val savable = !readingMaxScoreError &&
+                    val savable = selectedGrade == "" &&
+                            !readingMaxScoreError &&
                             !listeningMaxScoreError &&
                             !writingMaxScoreError &&
                             !speakingMaxScoreError
@@ -327,6 +329,28 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     var showSaved by remember { mutableStateOf("") }
                     var result by remember { mutableStateOf("Result") }
                     var alertMessage by remember { mutableStateOf<String?>(null) }
+
+                    if (showAlertEmptyGrade) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                showAlertEmptyGrade = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showAlertEmptyGrade = false
+                                    }
+                                ) {
+                                    Text("OK")
+                                }
+                            },
+                            text = {
+                                Text("受験級が選択されていません。")
+                            },
+                            backgroundColor = Color.White,
+                            contentColor = Color.Black
+                        )
+                    }
 
                     if (eikenSameYearErrorMessage != null) {
                         AlertDialog(
@@ -515,7 +539,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     SaveButton(
                         onClick = {
                             if (savable) {
-                                if (
+                                if (selectedGrade == ""){
+                                    showAlertEmptyGrade = true
+                                } else if (
                                     zeroCaseIchiji &&
                                     speakingScore == 0 &&
                                     isSpeakingPickerVisible
