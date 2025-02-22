@@ -301,7 +301,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                             !writingMaxScoreError &&
                             !speakingMaxScoreError
                     var showSaved by rememberSaveable { mutableStateOf("") }
-                    // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
                     var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
                     var result by rememberSaveable { mutableStateOf("Result") }
                     var alertMessage by remember { mutableStateOf<String?>(null) }
@@ -339,6 +338,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                                         showSaved = ""
                                                     }
                                                 )
+                                                if (alertMessage == null) {
+                                                    showSaved = "登録しました。"
+                                                }
                                                 viewModel.setReadingScore(0)
                                                 viewModel.setListeningScore(0)
                                                 viewModel.setWritingScore(0)
