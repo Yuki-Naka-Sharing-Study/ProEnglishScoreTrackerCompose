@@ -96,6 +96,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             // スコア系
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
+            // TODO : デフォルトの5級のまま登録するとデータに反映されていなかったので、
+            //        全ての級をDropdownMenuWithIconはタップしてから選択する形式に修正予定。
             val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
             var selectedGrade by rememberSaveable { mutableStateOf("") }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
