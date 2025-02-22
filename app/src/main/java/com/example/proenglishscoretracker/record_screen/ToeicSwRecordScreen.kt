@@ -243,6 +243,9 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                                 showSaved = ""
                                             }
                                         )
+                                        if (alertMessage == null) {
+                                            showSaved = "登録しました。"
+                                        }
                                         viewModel.setWritingScore(0)
                                         viewModel.setSpeakingScore(0)
                                         viewModel.setMemoText("")
