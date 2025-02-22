@@ -50,7 +50,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -734,7 +733,7 @@ private fun ExamYearPicker(
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFd3d3d3)),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFffffff)),
                 modifier = Modifier
                     .size(
                         width = 240.dp,
@@ -836,7 +835,7 @@ private fun ExamYearFourDigits(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
@@ -863,7 +862,7 @@ private fun ExamYearThreeDigits(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
@@ -890,7 +889,7 @@ private fun ExamYearTwoDigits(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
@@ -917,7 +916,7 @@ private fun ExamYearOneDigit(state: MutableIntState) {
         state = listState,
         focus = {
             FWheelPickerFocusVertical(
-                dividerColor = Color.White,
+                dividerColor = Color.LightGray,
                 dividerSize = 2.dp
             )
         },
