@@ -110,8 +110,8 @@ class EnglishInfoViewModel(
     ) {
         viewModelScope.launch {
             val year = date.substring(0, 4)
-            val yearCount = repository.getEntryCountByYear(year)
-            val dateCount = repository.getEntryCountByDate(date)
+            val yearCount = repository.getToeicEntryCountByYear(year)
+            val dateCount = repository.getToeicEntryCountByDate(date)
 
             if (dateCount > 0) {
                 showAlert("同一年月日で既に登録済です。")
