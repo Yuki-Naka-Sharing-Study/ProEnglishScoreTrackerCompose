@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -1187,7 +1188,7 @@ private fun SpeakingScoreArea(
     modifier: Modifier,
     isVisible: Boolean,
     speakingScore: Int,
-    onValueChange: (Int) -> Unit
+    onValueChange: (Int) -> Unit,
 ) {
     if (isVisible) {
         var hasTakenSecondTest by remember { mutableStateOf(true) }
@@ -1227,6 +1228,12 @@ private fun SpeakingScoreArea(
                 Switch(
                     checked = hasTakenSecondTest,
                     onCheckedChange = { hasTakenSecondTest = it },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFE1BEE7),
+                        uncheckedThumbColor = Color(0xFFBDBDBD),
+                        uncheckedTrackColor = Color(0xFFEEEEEE)
+                    ),
                     modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp))
                 )
             }
