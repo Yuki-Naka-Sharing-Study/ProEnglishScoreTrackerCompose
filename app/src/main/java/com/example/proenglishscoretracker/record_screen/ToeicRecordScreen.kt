@@ -201,7 +201,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (showAlertDialogOfZero) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
                                 showAlertDialogOfZero = false
@@ -211,13 +211,15 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZero = false
-                                        showSaved = "登録しました。"
                                         viewModel.saveToeicValues(
                                             date.toString(),
                                             readingScore,
                                             listeningScore,
                                             memoText,
-                                            showAlert = { message -> alertMessage = message }
+                                            showAlert = { message ->
+                                                alertMessage = message
+                                                showSaved = ""
+                                            }
                                         )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
@@ -252,14 +254,19 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                             if (readingScore == 0 || listeningScore == 0) {
                                 showAlertDialogOfZero = true
                             } else {
-                                showSaved = "登録しました。"
                                 viewModel.saveToeicValues(
                                     date.toString(),
                                     readingScore,
                                     listeningScore,
                                     memoText,
-                                    showAlert = { message -> alertMessage = message }
+                                    showAlert = { message ->
+                                        alertMessage = message
+                                        showSaved = ""
+                                    }
                                 )
+                                if (alertMessage == null) {
+                                    showSaved = "登録しました。"
+                                }
                                 viewModel.setReadingScore(0)
                                 viewModel.setListeningScore(0)
                                 viewModel.setMemoText("")
@@ -271,18 +278,26 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     )
                     if (alertMessage != null) {
                         AlertDialog(
-                            onDismissRequest = { alertMessage = null },
+                            onDismissRequest = {
+                                alertMessage = null
+                                showSaved = ""
+                            },
                             title = { Text("エラー") },
                             text = { Text(alertMessage!!) },
                             confirmButton = {
-                                Button(onClick = { alertMessage = null }) {
+                                Button(onClick = {
+                                    alertMessage = null
+                                    showSaved = ""
+                                }) {
                                     Text("OK")
                                 }
                             }
                         )
                     }
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                    if (alertMessage == null && showSaved.isNotEmpty()) {
+                        ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                    }
                 }
             }
         }
