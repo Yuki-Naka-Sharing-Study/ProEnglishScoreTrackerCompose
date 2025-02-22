@@ -29,6 +29,13 @@ interface EnglishInfoDao {
 
 
     // TOEIC SW
+    // 指定された年度の受験回数を取得
+    @Query("SELECT COUNT(*) FROM toeic_sw WHERE strftime('%Y', date) = :year")
+    suspend fun countToeicSwEntriesByYear(year: String): Int
+
+    // 指定された受験日と一致するデータの数を取得
+    @Query("SELECT COUNT(*) FROM toeic_sw WHERE date = :date")
+    suspend fun countToeicSwEntriesByDate(date: String): Int
     @Insert
     suspend fun insertToeicSwInfo(item: EnglishTestInfo.TOEIC_SW)
     @Delete

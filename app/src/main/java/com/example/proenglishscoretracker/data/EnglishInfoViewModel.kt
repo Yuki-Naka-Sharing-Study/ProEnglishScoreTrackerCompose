@@ -168,16 +168,24 @@ class EnglishInfoViewModel(
         date: String,
         writingScore: Int,
         speakingScore: Int,
-        memo: String
+        memo: String,
+        showAlert: (String) -> Unit
     ) {
         viewModelScope.launch {
-            repository.saveToeicSwInfo(
-                date,
-                writingScore,
-                speakingScore,
-                memo
-            )
-            loadAllToeicSwInfo() // データを保存後に再読み込み
+            val year = date.substring(0, 4)
+            val yearCount = repository.getToeicSwEntryCountByYear(year)
+            val dateCount = repository.getToeicSwEntryCountByDate(date)
+
+            if (dateCount > 0) {
+                showAlert("同一年月日で既に登録済です。")
+                return@launch
+            }
+            if (yearCount >= 24) {
+                showAlert("TOEICは年間で25回以上試験を受験することはできません。")
+                return@launch
+            }
+            repository.saveToeicSwInfo(date, writingScore, speakingScore, memo)
+            loadAllToeicSwInfo() // データ保存後にリストを更新
         }
     }
     // TOEICデータを削除

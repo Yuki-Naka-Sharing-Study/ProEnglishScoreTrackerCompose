@@ -39,6 +39,13 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
 
 
     // TOEIC SW
+    // TOEICデータを保存（制限チェック用）
+    suspend fun getToeicSwEntryCountByYear(year: String): Int {
+        return dao.countToeicSwEntriesByYear(year)
+    }
+    suspend fun getToeicSwEntryCountByDate(date: String): Int {
+        return dao.countToeicSwEntriesByDate(date)
+    }
     suspend fun saveToeicSwInfo(
         date: String,
         writingScore: Int,

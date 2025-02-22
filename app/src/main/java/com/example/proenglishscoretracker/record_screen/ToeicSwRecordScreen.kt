@@ -201,6 +201,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             var showAlertDialogOfZero by remember { mutableStateOf(false) }
             var result by remember { mutableStateOf("Result") }
             var showSaved by remember { mutableStateOf("") }
+            var alertMessage by remember { mutableStateOf<String?>(null) }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -227,7 +228,8 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                             date.toString(),
                                             writingScore,
                                             speakingScore,
-                                            memoText
+                                            memoText,
+                                            showAlert = { message -> alertMessage = message }
                                         )
                                         viewModel.setWritingScore(0)
                                         viewModel.setSpeakingScore(0)
@@ -269,7 +271,8 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                     date.toString(),
                                     writingScore,
                                     speakingScore,
-                                    memoText
+                                    memoText,
+                                    showAlert = { message -> alertMessage = message }
                                 )
                                 viewModel.setWritingScore(0)
                                 viewModel.setSpeakingScore(0)
