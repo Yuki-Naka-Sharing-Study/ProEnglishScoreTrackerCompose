@@ -221,6 +221,9 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                                 showSaved = ""
                                             }
                                         )
+                                        if (alertMessage == null) {
+                                            showSaved = "登録しました。"
+                                        }
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setMemoText("")
