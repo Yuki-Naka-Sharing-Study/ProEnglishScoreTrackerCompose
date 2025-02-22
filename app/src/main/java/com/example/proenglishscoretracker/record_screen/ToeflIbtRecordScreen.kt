@@ -296,7 +296,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     overallScore = readingScore + listeningScore + writingScore + speakingScore
-                    val savable = !readingMaxScoreError &&
+                    val savableChecker = !readingMaxScoreError &&
                             !listeningMaxScoreError &&
                             !writingMaxScoreError &&
                             !speakingMaxScoreError
@@ -375,7 +375,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                             SaveButton(
                                 onClick = {
-                                    if (savable) {
+                                    if (savableChecker) {
                                         if (
                                             readingScore == 0 ||
                                             listeningScore == 0 ||
