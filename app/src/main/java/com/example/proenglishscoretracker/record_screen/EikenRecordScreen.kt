@@ -96,8 +96,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             // スコア系
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
-            // TODO : デフォルトの5級のまま登録するとデータに反映されていなかったので、
-            //        全ての級をDropdownMenuWithIconはタップしてから選択する形式に修正予定。
             val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
             var selectedGrade by rememberSaveable { mutableStateOf("") }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
@@ -144,9 +142,13 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Row {
                 SelectGradeText(selectedGrade)
-                DropdownMenuWithIcon(grades, onGradeSelected = { grade ->
-                    selectedGrade = grade
-                })
+                DropdownMenuWithIcon(
+                    grades = grades,
+                    selectedGrade = selectedGrade,
+                    onGradeSelected = { grade ->
+                        selectedGrade = grade
+                    }
+                )
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -798,10 +800,10 @@ private fun SelectGradeTextPreview() {
 @Composable
 private fun DropdownMenuWithIcon(
     grades: List<String>,
+    selectedGrade: String,
     onGradeSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember { mutableIntStateOf(0) }
 
     Box(
         modifier = Modifier
@@ -819,14 +821,16 @@ private fun DropdownMenuWithIcon(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = grades[selectedIndex],
+                    text = selectedGrade.ifEmpty { "" },
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
-                    imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
+                    imageVector =
+                    if (expanded) Icons.Default.ArrowDropUp
+                    else Icons.Default.ArrowDropDown,
                     contentDescription = "Dropdown Icon",
                     tint = Color.Black,
                     modifier = Modifier.size(24.dp)
@@ -837,12 +841,11 @@ private fun DropdownMenuWithIcon(
                 onDismissRequest = { expanded = false },
                 offset = DpOffset(0.dp, 8.dp)
             ) {
-                grades.forEachIndexed { index, item ->
+                grades.forEach { grade ->
                     DropdownMenuItem(
-                        text = { Text(text = item) },
+                        text = { Text(text = grade) },
                         onClick = {
-                            selectedIndex = index
-                            onGradeSelected(item)
+                            onGradeSelected(grade)
                             expanded = false
                         }
                     )
