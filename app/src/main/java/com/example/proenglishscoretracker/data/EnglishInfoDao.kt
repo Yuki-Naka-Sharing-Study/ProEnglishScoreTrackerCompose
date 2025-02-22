@@ -9,6 +9,13 @@ import androidx.room.Update
 @Dao
 interface EnglishInfoDao {
     // TOEIC
+    // 指定された年度の受験回数を取得
+    @Query("SELECT COUNT(*) FROM toeic WHERE strftime('%Y', date) = :year")
+    suspend fun countToeicEntriesByYear(year: String): Int
+
+    // 指定された受験日と一致するデータの数を取得
+    @Query("SELECT COUNT(*) FROM toeic WHERE date = :date")
+    suspend fun countToeicEntriesByDate(date: String): Int
     @Insert
     suspend fun insertToeicInfo(item: EnglishTestInfo.TOEIC)
     @Delete

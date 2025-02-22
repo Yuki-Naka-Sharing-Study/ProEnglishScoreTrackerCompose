@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -188,6 +189,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
             var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
             var result by rememberSaveable { mutableStateOf("Result") }
+            var alertMessage by remember { mutableStateOf<String?>(null) }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -214,7 +216,8 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                             date.toString(),
                                             readingScore,
                                             listeningScore,
-                                            memoText
+                                            memoText,
+                                            showAlert = { message -> alertMessage = message }
                                         )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
@@ -254,7 +257,8 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                     date.toString(),
                                     readingScore,
                                     listeningScore,
-                                    memoText
+                                    memoText,
+                                    showAlert = { message -> alertMessage = message }
                                 )
                                 viewModel.setReadingScore(0)
                                 viewModel.setListeningScore(0)
@@ -265,6 +269,18 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                         }
                     )
+                    if (alertMessage != null) {
+                        AlertDialog(
+                            onDismissRequest = { alertMessage = null },
+                            title = { Text("エラー") },
+                            text = { Text(alertMessage!!) },
+                            confirmButton = {
+                                Button(onClick = { alertMessage = null }) {
+                                    Text("OK")
+                                }
+                            }
+                        )
+                    }
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                     ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
                 }

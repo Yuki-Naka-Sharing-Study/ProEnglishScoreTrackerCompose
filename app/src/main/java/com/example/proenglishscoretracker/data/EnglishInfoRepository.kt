@@ -2,6 +2,13 @@ package com.example.proenglishscoretracker.data
 
 class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     // TOEIC
+    // TOEICデータを保存（制限チェック用）
+    suspend fun getEntryCountByYear(year: String): Int {
+        return dao.countToeicEntriesByYear(year)
+    }
+    suspend fun getEntryCountByDate(date: String): Int {
+        return dao.countToeicEntriesByDate(date)
+    }
     suspend fun saveToeicInfo(
         date: String,
         readingScore: Int,
