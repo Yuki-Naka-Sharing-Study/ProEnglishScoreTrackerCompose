@@ -243,12 +243,13 @@ class EnglishInfoViewModel(
     ) {
         viewModelScope.launch {
             val year = date.substring(0, 4) // 'yyyy-MM-dd'形式の日付から年を抽出
-            val dateCount = repository.getEikenEntryCountByDate(date)
+            val dateAndGradeCount = repository.getEikenEntryCountByDateAndGrade(date, grade)
 
-            if (dateCount > 0) {
-                showAlert("同一年月日で既に登録済です。")
+            if (dateAndGradeCount > 0) {
+                showAlert("同一年月日で且つ同一級を既に登録済です。")
                 return@launch
             }
+
             val count = repository.getEntryCountByGradeAndYear(grade, year)
             if (count >= 3) {
                 _eikenErrorMessage.value = "同一級は年間で3回までしか登録できません。"
@@ -263,8 +264,8 @@ class EnglishInfoViewModel(
                     cseScore,
                     memo
                 )
-                loadAllEikenInfo() // データを保存後に再読み込み
-                _eikenErrorMessage.value = null // エラーメッセージをクリア
+                loadAllEikenInfo()
+                _eikenErrorMessage.value = null
             }
         }
     }
