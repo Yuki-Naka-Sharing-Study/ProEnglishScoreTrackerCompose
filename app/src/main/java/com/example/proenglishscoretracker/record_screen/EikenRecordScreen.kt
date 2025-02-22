@@ -144,7 +144,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedGrade = selectedGrade,
                     onGradeSelected = { grade ->
                         selectedGrade = grade
-                    // TODO : setGradeTextを実装
+                        // TODO : setGradeTextを実装
                     }
                 )
             }
@@ -471,18 +471,18 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 if (selectedGrade == "") {
                                     alertMessage = "受験級が選択されていません。"
                                 } else if (
-                                    zeroCaseIchiji &&
-                                    speakingScore == 0 &&
-                                    isSpeakingPickerVisible
-                                ) {
-                                    showAlertDialogOfZeroCaseNiji = true
-                                } else if (
                                     readingScore == 0 ||
                                     listeningScore == 0 ||
                                     writingScore == 0
                                 ) {
                                     showAlertDialogOfZeroCaseIchiji = true
                                     zeroCaseIchiji = true
+                                } else if (
+                                    zeroCaseIchiji &&
+                                    speakingScore == 0 &&
+                                    isSpeakingPickerVisible
+                                ) {
+                                    showAlertDialogOfZeroCaseNiji = true
                                 } else {
                                     viewModel.saveEikenValues(
                                         date.toString(),
