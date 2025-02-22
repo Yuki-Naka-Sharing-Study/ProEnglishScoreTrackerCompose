@@ -12,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -59,7 +58,7 @@ fun EikenDetailScreen(
             Icon(
                 Icons.AutoMirrored.Outlined.ArrowBack,
                 contentDescription = "戻る",
-                tint = androidx.compose.ui.graphics.Color.Gray
+                tint = Color.Gray
             )
         }
 
@@ -74,7 +73,7 @@ fun EikenDetailScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.delete),
                     contentDescription = "削除する",
-                    tint = androidx.compose.ui.graphics.Color.Red
+                    tint = Color.Red
                 )
             }
             IconButton(
@@ -84,7 +83,7 @@ fun EikenDetailScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.edit),
                     contentDescription = "編集する",
-                    tint = androidx.compose.ui.graphics.Color.Gray
+                    tint = Color.Gray
                 )
             }
         }
@@ -165,7 +164,7 @@ fun EikenDetailScreen(
             } else {
                 Text(
                     text = "データが見つかりませんでした。",
-                    color = androidx.compose.ui.graphics.Color.Red
+                    color = Color.Red
                 )
             }
         }
