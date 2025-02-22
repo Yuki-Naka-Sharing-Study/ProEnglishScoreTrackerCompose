@@ -207,9 +207,6 @@ class EnglishInfoViewModel(
 
 
     // 英検
-    private val _eikenErrorMessage = MutableLiveData<String?>()
-    val eikenSameYearErrorMessage: LiveData<String?> = _eikenErrorMessage
-
     init {
         viewModelScope.launch {
             _eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
@@ -242,17 +239,23 @@ class EnglishInfoViewModel(
         showAlert: (String) -> Unit
     ) {
         viewModelScope.launch {
-            val year = date.substring(0, 4) // 'yyyy-MM-dd'形式の日付から年を抽出
             val dateAndGradeCount = repository.getEikenEntryCountByDateAndGrade(date, grade)
+
+            if (grade == "") {
+                showAlert("受験級が選択されていません。")
+                return@launch
+            }
 
             if (dateAndGradeCount > 0) {
                 showAlert("同一年月日で且つ同一級を既に登録済です。")
                 return@launch
             }
 
+            val year = date.substring(0, 4) // 'yyyy-MM-dd'形式の日付から年を抽出
             val count = repository.getEntryCountByGradeAndYear(grade, year)
+
             if (count >= 3) {
-                _eikenErrorMessage.value = "同一級は年間で3回までしか登録できません。"
+                showAlert("同一級は年間で3回までしか登録できません。")
             } else {
                 repository.saveEikenInfo(
                     date,
@@ -265,12 +268,8 @@ class EnglishInfoViewModel(
                     memo
                 )
                 loadAllEikenInfo()
-                _eikenErrorMessage.value = null
             }
         }
-    }
-    fun clearErrorMessage() {
-        _eikenErrorMessage.value = null
     }
     fun deleteEikenInfo(eikenId: String) {
         viewModelScope.launch {

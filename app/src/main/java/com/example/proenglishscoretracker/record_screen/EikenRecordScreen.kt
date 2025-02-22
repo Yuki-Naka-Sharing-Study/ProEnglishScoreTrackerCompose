@@ -40,7 +40,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -93,7 +92,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
         Column(
             modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
         ) {
-            // スコア系
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
             val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
@@ -113,7 +111,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var speakingMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            val eikenSameYearErrorMessage by viewModel.eikenSameYearErrorMessage.observeAsState()
 
             Row {
                 SelectDayText("")
@@ -315,7 +312,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     cseScore = readingScore + listeningScore + writingScore + speakingScore
-                    var showAlertEmptyGrade by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
                     var zeroCaseIchiji by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
@@ -329,96 +325,23 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     var result by remember { mutableStateOf("Result") }
                     var alertMessage by remember { mutableStateOf<String?>(null) }
 
-                    if (showAlertEmptyGrade) {
+                    if (alertMessage != null) {
                         AlertDialog(
-                            onDismissRequest = {
-                                showAlertEmptyGrade = false
-                            },
+                            onDismissRequest = { alertMessage = null },
                             confirmButton = {
                                 TextButton(
-                                    onClick = {
-                                        showAlertEmptyGrade = false
-                                    }
+                                    onClick = { alertMessage = null }
                                 ) {
                                     Text("OK")
                                 }
                             },
                             text = {
-                                Text("受験級が選択されていません。")
+                                Text(alertMessage!!)
                             },
                             backgroundColor = Color.White,
                             contentColor = Color.Black
                         )
                     }
-
-                    if (eikenSameYearErrorMessage != null) {
-                        AlertDialog(
-                            onDismissRequest = {
-                                viewModel.clearErrorMessage()
-                            },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        viewModel.clearErrorMessage()
-                                    }
-                                ) {
-                                    Text("OK")
-                                }
-                            },
-                            text = {
-                                Text(eikenSameYearErrorMessage!!)
-                            },
-                            backgroundColor = Color.White,
-                            contentColor = Color.Black
-                        )
-                    }
-
-                    if (eikenSameYearErrorMessage != null
-                        && showAlertDialogOfZeroCaseIchiji) {
-                        AlertDialog(
-                            onDismissRequest = {
-                                viewModel.clearErrorMessage()
-                            },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        viewModel.clearErrorMessage()
-                                    }
-                                ) {
-                                    Text("OK")
-                                }
-                            },
-                            text = {
-                                Text(eikenSameYearErrorMessage!!)
-                            },
-                            backgroundColor = Color.White,
-                            contentColor = Color.Black
-                        )
-                    }
-
-                    if (eikenSameYearErrorMessage != null
-                        && showAlertDialogOfZeroCaseNiji) {
-                        AlertDialog(
-                            onDismissRequest = {
-                                viewModel.clearErrorMessage()
-                            },
-                            confirmButton = {
-                                TextButton(
-                                    onClick = {
-                                        viewModel.clearErrorMessage()
-                                    }
-                                ) {
-                                    Text("OK")
-                                }
-                            },
-                            text = {
-                                Text(eikenSameYearErrorMessage!!)
-                            },
-                            backgroundColor = Color.White,
-                            contentColor = Color.Black
-                        )
-                    }
-
                     if (showAlertDialogOfZeroCaseIchiji) {
                         AlertDialog(
                             onDismissRequest = {
@@ -430,9 +353,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseIchiji = false
-                                        if (eikenSameYearErrorMessage == "") {
-                                            showSaved = "登録しました。"
-                                        }
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -442,8 +362,14 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                             speakingScore,
                                             cseScore,
                                             memoText,
-                                            showAlert = { message -> alertMessage = message }
+                                            showAlert = { message ->
+                                                alertMessage = message
+                                                showSaved = ""
+                                            }
                                         )
+                                        if (alertMessage == null) {
+                                            showSaved = "登録しました。"
+                                        }
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setWritingScore(0)
@@ -476,7 +402,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             backgroundColor = Color(0xFFd3d3d3)
                         )
                     }
-
                     if (showAlertDialogOfZeroCaseNiji) {
                         AlertDialog(
                             onDismissRequest = {
@@ -488,9 +413,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseNiji = false
-                                        if (eikenSameYearErrorMessage == "") {
-                                            showSaved = "登録しました。"
-                                        }
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -500,8 +422,14 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                             speakingScore,
                                             cseScore,
                                             memoText,
-                                            showAlert = { message -> alertMessage = message }
+                                            showAlert = { message ->
+                                                alertMessage = message
+                                                showSaved = ""
+                                            }
                                         )
+                                        if (alertMessage == null) {
+                                            showSaved = "登録しました。"
+                                        }
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
                                         viewModel.setWritingScore(0)
@@ -534,12 +462,11 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             backgroundColor = Color(0xFFd3d3d3)
                         )
                     }
-
                     SaveButton(
                         onClick = {
                             if (savableChecker) {
                                 if (selectedGrade == "") {
-                                    showAlertEmptyGrade = true
+                                    alertMessage = "受験級が選択されていません。"
                                 } else if (
                                     zeroCaseIchiji &&
                                     speakingScore == 0 &&
@@ -554,9 +481,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     showAlertDialogOfZeroCaseIchiji = true
                                     zeroCaseIchiji = true
                                 } else {
-                                    if (eikenSameYearErrorMessage == ""){
-                                        showSaved = "登録しました。"
-                                    }
                                     viewModel.saveEikenValues(
                                         date.toString(),
                                         selectedGrade,
@@ -566,8 +490,14 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         speakingScore,
                                         cseScore,
                                         memoText,
-                                        showAlert = { message -> alertMessage = message }
+                                        showAlert = { message ->
+                                            alertMessage = message
+                                            showSaved = ""
+                                        }
                                     )
+                                    if (alertMessage == null) {
+                                        showSaved = "登録しました。"
+                                    }
                                     viewModel.setReadingScore(0)
                                     viewModel.setListeningScore(0)
                                     viewModel.setWritingScore(0)
@@ -584,18 +514,26 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     )
                     if (alertMessage != null) {
                         AlertDialog(
-                            onDismissRequest = { alertMessage = null },
+                            onDismissRequest = {
+                                alertMessage = null
+                                showSaved = ""
+                            },
                             title = { Text("エラー") },
                             text = { Text(alertMessage!!) },
                             confirmButton = {
-                                Button(onClick = { alertMessage = null }) {
+                                Button(onClick = {
+                                    alertMessage = null
+                                    showSaved = ""
+                                }) {
                                     Text("OK")
                                 }
                             }
                         )
                     }
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                    if (alertMessage == null && showSaved.isNotEmpty()) {
+                        ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                    }
                 }
             }
         }
