@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Switch
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -1189,6 +1190,8 @@ private fun SpeakingScoreArea(
     onValueChange: (Int) -> Unit
 ) {
     if (isVisible) {
+        var hasTakenSecondTest by remember { mutableStateOf(true) }
+
         Column(
             verticalArrangement = Arrangement.Center
         ) {
@@ -1211,8 +1214,21 @@ private fun SpeakingScoreArea(
                     speakingScore,
                     onScoreConfirm = onValueChange
                 )
-                // TODO : Switch (二次受験済) を実装
                 Spacer(modifier = Modifier.weight(3f))
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = dimensionResource(id = R.dimen.space_64_dp))
+            ) {
+                Text(text = "二次試験受験済")
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Switch(
+                    checked = hasTakenSecondTest,
+                    onCheckedChange = { hasTakenSecondTest = it },
+                    modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp))
+                )
             }
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
