@@ -205,7 +205,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
-            val savable = !writingMaxScoreError &&
+            val savableChecker = !writingMaxScoreError &&
                     !speakingMaxScoreError
             var showSaved by rememberSaveable { mutableStateOf("") }
             // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
@@ -276,7 +276,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     }
                     SaveButton(
                         onClick = {
-                            if (savable) {
+                            if (savableChecker) {
                                 if (writingScore == 0 || speakingScore == 0) {
                                     showAlertDialogOfZero = true
                                 } else {
