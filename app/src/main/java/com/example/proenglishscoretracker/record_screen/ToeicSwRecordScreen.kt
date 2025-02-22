@@ -91,8 +91,8 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             var memoText by rememberSaveable { mutableStateOf("") }
 
             //「Error」系
-            val writingMaxScoreError = writingScore >= 201
-            val speakingMaxScoreError = speakingScore >= 201
+            var writingMaxScoreError = writingScore >= 201
+            var speakingMaxScoreError = speakingScore >= 201
 
             Row {
                 SelectDayText("")
@@ -148,6 +148,9 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 if (writingScore >= 201) {
                     ErrorText("Writingスコアは201未満である必要があります。")
+                    writingMaxScoreError = true
+                } else {
+                    writingMaxScoreError = false
                 }
             }
 
@@ -176,6 +179,9 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 if (speakingScore >= 201) {
                     ErrorText("Speakingスコアは201未満である必要があります。")
+                    speakingMaxScoreError = true
+                } else {
+                    speakingMaxScoreError = false
                 }
             }
 
@@ -199,6 +205,8 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
+            val savable = !writingMaxScoreError &&
+                    !speakingMaxScoreError
             var showSaved by rememberSaveable { mutableStateOf("") }
             // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
             var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
@@ -265,28 +273,30 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     }
                     SaveButton(
                         onClick = {
-                            if (writingScore == 0 || speakingScore == 0) {
-                                showAlertDialogOfZero = true
-                            } else {
-                                viewModel.saveToeicSwValues(
-                                    date.toString(),
-                                    writingScore,
-                                    speakingScore,
-                                    memoText,
-                                    showAlert = { message ->
-                                        alertMessage = message
-                                        showSaved = ""
+                            if (savable) {
+                                if (writingScore == 0 || speakingScore == 0) {
+                                    showAlertDialogOfZero = true
+                                } else {
+                                    viewModel.saveToeicSwValues(
+                                        date.toString(),
+                                        writingScore,
+                                        speakingScore,
+                                        memoText,
+                                        showAlert = { message ->
+                                            alertMessage = message
+                                            showSaved = ""
+                                        }
+                                    )
+                                    if (alertMessage == null) {
+                                        showSaved = "登録しました。"
                                     }
-                                )
-                                if (alertMessage == null) {
-                                    showSaved = "登録しました。"
+                                    viewModel.setWritingScore(0)
+                                    viewModel.setSpeakingScore(0)
+                                    viewModel.setMemoText("")
+                                    writingScore = 0
+                                    speakingScore = 0
+                                    memoText = ""
                                 }
-                                viewModel.setWritingScore(0)
-                                viewModel.setSpeakingScore(0)
-                                viewModel.setMemoText("")
-                                writingScore = 0
-                                speakingScore = 0
-                                memoText = ""
                             }
                         }
                     )
