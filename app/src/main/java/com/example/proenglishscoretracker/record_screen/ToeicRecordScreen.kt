@@ -243,7 +243,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                 }
                             },
                             text = {
-                                Text("ReadingスコアもしくはListeningスコアが０ですが登録しますか？")
+                                Text("ReadingスコアもしくはListeningスコアが0ですが登録しますか？")
                             },
                             contentColor = Color.Black,
                             backgroundColor = Color(0xFFd3d3d3)

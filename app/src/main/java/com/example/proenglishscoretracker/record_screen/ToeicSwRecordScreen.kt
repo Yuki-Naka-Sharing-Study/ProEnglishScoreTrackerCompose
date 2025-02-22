@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -198,9 +199,10 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
-            var showAlertDialogOfZero by remember { mutableStateOf(false) }
-            var result by remember { mutableStateOf("Result") }
-            var showSaved by remember { mutableStateOf("") }
+            var showSaved by rememberSaveable { mutableStateOf("") }
+            // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
+            var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
+            var result by rememberSaveable { mutableStateOf("Result") }
             var alertMessage by remember { mutableStateOf<String?>(null) }
 
             Row(
@@ -213,7 +215,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (showAlertDialogOfZero) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
                                 showAlertDialogOfZero = false
@@ -223,13 +225,15 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZero = false
-                                        showSaved = "登録しました。"
                                         viewModel.saveToeicSwValues(
                                             date.toString(),
                                             writingScore,
                                             speakingScore,
                                             memoText,
-                                            showAlert = { message -> alertMessage = message }
+                                            showAlert = { message ->
+                                                alertMessage = message
+                                                showSaved = ""
+                                            }
                                         )
                                         viewModel.setWritingScore(0)
                                         viewModel.setSpeakingScore(0)
@@ -253,7 +257,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                 }
                             },
                             text = {
-                                Text("WritingスコアもしくはSpeakingスコアが０ですが登録しますか？")
+                                Text("WritingスコアもしくはSpeakingスコアが0ですが登録しますか？")
                             },
                             contentColor = Color.Black,
                             backgroundColor = Color(0xFFd3d3d3)
@@ -263,17 +267,20 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                         onClick = {
                             if (writingScore == 0 || speakingScore == 0) {
                                 showAlertDialogOfZero = true
-                            } else if (writingMaxScoreError || speakingMaxScoreError) {
-
                             } else {
-                                showSaved = "登録しました。"
                                 viewModel.saveToeicSwValues(
                                     date.toString(),
                                     writingScore,
                                     speakingScore,
                                     memoText,
-                                    showAlert = { message -> alertMessage = message }
+                                    showAlert = { message ->
+                                        alertMessage = message
+                                        showSaved = ""
+                                    }
                                 )
+                                if (alertMessage == null) {
+                                    showSaved = "登録しました。"
+                                }
                                 viewModel.setWritingScore(0)
                                 viewModel.setSpeakingScore(0)
                                 viewModel.setMemoText("")
@@ -283,8 +290,28 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                         }
                     )
+                    if (alertMessage != null) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                alertMessage = null
+                                showSaved = ""
+                            },
+                            title = { Text("エラー") },
+                            text = { Text(alertMessage!!) },
+                            confirmButton = {
+                                Button(onClick = {
+                                    alertMessage = null
+                                    showSaved = ""
+                                }) {
+                                    Text("OK")
+                                }
+                            }
+                        )
+                    }
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                    ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                    if (alertMessage == null && showSaved.isNotEmpty()) {
+                        ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
+                    }
                 }
             }
         }
