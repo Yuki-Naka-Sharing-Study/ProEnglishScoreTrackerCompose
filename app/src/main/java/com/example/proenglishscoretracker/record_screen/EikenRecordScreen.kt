@@ -354,6 +354,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseIchiji = false
+                                        // TODO : 英検一次用のロジック
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -415,6 +416,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseNiji = false
+                                        // TODO : 英検二次用のロジック
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -484,6 +486,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 ) {
                                     showAlertDialogOfZeroCaseNiji = true
                                 } else {
+                                    // TODO : 英検二次用のロジック
                                     viewModel.saveEikenValues(
                                         date.toString(),
                                         selectedGrade,
