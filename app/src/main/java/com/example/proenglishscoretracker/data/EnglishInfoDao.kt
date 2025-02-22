@@ -49,6 +49,9 @@ interface EnglishInfoDao {
 
 
     // EIKEN
+    // 指定された受験日と一致するデータの数を取得
+    @Query("SELECT COUNT(*) FROM eiken_second WHERE date = :date")
+    suspend fun countEIkenEntriesByDate(date: String): Int
     @Query("SELECT COUNT(*) FROM eiken_second WHERE grade = :grade AND strftime('%Y', date) = :year")
     suspend fun countEntriesByGradeAndYear(grade: String, year: String): Int
     @Insert

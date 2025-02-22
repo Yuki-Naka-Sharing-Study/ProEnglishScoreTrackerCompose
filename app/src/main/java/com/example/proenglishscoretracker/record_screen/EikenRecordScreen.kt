@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -321,9 +322,10 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
                     var showSaved by remember { mutableStateOf("") }
                     var result by remember { mutableStateOf("Result") }
+                    var alertMessage by remember { mutableStateOf<String?>(null) }
 
                     if (eikenSameYearErrorMessage != null) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 viewModel.clearErrorMessage()
                             },
@@ -346,7 +348,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
                     if (eikenSameYearErrorMessage != null
                         && showAlertDialogOfZeroCaseIchiji) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 viewModel.clearErrorMessage()
                             },
@@ -369,7 +371,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
                     if (eikenSameYearErrorMessage != null
                         && showAlertDialogOfZeroCaseNiji) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 viewModel.clearErrorMessage()
                             },
@@ -391,7 +393,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     }
 
                     if (showAlertDialogOfZeroCaseIchiji) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
                                 showAlertDialogOfZeroCaseIchiji = false
@@ -412,7 +414,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                             writingScore,
                                             speakingScore,
                                             cseScore,
-                                            memoText
+                                            memoText,
+                                            showAlert = { message -> alertMessage = message }
                                         )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
@@ -448,7 +451,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     }
 
                     if (showAlertDialogOfZeroCaseNiji) {
-                        androidx.compose.material.AlertDialog(
+                        AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
                                 showAlertDialogOfZeroCaseNiji = false
@@ -469,7 +472,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                             writingScore,
                                             speakingScore,
                                             cseScore,
-                                            memoText
+                                            memoText,
+                                            showAlert = { message -> alertMessage = message }
                                         )
                                         viewModel.setReadingScore(0)
                                         viewModel.setListeningScore(0)
@@ -532,7 +536,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         writingScore,
                                         speakingScore,
                                         cseScore,
-                                        memoText
+                                        memoText,
+                                        showAlert = { message -> alertMessage = message }
                                     )
                                     viewModel.setReadingScore(0)
                                     viewModel.setListeningScore(0)
@@ -548,6 +553,18 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             }
                         }
                     )
+                    if (alertMessage != null) {
+                        AlertDialog(
+                            onDismissRequest = { alertMessage = null },
+                            title = { Text("エラー") },
+                            text = { Text(alertMessage!!) },
+                            confirmButton = {
+                                Button(onClick = { alertMessage = null }) {
+                                    Text("OK")
+                                }
+                            }
+                        )
+                    }
                     Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                     ShowSavedText(saved = showSaved, onTimeout = { showSaved = "" })
                 }
