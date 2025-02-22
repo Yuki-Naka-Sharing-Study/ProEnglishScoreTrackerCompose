@@ -1211,6 +1211,7 @@ private fun SpeakingScoreArea(
                     speakingScore,
                     onScoreConfirm = onValueChange
                 )
+                // TODO : Switch (二次受験済) を実装
                 Spacer(modifier = Modifier.weight(3f))
             }
             Row {
