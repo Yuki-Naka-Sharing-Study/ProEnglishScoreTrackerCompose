@@ -141,10 +141,19 @@ fun EikenDetailScreen(
                     text = "ライティングスコア: ${eikenInfo!!.writingScore}",
                     fontSize = 20.sp
                 )
-                Text(
-                    text = "スピーキングスコア: ${eikenInfo!!.speakingScore}",
-                    fontSize = 20.sp
-                )
+                if (
+                    eikenInfo!!.grade == "3級" ||
+                    eikenInfo!!.grade == "準2級" ||
+                    eikenInfo!!.grade == "2級" ||
+                    eikenInfo!!.grade == "準1級" ||
+                    eikenInfo!!.grade == "1級"
+                    )
+                {
+                    Text(
+                        text = "スピーキングスコア: ${eikenInfo!!.speakingScore}",
+                        fontSize = 20.sp
+                    )
+                }
                 Text(
                     text = "CSEスコア: ${eikenInfo!!.cseScore}",
                     fontSize = 20.sp
