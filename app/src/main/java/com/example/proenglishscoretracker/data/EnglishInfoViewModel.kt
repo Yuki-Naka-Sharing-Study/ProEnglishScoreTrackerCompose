@@ -17,35 +17,6 @@ class EnglishInfoViewModel(
     private val englishInfoDao: EnglishInfoDao,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
-    private val _toeicInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC>>(emptyList())
-    val toeicInfo: StateFlow<List<EnglishTestInfo.TOEIC>> = _toeicInfo
-
-    // 特定のTOEIC情報を保持するStateFlow
-    private val _selectedToeicInfo = MutableStateFlow<EnglishTestInfo.TOEIC?>(null)
-    val selectedToeicInfo: StateFlow<EnglishTestInfo.TOEIC?> = _selectedToeicInfo
-
-    private val _toeicSwInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC_SW>>(emptyList())
-    val toeicSwInfo: StateFlow<List<EnglishTestInfo.TOEIC_SW>> = _toeicSwInfo
-
-    private val _selectedToeicSwInfo = MutableStateFlow<EnglishTestInfo.TOEIC_SW?>(null)
-    val selectedToeicSwInfo: StateFlow<EnglishTestInfo.TOEIC_SW?> = _selectedToeicSwInfo
-
-    private val _eikenSecondInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN>>(emptyList())
-    val eikenSecondInfo: StateFlow<List<EnglishTestInfo.EIKEN>> = _eikenSecondInfo
-
-    private val _selectedEikenInfo = MutableStateFlow<EnglishTestInfo.EIKEN?>(null)
-    val selectedEikenInfo: StateFlow<EnglishTestInfo.EIKEN?> = _selectedEikenInfo
-
-    private val _toeflIbtInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
-    val toeflIbtInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflIbtInfo
-
-    private val _selectedToeflIbtInfo = MutableStateFlow<EnglishTestInfo.TOEFL?>(null)
-    val selectedToeflIbtInfo: StateFlow<EnglishTestInfo.TOEFL?> = _selectedToeflIbtInfo
-
-    private val _ieltsInfo = MutableStateFlow<List<EnglishTestInfo.IELTS>>(emptyList())
-    val ieltsInfo: StateFlow<List<EnglishTestInfo.IELTS>> = _ieltsInfo
-
-
     private val ONBOARDING_COMPLETED_KEY = booleanPreferencesKey("onboarding_completed")
 
     // 初回起動かどうかを監視するFlow
@@ -76,7 +47,16 @@ class EnglishInfoViewModel(
         }
     }
 
+
+
     // TOEIC
+    private val _toeicInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC>>(emptyList())
+    val toeicInfo: StateFlow<List<EnglishTestInfo.TOEIC>> = _toeicInfo
+
+    // 特定のTOEIC情報を保持するStateFlow
+    private val _selectedToeicInfo = MutableStateFlow<EnglishTestInfo.TOEIC?>(null)
+    val selectedToeicInfo: StateFlow<EnglishTestInfo.TOEIC?> = _selectedToeicInfo
+
     init {
         viewModelScope.launch {
             _toeicInfo.value = englishInfoDao.getAllToeicInfo()
@@ -139,7 +119,14 @@ class EnglishInfoViewModel(
     }
 
 
+
     // TOEIC SW
+    private val _toeicSwInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC_SW>>(emptyList())
+    val toeicSwInfo: StateFlow<List<EnglishTestInfo.TOEIC_SW>> = _toeicSwInfo
+
+    private val _selectedToeicSwInfo = MutableStateFlow<EnglishTestInfo.TOEIC_SW?>(null)
+    val selectedToeicSwInfo: StateFlow<EnglishTestInfo.TOEIC_SW?> = _selectedToeicSwInfo
+
     init {
         viewModelScope.launch {
             _toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
@@ -201,7 +188,14 @@ class EnglishInfoViewModel(
     }
 
 
+
     // 英検
+    private val _eikenSecondInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN>>(emptyList())
+    val eikenSecondInfo: StateFlow<List<EnglishTestInfo.EIKEN>> = _eikenSecondInfo
+
+    private val _selectedEikenInfo = MutableStateFlow<EnglishTestInfo.EIKEN?>(null)
+    val selectedEikenInfo: StateFlow<EnglishTestInfo.EIKEN?> = _selectedEikenInfo
+
     init {
         viewModelScope.launch {
             _eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
@@ -283,7 +277,14 @@ class EnglishInfoViewModel(
     }
 
 
+
     // TOEFL
+    private val _toeflIbtInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
+    val toeflIbtInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflIbtInfo
+
+    private val _selectedToeflIbtInfo = MutableStateFlow<EnglishTestInfo.TOEFL?>(null)
+    val selectedToeflIbtInfo: StateFlow<EnglishTestInfo.TOEFL?> = _selectedToeflIbtInfo
+
     init {
         viewModelScope.launch {
             _toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
@@ -348,6 +349,12 @@ class EnglishInfoViewModel(
             this@EnglishInfoViewModel._toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
         }
     }
+
+
+
+    // IELTS
+    private val _ieltsInfo = MutableStateFlow<List<EnglishTestInfo.IELTS>>(emptyList())
+    val ieltsInfo: StateFlow<List<EnglishTestInfo.IELTS>> = _ieltsInfo
 
 
 
