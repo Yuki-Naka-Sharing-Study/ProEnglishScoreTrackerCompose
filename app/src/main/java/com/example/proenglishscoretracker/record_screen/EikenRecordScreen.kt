@@ -1186,6 +1186,49 @@ private fun EikenOneDigit(state: MutableIntState) {
 }
 
 @Composable
+private fun WritingScoreArea(
+    modifier: Modifier,
+    isVisible: Boolean,
+    writingScore: Int,
+    onValueChange: (Int) -> Unit,
+) {
+    if (isVisible) {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = dimensionResource(id = R.dimen.space_24_dp))
+            ) {
+                WritingImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                WritingText(
+                    writingText = "Writing",
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = Modifier.weight(0.3f))
+                EikenRLWSScorePicker(
+                    modifier = Modifier.weight(1.2f),
+                    writingScore,
+                    onScoreConfirm = onValueChange
+                )
+                Spacer(modifier = Modifier.weight(3f))
+            }
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                if (writingScore >= 851) {
+                    ErrorText("WritingScoreスコアは851未満である必要があります。")
+                }
+            }
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+        }
+    }
+}
+
+@Composable
 private fun SpeakingScoreArea(
     modifier: Modifier,
     isVisible: Boolean,
