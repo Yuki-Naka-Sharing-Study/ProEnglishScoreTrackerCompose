@@ -1278,8 +1278,7 @@ private fun MemoInputField(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_32_dp)))
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
