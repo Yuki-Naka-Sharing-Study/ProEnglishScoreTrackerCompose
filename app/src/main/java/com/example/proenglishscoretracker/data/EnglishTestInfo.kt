@@ -22,7 +22,7 @@ sealed class EnglishTestInfo {
         val memo: String
     ) : EnglishTestInfo()
 
-    @Entity(tableName = "eiken_second")
+    @Entity(tableName = "eiken")
     data class EIKEN(
         @PrimaryKey(autoGenerate = true) val id: Int,
         val date: String,
