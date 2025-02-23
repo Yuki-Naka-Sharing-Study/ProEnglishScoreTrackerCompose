@@ -90,9 +90,9 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
         ) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
-            var readingScore by rememberSaveable { mutableIntStateOf(0) }
-            var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-            var memoText by rememberSaveable { mutableStateOf("") }
+            var readingScore by remember { mutableIntStateOf(0) }
+            var listeningScore by remember { mutableIntStateOf(0) }
+            var memoText by remember { mutableStateOf("") }
 
             Row {
                 SelectDayText("")
@@ -185,10 +185,10 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
-            var showSaved by rememberSaveable { mutableStateOf("") }
+            var showSaved by remember { mutableStateOf("") }
             // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
-            var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
-            var result by rememberSaveable { mutableStateOf("Result") }
+            var showAlertDialogOfZero by remember { mutableStateOf(false) }
+            var result by remember { mutableStateOf("Result") }
             var alertMessage by remember { mutableStateOf<String?>(null) }
 
             Row(
@@ -630,7 +630,6 @@ private fun TOEICRLScorePicker(
                             color = Color.White
                         )
                     }
-
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -648,13 +647,21 @@ private fun TOEICRLScorePickerView(
     val one = score % 10 // 1の位
 
     // 状態管理のためにrememberを使う
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
+    val hundredState = remember { mutableIntStateOf(hundred) }
+    val tenState = remember { mutableIntStateOf(ten) }
+    val oneState = remember { mutableIntStateOf(one) }
 
     // スコア変更をトリガーする
-    LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
-        onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
+    LaunchedEffect(
+        hundredState.intValue,
+        tenState.intValue,
+        oneState.intValue
+    ) {
+        onScoreChange(
+            hundredState.intValue * 100 +
+                    tenState.intValue * 10 +
+                    oneState.intValue
+        )
     }
 
     Row(
@@ -859,8 +866,7 @@ private fun MemoInputField(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_32_dp)))
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
