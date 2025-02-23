@@ -32,9 +32,6 @@ class EnglishInfoViewModel(
     private val _selectedToeicSwInfo = MutableStateFlow<EnglishTestInfo.TOEIC_SW?>(null)
     val selectedToeicSwInfo: StateFlow<EnglishTestInfo.TOEIC_SW?> = _selectedToeicSwInfo
 
-    private val _eikenFirstInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_FIRST>>(emptyList())
-    val eikenFirstInfo: StateFlow<List<EnglishTestInfo.EIKEN_FIRST>> = _eikenFirstInfo
-
     private val _eikenSecondInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_SECOND>>(emptyList())
     val eikenSecondInfo: StateFlow<List<EnglishTestInfo.EIKEN_SECOND>> = _eikenSecondInfo
 

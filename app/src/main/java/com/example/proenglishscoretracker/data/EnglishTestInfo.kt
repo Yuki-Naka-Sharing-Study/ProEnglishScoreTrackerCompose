@@ -22,18 +22,6 @@ sealed class EnglishTestInfo {
         val memo: String
     ) : EnglishTestInfo()
 
-    @Entity(tableName = "eiken_first")
-    data class EIKEN_FIRST(
-        @PrimaryKey(autoGenerate = true) val id: Int,
-        val date: String,
-        val grade: String,
-        val cseScore: Int,
-        val readingScore: Int,
-        val listeningScore: Int,
-        val writingScore: Int,
-        val memo: String
-    ) : EnglishTestInfo()
-
     @Entity(tableName = "eiken_second")
     data class EIKEN_SECOND(
         @PrimaryKey(autoGenerate = true) val id: Int,
