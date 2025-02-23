@@ -68,31 +68,31 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         modifier = Modifier.padding(dimensionResource(id = R.dimen.space_16_dp))
     ) {
         var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
-        var readingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var selectedReadingScore by rememberSaveable { mutableFloatStateOf(readingScore) }
-        var listeningScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var selectedListeningScore by rememberSaveable { mutableFloatStateOf(listeningScore) }
-        var writingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var selectedWritingScore by rememberSaveable { mutableFloatStateOf(writingScore) }
-        var speakingScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var selectedSpeakingScore by rememberSaveable { mutableFloatStateOf(speakingScore) }
-        var overallScore by rememberSaveable { mutableFloatStateOf(0F) }
-        var selectedOverallScore by rememberSaveable { mutableFloatStateOf(overallScore) }
-        var memoText by rememberSaveable { mutableStateOf("") }
+        var readingScore by remember { mutableFloatStateOf(0F) }
+        var selectedReadingScore by remember { mutableFloatStateOf(readingScore) }
+        var listeningScore by remember { mutableFloatStateOf(0F) }
+        var selectedListeningScore by remember { mutableFloatStateOf(listeningScore) }
+        var writingScore by remember { mutableFloatStateOf(0F) }
+        var selectedWritingScore by remember { mutableFloatStateOf(writingScore) }
+        var speakingScore by remember { mutableFloatStateOf(0F) }
+        var selectedSpeakingScore by remember { mutableFloatStateOf(speakingScore) }
+        var overallScore by remember { mutableFloatStateOf(0F) }
+        var selectedOverallScore by remember { mutableFloatStateOf(overallScore) }
+        var memoText by remember { mutableStateOf("") }
         var showDatePicker by remember { mutableStateOf(false) }
 
         //「ErrorText」系
-        var selectedDateEmptyErrorText by rememberSaveable { mutableStateOf("") }
-        var overallMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var readingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var listeningMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var writingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var speakingMaxScoreErrorText by rememberSaveable { mutableStateOf("") }
-        var overallScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
-        var readingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
-        var listeningScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
-        var writingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
-        var speakingScoreDivisionErrorText by rememberSaveable { mutableStateOf("") }
+        var selectedDateEmptyErrorText by remember { mutableStateOf("") }
+        var overallMaxScoreErrorText by remember { mutableStateOf("") }
+        var readingMaxScoreErrorText by remember { mutableStateOf("") }
+        var listeningMaxScoreErrorText by remember { mutableStateOf("") }
+        var writingMaxScoreErrorText by remember { mutableStateOf("") }
+        var speakingMaxScoreErrorText by remember { mutableStateOf("") }
+        var overallScoreDivisionErrorText by remember { mutableStateOf("") }
+        var readingScoreDivisionErrorText by remember { mutableStateOf("") }
+        var listeningScoreDivisionErrorText by remember { mutableStateOf("") }
+        var writingScoreDivisionErrorText by remember { mutableStateOf("") }
+        var speakingScoreDivisionErrorText by remember { mutableStateOf("") }
 
         //「Error」系
         val overallMaxScoreError = overallScore >= 36.1
@@ -138,7 +138,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfReading by rememberSaveable { mutableStateOf(false) }
+        var focusStateOfReading by remember { mutableStateOf(false) }
         val showReadingScoreDivisionError = readingScore % 0.5 != 0.0 && !focusStateOfReading
 
         Row(
@@ -178,7 +178,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfListening by rememberSaveable { mutableStateOf(false) }
+        var focusStateOfListening by remember { mutableStateOf(false) }
         val showListeningScoreDivisionError = listeningScore % 0.5 != 0.0 && !focusStateOfListening
 
         Row(
@@ -218,7 +218,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfWriting by rememberSaveable { mutableStateOf(false) }
+        var focusStateOfWriting by remember { mutableStateOf(false) }
         val showWritingScoreDivisionError = writingScore % 0.5 != 0.0 && !focusStateOfWriting
 
         Row(
@@ -258,7 +258,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfSpeaking by rememberSaveable { mutableStateOf(false) }
+        var focusStateOfSpeaking by remember { mutableStateOf(false) }
         val showSpeakingScoreDivisionError = speakingScore % 0.5 != 0.0 && !focusStateOfSpeaking
 
         Row(
@@ -298,7 +298,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-        var focusStateOfOverall by rememberSaveable { mutableStateOf(false) }
+        var focusStateOfOverall by remember { mutableStateOf(false) }
         val showOverallScoreDivisionError = overallScore % 0.5 != 0.0 && !focusStateOfOverall
 
         Row(
@@ -876,7 +876,7 @@ private fun IeltsOverallScorePicker(
     onScoreChange: (Float) -> Unit,
     onConfirm: () -> Unit
 ) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         // スコア入力ボタン
@@ -934,7 +934,6 @@ private fun IeltsOverallScorePicker(
                             color = Color.White
                         )
                     }
-
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
@@ -951,8 +950,8 @@ private fun IeltsOverallScorePickerView(
     val one = (score % 10.0) / 1.0 // 1の位
 
     // 状態管理のためにrememberを使う
-    val tenState = rememberSaveable { mutableFloatStateOf(ten.toFloat()) }
-    val oneState = rememberSaveable { mutableFloatStateOf(one.toFloat()) }
+    val tenState = remember { mutableFloatStateOf(ten.toFloat()) }
+    val oneState = remember { mutableFloatStateOf(one.toFloat()) }
 
     // スコア変更をトリガーする
     LaunchedEffect(tenState.floatValue, oneState.floatValue) {
@@ -1040,7 +1039,7 @@ private fun IeltsRLWSScorePicker(
     onScoreChange: (Float) -> Unit,
     onConfirm: () -> Unit
 ) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
         // スコア入力ボタン
@@ -1110,7 +1109,7 @@ private fun IeltsRLWSScorePickerView(
     onScoreChange: (Float) -> Unit
 ) {
     // 状態管理のためにrememberを使う
-    val scoreState = rememberSaveable { mutableFloatStateOf(score) }
+    val scoreState = remember { mutableFloatStateOf(score) }
 
     // スコア変更をトリガーする
     LaunchedEffect(scoreState.floatValue) {
@@ -1164,8 +1163,7 @@ private fun MemoInputField(placeholder: String, value: String, onValueChange: (S
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_32_dp)))
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
