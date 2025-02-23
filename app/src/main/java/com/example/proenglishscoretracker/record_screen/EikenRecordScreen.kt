@@ -475,18 +475,18 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 if (selectedGrade == "") {
                                     alertMessage = "受験級が選択されていません。"
                                 } else if (
+                                    zeroCaseIchiji &&
+                                    speakingScore == 0 &&
+                                    isSpeakingPickerVisible
+                                ) {
+                                    showAlertDialogOfZeroCaseNiji = true
+                                } else if (
                                     readingScore == 0 ||
                                     listeningScore == 0 ||
                                     writingScore == 0
                                 ) {
                                     showAlertDialogOfZeroCaseIchiji = true
                                     zeroCaseIchiji = true
-                                } else if (
-                                    zeroCaseIchiji &&
-                                    speakingScore == 0 &&
-                                    isSpeakingPickerVisible
-                                ) {
-                                    showAlertDialogOfZeroCaseNiji = true
                                 } else {
                                     // TODO : 英検二次用のロジック
                                     viewModel.saveEikenValues(
