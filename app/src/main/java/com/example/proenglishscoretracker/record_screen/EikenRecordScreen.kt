@@ -387,7 +387,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 }
                             },
                             text = {
-                                Text("Readingスコア, Listeningスコア, Writingスコアのいずれかが０ですが登録しますか？")
+                                Text("Readingスコア, Listeningスコアのいずれかが0ですが登録しますか？")
                             },
                             contentColor = Color.Black,
                             backgroundColor = Color(0xFFd3d3d3)
