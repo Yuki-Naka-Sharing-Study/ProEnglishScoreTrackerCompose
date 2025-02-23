@@ -240,6 +240,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.weight(3f))
             }
 
+            // TODO :「WritingScoreArea」に修正。4級と5級にはWriting試験が無いので。
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (writingScore >= 851) {
