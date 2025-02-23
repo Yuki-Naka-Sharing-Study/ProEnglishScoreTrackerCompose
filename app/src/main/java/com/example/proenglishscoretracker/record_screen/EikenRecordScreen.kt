@@ -99,23 +99,23 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
             val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
-            var selectedGrade by rememberSaveable { mutableStateOf("") }
-            var readingScore by rememberSaveable { mutableIntStateOf(0) }
-            var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-            var writingScore by rememberSaveable { mutableIntStateOf(0) }
-            var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-            var cseScore by rememberSaveable { mutableIntStateOf(0) }
-            var memoText by rememberSaveable { mutableStateOf("") }
-            var isWritingAndSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
+            var selectedGrade by remember { mutableStateOf("") }
+            var readingScore by remember { mutableIntStateOf(0) }
+            var listeningScore by remember { mutableIntStateOf(0) }
+            var writingScore by remember { mutableIntStateOf(0) }
+            var speakingScore by remember { mutableIntStateOf(0) }
+            var cseScore by remember { mutableIntStateOf(0) }
+            var memoText by remember { mutableStateOf("") }
+            var isWritingAndSpeakingPickerVisible by remember { mutableStateOf(false) }
             isWritingAndSpeakingPickerVisible = when (selectedGrade) {
                 "3級", "準2級", "2級", "準1級", "1級" -> true
                 else -> false
             }
             var isSpeakingVisible by remember { mutableStateOf(true) }
-            var readingMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            var speakingMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var readingMaxScoreError by remember { mutableStateOf(false) }
+            var listeningMaxScoreError by remember { mutableStateOf(false) }
+            var writingMaxScoreError by remember { mutableStateOf(false) }
+            var speakingMaxScoreError by remember { mutableStateOf(false) }
 
             Row {
                 SelectDayText("")
@@ -351,7 +351,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseRL = false
-                                        // TODO : 英検一次用のロジック
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -413,7 +412,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseRLW = false
-                                        // TODO : 英検一次用のロジック
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -552,7 +550,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     showAlertDialogOfZeroCaseRL = true
                                     zeroCaseRL = true
                                 } else {
-                                    // TODO : 英検二次用のロジック
                                     viewModel.saveEikenValues(
                                         date.toString(),
                                         selectedGrade,
@@ -1104,8 +1101,8 @@ private fun EikenRLWSScorePicker(
     toeicRLScore: Int,
     onScoreConfirm: (Int) -> Unit,
 ) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) }
+    var showDialog by remember { mutableStateOf(false) }
+    var tempScore by remember { mutableIntStateOf(toeicRLScore) }
 
     Box(modifier = modifier) {
         Button(
@@ -1174,12 +1171,20 @@ private fun EikenRLWSScorePickerView(
     val ten = (score % 100) / 10
     val one = score % 10
 
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
+    val hundredState = remember { mutableIntStateOf(hundred) }
+    val tenState = remember { mutableIntStateOf(ten) }
+    val oneState = remember { mutableIntStateOf(one) }
 
-    LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
-        onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
+    LaunchedEffect(
+        hundredState.intValue,
+        tenState.intValue,
+        oneState.intValue
+    ) {
+        onScoreChange(
+            hundredState.intValue * 100 +
+                    tenState.intValue * 10 +
+                    oneState.intValue
+        )
     }
 
     Row(
