@@ -248,7 +248,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
             SpeakingScoreArea(
                 Modifier,
-                isVisible = isWritingAndSpeakingPickerVisible && isSpeakingVisible, // 条件を変更
+                isVisible = isWritingAndSpeakingPickerVisible && isSpeakingVisible,
                 speakingScore = speakingScore,
                 onValueChange = {
                     speakingScore = it
@@ -311,6 +311,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     cseScore = readingScore + listeningScore + writingScore + speakingScore
                     var showAlertDialogOfZeroCaseRL by remember { mutableStateOf(false) }
                     var zeroCaseRL by remember { mutableStateOf(false) }
+                    var showAlertDialogOfZeroCaseRLW by remember { mutableStateOf(false) }
                     var showAlertDialogOfZeroCaseRLWS by remember { mutableStateOf(false) }
 
                     val savableChecker = !readingMaxScoreError &&
@@ -401,6 +402,68 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             backgroundColor = Color(0xFFd3d3d3)
                         )
                     }
+                    if (showAlertDialogOfZeroCaseRLW) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                result = "Dismiss"
+                                showAlertDialogOfZeroCaseRLW = false
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "はい"
+                                        showAlertDialogOfZeroCaseRLW = false
+                                        // TODO : 英検一次用のロジック
+                                        viewModel.saveEikenValues(
+                                            date.toString(),
+                                            selectedGrade,
+                                            readingScore,
+                                            listeningScore,
+                                            writingScore,
+                                            speakingScore,
+                                            cseScore,
+                                            memoText,
+                                            showAlert = { message ->
+                                                alertMessage = message
+                                                showSaved = ""
+                                            }
+                                        )
+                                        if (alertMessage == null) {
+                                            showSaved = "登録しました。"
+                                        }
+                                        // TODO : setGradeTextを実装
+                                        viewModel.setReadingScore(0)
+                                        viewModel.setListeningScore(0)
+                                        viewModel.setWritingScore(0)
+                                        viewModel.setSpeakingScore(0)
+                                        viewModel.setMemoText("")
+                                        readingScore = 0
+                                        listeningScore = 0
+                                        writingScore = 0
+                                        speakingScore = 0
+                                        memoText = ""
+                                    }
+                                ) {
+                                    Text("はい")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        result = "いいえ"
+                                        showAlertDialogOfZeroCaseRLW = false
+                                    }
+                                ) {
+                                    Text("いいえ")
+                                }
+                            },
+                            text = {
+                                Text("Readingスコア, Listeningスコア, Writingスコアのいずれかが0ですが登録しますか？")
+                            },
+                            contentColor = Color.Black,
+                            backgroundColor = Color(0xFFd3d3d3)
+                        )
+                    }
                     if (showAlertDialogOfZeroCaseRLWS) {
                         AlertDialog(
                             onDismissRequest = {
@@ -470,14 +533,21 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     alertMessage = "受験級が選択されていません。"
                                 } else if (
                                     zeroCaseRL &&
+                                    writingScore == 0 &&
+                                    isWritingAndSpeakingPickerVisible &&
+                                    !isSpeakingVisible
+                                ) {
+                                    showAlertDialogOfZeroCaseRLW = true
+                                } else if (
+                                    zeroCaseRL &&
+                                    writingScore == 0 &&
                                     speakingScore == 0 &&
                                     isWritingAndSpeakingPickerVisible
                                 ) {
                                     showAlertDialogOfZeroCaseRLWS = true
                                 } else if (
                                     readingScore == 0 ||
-                                    listeningScore == 0 ||
-                                    writingScore == 0
+                                    listeningScore == 0
                                 ) {
                                     showAlertDialogOfZeroCaseRL = true
                                     zeroCaseRL = true
