@@ -47,7 +47,6 @@ import com.example.proenglishscoretracker.detail_screen.ToeflIbtDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicSwDetailScreen
 import com.example.proenglishscoretracker.record_screen.EikenRecordScreen
-import com.example.proenglishscoretracker.record_screen.EikenNijiRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
@@ -184,7 +183,6 @@ fun EnglishScoreTracker(
             composable("toeicRecordScreen") { ToeicRecordScreen(viewModel = viewModel) }
             composable("toeicSwRecordScreen") { ToeicSwRecordScreen(viewModel = viewModel) }
             composable("eikenRecordScreen") { EikenRecordScreen(viewModel = viewModel) }
-            composable("eikenNijiRecordScreen") { EikenNijiRecordScreen(viewModel = viewModel) }
             composable("toeflIbtRecordScreen") { ToeflIbtRecordScreen(viewModel = viewModel) }
             composable("ieltsRecordScreen") { IeltsRecordScreen(viewModel = viewModel) }
         }
