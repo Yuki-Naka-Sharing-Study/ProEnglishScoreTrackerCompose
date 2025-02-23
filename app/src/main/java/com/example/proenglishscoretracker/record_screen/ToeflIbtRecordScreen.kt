@@ -85,16 +85,16 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
         ) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
-            var readingScore by rememberSaveable { mutableIntStateOf(0) }
-            var listeningScore by rememberSaveable { mutableIntStateOf(0) }
-            var writingScore by rememberSaveable { mutableIntStateOf(0) }
-            var speakingScore by rememberSaveable { mutableIntStateOf(0) }
-            var overallScore by rememberSaveable { mutableIntStateOf(0) }
-            var memoText by rememberSaveable { mutableStateOf("") }
-            var readingMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
-            var speakingMaxScoreError by rememberSaveable { mutableStateOf(false) }
+            var readingScore by remember { mutableIntStateOf(0) }
+            var listeningScore by remember { mutableIntStateOf(0) }
+            var writingScore by remember { mutableIntStateOf(0) }
+            var speakingScore by remember { mutableIntStateOf(0) }
+            var overallScore by remember { mutableIntStateOf(0) }
+            var memoText by remember { mutableStateOf("") }
+            var readingMaxScoreError by remember { mutableStateOf(false) }
+            var listeningMaxScoreError by remember { mutableStateOf(false) }
+            var writingMaxScoreError by remember { mutableStateOf(false) }
+            var speakingMaxScoreError by remember { mutableStateOf(false) }
 
             Row {
                 SelectDayText("")
@@ -300,9 +300,9 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                             !listeningMaxScoreError &&
                             !writingMaxScoreError &&
                             !speakingMaxScoreError
-                    var showSaved by rememberSaveable { mutableStateOf("") }
-                    var showAlertDialogOfZero by rememberSaveable { mutableStateOf(false) }
-                    var result by rememberSaveable { mutableStateOf("Result") }
+                    var showSaved by remember { mutableStateOf("") }
+                    var showAlertDialogOfZero by remember { mutableStateOf(false) }
+                    var result by remember { mutableStateOf("Result") }
                     var alertMessage by remember { mutableStateOf<String?>(null) }
 
                     Row(
@@ -959,8 +959,16 @@ private fun ToeflOverallScorePickerView(
     val oneState = rememberSaveable { mutableIntStateOf(one) }
 
     // スコア変更をトリガーする
-    LaunchedEffect(hundredState.intValue, tenState.intValue, oneState.intValue) {
-        onScoreChange(hundredState.intValue * 100 + tenState.intValue * 10 + oneState.intValue)
+    LaunchedEffect(
+        hundredState.intValue,
+        tenState.intValue,
+        oneState.intValue
+    ) {
+        onScoreChange(
+            hundredState.intValue * 100 +
+                    tenState.intValue * 10 +
+                    oneState.intValue
+        )
     }
 
     Row(
@@ -1073,8 +1081,8 @@ private fun ToeflRLWSScorePicker(
     toeicRLScore: Int,
     onScoreConfirm: (Int) -> Unit, // スコア更新用のコールバック
 ) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
+    var showDialog by remember { mutableStateOf(false) }
+    var tempScore by remember { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
 
     Box(modifier = modifier) {
         // スコア入力ボタン
@@ -1151,8 +1159,8 @@ private fun ToeflRLWSScorePickerView(
     val one = (score % 10) / 1 // 1の位
 
     // 状態管理のためにrememberを使う
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
+    val tenState = remember { mutableIntStateOf(ten) }
+    val oneState = remember { mutableIntStateOf(one) }
 
     // スコア変更をトリガーする
     LaunchedEffect(tenState.intValue, oneState.intValue) {
