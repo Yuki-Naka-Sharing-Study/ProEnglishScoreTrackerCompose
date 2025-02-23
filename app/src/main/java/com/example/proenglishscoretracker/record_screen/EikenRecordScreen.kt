@@ -1,5 +1,6 @@
 package com.example.proenglishscoretracker.record_screen
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,8 +24,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -78,6 +79,7 @@ import com.sd.lib.date.fDate
 import com.sd.lib.date.selectDayOfMonthWithIndex
 import com.sd.lib.date.selectMonthWithIndex
 import com.sd.lib.date.selectYearWithIndex
+import kotlinx.coroutines.delay
 
 @Composable
 fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
@@ -98,6 +100,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var showDatePicker by remember { mutableStateOf(false) }
             val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
             var selectedGrade by rememberSaveable { mutableStateOf("") }
+            var hasTakenSpeakingTest by remember { mutableStateOf(false) }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
@@ -157,9 +160,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 EnterScoreText("")
             }
 
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
             // TODO : ここに「Switch:二次試験受験済」を実装する
+            SpeakingSwitchArea(
+                Modifier,
+                isVisible = isWritingAndSpeakingPickerVisible,
+                onCheckedChange = { isWritingAndSpeakingPickerVisible = it }
+            )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -817,6 +823,34 @@ private fun DropdownMenuWithIcon(
 }
 
 @Composable
+private fun SpeakingSwitchArea(
+    modifier: Modifier,
+    isVisible: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    if (isVisible) {
+        Column(
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(start = dimensionResource(id = R.dimen.space_16_dp))
+            ) {
+                Switch(
+                    isVisible,
+                    onCheckedChange = onCheckedChange
+                )
+                Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+                Text(text = "二次試験受験済")
+            }
+        }
+    }
+}
+
+@Composable
 private fun EnterScoreText(grade: String, modifier: Modifier = Modifier) {
     Text(
         text = "スコアを記入",
@@ -1288,7 +1322,7 @@ private fun MemoInputField(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_32_dp)))
-        androidx.compose.material.OutlinedTextField(
+        OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
                 .height(dimensionResource(id = R.dimen.space_52_dp)),
@@ -1349,7 +1383,7 @@ private fun ErrorText(error: String) {
     )
 }
 
-private fun showToast(context: android.content.Context, message: String) {
+private fun showToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
@@ -1364,7 +1398,7 @@ private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
 
         // メッセージを非表示にするためのタイマーを設定
         LaunchedEffect(saved) {
-            kotlinx.coroutines.delay(2000) // 2秒間待機
+            delay(2000) // 2秒間待機
             onTimeout()
         }
     }
