@@ -413,7 +413,8 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                             memoText = ""
                                         }
                                     }
-                                }
+                                },
+                                isEnabled = savableChecker
                             )
                             if (alertMessage != null) {
                                 AlertDialog(
@@ -1268,14 +1269,17 @@ private fun MemoInputField(
 
 @Composable
 private fun SaveButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isEnabled: Boolean
 ) {
     Column(
         verticalArrangement = Arrangement.Center
     ) {
         Button(
             onClick = onClick,
-            colors = ButtonDefaults.buttonColors(Color.Blue),
+            colors =
+            if (isEnabled) ButtonDefaults.buttonColors(Color.Blue)
+            else ButtonDefaults.buttonColors(Color.LightGray),
             shape = RoundedCornerShape(8.dp),
         ) {
             Text(stringResource(id = R.string.record), color = Color.White)
