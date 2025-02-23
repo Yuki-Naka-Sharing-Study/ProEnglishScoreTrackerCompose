@@ -227,7 +227,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
             }
 
-            // TODO :「WritingScoreArea」に修正。4級と5級にはWriting試験が無いので。
             WritingScoreArea(
                 Modifier,
                 isVisible = isWritingAndSpeakingPickerVisible,
@@ -246,6 +245,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+            // TODO :「SpeakingScoreArea」の周りでif文を実装して表示非表示の切替
             SpeakingScoreArea(
                 Modifier,
                 isVisible = isWritingAndSpeakingPickerVisible,
