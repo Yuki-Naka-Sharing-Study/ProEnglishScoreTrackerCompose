@@ -100,7 +100,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var showDatePicker by remember { mutableStateOf(false) }
             val grades = listOf("5級", "4級", "3級", "準2級", "2級", "準1級", "1級")
             var selectedGrade by rememberSaveable { mutableStateOf("") }
-            var hasTakenSpeakingTest by remember { mutableStateOf(false) }
             var readingScore by rememberSaveable { mutableIntStateOf(0) }
             var listeningScore by rememberSaveable { mutableIntStateOf(0) }
             var writingScore by rememberSaveable { mutableIntStateOf(0) }
@@ -112,6 +111,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 "3級", "準2級", "2級", "準1級", "1級" -> true
                 else -> false
             }
+            var isSpeakingVisible by remember { mutableStateOf(true) }
             var readingMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var listeningMaxScoreError by rememberSaveable { mutableStateOf(false) }
             var writingMaxScoreError by rememberSaveable { mutableStateOf(false) }
@@ -160,12 +160,13 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 EnterScoreText("")
             }
 
-            // TODO : ここに「Switch:二次試験受験済」を実装する
-            SpeakingSwitchArea(
-                Modifier,
-                isVisible = isWritingAndSpeakingPickerVisible,
-                onCheckedChange = { isWritingAndSpeakingPickerVisible = it }
-            )
+            if (isWritingAndSpeakingPickerVisible) {
+                SpeakingSwitchArea(
+                    Modifier,
+                    isSpeakingVisible = isSpeakingVisible,
+                    onCheckedChange = { isSpeakingVisible = it }
+                )
+            }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -245,10 +246,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-            // TODO :「SpeakingScoreArea」の周りでif文を実装して表示非表示の切替
             SpeakingScoreArea(
                 Modifier,
-                isVisible = isWritingAndSpeakingPickerVisible,
+                isVisible = isWritingAndSpeakingPickerVisible && isSpeakingVisible, // 条件を変更
                 speakingScore = speakingScore,
                 onValueChange = {
                     speakingScore = it
@@ -825,27 +825,25 @@ private fun DropdownMenuWithIcon(
 @Composable
 private fun SpeakingSwitchArea(
     modifier: Modifier,
-    isVisible: Boolean,
+    isSpeakingVisible: Boolean,
     onCheckedChange: (Boolean) -> Unit
 ) {
-    if (isVisible) {
-        Column(
-            verticalArrangement = Arrangement.Center
+    Column(
+        verticalArrangement = Arrangement.Center
+    ) {
+        Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = dimensionResource(id = R.dimen.space_16_dp))
         ) {
-            Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = dimensionResource(id = R.dimen.space_16_dp))
-            ) {
-                Switch(
-                    isVisible,
-                    onCheckedChange = onCheckedChange
-                )
-                Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-                Text(text = "二次試験受験済")
-            }
+            Switch(
+                checked = isSpeakingVisible,
+                onCheckedChange = onCheckedChange
+            )
+            Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            Text(text = "二次試験受験済")
         }
     }
 }
