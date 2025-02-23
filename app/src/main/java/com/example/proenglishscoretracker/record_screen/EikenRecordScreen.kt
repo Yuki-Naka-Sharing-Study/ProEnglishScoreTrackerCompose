@@ -104,8 +104,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var speakingScore by rememberSaveable { mutableIntStateOf(0) }
             var cseScore by rememberSaveable { mutableIntStateOf(0) }
             var memoText by rememberSaveable { mutableStateOf("") }
-            var isSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
-            isSpeakingPickerVisible = when (selectedGrade) {
+            var isWritingAndSpeakingPickerVisible by rememberSaveable { mutableStateOf(false) }
+            isWritingAndSpeakingPickerVisible = when (selectedGrade) {
                 "3級", "準2級", "2級", "準1級", "1級" -> true
                 else -> false
             }
@@ -219,43 +219,28 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
-                WritingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                WritingText("", modifier = Modifier.weight(1f))
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                Spacer(modifier = Modifier.weight(0.3f))
-                EikenRLWSScorePicker(
-                    modifier = Modifier.weight(1.3f),
-                    writingScore,
-                ) {
+            // TODO :「WritingScoreArea」に修正。4級と5級にはWriting試験が無いので。
+            WritingScoreArea(
+                Modifier,
+                isVisible = isWritingAndSpeakingPickerVisible,
+                writingScore = writingScore,
+                onValueChange = {
                     writingScore = it
                     viewModel.setWritingScore(it)
                 }
-                Spacer(modifier = Modifier.weight(3f))
-            }
+            )
 
-            // TODO :「WritingScoreArea」に修正。4級と5級にはWriting試験が無いので。
-            Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
-                if (writingScore >= 851) {
-                    ErrorText("Writingスコアは851未満である必要があります。")
-                    writingMaxScoreError = true
-                } else {
-                    writingMaxScoreError = false
-                }
+            if (writingScore >= 851) {
+                writingMaxScoreError = true
+            } else {
+                writingMaxScoreError = false
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
             SpeakingScoreArea(
                 Modifier,
-                isVisible = isSpeakingPickerVisible,
+                isVisible = isWritingAndSpeakingPickerVisible,
                 speakingScore = speakingScore,
                 onValueChange = {
                     speakingScore = it
@@ -478,7 +463,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 } else if (
                                     zeroCaseIchiji &&
                                     speakingScore == 0 &&
-                                    isSpeakingPickerVisible
+                                    isWritingAndSpeakingPickerVisible
                                 ) {
                                     showAlertDialogOfZeroCaseNiji = true
                                 } else if (
@@ -1196,6 +1181,7 @@ private fun WritingScoreArea(
         Column(
             verticalArrangement = Arrangement.Center
         ) {
+            Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
@@ -1203,27 +1189,26 @@ private fun WritingScoreArea(
                     .padding(start = dimensionResource(id = R.dimen.space_24_dp))
             ) {
                 WritingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 WritingText(
                     writingText = "Writing",
-                    modifier = Modifier.weight(1f)
+                    modifier = modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                Spacer(modifier = Modifier.weight(0.3f))
+                Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = modifier.weight(0.3f))
                 EikenRLWSScorePicker(
-                    modifier = Modifier.weight(1.2f),
+                    modifier = modifier.weight(1.2f),
                     writingScore,
                     onScoreConfirm = onValueChange
                 )
-                Spacer(modifier = Modifier.weight(3f))
+                Spacer(modifier = modifier.weight(3f))
             }
             Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                Spacer(modifier = modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
                 if (writingScore >= 851) {
                     ErrorText("WritingScoreスコアは851未満である必要があります。")
                 }
             }
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
         }
     }
 }
