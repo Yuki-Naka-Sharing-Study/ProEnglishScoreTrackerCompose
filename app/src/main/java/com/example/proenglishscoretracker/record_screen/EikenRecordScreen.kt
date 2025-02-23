@@ -1221,8 +1221,6 @@ private fun SpeakingScoreArea(
     onValueChange: (Int) -> Unit,
 ) {
     if (isVisible) {
-        var hasTakenSecondTest by remember { mutableStateOf(true) }
-
         Column(
             verticalArrangement = Arrangement.Center
         ) {
@@ -1233,47 +1231,27 @@ private fun SpeakingScoreArea(
                     .padding(start = dimensionResource(id = R.dimen.space_24_dp))
             ) {
                 SpeakingImageView()
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 SpeakingText(
                     speakingText = "Speaking",
-                    modifier = Modifier.weight(1f)
+                    modifier = modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                Spacer(modifier = Modifier.weight(0.3f))
+                Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+                Spacer(modifier = modifier.weight(0.3f))
                 EikenRLWSScorePicker(
-                    modifier = Modifier.weight(1.2f),
+                    modifier = modifier.weight(1.2f),
                     speakingScore,
                     onScoreConfirm = onValueChange
                 )
-                Spacer(modifier = Modifier.weight(3f))
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(start = dimensionResource(id = R.dimen.space_64_dp))
-            ) {
-                Text(text = "二次試験受験済")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
-                Switch(
-                    checked = hasTakenSecondTest,
-                    onCheckedChange = { hasTakenSecondTest = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color(0xFF9C27B0),
-                        checkedTrackColor = Color(0xFFE1BEE7),
-                        uncheckedThumbColor = Color(0xFFBDBDBD),
-                        uncheckedTrackColor = Color(0xFFEEEEEE)
-                    ),
-                    modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp))
-                )
+                Spacer(modifier = modifier.weight(3f))
             }
             Row {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
+                Spacer(modifier = modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
                 if (speakingScore >= 851) {
-                    ErrorText("Speakingスコアは851未満である必要があります。")
+                    ErrorText("SpeakingScoreスコアは851未満である必要があります。")
                 }
             }
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
         }
     }
 }
