@@ -159,6 +159,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
+            // TODO : ここに「Switch:二次試験受験済」を実装する
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
