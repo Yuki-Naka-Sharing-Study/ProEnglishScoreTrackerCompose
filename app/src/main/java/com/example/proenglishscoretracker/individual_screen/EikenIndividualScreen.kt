@@ -65,7 +65,7 @@ fun EikenIndividualScreen(
 
 @Composable
 private fun EikenItem(
-    eikenInfo: EnglishTestInfo.EIKEN_SECOND,
+    eikenInfo: EnglishTestInfo.EIKEN,
     navController: NavController
 ) {
     Card(

@@ -54,15 +54,15 @@ interface EnglishInfoDao {
     @Query("SELECT COUNT(*) FROM eiken_second WHERE grade = :grade AND strftime('%Y', date) = :year")
     suspend fun countEntriesByGradeAndYear(grade: String, year: String): Int
     @Insert
-    suspend fun insertEikenInfo(item: EnglishTestInfo.EIKEN_SECOND)
+    suspend fun insertEikenInfo(item: EnglishTestInfo.EIKEN)
     @Delete
-    suspend fun deleteEikenInfo(item: EnglishTestInfo.EIKEN_SECOND)
+    suspend fun deleteEikenInfo(item: EnglishTestInfo.EIKEN)
     @Update
-    suspend fun updateEikenInfo(item: EnglishTestInfo.EIKEN_SECOND)
+    suspend fun updateEikenInfo(item: EnglishTestInfo.EIKEN)
     @Query("SELECT * FROM eiken_second")
-    suspend fun getAllEikenInfo(): List<EnglishTestInfo.EIKEN_SECOND>
+    suspend fun getAllEikenInfo(): List<EnglishTestInfo.EIKEN>
     @Query("SELECT * FROM eiken_second WHERE id = :eikenId")
-    suspend fun getEikenInfoById(eikenId: String): EnglishTestInfo.EIKEN_SECOND?
+    suspend fun getEikenInfoById(eikenId: String): EnglishTestInfo.EIKEN?
 
 
     // TOEFL

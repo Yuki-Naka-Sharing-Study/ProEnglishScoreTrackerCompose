@@ -92,7 +92,7 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         cseScore: Int,
         memo: String,
     ) {
-        val eikenInfo = EnglishTestInfo.EIKEN_SECOND(
+        val eikenInfo = EnglishTestInfo.EIKEN(
             id = 0,
             date = date,
             grade = grade,
@@ -105,16 +105,16 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
         )
         dao.insertEikenInfo(eikenInfo)
     }
-    suspend fun getAllEikenInfo(): List<EnglishTestInfo.EIKEN_SECOND> {
+    suspend fun getAllEikenInfo(): List<EnglishTestInfo.EIKEN> {
         return dao.getAllEikenInfo()
     }
-    suspend fun deleteEikenInfo(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+    suspend fun deleteEikenInfo(eikenInfo: EnglishTestInfo.EIKEN) {
         dao.deleteEikenInfo(eikenInfo)
     }
-    suspend fun updateEikenInfo(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+    suspend fun updateEikenInfo(eikenInfo: EnglishTestInfo.EIKEN) {
         dao.updateEikenInfo(eikenInfo)
     }
-    suspend fun getEikenInfoById(eikenId: String): EnglishTestInfo.EIKEN_SECOND? {
+    suspend fun getEikenInfoById(eikenId: String): EnglishTestInfo.EIKEN? {
         return dao.getEikenInfoById(eikenId)
     }
 

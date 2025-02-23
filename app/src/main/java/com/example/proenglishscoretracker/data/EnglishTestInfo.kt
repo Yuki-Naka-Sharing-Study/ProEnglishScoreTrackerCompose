@@ -23,7 +23,7 @@ sealed class EnglishTestInfo {
     ) : EnglishTestInfo()
 
     @Entity(tableName = "eiken_second")
-    data class EIKEN_SECOND(
+    data class EIKEN(
         @PrimaryKey(autoGenerate = true) val id: Int,
         val date: String,
         val grade: String,

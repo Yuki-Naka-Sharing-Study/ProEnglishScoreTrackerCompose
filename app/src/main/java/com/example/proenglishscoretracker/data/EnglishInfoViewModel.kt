@@ -4,8 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
@@ -32,11 +30,11 @@ class EnglishInfoViewModel(
     private val _selectedToeicSwInfo = MutableStateFlow<EnglishTestInfo.TOEIC_SW?>(null)
     val selectedToeicSwInfo: StateFlow<EnglishTestInfo.TOEIC_SW?> = _selectedToeicSwInfo
 
-    private val _eikenSecondInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN_SECOND>>(emptyList())
-    val eikenSecondInfo: StateFlow<List<EnglishTestInfo.EIKEN_SECOND>> = _eikenSecondInfo
+    private val _eikenSecondInfo = MutableStateFlow<List<EnglishTestInfo.EIKEN>>(emptyList())
+    val eikenSecondInfo: StateFlow<List<EnglishTestInfo.EIKEN>> = _eikenSecondInfo
 
-    private val _selectedEikenInfo = MutableStateFlow<EnglishTestInfo.EIKEN_SECOND?>(null)
-    val selectedEikenInfo: StateFlow<EnglishTestInfo.EIKEN_SECOND?> = _selectedEikenInfo
+    private val _selectedEikenInfo = MutableStateFlow<EnglishTestInfo.EIKEN?>(null)
+    val selectedEikenInfo: StateFlow<EnglishTestInfo.EIKEN?> = _selectedEikenInfo
 
     private val _toeflIbtInfo = MutableStateFlow<List<EnglishTestInfo.TOEFL>>(emptyList())
     val toeflIbtInfo: StateFlow<List<EnglishTestInfo.TOEFL>> = _toeflIbtInfo
@@ -277,7 +275,7 @@ class EnglishInfoViewModel(
             }
         }
     }
-    fun updateEikenValues(eikenInfo: EnglishTestInfo.EIKEN_SECOND) {
+    fun updateEikenValues(eikenInfo: EnglishTestInfo.EIKEN) {
         viewModelScope.launch {
             repository.updateEikenInfo(eikenInfo)
             this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
