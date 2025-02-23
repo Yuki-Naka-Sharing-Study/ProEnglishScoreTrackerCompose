@@ -309,9 +309,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     cseScore = readingScore + listeningScore + writingScore + speakingScore
-                    var showAlertDialogOfZeroCaseIchiji by remember { mutableStateOf(false) }
-                    var zeroCaseIchiji by remember { mutableStateOf(false) }
-                    var showAlertDialogOfZeroCaseNiji by remember { mutableStateOf(false) }
+                    var showAlertDialogOfZeroCaseRL by remember { mutableStateOf(false) }
+                    var zeroCaseRL by remember { mutableStateOf(false) }
+                    var showAlertDialogOfZeroCaseRLWS by remember { mutableStateOf(false) }
 
                     val savableChecker = !readingMaxScoreError &&
                             !listeningMaxScoreError &&
@@ -339,17 +339,17 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             contentColor = Color.Black
                         )
                     }
-                    if (showAlertDialogOfZeroCaseIchiji) {
+                    if (showAlertDialogOfZeroCaseRL) {
                         AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
-                                showAlertDialogOfZeroCaseIchiji = false
+                                showAlertDialogOfZeroCaseRL = false
                             },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
                                         result = "はい"
-                                        showAlertDialogOfZeroCaseIchiji = false
+                                        showAlertDialogOfZeroCaseRL = false
                                         // TODO : 英検一次用のロジック
                                         viewModel.saveEikenValues(
                                             date.toString(),
@@ -388,7 +388,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 TextButton(
                                     onClick = {
                                         result = "いいえ"
-                                        showAlertDialogOfZeroCaseIchiji = false
+                                        showAlertDialogOfZeroCaseRL = false
                                     }
                                 ) {
                                     Text("いいえ")
@@ -401,17 +401,17 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                             backgroundColor = Color(0xFFd3d3d3)
                         )
                     }
-                    if (showAlertDialogOfZeroCaseNiji) {
+                    if (showAlertDialogOfZeroCaseRLWS) {
                         AlertDialog(
                             onDismissRequest = {
                                 result = "Dismiss"
-                                showAlertDialogOfZeroCaseNiji = false
+                                showAlertDialogOfZeroCaseRLWS = false
                             },
                             confirmButton = {
                                 TextButton(
                                     onClick = {
                                         result = "はい"
-                                        showAlertDialogOfZeroCaseNiji = false
+                                        showAlertDialogOfZeroCaseRLWS = false
                                         // TODO : 英検二次用のロジック
                                         viewModel.saveEikenValues(
                                             date.toString(),
@@ -450,7 +450,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 TextButton(
                                     onClick = {
                                         result = "いいえ"
-                                        showAlertDialogOfZeroCaseNiji = false
+                                        showAlertDialogOfZeroCaseRLWS = false
                                     }
                                 ) {
                                     Text("いいえ")
@@ -469,18 +469,18 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 if (selectedGrade == "") {
                                     alertMessage = "受験級が選択されていません。"
                                 } else if (
-                                    zeroCaseIchiji &&
+                                    zeroCaseRL &&
                                     speakingScore == 0 &&
                                     isWritingAndSpeakingPickerVisible
                                 ) {
-                                    showAlertDialogOfZeroCaseNiji = true
+                                    showAlertDialogOfZeroCaseRLWS = true
                                 } else if (
                                     readingScore == 0 ||
                                     listeningScore == 0 ||
                                     writingScore == 0
                                 ) {
-                                    showAlertDialogOfZeroCaseIchiji = true
-                                    zeroCaseIchiji = true
+                                    showAlertDialogOfZeroCaseRL = true
+                                    zeroCaseRL = true
                                 } else {
                                     // TODO : 英検二次用のロジック
                                     viewModel.saveEikenValues(
