@@ -126,20 +126,20 @@ private fun EikenItem(
                     Text(text = eikenInfo.listeningScore.toString())
                 }
 
-                Row(
-
-                ) {
-                    Text(text = "ライティングスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(text = eikenInfo.writingScore.toString())
-                }
-
                 if (eikenInfo.grade == "3級" ||
                     eikenInfo.grade == "準2級" ||
                     eikenInfo.grade == "2級" ||
                     eikenInfo.grade == "準1級" ||
-                    eikenInfo.grade == "1級")
-                {
+                    eikenInfo.grade == "1級"
+                ) {
+                    Row(
+
+                    ) {
+                        Text(text = "ライティングスコア:")
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(text = eikenInfo.writingScore.toString())
+                    }
+
                     Row(
 
                     ) {
