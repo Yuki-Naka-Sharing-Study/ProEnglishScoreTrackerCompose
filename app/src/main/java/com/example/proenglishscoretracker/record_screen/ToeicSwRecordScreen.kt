@@ -98,8 +98,12 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                CalendarImageView()
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 SelectDatePicker(
                     date = date,
                     onShowDatePickerChange = { showDatePicker = it }
@@ -354,6 +358,17 @@ private fun SelectDayTextPreview() {
 }
 
 @Composable
+private fun CalendarImageView(modifier: Modifier = Modifier) {
+    Image(
+        painter = painterResource(id = R.drawable.calendar),
+        contentDescription = "",
+        modifier = modifier
+            .size((dimensionResource(id = R.dimen.space_32_dp)))
+            .aspectRatio(1f)
+    )
+}
+
+@Composable
 private fun SelectDatePicker(
     date: FDate,
     onShowDatePickerChange: (Boolean) -> Unit,
@@ -361,11 +376,8 @@ private fun SelectDatePicker(
 ) {
     Box(
         modifier = modifier
-            .navigationBarsPadding()
     ) {
-        // 年月日を表示するボタン
         Button(
-            modifier = Modifier.align(Alignment.TopCenter),
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),

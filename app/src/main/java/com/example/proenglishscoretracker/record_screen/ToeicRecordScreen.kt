@@ -353,7 +353,6 @@ private fun SelectDatePicker(
         modifier = modifier
     ) {
         Button(
-            modifier = Modifier.align(Alignment.Center),
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
