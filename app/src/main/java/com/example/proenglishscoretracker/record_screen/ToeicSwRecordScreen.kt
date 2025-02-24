@@ -833,7 +833,7 @@ private fun OneDigit(state: MutableIntState) {
 @Composable
 private fun MemoText(memoText: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Memo",
+        text = "メモ",
         modifier = modifier
     )
 }

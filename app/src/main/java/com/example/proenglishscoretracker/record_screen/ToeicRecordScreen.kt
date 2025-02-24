@@ -813,7 +813,7 @@ private fun ListeningImageViewPreview() {
 @Composable
 private fun MemoText(memoText: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Memo",
+        text = "メモ",
         modifier = modifier
     )
 }

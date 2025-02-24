@@ -854,7 +854,7 @@ private fun SpeakingImageViewPreview() {
 @Composable
 private fun MemoText(memoText: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Memo",
+        text = "メモ",
         modifier = modifier
     )
 }
