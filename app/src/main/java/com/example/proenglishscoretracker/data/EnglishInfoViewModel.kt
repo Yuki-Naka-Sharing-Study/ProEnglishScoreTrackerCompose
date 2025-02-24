@@ -36,6 +36,8 @@ class EnglishInfoViewModel(
 
 
     // TOEIC
+    // TODO : TOEICの情報喪失アラートの実装
+
     private val _toeicInfo = MutableStateFlow<List<EnglishTestInfo.TOEIC>>(emptyList())
     val toeicInfo: StateFlow<List<EnglishTestInfo.TOEIC>> = _toeicInfo
 

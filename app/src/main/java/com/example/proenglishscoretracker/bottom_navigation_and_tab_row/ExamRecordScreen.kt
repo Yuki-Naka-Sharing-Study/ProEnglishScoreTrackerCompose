@@ -43,6 +43,8 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
             pagerState = pagerState,
             onTabClick = { index ->
                 if (
+                    // TODO : TOEICの情報喪失アラートの実装
+
                     viewModel.eikenGrade.value.isNotEmpty() ||
                     viewModel.eikenReadingScore.value > 0 ||
                     viewModel.eikenListeningScore.value > 0 ||

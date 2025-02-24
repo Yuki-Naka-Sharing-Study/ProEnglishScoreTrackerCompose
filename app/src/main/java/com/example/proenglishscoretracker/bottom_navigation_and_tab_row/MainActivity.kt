@@ -213,6 +213,8 @@ fun BottomNavigationBar(
                 TextButton(onClick = {
                     showDialog = false
                     targetRoute?.let {
+                        // TODO : TOEICの情報喪失アラートの実装
+
                         viewModel.setEikenGrade("")
                         viewModel.setEikenReadingScore(0)
                         viewModel.setEikenListeningScore(0)
@@ -251,17 +253,22 @@ fun BottomNavigationBar(
             selected = navController.currentBackStackEntry?.destination?.route == "examDataScreen",
             onClick = {
                 if (
+                // TODO : TOEICの情報喪失アラートの実装
+
                     eikenUnsavedChanges &&
                     eikenGrade.isNotEmpty() ||
                     eikenReadingScore > 0 ||
                     eikenListeningScore > 0 ||
                     eikenWritingScore > 0 ||
                     eikenSpeakingScore > 0 ||
-                    eikenMemoText.isNotEmpty())
+                    eikenMemoText.isNotEmpty()
+                    )
                 {
                     targetRoute = "examDataScreen"
                     showDialog = true
                 } else {
+                    // TODO : TOEICの情報喪失アラートの実装
+
                     viewModel.setEikenGrade("")
                     viewModel.setEikenReadingScore(0)
                     viewModel.setEikenListeningScore(0)
@@ -283,6 +290,8 @@ fun BottomNavigationBar(
             selected = navController.currentBackStackEntry?.destination?.route == "examRecordScreen",
             onClick = {
                 if (
+                // TODO : TOEICの情報喪失アラートの実装
+
                     eikenUnsavedChanges &&
                     eikenGrade.isNotEmpty() ||
                     eikenReadingScore > 0 ||
@@ -294,6 +303,8 @@ fun BottomNavigationBar(
                     targetRoute = "examRecordScreen"
                     showDialog = true
                 } else {
+                    // TODO : TOEICの情報喪失アラートの実装
+
                     viewModel.setEikenGrade("")
                     viewModel.setEikenReadingScore(0)
                     viewModel.setEikenListeningScore(0)
@@ -315,6 +326,8 @@ fun BottomNavigationBar(
             selected = navController.currentBackStackEntry?.destination?.route == "setting",
             onClick = {
                 if (
+                // TODO : TOEICの情報喪失アラートの実装
+
                     eikenUnsavedChanges &&
                     eikenGrade.isNotEmpty() ||
                     eikenReadingScore > 0 ||
@@ -326,6 +339,8 @@ fun BottomNavigationBar(
                     targetRoute = "setting"
                     showDialog = true
                 } else {
+                    // TODO : TOEICの情報喪失アラートの実装
+
                     viewModel.setEikenGrade("")
                     viewModel.setEikenReadingScore(0)
                     viewModel.setEikenListeningScore(0)
