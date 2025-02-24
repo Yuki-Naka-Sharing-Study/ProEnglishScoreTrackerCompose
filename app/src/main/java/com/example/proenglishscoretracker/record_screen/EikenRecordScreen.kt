@@ -1447,6 +1447,7 @@ private fun MemoInputField(
                 unfocusedBorderColor = Color.Gray
             )
         )
+        Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
     }
 }
 
