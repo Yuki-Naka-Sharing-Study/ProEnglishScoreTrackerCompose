@@ -282,9 +282,9 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 MemoText("")
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 MemoInputField(
@@ -330,11 +330,17 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 TextButton(
                                     onClick = { alertMessage = null }
                                 ) {
-                                    Text("OK")
+                                    Text(
+                                        text = "OK",
+                                        color = Color.White
+                                    )
                                 }
                             },
                             text = {
-                                Text(alertMessage!!)
+                                Text(
+                                    text = alertMessage!!,
+                                    color = Color.Red
+                                )
                             },
                             backgroundColor = Color.White,
                             contentColor = Color.Black
@@ -589,14 +595,24 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                 alertMessage = null
                                 showSaved = ""
                             },
-                            title = { Text("エラー") },
-                            text = { Text(alertMessage!!) },
+                            title = { Text(
+                                text = "エラー",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Red
+                            ) },
+                            text = { Text(
+                                text = alertMessage!!,
+                                color = Color.Black
+                            ) },
                             confirmButton = {
                                 Button(onClick = {
                                     alertMessage = null
                                     showSaved = ""
                                 }) {
-                                    Text("OK")
+                                    Text(
+                                        text = "OK",
+                                        color = Color.White
+                                    )
                                 }
                             }
                         )
