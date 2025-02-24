@@ -150,7 +150,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
             }
 
-
             SelectGradeText("")
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
