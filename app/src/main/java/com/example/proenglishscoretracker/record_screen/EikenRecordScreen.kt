@@ -117,9 +117,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             var writingMaxScoreError by remember { mutableStateOf(false) }
             var speakingMaxScoreError by remember { mutableStateOf(false) }
 
+            SelectDayText("")
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
             Row {
-                SelectDayText("")
-                Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 SelectDatePicker(
                     date = date,
                     onShowDatePickerChange = { showDatePicker = it }
@@ -140,25 +143,22 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
-
-            Row {
-                SelectGradeText(selectedGrade)
-                DropdownMenuWithIcon(
-                    grades = grades,
-                    selectedGrade = selectedGrade,
-                    onGradeSelected = { grade ->
-                        selectedGrade = grade
-                        viewModel.setEikenGrade(selectedGrade)
-                    }
-                )
-            }
+            SelectGradeText("")
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-            Row {
-                EnterScoreText("")
-            }
+            DropdownMenuWithIcon(
+                grades = grades,
+                selectedGrade = selectedGrade,
+                onGradeSelected = { grade ->
+                    selectedGrade = grade
+                    viewModel.setEikenGrade(selectedGrade)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            EnterScoreText("")
 
             if (isWritingAndSpeakingPickerVisible) {
                 SpeakingSwitchArea(
@@ -167,6 +167,8 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     onCheckedChange = { isSpeakingVisible = it }
                 )
             }
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -238,10 +240,13 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
             )
 
-            if (writingScore >= 851) {
-                writingMaxScoreError = true
-            } else {
-                writingMaxScoreError = false
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (writingScore >= 851) {
+                    writingMaxScoreError = true
+                } else {
+                    writingMaxScoreError = false
+                }
             }
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
@@ -256,10 +261,13 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 }
             )
 
-            if (speakingScore >= 851) {
-                speakingMaxScoreError = true
-            } else {
-                speakingMaxScoreError = false
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
+                if (speakingScore >= 851) {
+                    speakingMaxScoreError = true
+                } else {
+                    speakingMaxScoreError = false
+                }
             }
 
             Row(
@@ -1077,7 +1085,7 @@ private fun WritingTextPreview() {
 @Composable
 private fun MemoText(memoText: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Memo",
+        text = "メモ",
         modifier = modifier
     )
 }
