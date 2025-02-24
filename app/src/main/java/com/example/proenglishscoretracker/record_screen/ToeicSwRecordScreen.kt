@@ -372,11 +372,8 @@ private fun CalendarImageView(modifier: Modifier = Modifier) {
 private fun SelectDatePicker(
     date: FDate,
     onShowDatePickerChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-    ) {
+    Box{
         Button(
             onClick = { onShowDatePickerChange(true) },
             shape = RoundedCornerShape(8.dp),
