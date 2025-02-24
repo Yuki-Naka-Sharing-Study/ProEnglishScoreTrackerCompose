@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -473,7 +474,6 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     onClick = {
                                         result = "はい"
                                         showAlertDialogOfZeroCaseRLWS = false
-                                        // TODO : 英検二次用のロジック
                                         viewModel.saveEikenValues(
                                             date.toString(),
                                             selectedGrade,
@@ -907,7 +907,13 @@ private fun SpeakingSwitchArea(
         ) {
             Switch(
                 checked = isSpeakingVisible,
-                onCheckedChange = onCheckedChange
+                onCheckedChange = onCheckedChange,
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color(0xFF9C27B0),
+                    uncheckedThumbColor = Color(0xFFBDBDBD),
+                    checkedTrackColor = Color(0xFF9C27B0),
+                    uncheckedTrackColor = Color(0xFFBDBDBD)
+                )
             )
             Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             Text(text = "二次試験受験済")
