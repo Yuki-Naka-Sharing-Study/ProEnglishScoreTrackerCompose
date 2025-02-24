@@ -228,21 +228,29 @@ class EnglishInfoViewModel(
         showAlert: (String) -> Unit
     ) {
         viewModelScope.launch {
-            val dateAndGradeCount = repository.getEikenEntryCountByDateAndGrade(date, grade)
-
-            if (grade == "") {
+            if (grade.isEmpty()) {
                 showAlert("受験級が選択されていません。")
                 return@launch
             }
 
+            // 同一年月日かつ同一級の登録チェック
+            val dateAndGradeCount = repository.getEikenEntryCountByDateAndGrade(date, grade)
             if (dateAndGradeCount > 0) {
                 showAlert("同一年月日で且つ同一級を既に登録済です。")
                 return@launch
             }
 
-            val year = date.substring(0, 4) // 'yyyy-MM-dd'形式の日付から年を抽出
-            val count = repository.getEntryCountByGradeAndYear(grade, year)
+            // 同一月かつ同一級の登録チェック
+            val yearMonth = date.substring(0, 7)
+            val monthAndGradeCount = repository.getEikenEntryCountByYearMonthAndGrade(yearMonth, grade)
+            if (monthAndGradeCount > 0) {
+                showAlert("同一月で同一級を既に登録済です。")
+                return@launch
+            }
 
+            // 同一年度内での登録回数チェック
+            val year = date.substring(0, 4) // 'yyyy'を抽出
+            val count = repository.getEntryCountByGradeAndYear(grade, year)
             if (count >= 3) {
                 showAlert("同一級は年間で3回までしか登録できません。")
             } else {

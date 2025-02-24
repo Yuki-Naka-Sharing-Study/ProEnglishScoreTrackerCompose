@@ -51,6 +51,8 @@ interface EnglishInfoDao {
     // EIKEN
     @Query("SELECT COUNT(*) FROM eiken WHERE date = :date AND grade = :grade")
     suspend fun countEikenEntriesByDateAndGrade(date: String, grade: String): Int
+    @Query("SELECT COUNT(*) FROM eiken WHERE strftime('%Y-%m', date) = :yearMonth AND grade = :grade")
+    suspend fun countEikenEntriesByYearMonthAndGrade(yearMonth: String, grade: String): Int
     @Query("SELECT COUNT(*) FROM eiken WHERE grade = :grade AND strftime('%Y', date) = :year")
     suspend fun countEntriesByGradeAndYear(grade: String, year: String): Int
     @Insert
