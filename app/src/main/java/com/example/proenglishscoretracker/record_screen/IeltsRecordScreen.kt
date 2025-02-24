@@ -335,15 +335,17 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
-            Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
             MemoText("")
-            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
             MemoInputField(
                 placeholder = stringResource(id = R.string.memo),
                 value = memoText,
-                onValueChange = { memoText = it }
+                onValueChange = {
+                    memoText = it
+                }
             )
         }
 
