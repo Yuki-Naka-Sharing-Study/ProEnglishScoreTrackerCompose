@@ -194,15 +194,15 @@ fun BottomNavigationBar(
     navController: NavController,
     viewModel: EnglishInfoViewModel
 ) {
-    val unsavedChanges by viewModel.unsavedChanges.collectAsState()
+    val eikenUnsavedChanges by viewModel.eikenUnsavedChanges.collectAsState()
     var showDialog by rememberSaveable { mutableStateOf(false) }
     var targetRoute by rememberSaveable { mutableStateOf<String?>(null) }
-    val sumScore by viewModel.sumScore.collectAsState()
-    val readingScore by viewModel.readingScore.collectAsState()
-    val listeningScore by viewModel.listeningScore.collectAsState()
-    val writingScore by viewModel.writingScore.collectAsState()
-    val speakingScore by viewModel.speakingScore.collectAsState()
-    val memoText by viewModel.memoText.collectAsState()
+    val eikenGrade by viewModel.eikenGrade.collectAsState()
+    val eikenReadingScore by viewModel.eikenReadingScore.collectAsState()
+    val eikenListeningScore by viewModel.eikenListeningScore.collectAsState()
+    val eikenWritingScore by viewModel.eikenWritingScore.collectAsState()
+    val eikenSpeakingScore by viewModel.eikenSpeakingScore.collectAsState()
+    val eikenMemoText by viewModel.eikenMemoText.collectAsState()
 
     if (showDialog) {
         AlertDialog(
@@ -213,13 +213,12 @@ fun BottomNavigationBar(
                 TextButton(onClick = {
                     showDialog = false
                     targetRoute?.let {
-                        // 遷移前にmemoTextをリセット
-                        viewModel.setSumScore(0)
-                        viewModel.setReadingScore(0)
-                        viewModel.setListeningScore(0)
-                        viewModel.setWritingScore(0)
-                        viewModel.setSpeakingScore(0)
-                        viewModel.setMemoText("")
+                        viewModel.setEikenGrade("")
+                        viewModel.setEikenReadingScore(0)
+                        viewModel.setEikenListeningScore(0)
+                        viewModel.setEikenWritingScore(0)
+                        viewModel.setEikenSpeakingScore(0)
+                        viewModel.setEikenMemoText("")
                         navController.navigate(it) {
                             launchSingleTop = true
                             restoreState = true
@@ -251,24 +250,24 @@ fun BottomNavigationBar(
             label = { Text("記録確認") },
             selected = navController.currentBackStackEntry?.destination?.route == "examDataScreen",
             onClick = {
-                if (unsavedChanges &&
-                    sumScore > 0 ||
-                    readingScore > 0 ||
-                    listeningScore > 0 ||
-                    writingScore > 0 ||
-                    speakingScore > 0 ||
-                    memoText.isNotEmpty())
+                if (
+                    eikenUnsavedChanges &&
+                    eikenGrade.isNotEmpty() ||
+                    eikenReadingScore > 0 ||
+                    eikenListeningScore > 0 ||
+                    eikenWritingScore > 0 ||
+                    eikenSpeakingScore > 0 ||
+                    eikenMemoText.isNotEmpty())
                 {
                     targetRoute = "examDataScreen"
                     showDialog = true
                 } else {
-                    // 遷移前にmemoTextをリセット
-                    viewModel.setSumScore(0)
-                    viewModel.setReadingScore(0)
-                    viewModel.setListeningScore(0)
-                    viewModel.setWritingScore(0)
-                    viewModel.setSpeakingScore(0)
-                    viewModel.setMemoText("")
+                    viewModel.setEikenGrade("")
+                    viewModel.setEikenReadingScore(0)
+                    viewModel.setEikenListeningScore(0)
+                    viewModel.setEikenWritingScore(0)
+                    viewModel.setEikenSpeakingScore(0)
+                    viewModel.setEikenMemoText("")
                     navController.navigate("examDataScreen") {
                         launchSingleTop = true
                         restoreState = true
@@ -283,24 +282,24 @@ fun BottomNavigationBar(
             label = { Text("記録") },
             selected = navController.currentBackStackEntry?.destination?.route == "examRecordScreen",
             onClick = {
-                if (unsavedChanges &&
-                    sumScore > 0 ||
-                    readingScore > 0 ||
-                    listeningScore > 0 ||
-                    writingScore > 0 ||
-                    speakingScore > 0 ||
-                    memoText.isNotEmpty())
+                if (
+                    eikenUnsavedChanges &&
+                    eikenGrade.isNotEmpty() ||
+                    eikenReadingScore > 0 ||
+                    eikenListeningScore > 0 ||
+                    eikenWritingScore > 0 ||
+                    eikenSpeakingScore > 0 ||
+                    eikenMemoText.isNotEmpty())
                 {
                     targetRoute = "examRecordScreen"
                     showDialog = true
                 } else {
-                    // 遷移前にmemoTextをリセット
-                    viewModel.setSumScore(0)
-                    viewModel.setReadingScore(0)
-                    viewModel.setListeningScore(0)
-                    viewModel.setWritingScore(0)
-                    viewModel.setSpeakingScore(0)
-                    viewModel.setMemoText("")
+                    viewModel.setEikenGrade("")
+                    viewModel.setEikenReadingScore(0)
+                    viewModel.setEikenListeningScore(0)
+                    viewModel.setEikenWritingScore(0)
+                    viewModel.setEikenSpeakingScore(0)
+                    viewModel.setEikenMemoText("")
                     navController.navigate("examRecordScreen") {
                         launchSingleTop = true
                         restoreState = true
@@ -315,24 +314,24 @@ fun BottomNavigationBar(
             label = { Text("設定") },
             selected = navController.currentBackStackEntry?.destination?.route == "setting",
             onClick = {
-                if (unsavedChanges &&
-                    sumScore > 0 ||
-                    readingScore > 0 ||
-                    listeningScore > 0 ||
-                    writingScore > 0 ||
-                    speakingScore > 0 ||
-                    memoText.isNotEmpty())
+                if (
+                    eikenUnsavedChanges &&
+                    eikenGrade.isNotEmpty() ||
+                    eikenReadingScore > 0 ||
+                    eikenListeningScore > 0 ||
+                    eikenWritingScore > 0 ||
+                    eikenSpeakingScore > 0 ||
+                    eikenMemoText.isNotEmpty())
                 {
                     targetRoute = "setting"
                     showDialog = true
                 } else {
-                    // 遷移前にmemoTextをリセット
-                    viewModel.setSumScore(0)
-                    viewModel.setReadingScore(0)
-                    viewModel.setListeningScore(0)
-                    viewModel.setWritingScore(0)
-                    viewModel.setSpeakingScore(0)
-                    viewModel.setMemoText("")
+                    viewModel.setEikenGrade("")
+                    viewModel.setEikenReadingScore(0)
+                    viewModel.setEikenListeningScore(0)
+                    viewModel.setEikenWritingScore(0)
+                    viewModel.setEikenSpeakingScore(0)
+                    viewModel.setEikenMemoText("")
                     navController.navigate("setting") {
                         launchSingleTop = true
                         restoreState = true

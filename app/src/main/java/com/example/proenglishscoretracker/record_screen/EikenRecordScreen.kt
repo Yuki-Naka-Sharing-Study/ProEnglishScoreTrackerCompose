@@ -46,7 +46,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -150,7 +149,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     selectedGrade = selectedGrade,
                     onGradeSelected = { grade ->
                         selectedGrade = grade
-                        // TODO : setGradeTextを実装
+                        viewModel.setEikenGrade(selectedGrade)
                     }
                 )
             }
@@ -183,7 +182,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     readingScore,
                 ) {
                     readingScore = it
-                    viewModel.setReadingScore(it)
+                    viewModel.setEikenReadingScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -214,7 +213,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     listeningScore,
                 ) {
                     listeningScore = it
-                    viewModel.setListeningScore(it)
+                    viewModel.setEikenListeningScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -235,7 +234,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 writingScore = writingScore,
                 onValueChange = {
                     writingScore = it
-                    viewModel.setWritingScore(it)
+                    viewModel.setEikenWritingScore(it)
                 }
             )
 
@@ -253,7 +252,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 speakingScore = speakingScore,
                 onValueChange = {
                     speakingScore = it
-                    viewModel.setSpeakingScore(it)
+                    viewModel.setEikenSpeakingScore(it)
                 }
             )
 
@@ -293,7 +292,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = memoText,
                     onValueChange = {
                         memoText = it
-                        viewModel.setMemoText(it)
+                        viewModel.setEikenMemoText(it)
                     }
                 )
             }
@@ -369,12 +368,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         if (alertMessage == null) {
                                             showSaved = "登録しました。"
                                         }
-                                        // TODO : setGradeTextを実装
-                                        viewModel.setReadingScore(0)
-                                        viewModel.setListeningScore(0)
-                                        viewModel.setWritingScore(0)
-                                        viewModel.setSpeakingScore(0)
-                                        viewModel.setMemoText("")
+                                        viewModel.setEikenGrade("")
+                                        viewModel.setEikenReadingScore(0)
+                                        viewModel.setEikenListeningScore(0)
+                                        viewModel.setEikenWritingScore(0)
+                                        viewModel.setEikenReadingScore(0)
+                                        viewModel.setEikenMemoText("")
                                         readingScore = 0
                                         listeningScore = 0
                                         writingScore = 0
@@ -430,12 +429,13 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         if (alertMessage == null) {
                                             showSaved = "登録しました。"
                                         }
-                                        // TODO : setGradeTextを実装
-                                        viewModel.setReadingScore(0)
-                                        viewModel.setListeningScore(0)
-                                        viewModel.setWritingScore(0)
-                                        viewModel.setSpeakingScore(0)
-                                        viewModel.setMemoText("")
+                                        viewModel.setEikenGrade("")
+                                        viewModel.setEikenGrade("")
+                                        viewModel.setEikenReadingScore(0)
+                                        viewModel.setEikenListeningScore(0)
+                                        viewModel.setEikenWritingScore(0)
+                                        viewModel.setEikenSpeakingScore(0)
+                                        viewModel.setEikenMemoText("")
                                         readingScore = 0
                                         listeningScore = 0
                                         writingScore = 0
@@ -491,12 +491,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                         if (alertMessage == null) {
                                             showSaved = "登録しました。"
                                         }
-                                        // TODO : setGradeTextを実装
-                                        viewModel.setReadingScore(0)
-                                        viewModel.setListeningScore(0)
-                                        viewModel.setWritingScore(0)
-                                        viewModel.setSpeakingScore(0)
-                                        viewModel.setMemoText("")
+                                        viewModel.setEikenGrade("")
+                                        viewModel.setEikenReadingScore(0)
+                                        viewModel.setEikenListeningScore(0)
+                                        viewModel.setEikenWritingScore(0)
+                                        viewModel.setEikenSpeakingScore(0)
+                                        viewModel.setEikenMemoText("")
                                         readingScore = 0
                                         listeningScore = 0
                                         writingScore = 0
@@ -567,12 +567,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                                     if (alertMessage == null) {
                                         showSaved = "登録しました。"
                                     }
-                                    // TODO : setGradeTextを実装
-                                    viewModel.setReadingScore(0)
-                                    viewModel.setListeningScore(0)
-                                    viewModel.setWritingScore(0)
-                                    viewModel.setSpeakingScore(0)
-                                    viewModel.setMemoText("")
+                                    viewModel.setEikenGrade("")
+                                    viewModel.setEikenReadingScore(0)
+                                    viewModel.setEikenListeningScore(0)
+                                    viewModel.setEikenWritingScore(0)
+                                    viewModel.setEikenSpeakingScore(0)
+                                    viewModel.setEikenMemoText("")
                                     readingScore = 0
                                     listeningScore = 0
                                     writingScore = 0

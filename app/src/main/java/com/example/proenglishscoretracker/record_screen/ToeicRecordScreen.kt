@@ -139,7 +139,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     readingScore,
                 ) {
                     readingScore = it
-                    viewModel.setReadingScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -160,7 +159,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     listeningScore,
                 ) {
                     listeningScore = it
-                    viewModel.setListeningScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -178,7 +176,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = memoText,
                     onValueChange = {
                         memoText = it
-                        viewModel.setMemoText(it)
                     }
                 )
             }
@@ -224,9 +221,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                         if (alertMessage == null) {
                                             showSaved = "登録しました。"
                                         }
-                                        viewModel.setReadingScore(0)
-                                        viewModel.setListeningScore(0)
-                                        viewModel.setMemoText("")
                                         readingScore = 0
                                         listeningScore = 0
                                         memoText = ""
@@ -270,9 +264,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                                 if (alertMessage == null) {
                                     showSaved = "登録しました。"
                                 }
-                                viewModel.setReadingScore(0)
-                                viewModel.setListeningScore(0)
-                                viewModel.setMemoText("")
                                 readingScore = 0
                                 listeningScore = 0
                                 memoText = ""

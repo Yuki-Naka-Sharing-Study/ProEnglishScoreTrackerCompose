@@ -139,7 +139,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     writingScore
                 ) {
                     writingScore = it
-                    viewModel.setWritingScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -170,7 +169,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     speakingScore
                 ) {
                     speakingScore = it
-                    viewModel.setSpeakingScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -198,7 +196,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = memoText,
                     onValueChange = {
                         memoText = it
-                        viewModel.setMemoText(it)
                     }
                 )
             }
@@ -245,9 +242,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                         if (alertMessage == null) {
                                             showSaved = "登録しました。"
                                         }
-                                        viewModel.setWritingScore(0)
-                                        viewModel.setSpeakingScore(0)
-                                        viewModel.setMemoText("")
                                         writingScore = 0
                                         speakingScore = 0
                                         memoText = ""
@@ -292,9 +286,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                                     if (alertMessage == null) {
                                         showSaved = "登録しました。"
                                     }
-                                    viewModel.setWritingScore(0)
-                                    viewModel.setSpeakingScore(0)
-                                    viewModel.setMemoText("")
                                     writingScore = 0
                                     speakingScore = 0
                                     memoText = ""

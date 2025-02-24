@@ -43,12 +43,12 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
             pagerState = pagerState,
             onTabClick = { index ->
                 if (
-                    viewModel.sumScore.value > 0 ||
-                    viewModel.readingScore.value > 0 ||
-                    viewModel.listeningScore.value > 0 ||
-                    viewModel.writingScore.value > 0 ||
-                    viewModel.speakingScore.value  > 0 ||
-                    viewModel.memoText.value.isNotEmpty()
+                    viewModel.eikenGrade.value.isNotEmpty() ||
+                    viewModel.eikenReadingScore.value > 0 ||
+                    viewModel.eikenListeningScore.value > 0 ||
+                    viewModel.eikenWritingScore.value > 0 ||
+                    viewModel.eikenSpeakingScore.value > 0 ||
+                    viewModel.eikenMemoText.value.isNotEmpty()
                 )
                 {
                     showDialog = true
@@ -75,7 +75,7 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
             text = { Text("入力途中で画面遷移するとデータが喪失しますが宜しいでしょうか？") },
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.setMemoText("") // データをクリア
+                    viewModel.setEikenMemoText("")
                     scope.launch { pagerState.animateScrollToPage(pendingPage) }
                     showDialog = false
                 }) {

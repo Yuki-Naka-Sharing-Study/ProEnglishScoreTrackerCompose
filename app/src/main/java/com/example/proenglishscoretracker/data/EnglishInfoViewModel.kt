@@ -23,20 +23,6 @@ class EnglishInfoViewModel(
     val isFirstLaunch: Flow<Boolean> = dataStore.data.map { preferences ->
         preferences[ONBOARDING_COMPLETED_KEY] ?: true
     }
-    private val _unsavedChanges = MutableStateFlow(false)
-    val unsavedChanges: StateFlow<Boolean> = _unsavedChanges
-    private val _sumScore = MutableStateFlow(0)
-    val sumScore: StateFlow<Int> = _sumScore
-    private val _readingScore = MutableStateFlow(0)
-    val readingScore: StateFlow<Int> = _readingScore
-    private val _listeningScore = MutableStateFlow(0)
-    val listeningScore: StateFlow<Int> = _listeningScore
-    private val _writingScore = MutableStateFlow(0)
-    val writingScore: StateFlow<Int> = _writingScore
-    private val _speakingScore = MutableStateFlow(0)
-    val speakingScore: StateFlow<Int> = _speakingScore
-    private val _memoText = MutableStateFlow("")
-    val memoText: StateFlow<String> = _memoText
 
     // Onboarding 完了時にフラグを保存
     fun completeOnboarding() {
@@ -195,6 +181,46 @@ class EnglishInfoViewModel(
 
     private val _selectedEikenInfo = MutableStateFlow<EnglishTestInfo.EIKEN?>(null)
     val selectedEikenInfo: StateFlow<EnglishTestInfo.EIKEN?> = _selectedEikenInfo
+
+    private val _eikenUnsavedChanges = MutableStateFlow(false)
+    val eikenUnsavedChanges: StateFlow<Boolean> = _eikenUnsavedChanges
+    private val _eikenGrade = MutableStateFlow("")
+    val eikenGrade: StateFlow<String> = _eikenGrade
+    private val _eikenReadingScore = MutableStateFlow(0)
+    val eikenReadingScore: StateFlow<Int> = _eikenReadingScore
+    private val _eikenListeningScore = MutableStateFlow(0)
+    val eikenListeningScore: StateFlow<Int> = _eikenListeningScore
+    private val _eikenWritingScore = MutableStateFlow(0)
+    val eikenWritingScore: StateFlow<Int> = _eikenWritingScore
+    private val _eikenSpeakingScore = MutableStateFlow(0)
+    val eikenSpeakingScore: StateFlow<Int> = _eikenSpeakingScore
+    private val _eikenMemoText = MutableStateFlow("")
+    val eikenMemoText: StateFlow<String> = _eikenMemoText
+
+    fun setEikenGrade(value: String) {
+        _eikenGrade.value = value
+        _eikenUnsavedChanges.value = value.isNotEmpty()
+    }
+    fun setEikenReadingScore(value: Int) {
+        _eikenReadingScore.value = value
+        _eikenUnsavedChanges.value = value > 0
+    }
+    fun setEikenListeningScore(value: Int) {
+        _eikenListeningScore.value = value
+        _eikenUnsavedChanges.value = value > 0
+    }
+    fun setEikenWritingScore(value: Int) {
+        _eikenWritingScore.value = value
+        _eikenUnsavedChanges.value = value > 0
+    }
+    fun setEikenSpeakingScore(value: Int) {
+        _eikenSpeakingScore.value = value
+        _eikenUnsavedChanges.value = value > 0
+    }
+    fun setEikenMemoText(value: String) {
+        _eikenMemoText.value = value
+        _eikenUnsavedChanges.value = value.isNotEmpty()
+    }
 
     init {
         viewModelScope.launch {
@@ -363,31 +389,4 @@ class EnglishInfoViewModel(
     // IELTS
     private val _ieltsInfo = MutableStateFlow<List<EnglishTestInfo.IELTS>>(emptyList())
     val ieltsInfo: StateFlow<List<EnglishTestInfo.IELTS>> = _ieltsInfo
-
-
-
-    fun setSumScore(value: Int) {
-        _sumScore.value = value
-        _unsavedChanges.value = value > 0
-    }
-    fun setReadingScore(value: Int) {
-        _readingScore.value = value
-        _unsavedChanges.value = value > 0
-    }
-    fun setListeningScore(value: Int) {
-        _listeningScore.value = value
-        _unsavedChanges.value = value > 0
-    }
-    fun setWritingScore(value: Int) {
-        _writingScore.value = value
-        _unsavedChanges.value = value > 0
-    }
-    fun setSpeakingScore(value: Int) {
-        _speakingScore.value = value
-        _unsavedChanges.value = value > 0
-    }
-    fun setMemoText(value: String) {
-        _memoText.value = value
-        _unsavedChanges.value = value.isNotEmpty()
-    }
 }

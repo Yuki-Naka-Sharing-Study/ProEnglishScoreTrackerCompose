@@ -141,7 +141,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     readingScore,
                 ) {
                     readingScore = it
-                    viewModel.setReadingScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -172,7 +171,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     listeningScore,
                 ) {
                     listeningScore = it
-                    viewModel.setListeningScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -203,7 +201,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     writingScore,
                 ) {
                     writingScore = it
-                    viewModel.setWritingScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -234,7 +231,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     speakingScore,
                 ) {
                     speakingScore = it
-                    viewModel.setSpeakingScore(it)
                 }
                 Spacer(modifier = Modifier.weight(3f))
             }
@@ -279,7 +275,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                     value = memoText,
                     onValueChange = {
                         memoText = it
-                        viewModel.setMemoText(it)
                     }
                 )
             }
@@ -341,11 +336,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                                 if (alertMessage == null) {
                                                     showSaved = "登録しました。"
                                                 }
-                                                viewModel.setReadingScore(0)
-                                                viewModel.setListeningScore(0)
-                                                viewModel.setWritingScore(0)
-                                                viewModel.setSpeakingScore(0)
-                                                viewModel.setMemoText("")
                                                 readingScore = 0
                                                 listeningScore = 0
                                                 writingScore = 0
@@ -401,11 +391,6 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                                             if (alertMessage == null) {
                                                 showSaved = "登録しました。"
                                             }
-                                            viewModel.setReadingScore(0)
-                                            viewModel.setListeningScore(0)
-                                            viewModel.setWritingScore(0)
-                                            viewModel.setSpeakingScore(0)
-                                            viewModel.setMemoText("")
                                             readingScore = 0
                                             listeningScore = 0
                                             writingScore = 0
