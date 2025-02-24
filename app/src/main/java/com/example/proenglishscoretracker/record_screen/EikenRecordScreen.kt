@@ -292,12 +292,12 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                MemoText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            MemoText("")
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 MemoInputField(
                     placeholder = stringResource(id = R.string.memo),
                     value = memoText,
@@ -1427,11 +1427,10 @@ private fun MemoInputField(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_32_dp)))
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
+                .height(dimensionResource(id = R.dimen.memo_height_dp)),
             value = value,
             onValueChange = onValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),

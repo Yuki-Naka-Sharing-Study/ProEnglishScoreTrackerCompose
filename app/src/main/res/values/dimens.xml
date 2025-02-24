@@ -11,6 +11,7 @@
     <dimen name="space_56_dp">56dp</dimen>
     <dimen name="space_64_dp">64dp</dimen>
     <dimen name="space_72_dp">72dp</dimen>
+    <dimen name="memo_height_dp">156dp</dimen>
 
     <dimen name="space_16_sp">16sp</dimen>
 </resources>
