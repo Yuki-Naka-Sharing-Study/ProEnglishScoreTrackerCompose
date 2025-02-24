@@ -94,9 +94,12 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             var writingMaxScoreError = writingScore >= 201
             var speakingMaxScoreError = speakingScore >= 201
 
+            SelectDayText("")
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
             Row {
-                SelectDayText("")
-                Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 SelectDatePicker(
                     date = date,
                     onShowDatePickerChange = { showDatePicker = it }
@@ -185,17 +188,18 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
 
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
-            ) {
-                MemoText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
+            MemoText("")
+
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
+
+            Row {
+                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 MemoInputField(
                     placeholder = stringResource(id = R.string.memo),
                     value = memoText,
                     onValueChange = {
                         memoText = it
+                        viewModel.setEikenMemoText(it)
                     }
                 )
             }
@@ -874,11 +878,10 @@ private fun MemoInputField(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_32_dp)))
         androidx.compose.material.OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
-                .height(dimensionResource(id = R.dimen.space_52_dp)),
+                .height(dimensionResource(id = R.dimen.memo_height_dp)),
             value = value,
             onValueChange = onValueChange,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -895,7 +898,7 @@ private fun MemoInputField(
                 unfocusedBorderColor = Color.Gray
             )
         )
-        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+        Spacer(modifier = Modifier.padding(end = dimensionResource(id = R.dimen.space_24_dp)))
     }
 }
 
