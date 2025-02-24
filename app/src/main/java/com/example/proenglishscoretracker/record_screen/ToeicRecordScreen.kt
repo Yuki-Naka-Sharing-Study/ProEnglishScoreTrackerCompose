@@ -166,11 +166,11 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_16_dp)))
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 MemoText("")
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 MemoInputField(
                     placeholder = stringResource(id = R.string.memo),
                     value = memoText,
@@ -183,7 +183,6 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
 
             var showSaved by remember { mutableStateOf("") }
-            // 他にもメモを入力途中で画面遷移する時に表示するAlertDialogがあるので具体的に命名
             var showAlertDialogOfZero by remember { mutableStateOf(false) }
             var result by remember { mutableStateOf("Result") }
             var alertMessage by remember { mutableStateOf<String?>(null) }
