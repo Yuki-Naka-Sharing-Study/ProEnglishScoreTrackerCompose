@@ -73,38 +73,6 @@ fun FVerticalWheelPicker(
 }
 
 @Composable
-fun FHorizontalWheelPicker(
-    modifier: Modifier = Modifier,
-    count: Int,
-    state: FWheelPickerState = rememberFWheelPickerState(),
-    key: ((index: Int) -> Any)? = null,
-    itemWidth: Dp = 35.dp,
-    unfocusedCount: Int = 2,
-    userScrollEnabled: Boolean = true,
-    reverseLayout: Boolean = false,
-    debug: Boolean = false,
-    focus: @Composable () -> Unit = { FWheelPickerFocusHorizontal() },
-    display: @Composable FWheelPickerDisplayScope.(index: Int) -> Unit = { DefaultWheelPickerDisplay(it) },
-    content: @Composable FWheelPickerContentScope.(index: Int) -> Unit,
-) {
-    WheelPicker(
-        modifier = modifier,
-        isVertical = false,
-        count = count,
-        state = state,
-        key = key,
-        itemSize = itemWidth,
-        unfocusedCount = unfocusedCount,
-        userScrollEnabled = userScrollEnabled,
-        reverseLayout = reverseLayout,
-        debug = debug,
-        focus = focus,
-        display = display,
-        content = content,
-    )
-}
-
-@Composable
 private fun WheelPicker(
     modifier: Modifier,
     isVertical: Boolean,

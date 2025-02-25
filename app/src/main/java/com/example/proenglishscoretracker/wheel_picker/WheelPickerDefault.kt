@@ -48,35 +48,6 @@ fun FWheelPickerFocusVertical(
 }
 
 /**
- * The default implementation of focus view in horizontal.
- */
-@Composable
-fun FWheelPickerFocusHorizontal(
-    modifier: Modifier = Modifier,
-    dividerSize: Dp = 1.dp,
-    dividerColor: Color = DefaultDividerColor,
-) {
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .background(dividerColor)
-                .width(dividerSize)
-                .fillMaxHeight()
-                .align(Alignment.CenterStart),
-        )
-        Box(
-            modifier = Modifier
-                .background(dividerColor)
-                .width(dividerSize)
-                .fillMaxHeight()
-                .align(Alignment.CenterEnd),
-        )
-    }
-}
-
-/**
  * Default divider color.
  */
 private val DefaultDividerColor: Color

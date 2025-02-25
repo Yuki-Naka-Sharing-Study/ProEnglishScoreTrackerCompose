@@ -89,8 +89,6 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             var writingScore by remember { mutableIntStateOf(0) }
             var speakingScore by remember { mutableIntStateOf(0) }
             var memoText by remember { mutableStateOf("") }
-
-            //「Error」系
             var writingMaxScoreError = writingScore >= 201
             var speakingMaxScoreError = speakingScore >= 201
 
@@ -700,16 +698,14 @@ private fun TOEICSWScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
-    val hundred = score / 100 // 100の位
-    val ten = (score % 100) / 10 // 10の位
-    val one = score % 10 // 1の位
+    val hundred = score / 100
+    val ten = (score % 100) / 10
+    val one = score % 10
 
-    // 状態管理のためにrememberを使う
     val hundredState = remember { mutableIntStateOf(hundred) }
     val tenState = remember { mutableIntStateOf(ten) }
     val oneState = remember { mutableIntStateOf(one) }
 
-    // スコア変更をトリガーする
     LaunchedEffect(
         hundredState.intValue,
         tenState.intValue,
@@ -738,12 +734,9 @@ private fun TOEICSWScorePickerView(
 
 @Composable
 private fun ThreeDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -768,12 +761,9 @@ private fun ThreeDigits(state: MutableIntState) {
 
 @Composable
 private fun TwoDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -800,14 +790,10 @@ private fun TwoDigits(state: MutableIntState) {
 @Composable
 private fun OneDigit(state: MutableIntState) {
     val items = listOf(0, 5)
-
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
-    // currentIndex の変化を監視
+
     LaunchedEffect(listState.currentIndex) {
-        // currentIndex が items のサイズを超えないことを確認
         val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = items[currentItemIndex]
     }
     FVerticalWheelPicker(
@@ -949,10 +935,6 @@ private fun SaveButton(
 //    }
 //}
 
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
 @Composable
 private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
     if (saved.isNotEmpty()) {
@@ -961,10 +943,8 @@ private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
             fontSize = 16.sp,
             color = Color.Blue
         )
-
-        // メッセージを非表示にするためのタイマーを設定
         LaunchedEffect(saved) {
-            kotlinx.coroutines.delay(2000) // 2秒間待機
+            kotlinx.coroutines.delay(2000)
             onTimeout()
         }
     }

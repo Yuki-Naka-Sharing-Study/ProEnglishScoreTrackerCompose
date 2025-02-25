@@ -46,6 +46,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,23 +66,17 @@ import com.github.mikephil.charting.listener.OnChartGestureListener
 @Composable
 fun ToeflIbtChartScreen(viewModel: EnglishInfoViewModel) {
     val toeflIbtInfoList by viewModel.toeflIbtInfo.collectAsState()
-
-    // 最新の受験年を取得
     val latestExamYear = toeflIbtInfoList
         .mapNotNull { it.date.substring(0, 4).toIntOrNull() }
         .maxOrNull()
-
-    // examYearの初期値をnullにして、データが入ったら更新
     var examYear by rememberSaveable { mutableStateOf<Int?>(null) }
 
-    // データが取得できたら examYear を設定
     LaunchedEffect(latestExamYear) {
         if (latestExamYear != null && examYear == null) {
             examYear = latestExamYear
         }
     }
 
-    // examYear が null の間は表示しない
     if (examYear != null) {
         Column(
             modifier = Modifier
@@ -130,7 +125,6 @@ private fun ToeflIbtScoreChart(
     val toeflIbtInfoList by viewModel.toeflIbtInfo.collectAsState()
     var isGraphTapped by rememberSaveable { mutableStateOf(false) }
 
-    // データが存在しない場合のメッセージ
     if (toeflIbtInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -143,12 +137,11 @@ private fun ToeflIbtScoreChart(
             )
         }
     } else {
-        // examYear に基づいてデータをフィルタリング
         val filteredToeflIbtInfo = toeflIbtInfoList.filter {
-            it.date.substring(0, 4).toInt() == examYear }
+            it.date.substring(0, 4).toInt() == examYear
+        }
 
         if (filteredToeflIbtInfo.isEmpty()) {
-            // 選択した年のデータがない場合のメッセージ
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -160,17 +153,13 @@ private fun ToeflIbtScoreChart(
                 )
             }
         } else {
-            // 受験日を昇順（古い順）にソート
             val sortedToeflIbtInfo = filteredToeflIbtInfo.sortedBy { it.date }
-
-            // ソートされたデータから必要な情報を抽出
             val examDates = sortedToeflIbtInfo.map { it.date }
             val overallScores = sortedToeflIbtInfo.map { it.overallScore.toFloat() }
             val readingScores = sortedToeflIbtInfo.map { it.readingScore.toFloat() }
             val listeningScores = sortedToeflIbtInfo.map { it.listeningScore.toFloat() }
             val writingScores = sortedToeflIbtInfo.map { it.writingScore.toFloat() }
             val speakingScores = sortedToeflIbtInfo.map { it.speakingScore.toFloat() }
-
             val entriesOverall = overallScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
             }
@@ -192,7 +181,6 @@ private fun ToeflIbtScoreChart(
                     .fillMaxWidth()
                     .height(300.dp)
             ) {
-                // Overallスコアのグラフ
                 AndroidView(
                     update = {
                         it.data = updateOverallData(entriesOverall)
@@ -228,20 +216,21 @@ private fun ToeflIbtScoreChart(
                                 invalidate()
                             }, 100)
 
-                            // グラフのタップイベントをリスナーで検知
                             setOnChartGestureListener(object : OnChartGestureListener {
                                 override fun onChartGestureStart(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = true // タップ開始時に表示
+                                    isGraphTapped = true
                                 }
+
                                 override fun onChartGestureEnd(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = false // タップ終了時に非表示
+                                    isGraphTapped = false
                                 }
+
                                 override fun onChartLongPressed(me: MotionEvent?) {}
                                 override fun onChartDoubleTapped(me: MotionEvent?) {}
                                 override fun onChartSingleTapped(me: MotionEvent?) {}
@@ -250,27 +239,37 @@ private fun ToeflIbtScoreChart(
                                     me2: MotionEvent?,
                                     velocityX: Float,
                                     velocityY: Float
-                                ) {}
+                                ) {
+                                }
+
                                 override fun onChartScale(
                                     me: MotionEvent?,
                                     scaleX: Float,
                                     scaleY: Float
-                                ) {}
-                                override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
+                                ) {
+                                }
+
+                                override fun onChartTranslate(
+                                    me: MotionEvent?,
+                                    dX: Float,
+                                    dY: Float
+                                ) {
+                                }
                             })
                         }
                     },
                     modifier = Modifier
                         .matchParentSize()
                 )
-                // タップ時に表示する UI（グラフの上に重ねる）
                 if (isGraphTapped) {
                     Column(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(8.dp)
-                            .background(Color.White.copy(
-                                alpha = 0.8f),
+                            .background(
+                                Color.White.copy(
+                                    alpha = 0.8f
+                                ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .padding(8.dp)
@@ -331,7 +330,6 @@ private fun ToeflIbtScoreChart(
                 val guideline = createGuidelineFromStart(0.4f)
                 val (overAllLabel, overAllScore) = createRefs()
 
-                // Overallスコアのラベル
                 Text(
                     text = "Overallスコア:",
                     modifier = Modifier.constrainAs(overAllLabel) {
@@ -339,8 +337,6 @@ private fun ToeflIbtScoreChart(
                         top.linkTo(parent.top, margin = 16.dp)
                     }
                 )
-
-                // Overallスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(overAllScore) {
                         start.linkTo(guideline)
@@ -351,9 +347,8 @@ private fun ToeflIbtScoreChart(
                 )
             }
 
-                Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // 4技能のグラフ
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -377,7 +372,7 @@ private fun ToeflIbtScoreChart(
                             ).apply {
                                 color = android.graphics.Color.RED
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val dataSetListening = LineDataSet(
@@ -385,7 +380,7 @@ private fun ToeflIbtScoreChart(
                             ).apply {
                                 color = android.graphics.Color.BLUE
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val dataSetWriting = LineDataSet(
@@ -393,7 +388,7 @@ private fun ToeflIbtScoreChart(
                             ).apply {
                                 color = android.graphics.Color.GREEN
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val dataSetSpeaking = LineDataSet(
@@ -401,7 +396,7 @@ private fun ToeflIbtScoreChart(
                             ).apply {
                                 color = android.graphics.Color.MAGENTA
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val lineData = LineData(
@@ -412,21 +407,18 @@ private fun ToeflIbtScoreChart(
                             )
                             this.data = lineData
 
-                            // X軸ラベル設定
                             xAxis.textSize = 15f
                             xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
                             xAxis.position = XAxis.XAxisPosition.BOTTOM
                             xAxis.granularity = 1f
                             xAxis.setDrawGridLines(false)
 
-                            // Y軸設定
                             axisLeft.textSize = 15f
                             axisLeft.axisMinimum = 0f
                             axisRight.isEnabled = false
                             description.isEnabled = false
                             legend.isEnabled = true
 
-                            // グラフの余白設定
                             setViewPortOffsets(
                                 120f,
                                 0f,
@@ -434,7 +426,6 @@ private fun ToeflIbtScoreChart(
                                 0f
                             )
 
-                            // 左から右に表示するアニメーションを追加。
                             animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
 
                             Handler(Looper.getMainLooper()).postDelayed({
@@ -443,19 +434,18 @@ private fun ToeflIbtScoreChart(
                                 invalidate()
                             }, 100)
 
-                            // グラフのタップイベントをリスナーで検知
                             setOnChartGestureListener(object : OnChartGestureListener {
                                 override fun onChartGestureStart(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = true // タップ開始時に表示
+                                    isGraphTapped = true
                                 }
                                 override fun onChartGestureEnd(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = false // タップ終了時に非表示
+                                    isGraphTapped = false
                                 }
                                 override fun onChartLongPressed(me: MotionEvent?) {}
                                 override fun onChartDoubleTapped(me: MotionEvent?) {}
@@ -465,27 +455,35 @@ private fun ToeflIbtScoreChart(
                                     me2: MotionEvent?,
                                     velocityX: Float,
                                     velocityY: Float
-                                ) {}
+                                ) {
+                                }
                                 override fun onChartScale(
                                     me: MotionEvent?,
                                     scaleX: Float,
                                     scaleY: Float
-                                ) {}
-                                override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
+                                ) {
+                                }
+                                override fun onChartTranslate(
+                                    me: MotionEvent?,
+                                    dX: Float,
+                                    dY: Float
+                                ) {
+                                }
                             })
                         }
                     },
                     modifier = Modifier
                         .matchParentSize()
                 )
-                // タップ時に表示する UI（グラフの上に重ねる）
                 if (isGraphTapped) {
                     Column(
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
                             .padding(8.dp)
-                            .background(Color.White.copy(
-                                alpha = 0.8f),
+                            .background(
+                                Color.White.copy(
+                                    alpha = 0.8f
+                                ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .padding(8.dp)
@@ -535,7 +533,6 @@ private fun ToeflIbtScoreChart(
 
             Spacer(modifier = Modifier.height(64.dp))
 
-            // 前回のスコアとの比較を表示
             val currentReadingScore =
                 readingScores.last().toInt()
             val previousReadingScore =
@@ -553,7 +550,6 @@ private fun ToeflIbtScoreChart(
             val previousSpeakingScore =
                 speakingScores.dropLast(1).lastOrNull()?.toInt() ?: currentSpeakingScore
 
-            // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正できるかも
             ConstraintLayout(
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -563,7 +559,6 @@ private fun ToeflIbtScoreChart(
                     writingLabel, writingScore,
                     speakingLabel, speakingScore) = createRefs()
 
-                // Readingスコアのラベル
                 Text(
                     text = "Readingスコア:",
                     modifier = Modifier.constrainAs(readingLabel) {
@@ -571,8 +566,6 @@ private fun ToeflIbtScoreChart(
                         top.linkTo(parent.top, margin = 16.dp)
                     }
                 )
-
-                // Readingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(readingScore) {
                         start.linkTo(guideline)
@@ -581,8 +574,6 @@ private fun ToeflIbtScoreChart(
                     currentScore = currentReadingScore,
                     previousScore = previousReadingScore
                 )
-
-                // Listeningスコアのラベル
                 Text(
                     text = "Listeningスコア:",
                     modifier = Modifier.constrainAs(listeningLabel) {
@@ -590,8 +581,6 @@ private fun ToeflIbtScoreChart(
                         top.linkTo(readingLabel.bottom, margin = 16.dp)
                     }
                 )
-
-                // Listeningスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(listeningScore) {
                         start.linkTo(guideline)
@@ -600,8 +589,6 @@ private fun ToeflIbtScoreChart(
                     currentScore = currentListeningScore,
                     previousScore = previousListeningScore
                 )
-
-                // Writingスコアのラベル
                 Text(
                     text = "Writingスコア:",
                     modifier = Modifier.constrainAs(writingLabel) {
@@ -609,8 +596,6 @@ private fun ToeflIbtScoreChart(
                         top.linkTo(listeningScore.bottom, margin = 16.dp)
                     }
                 )
-
-                // Writingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(writingScore) {
                         start.linkTo(guideline)
@@ -619,8 +604,6 @@ private fun ToeflIbtScoreChart(
                     currentScore = currentWritingScore,
                     previousScore = previousWritingScore
                 )
-
-                // Speakingスコアのラベル
                 Text(
                     text = "Speakingスコア:",
                     modifier = Modifier.constrainAs(speakingLabel) {
@@ -628,13 +611,11 @@ private fun ToeflIbtScoreChart(
                         top.linkTo(writingLabel.bottom, margin = 16.dp)
                     }
                 )
-
-                // Speakingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(speakingScore) {
                         start.linkTo(guideline)
                         top.linkTo(speakingLabel.top)
-                        bottom.linkTo(parent.bottom, margin =  16.dp)
+                        bottom.linkTo(parent.bottom, margin = 16.dp)
                     },
                     currentScore = currentSpeakingScore,
                     previousScore = previousSpeakingScore
@@ -652,7 +633,7 @@ private fun updateOverallData(
     ).apply {
         color = android.graphics.Color.CYAN
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     return LineData(
         dataSetOverall,
@@ -670,28 +651,28 @@ private fun updateRLWSData(
     ).apply {
         color = android.graphics.Color.RED
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetListening = LineDataSet(
         entriesListening, "Listeningスコア"
     ).apply {
         color = android.graphics.Color.BLUE
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetWriting = LineDataSet(
         entriesWriting, "Writingスコア"
     ).apply {
         color = android.graphics.Color.GREEN
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetSpeaking = LineDataSet(
         entriesSpeaking, "Speakingスコア"
     ).apply {
         color = android.graphics.Color.MAGENTA
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     return LineData(
         dataSetReading,
@@ -707,8 +688,8 @@ private fun ExamYearPicker(
     selectedExamYear: Int,
     onScoreConfirm: (Int) -> Unit,
 ) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var examYear by rememberSaveable { mutableIntStateOf(selectedExamYear) }
+    var showDialog by remember { mutableStateOf(false) }
+    var examYear by remember { mutableIntStateOf(selectedExamYear) }
 
     Box(modifier = modifier) {
         Button(
@@ -729,7 +710,6 @@ private fun ExamYearPicker(
             )
         }
     }
-
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -784,10 +764,10 @@ private fun ExamYearPickerView(
     val ten = (score % 100) / 10
     val one = score % 10
 
-    val thousandState = rememberSaveable { mutableIntStateOf(thousand) }
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
+    val thousandState = remember { mutableIntStateOf(thousand) }
+    val hundredState = remember { mutableIntStateOf(hundred) }
+    val tenState = remember { mutableIntStateOf(ten) }
+    val oneState = remember { mutableIntStateOf(one) }
 
     LaunchedEffect(
         thousandState.intValue,
@@ -817,14 +797,10 @@ private fun ExamYearPickerView(
 @Composable
 private fun ExamYearFourDigits(state: MutableIntState) {
     val items = listOf(2)
-
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
-    // currentIndex の変化を監視
+
     LaunchedEffect(listState.currentIndex) {
-        // currentIndex が items のサイズを超えないことを確認
         val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = items[currentItemIndex]
     }
     FVerticalWheelPicker(
@@ -943,6 +919,7 @@ private fun ComparePreviousScore(
                 "前回より${scoreDifference}点上がっています。"
             )
         }
+
         scoreDifference < 0 -> {
             Triple(
                 Icons.Default.KeyboardArrowDown,
@@ -950,6 +927,7 @@ private fun ComparePreviousScore(
                 "前回より${-scoreDifference}点下がっています。"
             )
         }
+
         else -> {
             Triple(
                 Icons.Default.Minimize,

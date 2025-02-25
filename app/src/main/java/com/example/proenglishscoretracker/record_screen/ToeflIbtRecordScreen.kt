@@ -1,6 +1,5 @@
 package com.example.proenglishscoretracker.record_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -37,7 +35,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -871,222 +868,15 @@ private fun MemoTextPreview() {
 }
 
 @Composable
-private fun ToeflOverallScorePicker(
-    modifier: Modifier = Modifier,
-    toeicRLScore: Int,
-    onScoreConfirm: (Int) -> Unit, // スコア更新用のコールバック
-) {
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
-
-    Box(modifier = modifier) {
-        // スコア入力ボタン
-        Button(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .size(width = 80.dp, height = 40.dp),
-            onClick = { showDialog = true },
-            shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
-        ) {
-            Text(
-                text = "$toeicRLScore",
-                color = Color.Black
-            )
-        }
-    }
-
-    // スコア入力ダイアログ
-    if (showDialog) {
-        Dialog(onDismissRequest = { showDialog = false }) {
-            Card(
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFffffff)
-                ),
-                modifier = Modifier
-                    .size(width = 240.dp, height = 320.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    // スコア選択のWheel Picker
-                    ToeflOverallScorePickerView(
-                        score = tempScore,
-                        onScoreChange = { tempScore = it } // 一時的なスコアを更新
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    // 確定ボタン
-                    Button(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
-                        onClick = {
-                            onScoreConfirm(tempScore) // 確定時にスコアを親に渡す
-                            showDialog = false
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            Color(0xFF9C27B0)
-                        ),
-                    ) {
-                        Text(
-                            text = "確定",
-                            color = Color.White
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun ToeflOverallScorePickerView(
-    score: Int,
-    onScoreChange: (Int) -> Unit
-) {
-    val hundred = score / 100 // 100の位
-    val ten = (score % 100) / 10 // 10の位
-    val one = score % 10 // 1の位
-
-    // 状態管理のためにrememberを使う
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
-
-    // スコア変更をトリガーする
-    LaunchedEffect(
-        hundredState.intValue,
-        tenState.intValue,
-        oneState.intValue
-    ) {
-        onScoreChange(
-            hundredState.intValue * 100 +
-                    tenState.intValue * 10 +
-                    oneState.intValue
-        )
-    }
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // 100の位
-        ToeflOverallThreeDigits(hundredState)
-        // 10の位
-        ToeflOverallTwoDigits(tenState)
-        // 1の位
-        ToeflOverallOneDigit(oneState)
-    }
-}
-
-@Composable
-private fun ToeflOverallThreeDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
-    val listState = rememberFWheelPickerState()
-
-    // currentIndex の変化を監視
-    LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
-        state.intValue = listState.currentIndex
-    }
-    FVerticalWheelPicker(
-        modifier = Modifier.width(64.dp),
-        count = 2,
-        itemHeight = 48.dp,
-        unfocusedCount = 2,
-        state = listState,
-        focus = {
-            FWheelPickerFocusVertical(
-                dividerColor = Color.LightGray,
-                dividerSize = 2.dp
-            )
-        },
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
-private fun ToeflOverallTwoDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
-    val listState = rememberFWheelPickerState()
-
-    // currentIndex の変化を監視
-    LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
-        state.intValue = listState.currentIndex
-    }
-    FVerticalWheelPicker(
-        modifier = Modifier.width(64.dp),
-        count = 10,
-        itemHeight = 48.dp,
-        unfocusedCount = 2,
-        state = listState,
-        focus = {
-            FWheelPickerFocusVertical(
-                dividerColor = Color.LightGray,
-                dividerSize = 2.dp
-            )
-        },
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
-private fun ToeflOverallOneDigit(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
-    val listState = rememberFWheelPickerState()
-
-    // currentIndex の変化を監視
-    LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
-        state.intValue = listState.currentIndex
-    }
-    FVerticalWheelPicker(
-        modifier = Modifier.width(64.dp),
-        count = 3,
-        itemHeight = 48.dp,
-        unfocusedCount = 2,
-        state = listState,
-        focus = {
-            FWheelPickerFocusVertical(
-                dividerColor = Color.LightGray,
-                dividerSize = 2.dp
-            )
-        },
-    ) { index ->
-        Text(
-            index.toString(),
-            color = Color.Black
-        )
-    }
-}
-
-@Composable
 private fun ToeflRLWSScorePicker(
     modifier: Modifier = Modifier,
     toeicRLScore: Int,
-    onScoreConfirm: (Int) -> Unit, // スコア更新用のコールバック
+    onScoreConfirm: (Int) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    var tempScore by remember { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
+    var tempScore by remember { mutableIntStateOf(toeicRLScore) }
 
     Box(modifier = modifier) {
-        // スコア入力ボタン
         Button(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -1101,8 +891,6 @@ private fun ToeflRLWSScorePicker(
             )
         }
     }
-
-    // スコア入力ダイアログ
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -1118,19 +906,17 @@ private fun ToeflRLWSScorePicker(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    // スコア選択のWheel Picker
                     ToeflRLWSScorePickerView(
                         score = tempScore,
-                        onScoreChange = { tempScore = it } // 一時的なスコアを更新
+                        onScoreChange = { tempScore = it }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 確定ボタン
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onScoreConfirm(tempScore) // 確定時にスコアを親に渡す
+                            onScoreConfirm(tempScore)
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -1156,14 +942,12 @@ private fun ToeflRLWSScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
-    val ten = score / 10 // 10の位
-    val one = (score % 10) / 1 // 1の位
+    val ten = score / 10
+    val one = (score % 10) / 1
 
-    // 状態管理のためにrememberを使う
     val tenState = remember { mutableIntStateOf(ten) }
     val oneState = remember { mutableIntStateOf(one) }
 
-    // スコア変更をトリガーする
     LaunchedEffect(tenState.intValue, oneState.intValue) {
         onScoreChange(tenState.intValue * 10 + oneState.intValue)
     }
@@ -1182,12 +966,9 @@ private fun ToeflRLWSScorePickerView(
 
 @Composable
 private fun ToeflRLWSTwoDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -1212,12 +993,9 @@ private fun ToeflRLWSTwoDigits(state: MutableIntState) {
 
 @Composable
 private fun ToeflRLWSOneDigit(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -1312,10 +1090,6 @@ private fun ErrorText(error: String) {
     )
 }
 
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
 @Composable
 private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
     if (saved.isNotEmpty()) {
@@ -1324,10 +1098,8 @@ private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
             fontSize = 16.sp,
             color = Color.Blue
         )
-
-        // メッセージを非表示にするためのタイマーを設定
         LaunchedEffect(saved) {
-            kotlinx.coroutines.delay(2000) // 2秒間待機
+            kotlinx.coroutines.delay(2000)
             onTimeout()
         }
     }

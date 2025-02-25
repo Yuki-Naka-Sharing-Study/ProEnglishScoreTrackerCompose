@@ -1,7 +1,5 @@
 package com.example.proenglishscoretracker.record_screen
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -1501,10 +1498,6 @@ private fun ErrorText(error: String) {
     )
 }
 
-private fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
 @Composable
 private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
     if (saved.isNotEmpty()) {
@@ -1513,10 +1506,8 @@ private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
             fontSize = 16.sp,
             color = Color.Blue
         )
-
-        // メッセージを非表示にするためのタイマーを設定
         LaunchedEffect(saved) {
-            delay(2000) // 2秒間待機
+            delay(2000)
             onTimeout()
         }
     }

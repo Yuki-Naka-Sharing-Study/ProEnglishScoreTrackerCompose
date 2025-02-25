@@ -1,6 +1,5 @@
 package com.example.proenglishscoretracker.record_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.material.Text
 import androidx.compose.foundation.layout.padding
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -894,7 +891,6 @@ private fun IeltsOverallScorePicker(
     var showDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
-        // スコア入力ボタン
         Button(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { showDialog = true },
@@ -907,8 +903,6 @@ private fun IeltsOverallScorePicker(
             )
         }
     }
-
-    // スコア入力ダイアログ
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -924,7 +918,6 @@ private fun IeltsOverallScorePicker(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    // スコア選択のWheel Picker
                     IeltsOverallScorePickerView(
                         score = selectedIeltsOverallScore,
                         onScoreChange = onScoreChange
@@ -932,11 +925,10 @@ private fun IeltsOverallScorePicker(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 確定ボタン
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm() // 確定時にスコアを親に渡す
+                            onConfirm()
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -961,14 +953,12 @@ private fun IeltsOverallScorePickerView(
     score: Float,
     onScoreChange: (Float) -> Unit
 ) {
-    val ten = score / 10.0 // 10の位
-    val one = (score % 10.0) / 1.0 // 1の位
+    val ten = score / 10.0
+    val one = (score % 10.0) / 1.0
 
-    // 状態管理のためにrememberを使う
     val tenState = remember { mutableFloatStateOf(ten.toFloat()) }
     val oneState = remember { mutableFloatStateOf(one.toFloat()) }
 
-    // スコア変更をトリガーする
     LaunchedEffect(tenState.floatValue, oneState.floatValue) {
         onScoreChange((tenState.floatValue * 10.0 + oneState.floatValue).toFloat())
     }
@@ -988,12 +978,9 @@ private fun IeltsOverallScorePickerView(
 
 @Composable
 private fun IeltsOverallTwoDigits(state: MutableFloatState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.floatValue = listState.currentIndex.toFloat()
     }
     FVerticalWheelPicker(
@@ -1018,12 +1005,9 @@ private fun IeltsOverallTwoDigits(state: MutableFloatState) {
 
 @Composable
 private fun IeltsOverallOneDigit(state: MutableFloatState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.floatValue = listState.currentIndex.toFloat()
     }
     FVerticalWheelPicker(
@@ -1057,7 +1041,6 @@ private fun IeltsRLWSScorePicker(
     var showDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {
-        // スコア入力ボタン
         Button(
             modifier = Modifier.align(Alignment.TopCenter),
             onClick = { showDialog = true },
@@ -1070,8 +1053,6 @@ private fun IeltsRLWSScorePicker(
             )
         }
     }
-
-    // スコア入力ダイアログ
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -1087,18 +1068,16 @@ private fun IeltsRLWSScorePicker(
                         .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    // スコア選択のWheel Picker
                     IeltsRLWSScorePickerView(
                         score = selectedIeltsRLWSScore,
                         onScoreChange = onScoreChange
                     )
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 確定ボタン
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onConfirm() // 確定時にスコアを親に渡す
+                            onConfirm()
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -1123,10 +1102,8 @@ private fun IeltsRLWSScorePickerView(
     score: Float,
     onScoreChange: (Float) -> Unit
 ) {
-    // 状態管理のためにrememberを使う
     val scoreState = remember { mutableFloatStateOf(score) }
 
-    // スコア変更をトリガーする
     LaunchedEffect(scoreState.floatValue) {
         onScoreChange((scoreState.floatValue))
     }
@@ -1137,19 +1114,15 @@ private fun IeltsRLWSScorePickerView(
             .SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 1の位
         IeltsRLWSScore(scoreState)
     }
 }
 
 @Composable
 private fun IeltsRLWSScore(state: MutableFloatState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.floatValue = listState.currentIndex.toFloat()
     }
     FVerticalWheelPicker(
@@ -1236,10 +1209,6 @@ private fun ErrorText(error: String) {
         color = Color.Red,
         maxLines = 1,
     )
-}
-
-private fun showToast(context: android.content.Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
 @Composable

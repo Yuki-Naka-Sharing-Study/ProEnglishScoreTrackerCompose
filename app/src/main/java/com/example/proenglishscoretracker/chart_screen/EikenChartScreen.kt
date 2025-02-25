@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -67,23 +68,16 @@ import com.github.mikephil.charting.listener.OnChartGestureListener
 @Composable
 fun EikenChartScreen(viewModel: EnglishInfoViewModel) {
     val eikenInfoList by viewModel.eikenSecondInfo.collectAsState()
-
-    // 最新の受験年を取得
     val latestExamYear = eikenInfoList
         .mapNotNull { it.date.substring(0, 4).toIntOrNull() }
         .maxOrNull()
-
-    // examYearの初期値をnullにして、データが入ったら更新
     var examYear by rememberSaveable { mutableStateOf<Int?>(null) }
 
-    // データが取得できたら examYear を設定
     LaunchedEffect(latestExamYear) {
         if (latestExamYear != null && examYear == null) {
             examYear = latestExamYear
         }
     }
-
-    // examYear が null の間は表示しない
     if (examYear != null) {
         Column(
             modifier = Modifier
@@ -132,7 +126,6 @@ private fun EikenScoreChart(
     val eikenInfoList by viewModel.eikenSecondInfo.collectAsState()
     var isGraphTapped by rememberSaveable { mutableStateOf(false) }
 
-    // データが存在しない場合のメッセージ
     if (eikenInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -145,12 +138,10 @@ private fun EikenScoreChart(
             )
         }
     } else {
-        // examYear に基づいてデータをフィルタリング
         val filteredEikenInfo = eikenInfoList.filter {
             it.date.substring(0, 4).toInt() == examYear }
 
         if (filteredEikenInfo.isEmpty()) {
-            // 選択した年のデータがない場合のメッセージ
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -162,17 +153,13 @@ private fun EikenScoreChart(
                 )
             }
         } else {
-            // 受験日を昇順（古い順）にソート
             val sortedEikenInfo = filteredEikenInfo.sortedBy { it.date }
-
-            // ソートされたデータから必要な情報を抽出
             val examDates = sortedEikenInfo.map { it.date }
             val cseScores = sortedEikenInfo.map { it.cseScore.toFloat() }
             val readingScores = sortedEikenInfo.map { it.readingScore.toFloat() }
             val listeningScores = sortedEikenInfo.map { it.listeningScore.toFloat() }
             val writingScores = sortedEikenInfo.map { it.writingScore.toFloat() }
             val speakingScores = sortedEikenInfo.map { it.speakingScore.toFloat() }
-
             val entriesCse = cseScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
             }
@@ -230,20 +217,19 @@ private fun EikenScoreChart(
                                 invalidate()
                             }, 100)
 
-                            // グラフのタップイベントをリスナーで検知
                             setOnChartGestureListener(object : OnChartGestureListener {
                                 override fun onChartGestureStart(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = true // タップ開始時に表示
+                                    isGraphTapped = true
                                 }
 
                                 override fun onChartGestureEnd(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = false // タップ終了時に非表示
+                                    isGraphTapped = false
                                 }
 
                                 override fun onChartLongPressed(me: MotionEvent?) {}
@@ -269,7 +255,6 @@ private fun EikenScoreChart(
                     modifier = Modifier
                         .matchParentSize()
                 )
-                // タップ時に表示する UI（グラフの上に重ねる）
                 if (isGraphTapped) {
                     Column(
                         modifier = Modifier
@@ -331,14 +316,12 @@ private fun EikenScoreChart(
             val previousCSEScore =
                 cseScores.dropLast(1).lastOrNull()?.toInt() ?: currentCseScore
 
-            // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正できるかも
             ConstraintLayout(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 val guideline = createGuidelineFromStart(0.4f)
                 val (overAllLabel, overAllScore) = createRefs()
 
-                // CSEスコアのラベル
                 Text(
                     text = "CSEスコア:",
                     modifier = Modifier.constrainAs(overAllLabel) {
@@ -346,8 +329,6 @@ private fun EikenScoreChart(
                         top.linkTo(parent.top, margin = 16.dp)
                     }
                 )
-
-                // CSEスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(overAllScore) {
                         start.linkTo(guideline)
@@ -358,10 +339,8 @@ private fun EikenScoreChart(
                 )
             }
 
-
             Spacer(modifier = Modifier.height(32.dp))
 
-            // 4技能のグラフ
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -390,7 +369,7 @@ private fun EikenScoreChart(
                             ).apply {
                                 color = android.graphics.Color.RED
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val dataSetListening = LineDataSet(
@@ -398,7 +377,7 @@ private fun EikenScoreChart(
                             ).apply {
                                 color = android.graphics.Color.BLUE
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val dataSetWriting = LineDataSet(
@@ -406,7 +385,7 @@ private fun EikenScoreChart(
                             ).apply {
                                 color = android.graphics.Color.GREEN
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val dataSetSpeaking = LineDataSet(
@@ -414,7 +393,7 @@ private fun EikenScoreChart(
                             ).apply {
                                 color = android.graphics.Color.MAGENTA
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
 //                            mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
 
@@ -426,21 +405,18 @@ private fun EikenScoreChart(
                             )
                             this.data = lineData
 
-                            // X軸ラベル設定
                             xAxis.textSize = 15f
                             xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
                             xAxis.position = XAxis.XAxisPosition.BOTTOM
                             xAxis.granularity = 1f
                             xAxis.setDrawGridLines(false)
 
-                            // Y軸設定
                             axisLeft.textSize = 15f
                             axisLeft.axisMinimum = 0f
                             axisRight.isEnabled = false
                             description.isEnabled = false
                             legend.isEnabled = true
 
-                            // グラフの余白設定
                             setViewPortOffsets(
                                 120f,
                                 0f,
@@ -448,7 +424,6 @@ private fun EikenScoreChart(
                                 0f
                             )
 
-                            // 左から右に表示するアニメーションを追加。
                             animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
 
                             Handler(Looper.getMainLooper()).postDelayed({
@@ -457,22 +432,19 @@ private fun EikenScoreChart(
                                 invalidate()
                             }, 100)
 
-                            // グラフのタップイベントをリスナーで検知
                             setOnChartGestureListener(object : OnChartGestureListener {
                                 override fun onChartGestureStart(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = true // タップ開始時に表示
+                                    isGraphTapped = true
                                 }
-
                                 override fun onChartGestureEnd(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = false // タップ終了時に非表示
+                                    isGraphTapped = false
                                 }
-
                                 override fun onChartLongPressed(me: MotionEvent?) {}
                                 override fun onChartDoubleTapped(me: MotionEvent?) {}
                                 override fun onChartSingleTapped(me: MotionEvent?) {}
@@ -482,13 +454,11 @@ private fun EikenScoreChart(
                                     velocityX: Float,
                                     velocityY: Float
                                 ) {}
-
                                 override fun onChartScale(
                                     me: MotionEvent?,
                                     scaleX: Float,
                                     scaleY: Float
                                 ) {}
-
                                 override fun onChartTranslate(me: MotionEvent?, dX: Float, dY: Float) {}
                             })
                         }
@@ -496,7 +466,6 @@ private fun EikenScoreChart(
                     modifier = Modifier
                         .matchParentSize()
                 )
-                // タップ時に表示する UI（グラフの上に重ねる）
                 if (isGraphTapped) {
                     Column(
                         modifier = Modifier
@@ -543,7 +512,6 @@ private fun EikenScoreChart(
 
             Spacer(modifier = Modifier.height(64.dp))
 
-            // 前回のスコアとの比較を表示
             val currentReadingScore =
                 readingScores.last().toInt()
             val previousReadingScore =
@@ -570,7 +538,6 @@ private fun EikenScoreChart(
                     writingLabel, writingScore,
                     speakingLabel, speakingScore) = createRefs()
 
-                // Readingスコアのラベル
                 Text(
                     text = "Readingスコア:",
                     modifier = Modifier.constrainAs(readingLabel) {
@@ -578,8 +545,6 @@ private fun EikenScoreChart(
                         top.linkTo(parent.top, margin = 16.dp)
                     }
                 )
-
-                // Readingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(readingScore) {
                         start.linkTo(guideline)
@@ -588,8 +553,6 @@ private fun EikenScoreChart(
                     currentScore = currentReadingScore,
                     previousScore = previousReadingScore
                 )
-
-                // Listeningスコアのラベル
                 Text(
                     text = "Listeningスコア:",
                     modifier = Modifier.constrainAs(listeningLabel) {
@@ -597,8 +560,6 @@ private fun EikenScoreChart(
                         top.linkTo(readingLabel.bottom, margin = 16.dp)
                     }
                 )
-
-                // Listeningスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(listeningScore) {
                         start.linkTo(guideline)
@@ -607,8 +568,6 @@ private fun EikenScoreChart(
                     currentScore = currentListeningScore,
                     previousScore = previousListeningScore
                 )
-
-                // Writingスコアのラベル
                 Text(
                     text = "Writingスコア:",
                     modifier = Modifier.constrainAs(writingLabel) {
@@ -616,8 +575,6 @@ private fun EikenScoreChart(
                         top.linkTo(listeningScore.bottom, margin = 16.dp)
                     }
                 )
-
-                // Writingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(writingScore) {
                         start.linkTo(guideline)
@@ -626,8 +583,6 @@ private fun EikenScoreChart(
                     currentScore = currentWritingScore,
                     previousScore = previousWritingScore
                 )
-
-                // Speakingスコアのラベル
                 Text(
                     text = "Speakingスコア:",
                     modifier = Modifier.constrainAs(speakingLabel) {
@@ -635,8 +590,6 @@ private fun EikenScoreChart(
                         top.linkTo(writingLabel.bottom, margin = 16.dp)
                     }
                 )
-
-                // Speakingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(speakingScore) {
                         start.linkTo(guideline)
@@ -659,7 +612,7 @@ private fun updateCseData(
     ).apply {
         color = android.graphics.Color.CYAN
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     return LineData(
         dataSetOverall,
@@ -677,28 +630,28 @@ private fun updateRLWSData(
     ).apply {
         color = android.graphics.Color.RED
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetListening = LineDataSet(
         entriesListening, "Listeningスコア"
     ).apply {
         color = android.graphics.Color.BLUE
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetWriting = LineDataSet(
         entriesWriting, "Writingスコア"
     ).apply {
         color = android.graphics.Color.GREEN
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetSpeaking = LineDataSet(
         entriesSpeaking, "Speakingスコア"
     ).apply {
         color = android.graphics.Color.MAGENTA
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     return LineData(
         dataSetReading,
@@ -791,10 +744,10 @@ private fun ExamYearPickerView(
     val ten = (score % 100) / 10
     val one = score % 10
 
-    val thousandState = rememberSaveable { mutableIntStateOf(thousand) }
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
+    val thousandState = remember { mutableIntStateOf(thousand) }
+    val hundredState = remember { mutableIntStateOf(hundred) }
+    val tenState = remember { mutableIntStateOf(ten) }
+    val oneState = remember { mutableIntStateOf(one) }
 
     LaunchedEffect(
         thousandState.intValue,
@@ -824,14 +777,10 @@ private fun ExamYearPickerView(
 @Composable
 private fun ExamYearFourDigits(state: MutableIntState) {
     val items = listOf(2)
-
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
-    // currentIndex の変化を監視
+
     LaunchedEffect(listState.currentIndex) {
-        // currentIndex が items のサイズを超えないことを確認
         val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = items[currentItemIndex]
     }
     FVerticalWheelPicker(

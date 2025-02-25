@@ -44,6 +44,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,23 +64,17 @@ import com.github.mikephil.charting.listener.OnChartGestureListener
 @Composable
 fun ToeicSwChartScreen(viewModel: EnglishInfoViewModel) {
     val toeicSwInfoList by viewModel.toeicSwInfo.collectAsState()
-
-    // 最新の受験年を取得
     val latestExamYear = toeicSwInfoList
         .mapNotNull { it.date.substring(0, 4).toIntOrNull() }
         .maxOrNull()
-
-    // examYearの初期値を最新の受験年に設定
     var examYear by rememberSaveable { mutableStateOf<Int?>(null) }
 
-    // データが取得できたら examYear を設定
     LaunchedEffect(latestExamYear) {
         if (latestExamYear != null && examYear == null) {
             examYear = latestExamYear
         }
     }
 
-    // examYear が null の間は表示しない
     if (examYear != null) {
         Column(
             modifier = Modifier
@@ -127,7 +122,6 @@ private fun ToeicSwScoreChart(
     val toeicSwInfoList by viewModel.toeicSwInfo.collectAsState()
     var isGraphTapped by rememberSaveable { mutableStateOf(false) }
 
-    // データが存在しない場合のメッセージ
     if (toeicSwInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -140,13 +134,11 @@ private fun ToeicSwScoreChart(
             )
         }
     } else {
-        // examYear に基づいてデータをフィルタリング
         val filteredToeicSwInfo = toeicSwInfoList.filter {
             it.date.substring(0, 4).toInt() == examYear
         }
 
         if (filteredToeicSwInfo.isEmpty()) {
-            // 選択した年のデータがない場合のメッセージ
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -158,14 +150,10 @@ private fun ToeicSwScoreChart(
                 )
             }
         } else {
-            // 受験日を昇順（古い順）にソート
             val sortedToeicSwInfo = filteredToeicSwInfo.sortedBy { it.date }
-
-            // ソートされたデータから必要な情報を抽出
             val examDates = sortedToeicSwInfo.map { it.date }
             val writingScores = sortedToeicSwInfo.map { it.writingScore.toFloat() }
             val speakingScores = sortedToeicSwInfo.map { it.speakingScore.toFloat() }
-
             val entriesWriting = writingScores.mapIndexed { index, score ->
                 Entry(index.toFloat(), score)
             }
@@ -191,7 +179,7 @@ private fun ToeicSwScoreChart(
                             ).apply {
                                 color = android.graphics.Color.RED
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
                                 // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
                             val dataSetSpeaking = LineDataSet(
@@ -199,28 +187,25 @@ private fun ToeicSwScoreChart(
                             ).apply {
                                 color = android.graphics.Color.BLUE
                                 valueTextColor = android.graphics.Color.BLACK
-                                valueTextSize = 15f // スコアのテキストサイズを設定
+                                valueTextSize = 15f
                                 // mode = LineDataSet.Mode.CUBIC_BEZIER // 曲線
                             }
 
                             val lineData = LineData(dataSetWriting, dataSetSpeaking)
                             this.data = lineData
 
-                            // X軸ラベル設定
                             xAxis.textSize = 15f
                             xAxis.valueFormatter = IndexAxisValueFormatter(examDates)
                             xAxis.position = XAxis.XAxisPosition.BOTTOM
                             xAxis.granularity = 1f
                             xAxis.setDrawGridLines(false)
 
-                            // Y軸設定
                             axisLeft.textSize = 15f
                             axisLeft.axisMinimum = 0f
                             axisRight.isEnabled = false
                             description.isEnabled = false
                             legend.isEnabled = true
 
-                            // グラフの余白設定
                             setViewPortOffsets(
                                 120f,
                                 0f,
@@ -228,7 +213,6 @@ private fun ToeicSwScoreChart(
                                 0f
                             )
 
-                            // 左から右に表示するアニメーションを追加。
                             this.animateX(250, com.github.mikephil.charting.animation.Easing.Linear)
 
                             Handler(Looper.getMainLooper()).postDelayed({
@@ -237,20 +221,19 @@ private fun ToeicSwScoreChart(
                                 invalidate()
                             }, 100)
 
-                            // グラフのタップイベントをリスナーで検知
                             setOnChartGestureListener(object : OnChartGestureListener {
                                 override fun onChartGestureStart(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = true // タップ開始時に表示
+                                    isGraphTapped = true
                                 }
 
                                 override fun onChartGestureEnd(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = false // タップ終了時に非表示
+                                    isGraphTapped = false
                                 }
 
                                 override fun onChartLongPressed(me: MotionEvent?) {}
@@ -276,7 +259,6 @@ private fun ToeicSwScoreChart(
                     modifier = Modifier
                         .matchParentSize()
                 )
-                // タップ時に表示する UI（グラフの上に重ねる）
                 if (isGraphTapped) {
                     Column(
                         modifier = Modifier
@@ -333,7 +315,6 @@ private fun ToeicSwScoreChart(
 
             Spacer(modifier = Modifier.height(64.dp))
 
-            // 前回のスコアとの比較を表示
             val currentWritingScore =
                 writingScores.last().toInt()
             val previousWritingScore =
@@ -349,7 +330,6 @@ private fun ToeicSwScoreChart(
                 val guideline = createGuidelineFromStart(0.4f)
                 val (writingLabel, writingScore, speakingLabel, speakingScore) = createRefs()
 
-                // Writingスコアのラベル
                 Text(
                     text = "Writingスコア:",
                     modifier = Modifier.constrainAs(writingLabel) {
@@ -357,8 +337,6 @@ private fun ToeicSwScoreChart(
                         top.linkTo(parent.top, margin = 16.dp)
                     }
                 )
-
-                // Writingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(writingScore) {
                         start.linkTo(guideline)
@@ -367,8 +345,6 @@ private fun ToeicSwScoreChart(
                     currentScore = currentWritingScore,
                     previousScore = previousWritingScore
                 )
-
-                // Speakingスコアのラベル
                 Text(
                     text = "Speakingスコア:",
                     modifier = Modifier.constrainAs(speakingLabel) {
@@ -376,8 +352,6 @@ private fun ToeicSwScoreChart(
                         top.linkTo(writingLabel.bottom, margin = 16.dp)
                     }
                 )
-
-                // Speakingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(speakingScore) {
                         start.linkTo(guideline)
@@ -401,14 +375,14 @@ private fun updateData(
     ).apply {
         color = android.graphics.Color.RED
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetSpeaking = LineDataSet(
         entriesSpeaking, "Speakingスコア"
     ).apply {
         color = android.graphics.Color.BLUE
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     return LineData(dataSetWriting, dataSetSpeaking)
 }
@@ -441,7 +415,6 @@ private fun ExamYearPicker(
             )
         }
     }
-
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -496,10 +469,10 @@ private fun ExamYearPickerView(
     val ten = (score % 100) / 10
     val one = score % 10
 
-    val thousandState = rememberSaveable { mutableIntStateOf(thousand) }
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
+    val thousandState = remember { mutableIntStateOf(thousand) }
+    val hundredState = remember { mutableIntStateOf(hundred) }
+    val tenState = remember { mutableIntStateOf(ten) }
+    val oneState = remember { mutableIntStateOf(one) }
 
     LaunchedEffect(
         thousandState.intValue,
@@ -529,14 +502,10 @@ private fun ExamYearPickerView(
 @Composable
 private fun ExamYearFourDigits(state: MutableIntState) {
     val items = listOf(2)
-
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
-    // currentIndex の変化を監視
+
     LaunchedEffect(listState.currentIndex) {
-        // currentIndex が items のサイズを超えないことを確認
         val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = items[currentItemIndex]
     }
     FVerticalWheelPicker(

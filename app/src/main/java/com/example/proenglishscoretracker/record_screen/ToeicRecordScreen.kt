@@ -1,7 +1,5 @@
 package com.example.proenglishscoretracker.record_screen
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -20,11 +18,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
@@ -43,7 +39,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
@@ -75,7 +70,6 @@ import com.sd.lib.date.selectYearWithIndex
 @Composable
 fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
     val focusManager = LocalFocusManager.current
-    // 以下の変数「interactionSource」は「rememberSaveable」だとクラッシュする。
     val interactionSource = remember { MutableInteractionSource() }
 
     Box(
@@ -573,13 +567,12 @@ private fun ReadingImageViewPreview() {
 private fun TOEICRLScorePicker(
     modifier: Modifier = Modifier,
     toeicRLScore: Int,
-    onScoreConfirm: (Int) -> Unit, // スコア更新用のコールバック
+    onScoreConfirm: (Int) -> Unit,
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
-    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) } // 一時的なスコア保持用
+    var tempScore by rememberSaveable { mutableIntStateOf(toeicRLScore) }
 
     Box(modifier = modifier) {
-        // スコア入力ボタン
         Button(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -594,8 +587,6 @@ private fun TOEICRLScorePicker(
             )
         }
     }
-
-    // スコア入力ダイアログ
     if (showDialog) {
         Dialog(onDismissRequest = { showDialog = false }) {
             Card(
@@ -613,16 +604,15 @@ private fun TOEICRLScorePicker(
                     // スコア選択のWheel Picker
                     TOEICRLScorePickerView(
                         score = tempScore,
-                        onScoreChange = { tempScore = it } // 一時的なスコアを更新
+                        onScoreChange = { tempScore = it }
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // 確定ボタン
                     Button(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
                         onClick = {
-                            onScoreConfirm(tempScore) // 確定時にスコアを親に渡す
+                            onScoreConfirm(tempScore)
                             showDialog = false
                         },
                         shape = RoundedCornerShape(8.dp),
@@ -645,16 +635,14 @@ private fun TOEICRLScorePickerView(
     score: Int,
     onScoreChange: (Int) -> Unit
 ) {
-    val hundred = score / 100 // 100の位
-    val ten = (score % 100) / 10 // 10の位
-    val one = score % 10 // 1の位
+    val hundred = score / 100
+    val ten = (score % 100) / 10
+    val one = score % 10
 
-    // 状態管理のためにrememberを使う
     val hundredState = remember { mutableIntStateOf(hundred) }
     val tenState = remember { mutableIntStateOf(ten) }
     val oneState = remember { mutableIntStateOf(one) }
 
-    // スコア変更をトリガーする
     LaunchedEffect(
         hundredState.intValue,
         tenState.intValue,
@@ -683,12 +671,9 @@ private fun TOEICRLScorePickerView(
 
 @Composable
 private fun ThreeDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -713,12 +698,9 @@ private fun ThreeDigits(state: MutableIntState) {
 
 @Composable
 private fun TwoDigits(state: MutableIntState) {
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
 
-    // currentIndex の変化を監視
     LaunchedEffect(listState.currentIndex) {
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = listState.currentIndex
     }
     FVerticalWheelPicker(
@@ -745,14 +727,10 @@ private fun TwoDigits(state: MutableIntState) {
 @Composable
 private fun OneDigit(state: MutableIntState) {
     val items = listOf(0, 5)
-
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
-    // currentIndex の変化を監視
+
     LaunchedEffect(listState.currentIndex) {
-        // currentIndex が items のサイズを超えないことを確認
         val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = items[currentItemIndex]
     }
     FVerticalWheelPicker(
@@ -892,16 +870,6 @@ private fun MemoInputField(
 }
 
 @Composable
-private fun ErrorText(error: String) {
-    Text(
-        text = error,
-        fontSize = 12.sp,
-        maxLines = 1,
-        color = Color.Red
-    )
-}
-
-@Composable
 private fun SaveButton(
     onClick: () -> Unit
 ) {
@@ -926,10 +894,6 @@ private fun SaveButton(
 //    }
 //}
 
-private fun showToast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-}
-
 @Composable
 private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
     if (saved.isNotEmpty()) {
@@ -938,10 +902,8 @@ private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
             fontSize = 16.sp,
             color = Color.Blue
         )
-
-        // メッセージを非表示にするためのタイマーを設定
         LaunchedEffect(saved) {
-            kotlinx.coroutines.delay(2000) // 2秒間待機
+            kotlinx.coroutines.delay(2000)
             onTimeout()
         }
     }

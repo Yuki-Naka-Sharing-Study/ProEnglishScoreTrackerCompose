@@ -44,11 +44,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -64,23 +64,16 @@ import com.github.mikephil.charting.listener.OnChartGestureListener
 @Composable
 fun ToeicChartScreen(viewModel: EnglishInfoViewModel) {
     val toeicInfoList by viewModel.toeicInfo.collectAsState()
-
-    // 最新の受験年を取得（データがある場合のみ）
     val latestExamYear = toeicInfoList
         .mapNotNull { it.date.substring(0, 4).toIntOrNull() }
         .maxOrNull()
-
-    // examYearの初期値をnullにして、データが入ったら更新
     var examYear by rememberSaveable { mutableStateOf<Int?>(null) }
 
-    // データが取得できたら examYear を設定
     LaunchedEffect(latestExamYear) {
         if (latestExamYear != null && examYear == null) {
             examYear = latestExamYear
         }
     }
-
-    // examYear が null の間は表示しない
     if (examYear != null) {
         Column(
             modifier = Modifier
@@ -231,20 +224,19 @@ private fun ToeicScoreChart(
                                 invalidate()
                             }, 100)
 
-                            // グラフのタップイベントをリスナーで検知
                             setOnChartGestureListener(object : OnChartGestureListener {
                                 override fun onChartGestureStart(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = true // タップ開始時に表示
+                                    isGraphTapped = true
                                 }
 
                                 override fun onChartGestureEnd(
                                     me: MotionEvent?,
                                     lastPerformedGesture: ChartTouchListener.ChartGesture?
                                 ) {
-                                    isGraphTapped = false // タップ終了時に非表示
+                                    isGraphTapped = false
                                 }
 
                                 override fun onChartLongPressed(me: MotionEvent?) {}
@@ -277,8 +269,6 @@ private fun ToeicScoreChart(
                     modifier = Modifier
                         .matchParentSize()
                 )
-
-                // タップ時に表示する UI（グラフの上に重ねる）
                 if (isGraphTapped) {
                     Column(
                         modifier = Modifier
@@ -344,14 +334,12 @@ private fun ToeicScoreChart(
             val previousListeningScore =
                 listeningScores.dropLast(1).lastOrNull()?.toInt() ?: currentListeningScore
 
-            // TODO : 以下のColumnは「ConstraintLayout in Compose」で修正済
             ConstraintLayout(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 val guideline = createGuidelineFromStart(0.4f)
                 val (readingLabel, readingScore, listeningLabel, listeningScore) = createRefs()
 
-                // Readingスコアのラベル
                 Text(
                     text = "Readingスコア:",
                     modifier = Modifier.constrainAs(readingLabel) {
@@ -359,8 +347,6 @@ private fun ToeicScoreChart(
                         top.linkTo(parent.top, margin = 16.dp)
                     }
                 )
-
-                // Readingスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(readingScore) {
                         start.linkTo(guideline)
@@ -369,8 +355,6 @@ private fun ToeicScoreChart(
                     currentScore = currentReadingScore,
                     previousScore = previousReadingScore
                 )
-
-                // Listeningスコアのラベル
                 Text(
                     text = "Listeningスコア:",
                     modifier = Modifier.constrainAs(listeningLabel) {
@@ -378,8 +362,6 @@ private fun ToeicScoreChart(
                         top.linkTo(readingLabel.bottom, margin = 16.dp)
                     }
                 )
-
-                // Listeningスコアの比較
                 ComparePreviousScore(
                     modifier = Modifier.constrainAs(listeningScore) {
                         start.linkTo(guideline)
@@ -402,14 +384,14 @@ private fun updateData(
     ).apply {
         color = android.graphics.Color.RED
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     val dataSetListening = LineDataSet(
         entriesListening, "Listeningスコア"
     ).apply {
         color = android.graphics.Color.BLUE
         valueTextColor = android.graphics.Color.BLACK
-        valueTextSize = 15f // スコアのテキストサイズを設定
+        valueTextSize = 15f
     }
     return LineData(dataSetReading, dataSetListening)
 }
@@ -497,10 +479,10 @@ private fun ExamYearPickerView(
     val ten = (score % 100) / 10
     val one = score % 10
 
-    val thousandState = rememberSaveable { mutableIntStateOf(thousand) }
-    val hundredState = rememberSaveable { mutableIntStateOf(hundred) }
-    val tenState = rememberSaveable { mutableIntStateOf(ten) }
-    val oneState = rememberSaveable { mutableIntStateOf(one) }
+    val thousandState = remember { mutableIntStateOf(thousand) }
+    val hundredState = remember { mutableIntStateOf(hundred) }
+    val tenState = remember { mutableIntStateOf(ten) }
+    val oneState = remember { mutableIntStateOf(one) }
 
     LaunchedEffect(
         thousandState.intValue,
@@ -530,14 +512,10 @@ private fun ExamYearPickerView(
 @Composable
 private fun ExamYearFourDigits(state: MutableIntState) {
     val items = listOf(2)
-
-    // FWheelPickerStateを利用してスクロール状態を管理
     val listState = rememberFWheelPickerState()
-    // currentIndex の変化を監視
+
     LaunchedEffect(listState.currentIndex) {
-        // currentIndex が items のサイズを超えないことを確認
         val currentItemIndex = listState.currentIndex.coerceIn(0, items.size - 1)
-        // listState.currentIndex が変わったときに state.intValue を更新
         state.intValue = items[currentItemIndex]
     }
     FVerticalWheelPicker(
