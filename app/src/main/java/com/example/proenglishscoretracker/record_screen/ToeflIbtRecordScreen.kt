@@ -1322,7 +1322,7 @@ private fun ShowSavedText(saved: String, onTimeout: () -> Unit) {
         Text(
             text = saved,
             fontSize = 16.sp,
-            color = Color.Green
+            color = Color.Blue
         )
 
         // メッセージを非表示にするためのタイマーを設定

@@ -1245,6 +1245,8 @@ private fun showToast(context: android.content.Context, message: String) {
 @Composable
 private fun ShowSavedText(saved: String) {
     Text(
-        text = saved, fontSize = 16.sp, color = Color.Green
+        text = saved,
+        fontSize = 16.sp,
+        color = Color.Blue
     )
 }
