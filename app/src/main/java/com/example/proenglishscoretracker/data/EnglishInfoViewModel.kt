@@ -301,10 +301,10 @@ class EnglishInfoViewModel(
             }
         }
     }
-    fun updateEikenValues(eikenInfo: EnglishTestInfo.EIKEN) {
+    fun updateEikenInfo(eikenInfo: EnglishTestInfo.EIKEN) {
         viewModelScope.launch {
             repository.updateEikenInfo(eikenInfo)
-            this@EnglishInfoViewModel._eikenSecondInfo.value = englishInfoDao.getAllEikenInfo()
+            loadAllEikenInfo()
         }
     }
 

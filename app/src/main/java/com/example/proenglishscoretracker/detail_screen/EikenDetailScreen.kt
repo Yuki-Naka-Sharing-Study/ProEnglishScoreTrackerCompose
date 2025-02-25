@@ -39,7 +39,7 @@ fun EikenDetailScreen(
     navController: NavController
 ) {
     // 画面表示時にデータを取得
-    LaunchedEffect(eikenId) {
+    LaunchedEffect(eikenId, viewModel) {
         viewModel.loadEikenInfoById(eikenId)
     }
 
@@ -78,7 +78,11 @@ fun EikenDetailScreen(
             }
             IconButton(
                 modifier = Modifier.padding(16.dp),
-                onClick = { /* 編集処理を追加 */ }
+                onClick = {
+                    eikenInfo?.let {
+                        navController.navigate("eiken_edit/${it.id}")
+                    }
+                }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.edit),

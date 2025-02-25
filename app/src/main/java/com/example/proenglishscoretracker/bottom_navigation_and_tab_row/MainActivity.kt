@@ -46,6 +46,7 @@ import com.example.proenglishscoretracker.detail_screen.EikenDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeflIbtDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicSwDetailScreen
+import com.example.proenglishscoretracker.edit_screen.EikenEditScreen
 import com.example.proenglishscoretracker.edit_screen.ToeicEditScreen
 import com.example.proenglishscoretracker.edit_screen.ToeicSwEditScreen
 import com.example.proenglishscoretracker.record_screen.EikenRecordScreen
@@ -193,6 +194,18 @@ fun EnglishScoreTracker(
                 if (toeicSwId != null && toeicSwInfo != null) {
                     ToeicSwEditScreen(
                         toeicSwInfo = toeicSwInfo,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
+                }
+            }
+            composable("eiken_edit/{eikenId}") { backStackEntry ->
+                val eikenId = backStackEntry.arguments?.getString("eikenId")
+                val eikenInfo = viewModel.selectedEikenInfo.collectAsState().value
+
+                if (eikenId != null && eikenInfo != null) {
+                    EikenEditScreen(
+                        eikenInfo = eikenInfo,
                         viewModel = viewModel,
                         navController = navController
                     )

@@ -96,7 +96,7 @@ fun ToeicDetailScreen(
             AlertDialog(
                 onDismissRequest = { showAlertDialog = false },
                 title = { Text(text = "削除の確認") },
-                text = { Text(text = "このTOEIC SWデータを削除しますか？") },
+                text = { Text(text = "このTOEIC データを削除しますか？") },
                 confirmButton = {
                     TextButton(
                         onClick = {
