@@ -85,24 +85,22 @@ class EnglishInfoViewModel(
                 return@launch
             }
             repository.saveToeicInfo(date, readingScore, listeningScore, memo)
-            loadAllToeicInfo() // データ保存後にリストを更新
+            loadAllToeicInfo()
         }
     }
-
-    // TOEICデータを削除
     fun deleteToeicInfo(toeicId: String) {
         viewModelScope.launch {
             val info = repository.getToeicInfoById(toeicId)
             info?.let {
                 repository.deleteToeicInfo(it)
-                loadAllToeicInfo() // データ削除後に最新のリストを取得
+                loadAllToeicInfo()
             }
         }
     }
-    fun updateToeicValues(toeicInfo: EnglishTestInfo.TOEIC) {
+    fun updateToeicInfo(toeicInfo: EnglishTestInfo.TOEIC) {
         viewModelScope.launch {
             repository.updateToeicInfo(toeicInfo)
-            this@EnglishInfoViewModel._toeicInfo.value = englishInfoDao.getAllToeicInfo()
+            loadAllToeicInfo()
         }
     }
 
@@ -155,16 +153,15 @@ class EnglishInfoViewModel(
                 return@launch
             }
             repository.saveToeicSwInfo(date, writingScore, speakingScore, memo)
-            loadAllToeicSwInfo() // データ保存後にリストを更新
+            loadAllToeicSwInfo()
         }
     }
-    // TOEICデータを削除
     fun deleteToeicSwInfo(toeicSwId: String) {
         viewModelScope.launch {
             val info = repository.getToeicSwInfoById(toeicSwId)
             info?.let {
                 repository.deleteToeicSwInfo(it)
-                loadAllToeicSwInfo() // データ削除後に最新のリストを取得
+                loadAllToeicSwInfo()
             }
         }
     }
@@ -234,7 +231,6 @@ class EnglishInfoViewModel(
     }
     fun loadAllEikenInfo() {
         viewModelScope.launch {
-//            _toeicInfo.value = repository.getAllToeicInfo()
             _eikenSecondInfo.value = repository.getAllEikenInfo()
         }
     }
@@ -277,7 +273,7 @@ class EnglishInfoViewModel(
             }
 
             // 同一年度内での登録回数チェック
-            val year = date.substring(0, 4) // 'yyyy'を抽出
+            val year = date.substring(0, 4)
             val count = repository.getEntryCountByGradeAndYear(grade, year)
             if (count >= 3) {
                 showAlert("同一級は年間で3回までしか登録できません。")
@@ -301,7 +297,7 @@ class EnglishInfoViewModel(
             val info = repository.getEikenInfoById(eikenId)
             info?.let {
                 repository.deleteEikenInfo(it)
-                loadAllEikenInfo() // データ削除後に最新のリストを取得
+                loadAllEikenInfo()
             }
         }
     }
@@ -367,7 +363,7 @@ class EnglishInfoViewModel(
                 overallScore,
                 memo
             )
-            loadAllToeflInfo() // データを保存後に再読み込み
+            loadAllToeflInfo()
         }
     }
     fun deleteToeflIbtInfo(toeflIbtId: String) {
@@ -375,7 +371,7 @@ class EnglishInfoViewModel(
             val info = repository.getToeflIbtInfoById(toeflIbtId)
             info?.let {
                 repository.deleteToeflIbtInfo(it)
-                loadAllToeflInfo() // データ削除後に最新のリストを取得
+                loadAllToeflInfo()
             }
         }
     }
