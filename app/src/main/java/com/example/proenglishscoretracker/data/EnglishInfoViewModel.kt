@@ -165,10 +165,10 @@ class EnglishInfoViewModel(
             }
         }
     }
-    fun updateToeicSwValues(toeicInfo: EnglishTestInfo.TOEIC_SW) {
+    fun updateToeicSwInfo(toeicSwInfo: EnglishTestInfo.TOEIC_SW) {
         viewModelScope.launch {
-            repository.updateToeicSwInfo(toeicInfo)
-            this@EnglishInfoViewModel._toeicSwInfo.value = englishInfoDao.getAllToeicSwInfo()
+            repository.updateToeicSwInfo(toeicSwInfo)
+            loadAllToeicSwInfo()
         }
     }
 

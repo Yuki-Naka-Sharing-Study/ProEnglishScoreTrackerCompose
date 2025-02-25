@@ -39,7 +39,7 @@ fun ToeicSwDetailScreen(
     navController: NavController
 ) {
     // 画面表示時にデータを取得
-    LaunchedEffect(toeicSwId) {
+    LaunchedEffect(toeicSwId, viewModel) {
         viewModel.loadToeicSwInfoById(toeicSwId)
     }
 
@@ -58,7 +58,7 @@ fun ToeicSwDetailScreen(
             Icon(
                 Icons.AutoMirrored.Outlined.ArrowBack,
                 contentDescription = "戻る",
-                tint = androidx.compose.ui.graphics.Color.Gray
+                tint = Color.Gray
             )
         }
 
@@ -73,17 +73,21 @@ fun ToeicSwDetailScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.delete),
                     contentDescription = "削除する",
-                    tint = androidx.compose.ui.graphics.Color.Red
+                    tint = Color.Red
                 )
             }
             IconButton(
                 modifier = Modifier.padding(16.dp),
-                onClick = { /* 編集処理を追加 */ }
+                onClick = {
+                    toeicSwInfo?.let {
+                        navController.navigate("toeic_sw_edit/${it.id}")
+                    }
+                }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.edit),
                     contentDescription = "編集する",
-                    tint = androidx.compose.ui.graphics.Color.Gray
+                    tint = Color.Gray
                 )
             }
         }
@@ -93,7 +97,7 @@ fun ToeicSwDetailScreen(
             AlertDialog(
                 onDismissRequest = { showAlertDialog = false },
                 title = { Text(text = "削除の確認") },
-                text = { Text(text = "このTOEICデータを削除しますか？") },
+                text = { Text(text = "このTOEIC SWデータを削除しますか？") },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -138,7 +142,7 @@ fun ToeicSwDetailScreen(
             } else {
                 Text(
                     text = "データが見つかりませんでした。",
-                    color = androidx.compose.ui.graphics.Color.Red
+                    color = Color.Red
                 )
             }
         }

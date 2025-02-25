@@ -47,6 +47,7 @@ import com.example.proenglishscoretracker.detail_screen.ToeflIbtDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicSwDetailScreen
 import com.example.proenglishscoretracker.edit_screen.ToeicEditScreen
+import com.example.proenglishscoretracker.edit_screen.ToeicSwEditScreen
 import com.example.proenglishscoretracker.record_screen.EikenRecordScreen
 import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
@@ -180,6 +181,18 @@ fun EnglishScoreTracker(
                 if (toeicId != null && toeicInfo != null) {
                     ToeicEditScreen(
                         toeicInfo = toeicInfo,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
+                }
+            }
+            composable("toeic_sw_edit/{toeicSwId}") { backStackEntry ->
+                val toeicSwId = backStackEntry.arguments?.getString("toeicSwId")
+                val toeicSwInfo = viewModel.selectedToeicSwInfo.collectAsState().value
+
+                if (toeicSwId != null && toeicSwInfo != null) {
+                    ToeicSwEditScreen(
+                        toeicSwInfo = toeicSwInfo,
                         viewModel = viewModel,
                         navController = navController
                     )
