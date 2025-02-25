@@ -1256,7 +1256,7 @@ private fun MemoInputField(
                 .height(dimensionResource(id = R.dimen.memo_height_dp)),
             value = value,
             onValueChange = onValueChange,
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
             placeholder = {
                 Text(
                     text = placeholder,
