@@ -39,7 +39,7 @@ fun ToeflIbtDetailScreen(
     navController: NavController
 ) {
     // 画面表示時にデータを取得
-    LaunchedEffect(toeflIbtId) {
+    LaunchedEffect(toeflIbtId, viewModel) {
         viewModel.loadToeflIbtInfoById(toeflIbtId)
     }
 
@@ -58,7 +58,7 @@ fun ToeflIbtDetailScreen(
             Icon(
                 Icons.AutoMirrored.Outlined.ArrowBack,
                 contentDescription = "戻る",
-                tint = androidx.compose.ui.graphics.Color.Gray
+                tint = Color.Gray
             )
         }
 
@@ -73,17 +73,21 @@ fun ToeflIbtDetailScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.delete),
                     contentDescription = "削除する",
-                    tint = androidx.compose.ui.graphics.Color.Red
+                    tint = Color.Red
                 )
             }
             IconButton(
                 modifier = Modifier.padding(16.dp),
-                onClick = { /* 編集処理を追加 */ }
+                onClick = {
+                    toeflIbtInfo?.let {
+                        navController.navigate("toefl_ibt_edit/${it.id}")
+                    }
+                }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.edit),
                     contentDescription = "編集する",
-                    tint = androidx.compose.ui.graphics.Color.Gray
+                    tint = Color.Gray
                 )
             }
         }
@@ -150,7 +154,7 @@ fun ToeflIbtDetailScreen(
             } else {
                 Text(
                     text = "データが見つかりませんでした。",
-                    color = androidx.compose.ui.graphics.Color.Red
+                    color = Color.Red
                 )
             }
         }

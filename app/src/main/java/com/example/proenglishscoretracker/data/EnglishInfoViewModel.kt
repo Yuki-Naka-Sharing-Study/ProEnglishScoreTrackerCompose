@@ -323,9 +323,9 @@ class EnglishInfoViewModel(
         }
     }
     init {
-        loadAllToeflInfo()
+        loadAllToeflIbtInfo()
     }
-    fun loadAllToeflInfo() {
+    fun loadAllToeflIbtInfo() {
         viewModelScope.launch {
             _toeflIbtInfo.value = repository.getAllToeflInfo()
         }
@@ -363,7 +363,7 @@ class EnglishInfoViewModel(
                 overallScore,
                 memo
             )
-            loadAllToeflInfo()
+            loadAllToeflIbtInfo()
         }
     }
     fun deleteToeflIbtInfo(toeflIbtId: String) {
@@ -371,14 +371,14 @@ class EnglishInfoViewModel(
             val info = repository.getToeflIbtInfoById(toeflIbtId)
             info?.let {
                 repository.deleteToeflIbtInfo(it)
-                loadAllToeflInfo()
+                loadAllToeflIbtInfo()
             }
         }
     }
-    fun updateToeflIbtValues(toeflIbtInfo: EnglishTestInfo.TOEFL) {
+    fun updateToeflIbtInfo(toeflIbtInfo: EnglishTestInfo.TOEFL) {
         viewModelScope.launch {
             repository.updateToeflIbtInfo(toeflIbtInfo)
-            this@EnglishInfoViewModel._toeflIbtInfo.value = englishInfoDao.getAllToeflIbtInfo()
+            loadAllToeflIbtInfo()
         }
     }
 
