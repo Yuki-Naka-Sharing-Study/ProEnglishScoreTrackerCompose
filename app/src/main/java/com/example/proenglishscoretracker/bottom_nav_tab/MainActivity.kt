@@ -97,8 +97,6 @@ class MainActivity : FragmentActivity() {
     }
 }
 
-// 以下、生体認証の処理。
-// TODO : エミュレータではテストができないため、Android実機端末が必要。
 @Composable
 fun BiometricAuthenticationDialog(
     onAuthSuccess: () -> Unit,
@@ -148,8 +146,6 @@ fun EnglishScoreTracker(
 ) {
     val navController = rememberNavController()
     val isFirstLaunchState = viewModel.isFirstLaunch.collectAsState(initial = null)
-    // 以下、生体認証の処理。
-    // TODO : エミュレータではテストができないため、Android実機端末が必要。
     var showBiometricDialog by remember { mutableStateOf(true) }
     var biometricResult by remember { mutableStateOf<String?>(null) }
     // 生体認証ダイアログの表示
