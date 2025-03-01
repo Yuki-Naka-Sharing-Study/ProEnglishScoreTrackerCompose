@@ -150,161 +150,167 @@ fun EnglishScoreTracker(
     val isFirstLaunchState = viewModel.isFirstLaunch.collectAsState(initial = null)
     // 以下、生体認証の処理。
     // TODO : エミュレータではテストができないため、Android実機端末が必要。
-    var showBiometricDialog by remember { mutableStateOf(false) }
+    var showBiometricDialog by remember { mutableStateOf(true) }
     var biometricResult by remember { mutableStateOf<String?>(null) }
+    // 生体認証ダイアログの表示
     if (showBiometricDialog) {
         BiometricAuthenticationDialog(
-            onAuthSuccess = { biometricResult = "Success" },
-            onAuthError = { error ->
-                biometricResult = error
-                showBiometricDialog = false
+            onAuthSuccess = {
+                biometricResult = "Success"
+                showBiometricDialog = false  // 認証成功時のみダイアログを閉じる
+            },
+            onAuthError = {
+                biometricResult = it
+                showBiometricDialog = true  // 認証エラー時もダイアログを再表示
             }
         )
     }
-
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            if (isFirstLaunchState.value == false) {
-                BottomNavigationBar(navController = navController, viewModel)
+    // 認証成功後にのみUIを表示する
+    if (biometricResult == "Success") {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = {
+                if (isFirstLaunchState.value == false) {
+                    BottomNavigationBar(navController = navController, viewModel)
+                }
             }
-        }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = if (isFirstLaunchState.value == true) "onboarding" else "examDataScreen",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("onboarding") {
-                OnboardingScreen(
-                    onFinish = {
-                        viewModel.completeOnboarding()
-                        navController.navigate("examDataScreen") {
-                            popUpTo("onboarding") { inclusive = true }
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = if (isFirstLaunchState.value == true) "onboarding" else "examDataScreen",
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable("onboarding") {
+                    OnboardingScreen(
+                        onFinish = {
+                            viewModel.completeOnboarding()
+                            navController.navigate("examDataScreen") {
+                                popUpTo("onboarding") { inclusive = true }
+                            }
                         }
+                    )
+                }
+                composable("examDataScreen") { ExamDataScreen(viewModel, navController) }
+                composable("examRecordScreen") { ExamRecordScreen(viewModel) }
+                composable("setting") { SettingsScreen(navController) }
+
+                composable("examCountdown") { CountdownSettingsScreen(navController)}
+
+                // XxxIndividualScreen
+                composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }
+                composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen(viewModel, navController) }
+                composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel, navController) }
+                composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel, navController) }
+                composable("ieltsIndividualScreen") { IeltsIndividualScreen() }
+
+                // XxxDetailScreen
+                composable("toeic_detail/{toeicId}") { backStackEntry ->
+                    val toeicId = backStackEntry.arguments?.getString("toeicId")
+                    // toeicIdを使用して詳細情報を取得し、ToeicDetailScreenに渡す
+                    if (toeicId != null) {
+                        ToeicDetailScreen(
+                            toeicId = toeicId,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
                     }
-                )
-            }
-            composable("examDataScreen") { ExamDataScreen(viewModel, navController) }
-            composable("examRecordScreen") { ExamRecordScreen(viewModel) }
-            composable("setting") { SettingsScreen(navController) }
-
-            composable("examCountdown") { CountdownSettingsScreen(navController)}
-
-            // XxxIndividualScreen
-            composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }
-            composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen(viewModel, navController) }
-            composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel, navController) }
-            composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel, navController) }
-            composable("ieltsIndividualScreen") { IeltsIndividualScreen() }
-
-            // XxxDetailScreen
-            composable("toeic_detail/{toeicId}") { backStackEntry ->
-                val toeicId = backStackEntry.arguments?.getString("toeicId")
-                // toeicIdを使用して詳細情報を取得し、ToeicDetailScreenに渡す
-                if (toeicId != null) {
-                    ToeicDetailScreen(
-                        toeicId = toeicId,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
                 }
-            }
-            composable("toeic_sw_detail/{toeicSwId}") { backStackEntry ->
-                val toeicSwId = backStackEntry.arguments?.getString("toeicSwId")
-                if (toeicSwId != null) {
-                    ToeicSwDetailScreen(
-                        toeicSwId = toeicSwId,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
+                composable("toeic_sw_detail/{toeicSwId}") { backStackEntry ->
+                    val toeicSwId = backStackEntry.arguments?.getString("toeicSwId")
+                    if (toeicSwId != null) {
+                        ToeicSwDetailScreen(
+                            toeicSwId = toeicSwId,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
                 }
-            }
-            composable("eiken_detail/{eikenId}") { backStackEntry ->
-                val eikenId = backStackEntry.arguments?.getString("eikenId")
-                if (eikenId != null) {
-                    EikenDetailScreen(
-                        eikenId = eikenId,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
+                composable("eiken_detail/{eikenId}") { backStackEntry ->
+                    val eikenId = backStackEntry.arguments?.getString("eikenId")
+                    if (eikenId != null) {
+                        EikenDetailScreen(
+                            eikenId = eikenId,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
                 }
-            }
-            composable("toefl_ibt_detail/{toeflIbtId}") { backStackEntry ->
-                val toeflIbtId = backStackEntry.arguments?.getString("toeflIbtId")
-                if (toeflIbtId != null) {
-                    ToeflIbtDetailScreen(
-                        toeflIbtId = toeflIbtId,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
+                composable("toefl_ibt_detail/{toeflIbtId}") { backStackEntry ->
+                    val toeflIbtId = backStackEntry.arguments?.getString("toeflIbtId")
+                    if (toeflIbtId != null) {
+                        ToeflIbtDetailScreen(
+                            toeflIbtId = toeflIbtId,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
                 }
-            }
 
-            // XxxEditScreen
-            composable("toeic_edit/{toeicId}") { backStackEntry ->
-                val toeicId = backStackEntry.arguments?.getString("toeicId")
-                val toeicInfo = viewModel.selectedToeicInfo.collectAsState().value
+                // XxxEditScreen
+                composable("toeic_edit/{toeicId}") { backStackEntry ->
+                    val toeicId = backStackEntry.arguments?.getString("toeicId")
+                    val toeicInfo = viewModel.selectedToeicInfo.collectAsState().value
 
-                if (toeicId != null && toeicInfo != null) {
-                    ToeicEditScreen(
-                        toeicInfo = toeicInfo,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
+                    if (toeicId != null && toeicInfo != null) {
+                        ToeicEditScreen(
+                            toeicInfo = toeicInfo,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
                 }
-            }
-            composable("toeic_sw_edit/{toeicSwId}") { backStackEntry ->
-                val toeicSwId = backStackEntry.arguments?.getString("toeicSwId")
-                val toeicSwInfo = viewModel.selectedToeicSwInfo.collectAsState().value
+                composable("toeic_sw_edit/{toeicSwId}") { backStackEntry ->
+                    val toeicSwId = backStackEntry.arguments?.getString("toeicSwId")
+                    val toeicSwInfo = viewModel.selectedToeicSwInfo.collectAsState().value
 
-                if (toeicSwId != null && toeicSwInfo != null) {
-                    ToeicSwEditScreen(
-                        toeicSwInfo = toeicSwInfo,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
+                    if (toeicSwId != null && toeicSwInfo != null) {
+                        ToeicSwEditScreen(
+                            toeicSwInfo = toeicSwInfo,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
                 }
-            }
-            composable("eiken_edit/{eikenId}") { backStackEntry ->
-                val eikenId = backStackEntry.arguments?.getString("eikenId")
-                val eikenInfo = viewModel.selectedEikenInfo.collectAsState().value
+                composable("eiken_edit/{eikenId}") { backStackEntry ->
+                    val eikenId = backStackEntry.arguments?.getString("eikenId")
+                    val eikenInfo = viewModel.selectedEikenInfo.collectAsState().value
 
-                if (eikenId != null && eikenInfo != null) {
-                    EikenEditScreen(
-                        eikenInfo = eikenInfo,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
+                    if (eikenId != null && eikenInfo != null) {
+                        EikenEditScreen(
+                            eikenInfo = eikenInfo,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
                 }
-            }
-            composable("toefl_ibt_edit/{toeflIbtId}") { backStackEntry ->
-                val toeflIbtId = backStackEntry.arguments?.getString("toeflIbtId")
-                val toeflIbtInfo = viewModel.selectedToeflIbtInfo.collectAsState().value
+                composable("toefl_ibt_edit/{toeflIbtId}") { backStackEntry ->
+                    val toeflIbtId = backStackEntry.arguments?.getString("toeflIbtId")
+                    val toeflIbtInfo = viewModel.selectedToeflIbtInfo.collectAsState().value
 
-                if (toeflIbtId != null && toeflIbtInfo != null) {
-                    ToeflIbtEditScreen(
-                        toeflIbtInfo = toeflIbtInfo,
-                        viewModel = viewModel,
-                        navController = navController
-                    )
+                    if (toeflIbtId != null && toeflIbtInfo != null) {
+                        ToeflIbtEditScreen(
+                            toeflIbtInfo = toeflIbtInfo,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
                 }
+
+
+                // XxxChartScreen
+                composable("toeicChartScreen") { ToeicChartScreen(viewModel) }
+                composable("toeicSwChartScreen") { ToeicSwChartScreen(viewModel) }
+                composable("eikenIchijiChartScreen") { EikenChartScreen(viewModel) }
+                composable("toeflIbtChartScreen") { ToeflIbtChartScreen(viewModel) }
+                composable("ieltsIbtChartScreen") { IeltsChartScreen() }
+
+                // XxxRecordScreen
+                composable("toeicRecordScreen") { ToeicRecordScreen(viewModel = viewModel) }
+                composable("toeicSwRecordScreen") { ToeicSwRecordScreen(viewModel = viewModel) }
+                composable("eikenRecordScreen") { EikenRecordScreen(viewModel = viewModel) }
+                composable("toeflIbtRecordScreen") { ToeflIbtRecordScreen(viewModel = viewModel) }
+                composable("ieltsRecordScreen") { IeltsRecordScreen(viewModel = viewModel) }
             }
-
-
-            // XxxChartScreen
-            composable("toeicChartScreen") { ToeicChartScreen(viewModel) }
-            composable("toeicSwChartScreen") { ToeicSwChartScreen(viewModel) }
-            composable("eikenIchijiChartScreen") { EikenChartScreen(viewModel) }
-            composable("toeflIbtChartScreen") { ToeflIbtChartScreen(viewModel) }
-            composable("ieltsIbtChartScreen") { IeltsChartScreen() }
-
-            // XxxRecordScreen
-            composable("toeicRecordScreen") { ToeicRecordScreen(viewModel = viewModel) }
-            composable("toeicSwRecordScreen") { ToeicSwRecordScreen(viewModel = viewModel) }
-            composable("eikenRecordScreen") { EikenRecordScreen(viewModel = viewModel) }
-            composable("toeflIbtRecordScreen") { ToeflIbtRecordScreen(viewModel = viewModel) }
-            composable("ieltsRecordScreen") { IeltsRecordScreen(viewModel = viewModel) }
         }
     }
 }
