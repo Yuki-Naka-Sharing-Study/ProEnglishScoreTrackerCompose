@@ -27,7 +27,6 @@ import java.util.Locale
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -125,7 +124,11 @@ fun ExamCountdownSettingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "受験日: $formattedDate", modifier = Modifier.weight(1f))
+                // TODO : ここに各英語試験の公式HPに遷移する処理をWebViewで実装
+                Text(
+                    text = "受験日: $formattedDate",
+                    modifier = Modifier.weight(1f)
+                )
                 Button(onClick = {
                     // DatePickerDialog を表示するため、context を Activity にキャスト
                     val activity = context as? Activity
