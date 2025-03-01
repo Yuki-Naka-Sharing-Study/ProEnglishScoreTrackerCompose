@@ -18,6 +18,10 @@ navigationComposeVersion = "2.8.4"
 androidx-room = "2.6.1"
 ksp = "1.9.0-1.0.13"
 mpandroidchart = "v3.1.0"
+appcompat = "1.7.0"
+materialVersion = "1.10.0"
+activity = "1.10.0"
+constraintlayoutVersion = "2.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +51,10 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 sd-date = "com.github.zj565061763:date:1.0.1"
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "materialVersion" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayoutVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

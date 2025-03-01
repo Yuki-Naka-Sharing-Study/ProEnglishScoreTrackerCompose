@@ -26,6 +26,7 @@ import java.util.Date
 import java.util.Locale
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Intent
 import android.os.Build
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -100,6 +101,15 @@ fun ExamCountdownSettingItem(
     val dateFormatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
     val formattedDate = if (examDate > 0L) dateFormatter.format(Date(examDate)) else "未設定"
 
+    // 公式HPのURLを設定
+    val examUrls = mapOf(
+        "TOEIC" to "https://www.toeic.or.jp/",
+        "TOEIC SW" to "https://www.iibc-global.org/toeic/test/sw.html",
+        "英検" to "https://www.eiken.or.jp/",
+        "TOEFL iBT" to "https://www.ets.org/toefl",
+        "IELTS" to "https://www.ielts.org/"
+    )
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -124,7 +134,6 @@ fun ExamCountdownSettingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // TODO : ここに各英語試験の公式HPに遷移する処理をWebViewで実装
                 Text(
                     text = "受験日: $formattedDate",
                     modifier = Modifier.weight(1f)
@@ -151,6 +160,19 @@ fun ExamCountdownSettingItem(
                     }
                 }) {
                     Text(text = "受験日を設定")
+                }
+
+                // 公式HPに遷移するボタン
+                Button(onClick = {
+                    val url = examUrls[setting.name] ?: return@Button
+                    // 公式HPを表示するためのWebViewActivityに遷移
+                    val intent = Intent(context, WebViewActivity::class.java).apply {
+                        putExtra("url", url)
+                    }
+                    intent.putExtra("URL", url) // URLを渡す
+                    context.startActivity(intent)
+                }) {
+                    Text(text = "公式HPを開く")
                 }
             }
         }
