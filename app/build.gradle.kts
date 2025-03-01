@@ -55,6 +55,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.biometric:biometric:1.4.0-alpha02")
     implementation("androidx.webkit:webkit:1.12.1")
     implementation("androidx.work:work-runtime-ktx:2.10.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.8")
