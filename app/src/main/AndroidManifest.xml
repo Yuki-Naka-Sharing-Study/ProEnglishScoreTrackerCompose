@@ -20,7 +20,7 @@
             android:theme="@style/Theme.AppCompat.Light"
             android:exported="false" />
         <activity
-            android:name=".bottom_navigation_and_tab_row.MainActivity"
+            android:name=".bottom_nav_tab.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.ProEnglishScoreTracker">

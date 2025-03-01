@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
+package com.example.proenglishscoretracker.bottom_nav_tab
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
