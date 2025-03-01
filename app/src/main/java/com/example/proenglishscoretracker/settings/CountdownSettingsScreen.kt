@@ -29,9 +29,11 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavController
@@ -74,7 +76,7 @@ fun CountdownSettingsScreen(
             fontSize = 24.sp,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(48.dp))
         examSettings.forEach { setting ->
             ExamCountdownSettingItem(
                 setting = setting,
@@ -120,6 +122,12 @@ private fun ExamCountdownSettingItem(
         ) {
             Text(text = setting.name, modifier = Modifier.weight(1f))
             Switch(
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color(0xFF8A2BE2),
+                    uncheckedThumbColor = Color.Gray,
+                    checkedTrackColor = Color(0xFF8A2BE2),
+                    uncheckedTrackColor = Color.LightGray
+                ),
                 checked = isEnabled,
                 onCheckedChange = { checked ->
                     isEnabled = checked
@@ -137,10 +145,12 @@ private fun ExamCountdownSettingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                Spacer(modifier = Modifier.width(32.dp))
                 Text(
                     text = "受験日: $formattedDate",
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(modifier = Modifier.width(16.dp))
                 Button(onClick = {
                     // DatePickerDialog を表示するため、context を Activity にキャスト
                     val activity = context as? Activity
