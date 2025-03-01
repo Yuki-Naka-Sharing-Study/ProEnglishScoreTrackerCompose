@@ -55,7 +55,7 @@ android {
 }
 
 dependencies {
-    // Kotlin + coroutines
+    implementation("androidx.webkit:webkit:1.12.1")
     implementation("androidx.work:work-runtime-ktx:2.10.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.7.8")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
