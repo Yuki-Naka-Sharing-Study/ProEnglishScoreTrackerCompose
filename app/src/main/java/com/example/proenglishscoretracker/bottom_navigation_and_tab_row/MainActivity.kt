@@ -61,6 +61,7 @@ import com.example.proenglishscoretracker.individual_screen.ToeflIbtIndividualSc
 import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
 import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScreen
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
+import com.example.proenglishscoretracker.settings.CountdownSettingsScreen
 
 class MainActivity : ComponentActivity() {
     private lateinit var englishInfoDao: EnglishInfoDao
@@ -123,7 +124,9 @@ fun EnglishScoreTracker(
             }
             composable("examDataScreen") { ExamDataScreen(viewModel, navController) }
             composable("examRecordScreen") { ExamRecordScreen(viewModel) }
-            composable("setting") { SettingsScreen() }
+            composable("setting") { SettingsScreen(navController) }
+
+            composable("examCountdown") { CountdownSettingsScreen(navController)}
 
             // XxxIndividualScreen
             composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }
