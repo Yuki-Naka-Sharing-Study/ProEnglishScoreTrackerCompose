@@ -28,6 +28,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -163,7 +164,7 @@ private fun ExamCountdownSettingItem(
                 }) {
                     Text(text = "受験日を設定")
                 }
-
+                Spacer(modifier = Modifier.width(16.dp))
                 // 公式HPに遷移するボタン
                 Button(onClick = {
                     val url = examUrls[setting.name] ?: return@Button
