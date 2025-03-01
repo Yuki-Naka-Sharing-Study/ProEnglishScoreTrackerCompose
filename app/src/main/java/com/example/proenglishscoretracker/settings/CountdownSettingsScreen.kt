@@ -86,7 +86,7 @@ fun CountdownSettingsScreen(
 }
 
 @Composable
-fun ExamCountdownSettingItem(
+private fun ExamCountdownSettingItem(
     setting: ExamSetting,
     sharedPreferences: SharedPreferences,
     workManager: WorkManager
@@ -182,7 +182,7 @@ fun ExamCountdownSettingItem(
 }
 
 // WorkManager の定期実行をスケジュール（1日ごとに実行）
-fun scheduleExamCountdown(workManager: WorkManager) {
+private fun scheduleExamCountdown(workManager: WorkManager) {
     val request = PeriodicWorkRequestBuilder<MultiExamCountdownWorker>(1, TimeUnit.DAYS)
         .setInitialDelay(1, TimeUnit.DAYS)
         .build()
