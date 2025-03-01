@@ -99,7 +99,9 @@ fun ExamCountdownSettingItem(
     var examDate by remember { mutableStateOf(savedExamDate) }
 
     val dateFormatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-    val formattedDate = if (examDate > 0L) dateFormatter.format(Date(examDate)) else "未設定"
+    val formattedDate =
+        if (examDate > 0L) dateFormatter.format(Date(examDate))
+        else "未設定"
 
     // 公式HPのURLを設定
     val examUrls = mapOf(
