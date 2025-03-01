@@ -2,8 +2,8 @@ package com.example.proenglishscoretracker.bottom_navigation_and_tab_row
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
@@ -22,14 +22,19 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.TextButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.fragment.app.FragmentActivity
 import androidx.room.Room
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
@@ -63,7 +68,7 @@ import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScr
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
 import com.example.proenglishscoretracker.settings.CountdownSettingsScreen
 
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     private lateinit var englishInfoDao: EnglishInfoDao
     private lateinit var repository: EnglishInfoRepository
     private val dataStore by preferencesDataStore(name = "examDataScreen")
@@ -92,12 +97,70 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// 以下、生体認証の処理。
+// TODO : エミュレータではテストができないため、Android実機端末が必要。
+@Composable
+fun BiometricAuthenticationDialog(
+    onAuthSuccess: () -> Unit,
+    onAuthError: (String) -> Unit
+) {
+    val context = LocalContext.current
+    val executor = ContextCompat.getMainExecutor(context)
+
+    val biometricPrompt = remember {
+        BiometricPrompt(
+            context as FragmentActivity,
+            executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                //if auth is successful.
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    onAuthSuccess()
+                }
+                //if auth is error.
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    onAuthError(errString.toString())
+                }
+                //if auth is failed.
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    onAuthError("Authentication failed.")
+                }
+            }
+        )
+    }
+
+    //ダイアログに表示するタイトルやテキストをセットする
+    LaunchedEffect(Unit) {
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Authentication")
+            .setSubtitle("Please touch your finger")
+            .setNegativeButtonText("Cancel")
+            .build()
+        biometricPrompt.authenticate(promptInfo)
+    }
+}
+
 @Composable
 fun EnglishScoreTracker(
     viewModel: EnglishInfoViewModel
 ) {
     val navController = rememberNavController()
     val isFirstLaunchState = viewModel.isFirstLaunch.collectAsState(initial = null)
+    // 以下、生体認証の処理。
+    // TODO : エミュレータではテストができないため、Android実機端末が必要。
+    var showBiometricDialog by remember { mutableStateOf(false) }
+    var biometricResult by remember { mutableStateOf<String?>(null) }
+    if (showBiometricDialog) {
+        BiometricAuthenticationDialog(
+            onAuthSuccess = { biometricResult = "Success" },
+            onAuthError = { error ->
+                biometricResult = error
+                showBiometricDialog = false
+            }
+        )
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
