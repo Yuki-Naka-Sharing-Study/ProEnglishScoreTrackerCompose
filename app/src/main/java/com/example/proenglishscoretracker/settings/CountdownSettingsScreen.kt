@@ -28,16 +28,24 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
 import android.os.Build
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.SwitchDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavController
 import androidx.work.*
+import com.example.proenglishscoretracker.R
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 
@@ -65,25 +73,45 @@ fun CountdownSettingsScreen(
     LaunchedEffect(Unit) {
         scheduleExamCountdown(workManager)
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            text = "受験日カウントダウン設定",
-            fontSize = 24.sp,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(48.dp))
-        examSettings.forEach { setting ->
-            ExamCountdownSettingItem(
-                setting = setting,
-                sharedPreferences = sharedPreferences,
-                workManager = workManager
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+        Column {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                IconButton(
+                    onClick = { navController.popBackStack() },
+                    modifier = Modifier
+                        .padding(16.dp)
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Outlined.ArrowBack,
+                        contentDescription = "戻る",
+                        tint = Color.Gray
+                    )
+                }
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
+                Text(
+                    text = "受験日カウントダウン設定",
+                    fontSize = 24.sp,
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                examSettings.forEach { setting ->
+                    ExamCountdownSettingItem(
+                        setting = setting,
+                        sharedPreferences = sharedPreferences,
+                        workManager = workManager
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
         }
     }
 }
