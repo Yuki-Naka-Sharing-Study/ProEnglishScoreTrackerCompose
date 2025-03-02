@@ -122,7 +122,7 @@ fun EikenDetailScreen(
 
 
         Column(modifier = Modifier.padding(start = 16.dp)) {
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (eikenInfo != null) {
                 Text(
                     text = "受験日: ${eikenInfo!!.date}",

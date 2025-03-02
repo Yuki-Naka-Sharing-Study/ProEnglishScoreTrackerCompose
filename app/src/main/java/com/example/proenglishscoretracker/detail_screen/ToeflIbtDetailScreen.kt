@@ -121,7 +121,7 @@ fun ToeflIbtDetailScreen(
         }
 
         Column(modifier = Modifier.padding(start = 16.dp)) {
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (toeflIbtInfo != null) {
                 Text(
                     text = "受験日: ${toeflIbtInfo!!.date}",

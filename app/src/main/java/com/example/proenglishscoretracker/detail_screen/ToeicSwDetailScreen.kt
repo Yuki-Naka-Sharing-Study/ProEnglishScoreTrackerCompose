@@ -121,7 +121,7 @@ fun ToeicSwDetailScreen(
         }
 
         Column(modifier = Modifier.padding(start = 16.dp)) {
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_64_dp)))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (toeicSwInfo != null) {
                 Text(
                     text = "受験日: ${toeicSwInfo!!.date}",
