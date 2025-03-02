@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.TextFieldDefaults
@@ -45,6 +46,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -132,7 +134,12 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 ReadingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ReadingText("", modifier = Modifier.weight(1f))
+                ReadingText(
+                    "",
+                    modifier = Modifier
+                        .weight(1.1f)
+                        .wrapContentWidth(),
+                )
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
@@ -152,7 +159,12 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 ListeningImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ListeningText("", modifier = Modifier.weight(1f))
+                ListeningText(
+                    "",
+                    modifier = Modifier
+                        .weight(1.1f)
+                        .wrapContentWidth(),
+                )
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
@@ -529,12 +541,16 @@ private fun EnterScoreTextPreview() {
 }
 
 @Composable
-private fun ReadingText(readingText: String, modifier: Modifier = Modifier) {
+private fun ReadingText(
+    readingText: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         text = "Reading",
         modifier = modifier
     )
 }
+
 
 @Preview(showBackground = true)
 @Composable

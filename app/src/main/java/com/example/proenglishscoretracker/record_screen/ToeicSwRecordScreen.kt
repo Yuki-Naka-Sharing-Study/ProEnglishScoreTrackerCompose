@@ -136,7 +136,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 WritingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                WritingText("", modifier = Modifier.weight(1f))
+                WritingText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICSWScorePicker(
@@ -166,7 +166,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 SpeakingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                SpeakingText("", modifier = Modifier.weight(1f))
+                SpeakingText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICSWScorePicker(

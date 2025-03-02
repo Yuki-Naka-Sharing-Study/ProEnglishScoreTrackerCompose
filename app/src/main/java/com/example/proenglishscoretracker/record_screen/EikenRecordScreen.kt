@@ -182,7 +182,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 ReadingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ReadingText("", modifier = Modifier.weight(1f))
+                ReadingText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
@@ -213,7 +213,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 ListeningImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ListeningText("", modifier = Modifier.weight(1f))
+                ListeningText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
@@ -1343,7 +1343,7 @@ private fun WritingScoreArea(
                 Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 WritingText(
                     writingText = "Writing",
-                    modifier = modifier.weight(1f)
+                    modifier = modifier.weight(1.1f)
                 )
                 Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = modifier.weight(0.3f))
@@ -1385,7 +1385,7 @@ private fun SpeakingScoreArea(
                 Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 SpeakingText(
                     speakingText = "Speaking",
-                    modifier = modifier.weight(1f)
+                    modifier = modifier.weight(1.1f)
                 )
                 Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = modifier.weight(0.3f))

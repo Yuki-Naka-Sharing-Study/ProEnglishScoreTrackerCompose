@@ -140,7 +140,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 ReadingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ReadingText("", modifier = Modifier.weight(1f))
+                ReadingText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
@@ -170,7 +170,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 ListeningImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                ListeningText("", modifier = Modifier.weight(1f))
+                ListeningText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
@@ -200,7 +200,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 WritingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                WritingText("", modifier = Modifier.weight(1f))
+                WritingText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
@@ -230,7 +230,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 SpeakingImageView()
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
-                SpeakingText("", modifier = Modifier.weight(1f))
+                SpeakingText("", modifier = Modifier.weight(1.1f))
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 ToeflRLWSScorePicker(
