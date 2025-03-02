@@ -173,9 +173,9 @@ private fun ExamCountdownSettingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Spacer(modifier = Modifier.width(32.dp))
+                Spacer(modifier = Modifier.width(20.dp))
                 Text(
-                    text = "受験日: $formattedDate",
+                    text = "受験日:\n$formattedDate",
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
