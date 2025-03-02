@@ -186,7 +186,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
-                    modifier = Modifier.weight(1.3f),
+                    modifier = Modifier.weight(1.4f),
                     readingScore,
                 ) {
                     readingScore = it
@@ -217,7 +217,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = Modifier.weight(0.3f))
                 EikenRLWSScorePicker(
-                    modifier = Modifier.weight(1.3f),
+                    modifier = Modifier.weight(1.4f),
                     listeningScore,
                 ) {
                     listeningScore = it
@@ -1348,7 +1348,7 @@ private fun WritingScoreArea(
                 Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = modifier.weight(0.3f))
                 EikenRLWSScorePicker(
-                    modifier = modifier.weight(1.2f),
+                    modifier = modifier.weight(1.4f),
                     writingScore,
                     onScoreConfirm = onValueChange
                 )
@@ -1390,7 +1390,7 @@ private fun SpeakingScoreArea(
                 Spacer(modifier = modifier.width(dimensionResource(id = R.dimen.space_8_dp)))
                 Spacer(modifier = modifier.weight(0.3f))
                 EikenRLWSScorePicker(
-                    modifier = modifier.weight(1.2f),
+                    modifier = modifier.weight(1.4f),
                     speakingScore,
                     onScoreConfirm = onValueChange
                 )

@@ -46,7 +46,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -143,7 +142,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
-                    modifier = Modifier.weight(1.2f),
+                    modifier = Modifier.weight(1.4f),
                     readingScore,
                 ) {
                     readingScore = it
@@ -168,7 +167,7 @@ fun ToeicRecordScreen(viewModel: EnglishInfoViewModel) {
                 Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Spacer(modifier = Modifier.weight(0.1f))
                 TOEICRLScorePicker(
-                    modifier = Modifier.weight(1.2f),
+                    modifier = Modifier.weight(1.4f),
                     listeningScore,
                 ) {
                     listeningScore = it
