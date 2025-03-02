@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -47,8 +49,37 @@ fun EikenDetailScreen(
     val eikenInfo by viewModel.selectedEikenInfo.collectAsState()
     var showAlertDialog by rememberSaveable { mutableStateOf(false) }
 
+    // 削除確認ダイアログ
+    if (showAlertDialog) {
+        AlertDialog(
+            onDismissRequest = { showAlertDialog = false },
+            title = { Text(text = "削除の確認") },
+            text = { Text(text = "この英検データを削除しますか？") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteEikenInfo(eikenId)
+                        showAlertDialog = false
+                        navController.popBackStack()
+                    }
+                ) {
+                    Text(
+                        text = "削除",
+                        color = Color.Red
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showAlertDialog = false }) {
+                    Text(text = "キャンセル")
+                }
+            }
+        )
+    }
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         IconButton(
             onClick = { navController.popBackStack() },
@@ -92,36 +123,6 @@ fun EikenDetailScreen(
                 )
             }
         }
-
-        // 削除確認ダイアログ
-        if (showAlertDialog) {
-            AlertDialog(
-                onDismissRequest = { showAlertDialog = false },
-                title = { Text(text = "削除の確認") },
-                text = { Text(text = "この英検データを削除しますか？") },
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            viewModel.deleteEikenInfo(eikenId)
-                            showAlertDialog = false
-                            navController.popBackStack()
-                        }
-                    ) {
-                        Text(
-                            text = "削除",
-                            color = Color.Red
-                        )
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showAlertDialog = false }) {
-                        Text(text = "キャンセル")
-                    }
-                }
-            )
-        }
-
-
         Column(modifier = Modifier.padding(16.dp)) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (eikenInfo != null) {
