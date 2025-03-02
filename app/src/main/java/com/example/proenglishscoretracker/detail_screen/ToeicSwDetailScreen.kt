@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -120,25 +121,63 @@ fun ToeicSwDetailScreen(
             )
         }
 
-        Column(modifier = Modifier.padding(start = 16.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (toeicSwInfo != null) {
+                Row(
+
+                ) {
+                    Text(
+                        text = "【受験日】",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = toeicSwInfo!!.date,
+                        fontSize = 20.sp
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Row(
+
+                ) {
+                    Text(
+                        text = "【ライティングスコア】",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "${toeicSwInfo!!.writingScore}",
+                        fontSize = 20.sp
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Row(
+
+                ) {
+                    Text(
+                        text = "【スピーキングスコア】",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "${toeicSwInfo!!.speakingScore}",
+                        fontSize = 20.sp
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "受験日: ${toeicSwInfo!!.date}",
+                    text = "【メモ】",
                     fontSize = 20.sp
                 )
-                Text(
-                    text = "ライティングスコア: ${toeicSwInfo!!.writingScore}",
-                    fontSize = 20.sp
-                )
-                Text(
-                    text = "スピーキングスコア: ${toeicSwInfo!!.speakingScore}",
-                    fontSize = 20.sp
-                )
-                Text(
-                    text = "メモ: ${toeicSwInfo!!.memo}",
-                    fontSize = 20.sp
-                )
+                Spacer(Modifier.height(16.dp))
+                Row {
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        text = toeicSwInfo!!.memo,
+                        fontSize = 20.sp
+                    )
+                }
             } else {
                 Text(
                     text = "データが見つかりませんでした。",
