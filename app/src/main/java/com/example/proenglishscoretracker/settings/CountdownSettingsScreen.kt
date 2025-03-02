@@ -92,7 +92,6 @@ fun CountdownSettingsScreen(
                         tint = Color.Gray
                     )
                 }
-                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_16_dp)))
                 Text(
                     text = "受験日カウントダウン設定",
                     fontSize = 24.sp,
