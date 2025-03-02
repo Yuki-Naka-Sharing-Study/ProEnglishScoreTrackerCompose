@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -121,25 +122,64 @@ fun EikenDetailScreen(
         }
 
 
-        Column(modifier = Modifier.padding(start = 16.dp)) {
+        Column(modifier = Modifier.padding(16.dp)) {
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (eikenInfo != null) {
-                Text(
-                    text = "受験日: ${eikenInfo!!.date}",
-                    fontSize = 20.sp
-                )
-                Text(
-                    text = "受験級: ${eikenInfo!!.grade}",
-                    fontSize = 20.sp
-                )
-                Text(
-                    text = "リーディングスコア: ${eikenInfo!!.readingScore}",
-                    fontSize = 20.sp
-                )
-                Text(
-                    text = "リスニングスコア: ${eikenInfo!!.listeningScore}",
-                    fontSize = 20.sp
-                )
+                Row(
+
+                ) {
+                    Text(
+                        text = "【受験日】",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = eikenInfo!!.date,
+                        fontSize = 20.sp
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Row(
+
+                ) {
+                    Text(
+                        text = "【受験級】",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = eikenInfo!!.grade,
+                        fontSize = 20.sp
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Row(
+
+                ) {
+                    Text(
+                        text = "【リーディングスコア】",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "${eikenInfo!!.readingScore}",
+                        fontSize = 20.sp
+                    )
+                }
+                Spacer(Modifier.height(16.dp))
+                Row(
+
+                ) {
+                    Text(
+                        text = "【リスニングスコア】",
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "${eikenInfo!!.listeningScore}",
+                        fontSize = 20.sp
+                    )
+                }
                 if (
                     eikenInfo!!.grade == "3級" ||
                     eikenInfo!!.grade == "準2級" ||
@@ -147,23 +187,62 @@ fun EikenDetailScreen(
                     eikenInfo!!.grade == "準1級" ||
                     eikenInfo!!.grade == "1級"
                 ) {
+                    Spacer(Modifier.height(16.dp))
+                    Row(
+
+                    ) {
+                        Text(
+                            text = "【ライティングスコア】",
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = "${eikenInfo!!.writingScore}",
+                            fontSize = 20.sp
+                        )
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    Row(
+
+                    ) {
+                        Text(
+                            text = "【スピーキングスコア】",
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = "${eikenInfo!!.speakingScore}",
+                            fontSize = 20.sp
+                        )
+                    }
+                }
+                Spacer(Modifier.height(16.dp))
+                Row(
+
+                ) {
                     Text(
-                        text = "ライティングスコア: ${eikenInfo!!.writingScore}",
+                        text = "【CSEスコア】",
                         fontSize = 20.sp
                     )
+                    Spacer(modifier = Modifier.weight(1f))
                     Text(
-                        text = "スピーキングスコア: ${eikenInfo!!.speakingScore}",
+                        text = "${eikenInfo!!.cseScore}",
                         fontSize = 20.sp
                     )
                 }
+                Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "CSEスコア: ${eikenInfo!!.cseScore}",
+                    text = "【メモ】",
                     fontSize = 20.sp
                 )
-                Text(
-                    text = "メモ: ${eikenInfo!!.memo}",
-                    fontSize = 20.sp
-                )
+                Spacer(Modifier.height(16.dp))
+                Row {
+                    Spacer(Modifier.width(16.dp))
+                    Text(
+                        text = eikenInfo!!.memo,
+                        fontSize = 20.sp
+                    )
+                }
             } else {
                 Text(
                     text = "データが見つかりませんでした。",
