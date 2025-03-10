@@ -83,7 +83,7 @@ fun EikenEditScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("英検情報編集") },
+                title = { Text("英検 データ編集") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

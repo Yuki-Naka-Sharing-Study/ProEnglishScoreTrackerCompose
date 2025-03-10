@@ -82,7 +82,7 @@ fun ToeflIbtEditScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("TOEFL iBT 情報編集") },
+                title = { Text("TOEFL iBT データ編集") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

@@ -79,7 +79,7 @@ fun ToeicSwEditScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("TOEIC SW 情報編集") },
+                title = { Text("TOEIC SW データ編集") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
