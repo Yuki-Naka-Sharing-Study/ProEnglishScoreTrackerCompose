@@ -162,7 +162,7 @@ fun EnglishScoreTracker(
         )
     }
     // 認証成功後にのみUIを表示する
-    if (biometricResult == "Success") {
+//    if (biometricResult == "Success") {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = {
@@ -308,7 +308,7 @@ fun EnglishScoreTracker(
                 composable("ieltsRecordScreen") { IeltsRecordScreen(viewModel = viewModel) }
             }
         }
-    }
+//    }
 }
 
 @Composable

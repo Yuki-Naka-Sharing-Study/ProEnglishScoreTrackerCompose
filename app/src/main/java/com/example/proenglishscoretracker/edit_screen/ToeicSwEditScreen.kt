@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -20,11 +21,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun ToeicSwEditScreen(
@@ -36,6 +42,39 @@ fun ToeicSwEditScreen(
     var writingScore by remember { mutableStateOf(toeicSwInfo.writingScore.toString()) }
     var speakingScore by remember { mutableStateOf(toeicSwInfo.speakingScore.toString()) }
     var memo by remember { mutableStateOf(toeicSwInfo.memo) }
+
+    // 日付の有効性とエラーメッセージの管理
+    var errorMessage by remember { mutableStateOf<String?>(null) } // エラーメッセージを保持
+    var isDateValid by remember { mutableStateOf(true) } // 日付の有効性を保持
+    var isFocused by remember { mutableStateOf(true) } // フォーカスの有無を管理
+
+    // FDate型チェックと日付が有効か確認する関数
+    fun isValidDate(date: String): Boolean {
+        return try {
+            // "yyyy-MM-dd" フォーマットで日付を検証
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.JAPAN)
+            dateFormat.isLenient = false
+            dateFormat.parse(date) != null
+        } catch (e: ParseException) {
+            false
+        }
+    }
+
+    // 日付が変更された場合の処理
+    fun onDateChange(newDate: String) {
+        date = newDate
+        // 日付が有効かチェック
+        isDateValid = isValidDate(newDate)
+        errorMessage = if (isDateValid) null else "無効な日付です。"
+    }
+
+    // フォーカスが外れたときの処理
+    fun onFocusChange(focused: Boolean) {
+        if (!focused && !isDateValid) {
+            errorMessage = "無効な日付です。"
+        }
+        isFocused = focused
+    }
 
     Scaffold(
         topBar = {
@@ -52,16 +91,18 @@ fun ToeicSwEditScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            viewModel.updateToeicSwInfo(
-                                EnglishTestInfo.TOEIC_SW(
-                                    id = toeicSwInfo.id,
-                                    date = date,
-                                    writingScore = writingScore.toIntOrNull() ?: 0,
-                                    speakingScore = speakingScore.toIntOrNull() ?: 0,
-                                    memo = memo
+                            if (isDateValid) {
+                                viewModel.updateToeicSwInfo(
+                                    EnglishTestInfo.TOEIC_SW(
+                                        id = toeicSwInfo.id,
+                                        date = date,
+                                        writingScore = writingScore.toIntOrNull() ?: 0,
+                                        speakingScore = speakingScore.toIntOrNull() ?: 0,
+                                        memo = memo
+                                    )
                                 )
-                            )
-                            navController.popBackStack()
+                                navController.popBackStack()
+                            }
                         }
                     ) {
                         Icon(
@@ -81,10 +122,23 @@ fun ToeicSwEditScreen(
         ) {
             OutlinedTextField(
                 value = date,
-                onValueChange = { date = it },
+                onValueChange = { onDateChange(it) },
                 label = { Text("受験日") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { onFocusChange(it.isFocused) },
+                isError = !isDateValid // 日付が無効な場合はエラーを表示
             )
+            // 日付のエラーメッセージ
+            if (!isDateValid) {
+                Text(
+                    text = errorMessage ?: "",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+
             OutlinedTextField(
                 value = writingScore,
                 onValueChange = { writingScore = it },
