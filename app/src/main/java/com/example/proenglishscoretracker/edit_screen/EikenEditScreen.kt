@@ -87,6 +87,36 @@ fun EikenEditScreen(
         }
     }
 
+    fun validateWritingScore(): Boolean {
+        val score = writingScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 495 -> {
+                writingErrorMessage = "Writingスコアが上限を超えています。"
+                false
+            }
+            else -> {
+                writingErrorMessage = null
+                true
+            }
+        }
+    }
+
+    fun validateSpeakingScore(): Boolean {
+        val score = speakingScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 495 -> {
+                speakingErrorMessage = "Speakingスコアが上限を超えています。"
+                false
+            }
+            else -> {
+                speakingErrorMessage = null
+                true
+            }
+        }
+    }
+
     // FDate型チェックと日付が有効か確認する関数
     fun isValidDate(date: String): Boolean {
         return try {
