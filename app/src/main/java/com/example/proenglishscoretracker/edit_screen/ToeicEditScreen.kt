@@ -156,7 +156,7 @@ fun ToeicEditScreen(
             OutlinedTextField(
                 value = readingScore,
                 onValueChange = { readingScore = it },
-                label = { Text("リーディングスコア") },
+                label = { Text("Readingスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
                     .onFocusChanged { isReadingFocused = it.isFocused },
@@ -168,7 +168,7 @@ fun ToeicEditScreen(
             OutlinedTextField(
                 value = listeningScore,
                 onValueChange = { listeningScore = it },
-                label = { Text("リスニングスコア") },
+                label = { Text("Listeningスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
                     .onFocusChanged { isListeningFocused = it.isFocused },
