@@ -52,6 +52,11 @@ fun EikenEditScreen(
     var isDateValid by remember { mutableStateOf(true) } // 日付の有効性を保持
     var isFocused by remember { mutableStateOf(true) } // フォーカスの有無を管理
 
+    var readingErrorMessage by remember { mutableStateOf<String?>(null) }
+    var listeningErrorMessage by remember { mutableStateOf<String?>(null) }
+    var writingErrorMessage by remember { mutableStateOf<String?>(null) }
+    var speakingErrorMessage by remember { mutableStateOf<String?>(null) }
+
     // FDate型チェックと日付が有効か確認する関数
     fun isValidDate(date: String): Boolean {
         return try {
