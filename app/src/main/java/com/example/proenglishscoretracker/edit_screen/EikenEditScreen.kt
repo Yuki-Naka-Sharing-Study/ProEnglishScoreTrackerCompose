@@ -48,7 +48,7 @@ fun EikenEditScreen(
     var memo by remember { mutableStateOf(eikenInfo.memo) }
 
     // 日付の有効性とエラーメッセージの管理
-    var errorMessage by remember { mutableStateOf<String?>(null) } // エラーメッセージを保持
+    var dateErrorMessage by remember { mutableStateOf<String?>(null) } // エラーメッセージを保持
     var isDateValid by remember { mutableStateOf(true) } // 日付の有効性を保持
     var isFocused by remember { mutableStateOf(true) } // フォーカスの有無を管理
 
@@ -69,13 +69,13 @@ fun EikenEditScreen(
         date = newDate
         // 日付が有効かチェック
         isDateValid = isValidDate(newDate)
-        errorMessage = if (isDateValid) null else "無効な日付です。"
+        dateErrorMessage = if (isDateValid) null else "無効な日付です。"
     }
 
     // フォーカスが外れたときの処理
     fun onFocusChange(focused: Boolean) {
         if (!focused && !isDateValid) {
-            errorMessage = "無効な日付です。"
+            dateErrorMessage = "無効な日付です。"
         }
         isFocused = focused
     }
@@ -140,7 +140,7 @@ fun EikenEditScreen(
             // 日付のエラーメッセージ
             if (!isDateValid) {
                 Text(
-                    text = errorMessage ?: "",
+                    text = dateErrorMessage ?: "",
                     color = Color.Red,
                     style = MaterialTheme.typography.body2,
                     modifier = Modifier.padding(start = 16.dp)
