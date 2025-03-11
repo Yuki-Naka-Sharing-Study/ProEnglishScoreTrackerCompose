@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -43,15 +42,57 @@ fun ToeicSwEditScreen(
     var speakingScore by remember { mutableStateOf(toeicSwInfo.speakingScore.toString()) }
     var memo by remember { mutableStateOf(toeicSwInfo.memo) }
 
-    // 日付の有効性とエラーメッセージの管理
-    var errorMessage by remember { mutableStateOf<String?>(null) } // エラーメッセージを保持
-    var isDateValid by remember { mutableStateOf(true) } // 日付の有効性を保持
-    var isFocused by remember { mutableStateOf(true) } // フォーカスの有無を管理
+    var dateErrorMessage by remember { mutableStateOf<String?>(null) }
+    var isDateValid by remember { mutableStateOf(true) }
 
-    // FDate型チェックと日付が有効か確認する関数
+    var writingErrorMessage by remember { mutableStateOf<String?>(null) }
+    var speakingErrorMessage by remember { mutableStateOf<String?>(null) }
+
+    var isWritingFocused by remember { mutableStateOf(false) }
+    var isSpeakingFocused by remember { mutableStateOf(false) }
+
+    fun validateWritingScore(): Boolean {
+        val score = writingScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 200 -> {
+                writingErrorMessage = "Writingスコアが上限を超えています。"
+                false
+            }
+            !isWritingFocused && score % 5 != 0 -> {
+                writingErrorMessage = "Writingスコアは5の倍数のみでしか入力できません。"
+                false
+            }
+            else -> {
+                writingErrorMessage = null
+                true
+            }
+        }
+    }
+
+    fun validateSpeakingScore(): Boolean {
+        val score = speakingScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 200 -> {
+                speakingErrorMessage = "Speakingスコアが上限を超えています。"
+                false
+            }
+            !isSpeakingFocused && score % 5 != 0 -> {
+                speakingErrorMessage = "Speakingスコアは5の倍数のみでしか入力できません。"
+                false
+            }
+            else -> {
+                speakingErrorMessage = null
+                true
+            }
+        }
+    }
+
+    val isFormValid = isDateValid && validateWritingScore() && validateSpeakingScore()
+
     fun isValidDate(date: String): Boolean {
         return try {
-            // "yyyy-MM-dd" フォーマットで日付を検証
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.JAPAN)
             dateFormat.isLenient = false
             dateFormat.parse(date) != null
@@ -60,20 +101,10 @@ fun ToeicSwEditScreen(
         }
     }
 
-    // 日付が変更された場合の処理
     fun onDateChange(newDate: String) {
         date = newDate
-        // 日付が有効かチェック
         isDateValid = isValidDate(newDate)
-        errorMessage = if (isDateValid) null else "無効な日付です。"
-    }
-
-    // フォーカスが外れたときの処理
-    fun onFocusChange(focused: Boolean) {
-        if (!focused && !isDateValid) {
-            errorMessage = "無効な日付です。"
-        }
-        isFocused = focused
+        dateErrorMessage = if (isDateValid) null else "無効な日付です。"
     }
 
     Scaffold(
@@ -82,16 +113,13 @@ fun ToeicSwEditScreen(
                 title = { Text("TOEIC SW データ編集") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            Icons.Default.ArrowBack,
-                            contentDescription = "戻る"
-                        )
+                        Icon(Icons.Default.ArrowBack, contentDescription = "戻る")
                     }
                 },
                 actions = {
                     IconButton(
                         onClick = {
-                            if (isDateValid) {
+                            if (isFormValid) {
                                 viewModel.updateToeicSwInfo(
                                     EnglishTestInfo.TOEIC_SW(
                                         id = toeicSwInfo.id,
@@ -103,56 +131,52 @@ fun ToeicSwEditScreen(
                                 )
                                 navController.popBackStack()
                             }
-                        }
+                        },
+                        enabled = isFormValid
                     ) {
-                        Icon(
-                            Icons.Default.Check,
-                            contentDescription = "保存"
-                        )
+                        Icon(Icons.Default.Check, contentDescription = "保存")
                     }
                 }
             )
         }
     ) { padding ->
         Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
-                .fillMaxSize()
+            modifier = Modifier.padding(padding).padding(16.dp).fillMaxSize()
         ) {
             OutlinedTextField(
                 value = date,
                 onValueChange = { onDateChange(it) },
                 label = { Text("受験日") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { onFocusChange(it.isFocused) },
-                isError = !isDateValid // 日付が無効な場合はエラーを表示
+                modifier = Modifier.fillMaxWidth(),
+                isError = !isDateValid
             )
-            // 日付のエラーメッセージ
             if (!isDateValid) {
-                Text(
-                    text = errorMessage ?: "",
-                    color = Color.Red,
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                Text(text = dateErrorMessage ?: "", color = Color.Red)
             }
-
             OutlinedTextField(
                 value = writingScore,
                 onValueChange = { writingScore = it },
-                label = { Text("ライティングスコア") },
+                label = { Text("Writingスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
+                    .onFocusChanged { isWritingFocused = it.isFocused },
+                isError = writingErrorMessage != null
             )
+            if (writingErrorMessage != null) {
+                Text(text = writingErrorMessage ?: "", color = Color.Red)
+            }
             OutlinedTextField(
                 value = speakingScore,
                 onValueChange = { speakingScore = it },
-                label = { Text("スピーキングスコア") },
+                label = { Text("Speakingスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
+                    .onFocusChanged { isSpeakingFocused = it.isFocused },
+                isError = speakingErrorMessage != null
             )
+            if (speakingErrorMessage != null) {
+                Text(text = speakingErrorMessage ?: "", color = Color.Red)
+            }
             OutlinedTextField(
                 value = memo,
                 onValueChange = { memo = it },
