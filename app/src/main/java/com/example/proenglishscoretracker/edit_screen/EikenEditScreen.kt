@@ -61,7 +61,7 @@ fun EikenEditScreen(
         val score = readingScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 495 -> {
+            score > 850 -> {
                 readingErrorMessage = "Readingスコアが上限を超えています。"
                 false
             }
@@ -76,7 +76,7 @@ fun EikenEditScreen(
         val score = listeningScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 495 -> {
+            score > 850 -> {
                 listeningErrorMessage = "Listeningスコアが上限を超えています。"
                 false
             }
@@ -91,7 +91,7 @@ fun EikenEditScreen(
         val score = writingScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 495 -> {
+            score > 850 -> {
                 writingErrorMessage = "Writingスコアが上限を超えています。"
                 false
             }
@@ -106,7 +106,7 @@ fun EikenEditScreen(
         val score = speakingScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 495 -> {
+            score > 850 -> {
                 speakingErrorMessage = "Speakingスコアが上限を超えています。"
                 false
             }
