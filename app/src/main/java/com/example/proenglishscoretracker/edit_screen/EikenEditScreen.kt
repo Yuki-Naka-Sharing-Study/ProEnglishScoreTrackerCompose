@@ -38,7 +38,6 @@ fun EikenEditScreen(
 ) {
     var date by remember { mutableStateOf(eikenInfo.date) }
     var grade by remember { mutableStateOf(eikenInfo.grade) }
-    var cseScore by remember { mutableStateOf(eikenInfo.cseScore.toString()) }
     var readingScore by remember { mutableStateOf(eikenInfo.readingScore.toString()) }
     var listeningScore by remember { mutableStateOf(eikenInfo.listeningScore.toString()) }
     var writingScore by remember { mutableStateOf(eikenInfo.writingScore.toString()) }
