@@ -117,6 +117,12 @@ fun EikenEditScreen(
         }
     }
 
+    val isFormValid = isDateValid &&
+            validateReadingScore() &&
+            validateListeningScore() &&
+            validateWritingScore() &&
+            validateSpeakingScore()
+
     // FDate型チェックと日付が有効か確認する関数
     fun isValidDate(date: String): Boolean {
         return try {
