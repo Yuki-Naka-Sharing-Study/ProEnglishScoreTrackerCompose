@@ -166,7 +166,7 @@ fun EikenEditScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            if (isDateValid) {
+                            if (isFormValid) {
                                 viewModel.updateEikenInfo(
                                     EnglishTestInfo.EIKEN(
                                         id = eikenInfo.id,
@@ -182,7 +182,8 @@ fun EikenEditScreen(
                                 )
                                 navController.popBackStack()
                             }
-                        }
+                        },
+                        enabled = isFormValid
                     ) {
                         Icon(
                             Icons.Default.Check,
