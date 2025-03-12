@@ -56,6 +56,66 @@ fun ToeflIbtEditScreen(
     var writingErrorMessage by remember { mutableStateOf<String?>(null) }
     var speakingErrorMessage by remember { mutableStateOf<String?>(null) }
 
+    fun validateReadingScore(): Boolean {
+        val score = readingScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 30 -> {
+                readingErrorMessage = "Readingスコアが上限を超えています。"
+                false
+            }
+            else -> {
+                readingErrorMessage = null
+                true
+            }
+        }
+    }
+
+    fun validateListeningScore(): Boolean {
+        val score = listeningScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 30 -> {
+                listeningErrorMessage = "Listeningスコアが上限を超えています。"
+                false
+            }
+            else -> {
+                listeningErrorMessage = null
+                true
+            }
+        }
+    }
+
+    fun validateWritingScore(): Boolean {
+        val score = writingScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 30 -> {
+                writingErrorMessage = "Writingスコアが上限を超えています。"
+                false
+            }
+            else -> {
+                writingErrorMessage = null
+                true
+            }
+        }
+    }
+
+    fun validateSpeakingScore(): Boolean {
+        val score = speakingScore.toIntOrNull()
+        return when {
+            score == null -> false
+            score > 30 -> {
+                speakingErrorMessage = "Speakingスコアが上限を超えています。"
+                false
+            }
+            else -> {
+                speakingErrorMessage = null
+                true
+            }
+        }
+    }
+
     // FDate型チェックと日付が有効か確認する関数
     fun isValidDate(date: String): Boolean {
         return try {
