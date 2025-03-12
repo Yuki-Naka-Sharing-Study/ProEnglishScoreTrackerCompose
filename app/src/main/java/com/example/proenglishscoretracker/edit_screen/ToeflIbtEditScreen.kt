@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -21,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -39,7 +37,6 @@ fun ToeflIbtEditScreen(
     navController: NavController
 ) {
     var date by remember { mutableStateOf(toeflIbtInfo.date) }
-    var overallScore by remember { mutableStateOf(toeflIbtInfo.overallScore.toString()) }
     var readingScore by remember { mutableStateOf(toeflIbtInfo.readingScore.toString()) }
     var listeningScore by remember { mutableStateOf(toeflIbtInfo.listeningScore.toString()) }
     var writingScore by remember { mutableStateOf(toeflIbtInfo.writingScore.toString()) }
@@ -49,7 +46,6 @@ fun ToeflIbtEditScreen(
     // 日付の有効性とエラーメッセージの管理
     var dateErrorMessage by remember { mutableStateOf<String?>(null) } // エラーメッセージを保持
     var isDateValid by remember { mutableStateOf(true) } // 日付の有効性を保持
-    var isFocused by remember { mutableStateOf(true) } // フォーカスの有無を管理
 
     var readingErrorMessage by remember { mutableStateOf<String?>(null) }
     var listeningErrorMessage by remember { mutableStateOf<String?>(null) }
@@ -142,14 +138,6 @@ fun ToeflIbtEditScreen(
         dateErrorMessage = if (isDateValid) null else "無効な日付です。"
     }
 
-    // フォーカスが外れたときの処理
-    fun onFocusChange(focused: Boolean) {
-        if (!focused && !isDateValid) {
-            dateErrorMessage = "無効な日付です。"
-        }
-        isFocused = focused
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -165,7 +153,7 @@ fun ToeflIbtEditScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            if (isDateValid) {
+                            if (isFormValid) {
                                 viewModel.updateToeflIbtInfo(
                                     EnglishTestInfo.TOEFL(
                                         id = toeflIbtInfo.id,
@@ -174,13 +162,17 @@ fun ToeflIbtEditScreen(
                                         listeningScore = listeningScore.toIntOrNull() ?: 0,
                                         writingScore = writingScore.toIntOrNull() ?: 0,
                                         speakingScore = speakingScore.toIntOrNull() ?: 0,
-                                        overallScore = overallScore.toIntOrNull() ?: 0,
+                                        overallScore = readingScore.toInt() +
+                                                listeningScore.toInt() +
+                                                writingScore.toInt() +
+                                                speakingScore.toInt(),
                                         memo = memo
                                     )
                                 )
                                 navController.popBackStack()
                             }
-                        }
+                        },
+                        enabled = isFormValid
                     ) {
                         Icon(
                             Icons.Default.Check,
@@ -201,55 +193,56 @@ fun ToeflIbtEditScreen(
                 value = date,
                 onValueChange = { onDateChange(it) },
                 label = { Text("受験日") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onFocusChanged { onFocusChange(it.isFocused) },
-                isError = !isDateValid // 日付が無効な場合はエラーを表示
+                modifier = Modifier.fillMaxWidth(),
+                isError = !isDateValid
             )
-            // 日付のエラーメッセージ
             if (!isDateValid) {
-                Text(
-                    text = dateErrorMessage ?: "",
-                    color = Color.Red,
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                Text(text = dateErrorMessage ?: "", color = Color.Red)
             }
-            OutlinedTextField(
-                value = overallScore,
-                onValueChange = { overallScore = it },
-                label = { Text("Overallスコア") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
             OutlinedTextField(
                 value = readingScore,
                 onValueChange = { readingScore = it },
-                label = { Text("リーディングスコア") },
+                label = { Text("Readingスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = readingErrorMessage != null
             )
+            if (readingErrorMessage != null) {
+                Text(text = readingErrorMessage ?: "", color = Color.Red)
+            }
             OutlinedTextField(
                 value = listeningScore,
                 onValueChange = { listeningScore = it },
-                label = { Text("リスニングスコア") },
+                label = { Text("Listeningスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = listeningErrorMessage != null
             )
+            if (listeningErrorMessage != null) {
+                Text(text = listeningErrorMessage ?: "", color = Color.Red)
+            }
             OutlinedTextField(
                 value = writingScore,
                 onValueChange = { writingScore = it },
-                label = { Text("ライティングスコア") },
+                label = { Text("Writingスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = writingErrorMessage != null
             )
+            if (writingErrorMessage != null) {
+                Text(text = writingErrorMessage ?: "", color = Color.Red)
+            }
             OutlinedTextField(
                 value = speakingScore,
                 onValueChange = { speakingScore = it },
-                label = { Text("スピーキングスコア") },
+                label = { Text("Speakingスコア") },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = speakingErrorMessage != null
             )
+            if (speakingErrorMessage != null) {
+                Text(text = speakingErrorMessage ?: "", color = Color.Red)
+            }
             OutlinedTextField(
                 value = memo,
                 onValueChange = { memo = it },
