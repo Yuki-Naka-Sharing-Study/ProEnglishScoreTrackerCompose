@@ -225,13 +225,6 @@ fun EikenEditScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
-                value = cseScore,
-                onValueChange = { cseScore = it },
-                label = { Text("CSEスコア") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
                 value = readingScore,
                 onValueChange = { readingScore = it },
                 label = { Text("リーディングスコア") },
