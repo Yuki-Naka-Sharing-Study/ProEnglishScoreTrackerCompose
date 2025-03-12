@@ -165,7 +165,10 @@ fun EikenEditScreen(
                                         listeningScore = listeningScore.toIntOrNull() ?: 0,
                                         writingScore = writingScore.toIntOrNull() ?: 0,
                                         speakingScore = speakingScore.toIntOrNull() ?: 0,
-                                        cseScore = cseScore.toIntOrNull() ?: 0,
+                                        cseScore = readingScore.toInt() +
+                                                listeningScore.toInt() +
+                                                writingScore.toInt() +
+                                                speakingScore.toInt(),
                                         memo = memo
                                     )
                                 )
