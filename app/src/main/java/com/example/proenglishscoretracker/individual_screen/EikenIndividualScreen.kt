@@ -43,7 +43,7 @@ fun EikenIndividualScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            androidx.compose.material.Text(
+            Text(
                 text = "まだスコアが登録されていません。",
                 fontSize = 18.sp,
                 color = Color.Gray
@@ -113,7 +113,7 @@ private fun EikenItem(
                 Row(
 
                 ) {
-                    Text(text = "リーディングスコア:")
+                    Text(text = "Readingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.readingScore.toString())
                 }
@@ -121,7 +121,7 @@ private fun EikenItem(
                 Row(
 
                 ) {
-                    Text(text = "リスニングスコア:")
+                    Text(text = "Listeningスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.listeningScore.toString())
                 }
@@ -135,7 +135,7 @@ private fun EikenItem(
                     Row(
 
                     ) {
-                        Text(text = "ライティングスコア:")
+                        Text(text = "Writingスコア:")
                         Spacer(modifier = Modifier.weight(1f))
                         Text(text = eikenInfo.writingScore.toString())
                     }
@@ -143,7 +143,7 @@ private fun EikenItem(
                     Row(
 
                     ) {
-                        Text(text = "スピーキングスコア:")
+                        Text(text = "Speakingスコア:")
                         Spacer(modifier = Modifier.weight(1f))
                         Text(text = eikenInfo.speakingScore.toString())
                     }

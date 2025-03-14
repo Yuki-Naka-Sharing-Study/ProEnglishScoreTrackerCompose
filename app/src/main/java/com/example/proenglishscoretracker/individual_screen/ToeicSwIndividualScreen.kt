@@ -95,7 +95,7 @@ private fun ToeicSwItem(
                 Row(
 
                 ) {
-                    Text(text = "ライティングスコア:")
+                    Text(text = "Writingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeicSwInfo.writingScore.toString())
                 }
@@ -104,7 +104,7 @@ private fun ToeicSwItem(
                 Row(
 
                 ) {
-                    Text(text = "スピーキングスコア:")
+                    Text(text = "Speakingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeicSwInfo.speakingScore.toString())
                 }

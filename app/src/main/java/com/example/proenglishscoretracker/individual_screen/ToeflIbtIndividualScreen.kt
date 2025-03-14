@@ -103,7 +103,7 @@ private fun ToeflIbtInfo(
                 Row(
 
                 ) {
-                    Text(text = "リーディングスコア:")
+                    Text(text = "Readingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.readingScore.toString())
                 }
@@ -111,7 +111,7 @@ private fun ToeflIbtInfo(
                 Row(
 
                 ) {
-                    Text(text = "リスニングスコア:")
+                    Text(text = "Listeningスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.listeningScore.toString())
                 }
@@ -119,7 +119,7 @@ private fun ToeflIbtInfo(
                 Row(
 
                 ) {
-                    Text(text = "ライティングスコア:")
+                    Text(text = "Writingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.writingScore.toString())
                 }
@@ -127,7 +127,7 @@ private fun ToeflIbtInfo(
                 Row(
 
                 ) {
-                    Text(text = "スピーキングスコア:")
+                    Text(text = "Speakingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.speakingScore.toString())
                 }

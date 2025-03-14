@@ -96,7 +96,7 @@ private fun ToeicItem(
                 Row(
 
                 ) {
-                    Text(text = "リーディングスコア:")
+                    Text(text = "Readingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeicInfo.readingScore.toString())
                 }
@@ -105,7 +105,7 @@ private fun ToeicItem(
                 Row(
 
                 ) {
-                    Text(text = "リスニングスコア:")
+                    Text(text = "Listeningスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeicInfo.listeningScore.toString())
                 }
