@@ -44,7 +44,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -486,7 +485,7 @@ private fun EikenScoreChart(
                             painter = painterResource(id = R.drawable.right_arrow),
                             contentDescription = "",
                         )
-                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Spacer(Modifier.weight(1f))
                         Text(
                             text = "Pinch In",
                             fontSize = 12.sp,
@@ -496,7 +495,7 @@ private fun EikenScoreChart(
                             painter = painterResource(id = R.drawable.pinch_in),
                             contentDescription = "",
                         )
-                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_40_dp)))
+                        Spacer(Modifier.weight(1f))
                         Text(
                             text = "Pinch Out",
                             fontSize = 12.sp,
@@ -504,6 +503,16 @@ private fun EikenScoreChart(
                         )
                         Image(
                             painter = painterResource(id = R.drawable.pinch_out),
+                            contentDescription = "",
+                        )
+                        Spacer(Modifier.weight(1f))
+                        Text(
+                            text = "Scroll",
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
+                        Image(
+                            painter = painterResource(id = R.drawable.left_arrow),
                             contentDescription = "",
                         )
                     }
