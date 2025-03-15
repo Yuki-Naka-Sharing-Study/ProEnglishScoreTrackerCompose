@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.proenglishscoretracker.R
 
+// TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
 fun ToeicSwIndividualScreen(
     viewModel: EnglishInfoViewModel,

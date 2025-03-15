@@ -30,6 +30,7 @@ import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 
+// TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
 fun EikenIndividualScreen(
     viewModel: EnglishInfoViewModel,
