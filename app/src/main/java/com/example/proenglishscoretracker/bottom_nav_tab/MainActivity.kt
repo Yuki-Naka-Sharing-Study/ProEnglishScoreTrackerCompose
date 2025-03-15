@@ -53,6 +53,7 @@ import com.example.proenglishscoretracker.detail_screen.ToeflIbtDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicSwDetailScreen
 import com.example.proenglishscoretracker.edit_screen.EikenEditScreen
+import com.example.proenglishscoretracker.edit_screen.IeltsEditScreen
 import com.example.proenglishscoretracker.edit_screen.ToeflIbtEditScreen
 import com.example.proenglishscoretracker.edit_screen.ToeicEditScreen
 import com.example.proenglishscoretracker.edit_screen.ToeicSwEditScreen
@@ -299,6 +300,18 @@ fun EnglishScoreTracker(
                     if (toeflIbtId != null && toeflIbtInfo != null) {
                         ToeflIbtEditScreen(
                             toeflIbtInfo = toeflIbtInfo,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
+                }
+                composable("ielts_edit/{ieltsId}") { backStackEntry ->
+                    val ieltsId = backStackEntry.arguments?.getString("ieltsId")
+                    val ieltsInfo = viewModel.selectedIeltsInfo.collectAsState().value
+
+                    if (ieltsId != null && ieltsInfo != null) {
+                        IeltsEditScreen(
+                            ieltsInfo = ieltsInfo,
                             viewModel = viewModel,
                             navController = navController
                         )
