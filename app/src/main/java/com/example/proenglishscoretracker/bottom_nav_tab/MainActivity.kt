@@ -67,6 +67,7 @@ import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScree
 import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScreen
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
 import com.example.proenglishscoretracker.settings.CountdownSettingsScreen
+import com.example.proenglishscoretracker.settings.YoutuberScreen
 
 class MainActivity : FragmentActivity() {
     private lateinit var englishInfoDao: EnglishInfoDao
@@ -191,6 +192,7 @@ fun EnglishScoreTracker(
                 composable("setting") { SettingsScreen(navController) }
 
                 composable("examCountdown") { CountdownSettingsScreen(navController)}
+                composable("youtuberScreen") { YoutuberScreen(navController)}
 
                 // XxxIndividualScreen
                 composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }

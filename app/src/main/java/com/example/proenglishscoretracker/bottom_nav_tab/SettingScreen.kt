@@ -20,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(navController: NavController) {
     val context = LocalContext.current
@@ -68,6 +67,7 @@ fun SettingsScreen(navController: NavController) {
             },
             "バージョン 1.0.0" to {},
             "受験日カウントダウンを設定" to { navController.navigate("examCountdown") },
+            "登録推奨YouTuber" to { navController.navigate("youtuberScreen") },
         )
 
         items.forEach { (title, action) ->

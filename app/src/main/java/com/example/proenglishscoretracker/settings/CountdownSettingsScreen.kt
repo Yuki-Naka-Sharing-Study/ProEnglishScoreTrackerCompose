@@ -40,12 +40,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavController
 import androidx.work.*
-import com.example.proenglishscoretracker.R
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 
