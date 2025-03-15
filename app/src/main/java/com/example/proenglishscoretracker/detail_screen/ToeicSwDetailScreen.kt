@@ -129,7 +129,7 @@ fun ToeicSwDetailScreen(
 
                 ) {
                     Text(
-                        text = "【受験日】",
+                        text = "[受験日]",
                         fontSize = 20.sp
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -143,7 +143,7 @@ fun ToeicSwDetailScreen(
 
                 ) {
                     Text(
-                        text = "【ライティングスコア】",
+                        text = "[Writingスコア]",
                         fontSize = 20.sp
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -157,7 +157,7 @@ fun ToeicSwDetailScreen(
 
                 ) {
                     Text(
-                        text = "【スピーキングスコア】",
+                        text = "[Speakingスコア]",
                         fontSize = 20.sp
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -168,7 +168,7 @@ fun ToeicSwDetailScreen(
                 }
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    text = "【メモ】",
+                    text = "[メモ]",
                     fontSize = 20.sp
                 )
                 Spacer(Modifier.height(16.dp))
