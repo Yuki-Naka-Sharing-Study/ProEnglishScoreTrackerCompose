@@ -75,16 +75,8 @@ fun YoutuberContentScreen(
             R.drawable.youtuber_atsu,
             "Atsu",
 
-            "必ず登録すべき情報発信者。\n" +
-                    "純ジャパでありながらも \n" +
-                    "以下の英語資格を保有している。 \n" +
-                    "間違い無く純ジャパ最強。 \n" +
-                    "ーーーーーーーーーーーーーーーーーーーーーーーー \n" +
-                    "IELTS Academic 8.5 (L9.0 R9.0 W7.5 S8.0) \n" +
-                    "実用英語技能検定１級 \n" +
-                    "TOEIC 990点（満点） (L495 R495) \n" +
-                    "TOEFL iBT 114点(L30 R28 S27 W29) \n" +
-                    "Versant 80点満点 \n",
+            "必ず登録すべき情報発信者。純ジャパ最強。\n" +
+                    "英検一級, TOEIC満点, TOEFL/IELTSほぼ満点。 \n",
 
             "https://www.youtube.com/@atsueigo"
         ),
@@ -144,7 +136,7 @@ fun YoutuberContentScreen(
             "Kazu Languages Shorts\n",
 
             "マルチリンガル。 \n" +
-                    "英語以外にスペイン語、フランス語、アラビア語、インドネシア語、ロシア語、ポルトガル語、ドイツ語、トルコ語、中国語、タイ語も話せる超人。 \n",
+                    "英語以外に10ケ国語以上も話せる超人。 \n",
 
             "https://www.youtube.com/@KazuLanguagesShorts/videos"
         ),
