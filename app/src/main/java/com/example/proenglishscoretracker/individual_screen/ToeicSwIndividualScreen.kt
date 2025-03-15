@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
@@ -21,9 +23,11 @@ import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.proenglishscoretracker.R
 
 @Composable
 fun ToeicSwIndividualScreen(
@@ -92,6 +96,12 @@ private fun ToeicSwItem(
                     Text(text = toeicSwInfo.date)
                 }
 
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
                 Row(
 
                 ) {
@@ -100,6 +110,11 @@ private fun ToeicSwItem(
                     Text(text = toeicSwInfo.writingScore.toString())
                 }
 
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
 
                 Row(
 
@@ -109,6 +124,11 @@ private fun ToeicSwItem(
                     Text(text = toeicSwInfo.speakingScore.toString())
                 }
 
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
 
                 Row(
 

@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,10 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.proenglishscoretracker.R
 
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
@@ -94,6 +98,12 @@ private fun EikenItem(
                     Text(text = eikenInfo.date)
                 }
 
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
                 Row(
 
                 ) {
@@ -101,6 +111,12 @@ private fun EikenItem(
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.grade)
                 }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
 
                 Row(
 
@@ -110,6 +126,12 @@ private fun EikenItem(
                     Text(text = eikenInfo.cseScore.toString())
                 }
 
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
                 Row(
 
                 ) {
@@ -118,6 +140,12 @@ private fun EikenItem(
                     Text(text = eikenInfo.readingScore.toString())
                 }
 
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
                 Row(
 
                 ) {
@@ -125,6 +153,12 @@ private fun EikenItem(
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.listeningScore.toString())
                 }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
 
                 if (eikenInfo.grade == "3級" ||
                     eikenInfo.grade == "準2級" ||
@@ -140,6 +174,12 @@ private fun EikenItem(
                         Text(text = eikenInfo.writingScore.toString())
                     }
 
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                    Divider()
+
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
                     Row(
 
                     ) {
@@ -148,6 +188,12 @@ private fun EikenItem(
                         Text(text = eikenInfo.speakingScore.toString())
                     }
                 }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+
+                Divider()
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
 
                 Row(
 
