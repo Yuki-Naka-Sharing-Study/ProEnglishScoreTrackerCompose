@@ -92,6 +92,7 @@ fun YoutuberContentScreen(
                     "TOEIC 990点（満点） (L495 R495) \n" +
                     "TOEFL iBT 114点(L30 R28 S27 W29) \n" +
                     "Versant 80点満点 \n",
+
             "https://www.youtube.com/@atsueigo" ),
 
         ExpandableItem(
@@ -100,8 +101,55 @@ fun YoutuberContentScreen(
 
             "勉強法のアンチパターンを積極的に紹介している。 \n" +
                     "遠回りしないために登録すべき。 \n",
+
             "https://www.youtube.com/@englishosaru/videos"),
-    )
+
+        ExpandableItem(
+            R.drawable.youtuber_moritetsu,
+            "Morite2 English Channel",
+
+            "TOEICや様々な大学の英語試験の解説をしている。 \n" +
+                    "受験生は登録すべき。 \n",
+
+            "https://www.youtube.com/@Morite2Channel/videos"),
+
+        ExpandableItem(
+            R.drawable.youtuber_takeda_juku,
+            "大人のための武田塾English",
+
+            "TOEFLやIELTSの学習ルートを紹介している。 \n" +
+                    "留学をしたい人はは登録すべき。 \n",
+
+            "https://www.youtube.com/@english3963"),
+
+        ExpandableItem(
+            R.drawable.youtuber_daijiro,
+            "だいじろー Daijiro",
+
+            "イギリス英語の発音の紹介が多めのYouTuber。 \n" +
+                    "イギリスが好きな人は登録すべき。 \n",
+
+            "https://www.youtube.com/@daijirojp/videos" ),
+
+        ExpandableItem(
+            R.drawable.youtuber_koala,
+            "こあらの学校　英語の時間",
+
+            "「shopとstoreの違い」といったように \n" +
+                    "違いを解説している動画が多い。 \n",
+
+            "https://www.youtube.com/@KoalaEnglish180/videos" ),
+
+        ExpandableItem(
+            R.drawable.youtuber_kazu,
+            "Kazu Languages Shorts\n",
+
+            "マルチリンガル。 \n" +
+                    "英語以外にスペイン語、フランス語、アラビア語、インドネシア語、ロシア語、ポルトガル語、ドイツ語、トルコ語、中国語、タイ語も話せる超人。 \n",
+
+            "https://www.youtube.com/@KazuLanguagesShorts/videos" ),
+
+        )
 
     val expandedState = remember { mutableStateMapOf<String, Boolean>() }
     val context = LocalContext.current
