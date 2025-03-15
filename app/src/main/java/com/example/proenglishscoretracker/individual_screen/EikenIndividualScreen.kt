@@ -91,74 +91,64 @@ private fun EikenItem(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "受験日:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.date)
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "受験級:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.grade)
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Overallスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.cseScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Readingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.readingScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Listeningスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = eikenInfo.listeningScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 if (eikenInfo.grade == "3級" ||
                     eikenInfo.grade == "準2級" ||
@@ -167,21 +157,19 @@ private fun EikenItem(
                     eikenInfo.grade == "1級"
                 ) {
                     Row(
-
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "Writingスコア:")
                         Spacer(modifier = Modifier.weight(1f))
                         Text(text = eikenInfo.writingScore.toString())
                     }
 
-                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                     Divider()
-
-                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                     Row(
-
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = "Speakingスコア:")
                         Spacer(modifier = Modifier.weight(1f))
@@ -189,14 +177,12 @@ private fun EikenItem(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "メモ: ${eikenInfo.memo}",

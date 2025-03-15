@@ -89,49 +89,43 @@ private fun ToeicSwItem(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "受験日:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeicSwInfo.date)
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Writingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeicSwInfo.writingScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Speakingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeicSwInfo.speakingScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "メモ: ${toeicSwInfo.memo}",

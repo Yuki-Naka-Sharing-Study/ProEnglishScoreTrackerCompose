@@ -89,91 +89,79 @@ private fun ToeflIbtInfo(
                 modifier = Modifier.align(Alignment.CenterStart)
             ) {
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "受験日:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.date)
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Overallスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.overallScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Readingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.readingScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Listeningスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.listeningScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Writingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.writingScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(text = "Speakingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
                     Text(text = toeflIbtInfo.speakingScore.toString())
                 }
 
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
-
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
                 Divider()
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
 
                 Row(
-
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "メモ: ${toeflIbtInfo.memo}",
