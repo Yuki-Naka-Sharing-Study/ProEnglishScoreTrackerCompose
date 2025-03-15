@@ -1,5 +1,8 @@
 package com.example.proenglishscoretracker.settings
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -32,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -84,17 +91,20 @@ fun YoutuberContentScreen(
                     "実用英語技能検定１級 \n" +
                     "TOEIC 990点（満点） (L495 R495) \n" +
                     "TOEFL iBT 114点(L30 R28 S27 W29) \n" +
-                    "Versant 80点満点"),
+                    "Versant 80点満点 \n",
+            "https://www.youtube.com/@atsueigo" ),
 
         ExpandableItem(
             R.drawable.youtuber_osaru,
             "英語コーチ-イングリッシュおさる",
 
             "勉強法のアンチパターンを積極的に紹介している。 \n" +
-                    "遠回りしないために登録すべき。 \n"),
+                    "遠回りしないために登録すべき。 \n",
+            "https://www.youtube.com/@englishosaru/videos"),
     )
 
     val expandedState = remember { mutableStateMapOf<String, Boolean>() }
+    val context = LocalContext.current
 
     LazyColumn {
         items(items) { item ->
@@ -129,7 +139,8 @@ fun YoutuberContentScreen(
                         text = item.name,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
                     )
                     Icon(
                         imageVector =
@@ -143,6 +154,13 @@ fun YoutuberContentScreen(
                         Text(
                             text = item.description
                         )
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                        Divider()
+                        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_4_dp)))
+                        Text(
+                            text = "YouTubeのリンクはこちら",
+                            modifier = Modifier.clickable { openYoutubeLink(context, item.url) },
+                        )
                     }
                 }
             }
@@ -153,5 +171,12 @@ fun YoutuberContentScreen(
 data class ExpandableItem(
     @DrawableRes val iconRes: Int,
     val name: String,
-    val description: String
+    val description: String,
+    val url: String
 )
+
+private fun openYoutubeLink(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    context.startActivity(intent)
+}
