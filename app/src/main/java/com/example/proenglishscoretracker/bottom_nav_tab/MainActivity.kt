@@ -199,7 +199,7 @@ fun EnglishScoreTracker(
                 composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen(viewModel, navController) }
                 composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel, navController) }
                 composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel, navController) }
-                composable("ieltsIndividualScreen") { IeltsIndividualScreen() }
+                composable("ieltsIndividualScreen") { IeltsIndividualScreen(viewModel, navController) }
 
                 // XxxDetailScreen
                 composable("toeic_detail/{toeicId}") { backStackEntry ->
