@@ -294,7 +294,7 @@ private fun IeltsSegmentedButton(
             }
         }
         when (selectedIndex) {
-            0 -> IeltsChartScreen()
+            0 -> IeltsChartScreen(viewModel)
             1 -> IeltsIndividualScreen(viewModel, navController)
         }
     }
