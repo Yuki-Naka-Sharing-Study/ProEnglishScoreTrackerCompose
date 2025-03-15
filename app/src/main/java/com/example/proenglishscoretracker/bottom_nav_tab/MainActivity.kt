@@ -48,6 +48,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoRepository
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishInfoViewModelFactory
 import com.example.proenglishscoretracker.detail_screen.EikenDetailScreen
+import com.example.proenglishscoretracker.detail_screen.IeltsDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeflIbtDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicDetailScreen
 import com.example.proenglishscoretracker.detail_screen.ToeicSwDetailScreen
@@ -238,6 +239,16 @@ fun EnglishScoreTracker(
                     if (toeflIbtId != null) {
                         ToeflIbtDetailScreen(
                             toeflIbtId = toeflIbtId,
+                            viewModel = viewModel,
+                            navController = navController
+                        )
+                    }
+                }
+                composable("ielts_detail/{ieltsId}") { backStackEntry ->
+                    val ieltsId = backStackEntry.arguments?.getString("ieltsId")
+                    if (ieltsId != null) {
+                        IeltsDetailScreen(
+                            ieltsId = ieltsId,
                             viewModel = viewModel,
                             navController = navController
                         )

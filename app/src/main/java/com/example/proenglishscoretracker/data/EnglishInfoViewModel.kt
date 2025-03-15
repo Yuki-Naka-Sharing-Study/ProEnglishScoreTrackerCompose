@@ -387,4 +387,72 @@ class EnglishInfoViewModel(
     // IELTS
     private val _ieltsInfo = MutableStateFlow<List<EnglishTestInfo.IELTS>>(emptyList())
     val ieltsInfo: StateFlow<List<EnglishTestInfo.IELTS>> = _ieltsInfo
+
+    private val _selectedIeltsInfo = MutableStateFlow<EnglishTestInfo.IELTS?>(null)
+    val selectedIeltsInfo: StateFlow<EnglishTestInfo.IELTS?> = _selectedIeltsInfo
+
+    init {
+        viewModelScope.launch {
+            _ieltsInfo.value = englishInfoDao.getAllIeltsInfo()
+        }
+    }
+    init {
+        loadAllIeltsInfo()
+    }
+    fun loadAllIeltsInfo() {
+        viewModelScope.launch {
+            _ieltsInfo.value = repository.getAllIeltsInfo()
+        }
+    }
+    fun loadIeltsInfoById(ieltsId: String) {
+        viewModelScope.launch {
+            val ieltsInfo = repository.getIeltsInfoById(ieltsId)
+            _selectedIeltsInfo.value = ieltsInfo
+        }
+    }
+    fun saveIeltsValues(
+        date: String,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        overallScore: Int,
+        memo: String,
+        showAlert: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            val dateCount = repository.getIeltsEntryCountByDate(date)
+
+            if (dateCount > 0) {
+                showAlert("同一年月日で既に登録済です。")
+                return@launch
+            }
+
+            repository.saveIeltsInfo(
+                date,
+                readingScore,
+                listeningScore,
+                writingScore,
+                speakingScore,
+                overallScore,
+                memo
+            )
+            loadAllToeflIbtInfo()
+        }
+    }
+    fun deleteIeltsInfo(ieltstId: String) {
+        viewModelScope.launch {
+            val info = repository.getIeltsInfoById(ieltstId)
+            info?.let {
+                repository.deleteIeltsInfo(it)
+                loadAllIeltsInfo()
+            }
+        }
+    }
+    fun updateIeltsInfo(ieltsInfo: EnglishTestInfo.IELTS) {
+        viewModelScope.launch {
+            repository.updateIeltsInfo(ieltsInfo)
+            loadAllIeltsInfo()
+        }
+    }
 }

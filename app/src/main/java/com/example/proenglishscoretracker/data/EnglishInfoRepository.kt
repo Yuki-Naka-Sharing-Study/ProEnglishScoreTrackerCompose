@@ -159,4 +159,43 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     suspend fun getToeflIbtInfoById(toeflIbtId: String): EnglishTestInfo.TOEFL? {
         return dao.getToeflIbtInfoById(toeflIbtId)
     }
+
+
+    // IELTS
+    suspend fun getIeltsEntryCountByDate(date: String): Int {
+        return dao.countIeltsEntriesByDate(date)
+    }
+    suspend fun saveIeltsInfo(
+        date: String,
+        readingScore: Int,
+        listeningScore: Int,
+        writingScore: Int,
+        speakingScore: Int,
+        overallScore: Int,
+        memo: String
+    ) {
+        val ieltsInfo = EnglishTestInfo.IELTS(
+            id = 0,
+            date = date,
+            readingScore = readingScore,
+            listeningScore = listeningScore,
+            writingScore = writingScore,
+            speakingScore = speakingScore,
+            overallScore = overallScore,
+            memo = memo
+        )
+        dao.insertIeltsInfo(ieltsInfo)
+    }
+    suspend fun deleteIeltsInfo(ieltsInfo: EnglishTestInfo.IELTS) {
+        dao.deleteIeltsInfo(ieltsInfo)
+    }
+    suspend fun getAllIeltsInfo(): List<EnglishTestInfo.IELTS> {
+        return dao.getAllIeltsInfo()
+    }
+    suspend fun updateIeltsInfo(ieltsInfo: EnglishTestInfo.IELTS) {
+        dao.updateIeltsInfo(ieltsInfo)
+    }
+    suspend fun getIeltsInfoById(ieltsId: String): EnglishTestInfo.IELTS? {
+        return dao.getIeltsInfoById(ieltsId)
+    }
 }

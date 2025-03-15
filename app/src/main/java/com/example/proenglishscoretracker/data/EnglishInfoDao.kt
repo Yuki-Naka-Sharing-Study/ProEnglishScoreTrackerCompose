@@ -81,4 +81,20 @@ interface EnglishInfoDao {
     suspend fun getAllToeflIbtInfo(): List<EnglishTestInfo.TOEFL>
     @Query("SELECT * FROM toefl WHERE id = :toeflIbtId")
     suspend fun getToeflIbtInfoById(toeflIbtId: String): EnglishTestInfo.TOEFL?
+
+
+    // TOEFL
+    // 指定された受験日と一致するデータの数を取得
+    @Query("SELECT COUNT(*) FROM ielts WHERE date = :date")
+    suspend fun countIeltsEntriesByDate(date: String): Int
+    @Insert
+    suspend fun insertIeltsInfo(item: EnglishTestInfo.IELTS)
+    @Delete
+    suspend fun deleteIeltsInfo(item: EnglishTestInfo.IELTS)
+    @Update
+    suspend fun updateIeltsInfo(item: EnglishTestInfo.IELTS)
+    @Query("SELECT * FROM ielts")
+    suspend fun getAllIeltsInfo(): List<EnglishTestInfo.IELTS>
+    @Query("SELECT * FROM ielts WHERE id = :ieltsId")
+    suspend fun getIeltsInfoById(ieltsId: String): EnglishTestInfo.IELTS?
 }

@@ -5,10 +5,13 @@ import androidx.room.Database
 import androidx.room.Room.databaseBuilder
 import androidx.room.RoomDatabase
 
-@Database(entities = [EnglishTestInfo.TOEIC::class,
+@Database(entities = [
+    EnglishTestInfo.TOEIC::class,
     EnglishTestInfo.TOEIC_SW::class,
     EnglishTestInfo.EIKEN::class,
-    EnglishTestInfo.TOEFL::class], version = 1)
+    EnglishTestInfo.TOEFL::class,
+    EnglishTestInfo.IELTS::class
+                     ], version = 1)
 abstract class EnglishInfoDatabase : RoomDatabase() {
     abstract fun englishInfoDao(): EnglishInfoDao
 
