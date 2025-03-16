@@ -1,11 +1,16 @@
 package com.example.proenglishscoretracker.edit_screen
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -22,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -188,80 +194,92 @@ fun EikenEditScreen(
             )
         }
     ) { padding ->
-        Column(
+        val focusManager = LocalFocusManager.current
+        val interactionSource = remember { MutableInteractionSource() }
+
+        Box(
             modifier = Modifier
-                .padding(padding)
-                .padding(16.dp)
                 .fillMaxSize()
-        ) {
-            OutlinedTextField(
-                value = date,
-                onValueChange = { onDateChange(it) },
-                label = { Text("受験日") },
-                modifier = Modifier.fillMaxWidth(),
-                isError = !isDateValid
-            )
-            if (!isDateValid) {
-                Text(text = dateErrorMessage ?: "", color = Color.Red)
-            }
-            OutlinedTextField(
-                value = grade,
-                onValueChange = { grade = it },
-                label = { Text("受験級") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            OutlinedTextField(
-                value = readingScore,
-                onValueChange = { readingScore = it },
-                label = { Text("Readingスコア") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                isError = readingErrorMessage != null
-            )
-            if (readingErrorMessage != null) {
-                Text(text = readingErrorMessage ?: "", color = Color.Red)
-            }
-            OutlinedTextField(
-                value = listeningScore,
-                onValueChange = { listeningScore = it },
-                label = { Text("Listeningスコア") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                isError = listeningErrorMessage != null
-            )
-            if (listeningErrorMessage != null) {
-                Text(text = listeningErrorMessage ?: "", color = Color.Red)
-            }
-            OutlinedTextField(
-                value = writingScore,
-                onValueChange = { writingScore = it },
-                label = { Text("Writingスコア") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                isError = writingErrorMessage != null
-            )
-            if (writingErrorMessage != null) {
-                Text(text = writingErrorMessage ?: "", color = Color.Red)
-            }
-            OutlinedTextField(
-                value = speakingScore,
-                onValueChange = { speakingScore = it },
-                label = { Text("Speakingスコア") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                isError = speakingErrorMessage != null
-            )
-            if (speakingErrorMessage != null) {
-                Text(text = speakingErrorMessage ?: "", color = Color.Red)
-            }
-            OutlinedTextField(
-                value = memo,
-                onValueChange = { memo = it },
-                label = { Text("メモ") },
+                .verticalScroll(rememberScrollState())
+                .clickable(interactionSource = interactionSource, indication = null) {
+                    focusManager.clearFocus()
+                }
+        ){
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimensionResource(id = R.dimen.memo_height_dp))
-            )
+                    .padding(padding)
+                    .padding(16.dp)
+                    .fillMaxSize()
+            ) {
+                OutlinedTextField(
+                    value = date,
+                    onValueChange = { onDateChange(it) },
+                    label = { Text("受験日") },
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = !isDateValid
+                )
+                if (!isDateValid) {
+                    Text(text = dateErrorMessage ?: "", color = Color.Red)
+                }
+                OutlinedTextField(
+                    value = grade,
+                    onValueChange = { grade = it },
+                    label = { Text("受験級") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = readingScore,
+                    onValueChange = { readingScore = it },
+                    label = { Text("Readingスコア") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = readingErrorMessage != null
+                )
+                if (readingErrorMessage != null) {
+                    Text(text = readingErrorMessage ?: "", color = Color.Red)
+                }
+                OutlinedTextField(
+                    value = listeningScore,
+                    onValueChange = { listeningScore = it },
+                    label = { Text("Listeningスコア") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = listeningErrorMessage != null
+                )
+                if (listeningErrorMessage != null) {
+                    Text(text = listeningErrorMessage ?: "", color = Color.Red)
+                }
+                OutlinedTextField(
+                    value = writingScore,
+                    onValueChange = { writingScore = it },
+                    label = { Text("Writingスコア") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = writingErrorMessage != null
+                )
+                if (writingErrorMessage != null) {
+                    Text(text = writingErrorMessage ?: "", color = Color.Red)
+                }
+                OutlinedTextField(
+                    value = speakingScore,
+                    onValueChange = { speakingScore = it },
+                    label = { Text("Speakingスコア") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = speakingErrorMessage != null
+                )
+                if (speakingErrorMessage != null) {
+                    Text(text = speakingErrorMessage ?: "", color = Color.Red)
+                }
+                OutlinedTextField(
+                    value = memo,
+                    onValueChange = { memo = it },
+                    label = { Text("メモ") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(dimensionResource(id = R.dimen.memo_height_dp))
+                )
+            }
         }
     }
 }
