@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -85,11 +86,11 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
         ) {
             var date by remember { mutableStateOf(fDate(2025, 1, 1)) }
             var showDatePicker by remember { mutableStateOf(false) }
-            var readingScore by remember { mutableIntStateOf(0) }
-            var listeningScore by remember { mutableIntStateOf(0) }
-            var writingScore by remember { mutableIntStateOf(0) }
-            var speakingScore by remember { mutableIntStateOf(0) }
-            var overallScore by remember { mutableIntStateOf(0) }
+            var readingScore by remember { mutableFloatStateOf(0.0F) }
+            var listeningScore by remember { mutableFloatStateOf(0.0F) }
+            var writingScore by remember { mutableFloatStateOf(0.0F) }
+            var speakingScore by remember { mutableFloatStateOf(0.0F) }
+            var overallScore by remember { mutableFloatStateOf(0.0F) }
             var memoText by remember { mutableStateOf("") }
             var readingMaxScoreError by remember { mutableStateOf(false) }
             var listeningMaxScoreError by remember { mutableStateOf(false) }
@@ -344,11 +345,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                                                 if (alertMessage == null) {
                                                     showSaved = "登録しました。"
                                                 }
-                                                readingScore = 0
-                                                listeningScore = 0
-                                                writingScore = 0
-                                                speakingScore = 0
-                                                memoText = ""
                                             }
                                         ) {
                                             Text("はい")
@@ -375,10 +371,10 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                                 onClick = {
                                     if (savableChecker) {
                                         if (
-                                            readingScore == 0 ||
-                                            listeningScore == 0 ||
-                                            writingScore == 0 ||
-                                            speakingScore == 0
+                                            readingScore == 0.0F ||
+                                            listeningScore == 0.0F ||
+                                            writingScore == 0.0F ||
+                                            speakingScore == 0.0F
                                         )
                                         {
                                             showAlertDialogOfZero = true
@@ -399,11 +395,6 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
                                             if (alertMessage == null) {
                                                 showSaved = "登録しました。"
                                             }
-                                            readingScore = 0
-                                            listeningScore = 0
-                                            writingScore = 0
-                                            speakingScore = 0
-                                            memoText = ""
                                         }
                                     }
                                 },
@@ -687,10 +678,10 @@ private fun OverallScoreTextPreview() {
 @Composable
 private fun IeltsOverallScoreView(
     modifier: Modifier,
-    readingScore: Int,
-    listeningScore: Int,
-    writingScore: Int,
-    speakingScore: Int,
+    readingScore: Float,
+    listeningScore: Float,
+    writingScore: Float,
+    speakingScore: Float,
 ) {
     val overallScore = readingScore + listeningScore + writingScore + speakingScore
 
@@ -870,11 +861,11 @@ private fun MemoTextPreview() {
 @Composable
 private fun IeltsRLWSScorePicker(
     modifier: Modifier = Modifier,
-    ieltsRLWSScore: Int,
-    onScoreConfirm: (Int) -> Unit,
+    ieltsRLWSScore: Float,
+    onScoreConfirm: (Float) -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    var tempScore by remember { mutableIntStateOf(ieltsRLWSScore) }
+    var tempScore by remember { mutableStateOf(ieltsRLWSScore) }
 
     Box(modifier = modifier) {
         Button(
@@ -886,7 +877,7 @@ private fun IeltsRLWSScorePicker(
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "$ieltsRLWSScore",
+                text = "${"%.1f".format(ieltsRLWSScore)}",
                 color = Color.Black
             )
         }
@@ -939,28 +930,33 @@ private fun IeltsRLWSScorePicker(
 
 @Composable
 private fun IeltsRLWSScorePickerView(
-    score: Int,
-    onScoreChange: (Int) -> Unit
+    score: Float,
+    onScoreChange: (Float) -> Unit
 ) {
-    val ten = score / 10
-    val one = (score % 10) / 1
+    val index = ((score * 2).toInt()).coerceIn(0, 18)
+    val state = rememberFWheelPickerState(initialIndex = index)
 
-    val tenState = remember { mutableIntStateOf(ten) }
-    val oneState = remember { mutableIntStateOf(one) }
-
-    LaunchedEffect(tenState.intValue, oneState.intValue) {
-        onScoreChange(tenState.intValue * 10 + oneState.intValue)
+    LaunchedEffect(state.currentIndex) {
+        onScoreChange(state.currentIndex / 2f)
     }
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // 10の位
-        IeltsRLWSTwoDigits(tenState)
-        // 1の位
-        IeltsRLWSOneDigits(oneState)
+    FVerticalWheelPicker(
+        modifier = Modifier.width(64.dp),
+        count = 19, // 0.0 to 9.0 (0.5刻み)
+        itemHeight = 48.dp,
+        unfocusedCount = 2,
+        state = state,
+        focus = {
+            FWheelPickerFocusVertical(
+                dividerColor = Color.LightGray,
+                dividerSize = 2.dp
+            )
+        },
+    ) { index ->
+        Text(
+            "%.1f".format(index / 2f),
+            color = Color.Black
+        )
     }
 }
 

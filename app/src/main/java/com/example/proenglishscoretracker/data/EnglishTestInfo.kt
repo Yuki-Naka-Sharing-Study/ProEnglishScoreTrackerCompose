@@ -51,11 +51,11 @@ sealed class EnglishTestInfo {
     data class IELTS(
         @PrimaryKey(autoGenerate = true) val id: Int,
         val date: String,
-        val overallScore: Int,
-        val readingScore: Int,
-        val listeningScore: Int,
-        val writingScore: Int,
-        val speakingScore: Int,
+        val overallScore: Float,
+        val readingScore: Float,
+        val listeningScore: Float,
+        val writingScore: Float,
+        val speakingScore: Float,
         val memo: String
     ) : EnglishTestInfo()
 }

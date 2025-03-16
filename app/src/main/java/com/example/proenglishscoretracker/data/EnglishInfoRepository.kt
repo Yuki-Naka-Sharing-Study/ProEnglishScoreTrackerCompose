@@ -167,11 +167,11 @@ class EnglishInfoRepository(private val dao: EnglishInfoDao) {
     }
     suspend fun saveIeltsInfo(
         date: String,
-        readingScore: Int,
-        listeningScore: Int,
-        writingScore: Int,
-        speakingScore: Int,
-        overallScore: Int,
+        readingScore: Float,
+        listeningScore: Float,
+        writingScore: Float,
+        speakingScore: Float,
+        overallScore: Float,
         memo: String
     ) {
         val ieltsInfo = EnglishTestInfo.IELTS(

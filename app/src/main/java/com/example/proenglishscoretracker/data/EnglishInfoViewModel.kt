@@ -412,11 +412,11 @@ class EnglishInfoViewModel(
     }
     fun saveIeltsValues(
         date: String,
-        readingScore: Int,
-        listeningScore: Int,
-        writingScore: Int,
-        speakingScore: Int,
-        overallScore: Int,
+        readingScore: Float,
+        listeningScore: Float,
+        writingScore: Float,
+        speakingScore: Float,
+        overallScore: Float,
         memo: String,
         showAlert: (String) -> Unit
     ) {

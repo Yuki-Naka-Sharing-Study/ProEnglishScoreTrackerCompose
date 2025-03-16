@@ -158,14 +158,14 @@ fun IeltsEditScreen(
                                     EnglishTestInfo.IELTS(
                                         id = ieltsInfo.id,
                                         date = date,
-                                        readingScore = readingScore.toIntOrNull() ?: 0,
-                                        listeningScore = listeningScore.toIntOrNull() ?: 0,
-                                        writingScore = writingScore.toIntOrNull() ?: 0,
-                                        speakingScore = speakingScore.toIntOrNull() ?: 0,
-                                        overallScore = readingScore.toInt() +
-                                                listeningScore.toInt() +
-                                                writingScore.toInt() +
-                                                speakingScore.toInt(),
+                                        readingScore = readingScore.toFloatOrNull() ?: 0.0F,
+                                        listeningScore = listeningScore.toFloatOrNull() ?: 0.0F,
+                                        writingScore = writingScore.toFloatOrNull() ?: 0.0F,
+                                        speakingScore = speakingScore.toFloatOrNull() ?: 0.0F,
+                                        overallScore = readingScore.toFloat() +
+                                                listeningScore.toFloat() +
+                                                writingScore.toFloat() +
+                                                speakingScore.toFloat(),
                                         memo = memo
                                     )
                                 )
