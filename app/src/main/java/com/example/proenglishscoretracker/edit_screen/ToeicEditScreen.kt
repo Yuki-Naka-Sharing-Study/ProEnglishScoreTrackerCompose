@@ -65,7 +65,7 @@ fun ToeicEditScreen(
         return when {
             score == null -> false
             score > 495 -> {
-                readingErrorMessage = "Readingスコアが上限を超えています。"
+                readingErrorMessage = "Readingスコアの上限は495です。"
                 false
             }
             !isReadingFocused && score % 5 != 0 -> {
@@ -84,7 +84,7 @@ fun ToeicEditScreen(
         return when {
             score == null -> false
             score > 495 -> {
-                listeningErrorMessage = "Listeningスコアが上限を超えています。"
+                listeningErrorMessage = "Listeningスコアの上限は495です。"
                 false
             }
             !isListeningFocused && score % 5 != 0 -> {

@@ -151,7 +151,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 if (writingScore >= 201) {
-                    ErrorText("Writingスコアは201未満である必要があります。")
+                    ErrorText("Writingスコアの上限は200です。")
                     writingMaxScoreError = true
                 } else {
                     writingMaxScoreError = false
@@ -181,7 +181,7 @@ fun ToeicSwRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_32_dp)))
                 if (speakingScore >= 201) {
-                    ErrorText("Speakingスコアは201未満である必要があります。")
+                    ErrorText("Speakingスコアの上限は200です。")
                     speakingMaxScoreError = true
                 } else {
                     speakingMaxScoreError = false

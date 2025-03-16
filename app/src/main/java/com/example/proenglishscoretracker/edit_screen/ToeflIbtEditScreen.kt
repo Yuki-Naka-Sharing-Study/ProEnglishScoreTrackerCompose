@@ -66,7 +66,7 @@ fun ToeflIbtEditScreen(
         return when {
             score == null -> false
             score > 30 -> {
-                readingErrorMessage = "Readingスコアが上限を超えています。"
+                readingErrorMessage = "Readingスコアの上限は30です。"
                 false
             }
             else -> {
@@ -81,7 +81,7 @@ fun ToeflIbtEditScreen(
         return when {
             score == null -> false
             score > 30 -> {
-                listeningErrorMessage = "Listeningスコアが上限を超えています。"
+                listeningErrorMessage = "Listeningスコアの上限は30です。"
                 false
             }
             else -> {
@@ -96,7 +96,7 @@ fun ToeflIbtEditScreen(
         return when {
             score == null -> false
             score > 30 -> {
-                writingErrorMessage = "Writingスコアが上限を超えています。"
+                writingErrorMessage = "Writingスコアの上限は30です。"
                 false
             }
             else -> {
@@ -111,7 +111,7 @@ fun ToeflIbtEditScreen(
         return when {
             score == null -> false
             score > 30 -> {
-                speakingErrorMessage = "Speakingスコアが上限を超えています。"
+                speakingErrorMessage = "Speakingスコアの上限は30です。"
                 false
             }
             else -> {

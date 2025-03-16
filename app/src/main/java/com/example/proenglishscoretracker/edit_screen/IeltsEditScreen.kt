@@ -73,7 +73,7 @@ fun IeltsEditScreen(
             false
         } else {
             readingErrorMessage = when {
-                score > 9.0 -> "Readingスコアが上限を超えています。"
+                score > 9.0 -> "Readingスコアの上限は9.0です。"
                 !isHalfMultiple(score) -> "Readingスコアは0.5の倍数でなければなりません。"
                 else -> null
             }
@@ -87,7 +87,7 @@ fun IeltsEditScreen(
             false
         } else {
             listeningErrorMessage = when {
-                score > 9.0 -> "Listeningスコアが上限を超えています。"
+                score > 9.0 -> "Listeningスコアの上限は9.0です。"
                 !isHalfMultiple(score) -> "Listeningスコアは0.5の倍数でなければなりません。"
                 else -> null
             }
@@ -101,7 +101,7 @@ fun IeltsEditScreen(
             false
         } else {
             writingErrorMessage = when {
-                score > 9.0 -> "Writingスコアが上限を超えています。"
+                score > 9.0 -> "Writingスコアの上限は9.0です。"
                 !isHalfMultiple(score) -> "Writingスコアは0.5の倍数でなければなりません。"
                 else -> null
             }
@@ -115,7 +115,7 @@ fun IeltsEditScreen(
             false
         } else {
             speakingErrorMessage = when {
-                score > 9.0 -> "Speakingスコアが上限を超えています。"
+                score > 9.0 -> "Speakingスコアの上限は9.0です。"
                 !isHalfMultiple(score) -> "Speakingスコアは0.5の倍数でなければなりません。"
                 else -> null
             }

@@ -155,7 +155,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (readingScore >= 31) {
-                    ErrorText("Readingスコアは31未満である必要があります。")
+                    ErrorText("Readingスコアの上限は30です。")
                     readingMaxScoreError = true
                 } else {
                     readingMaxScoreError = false
@@ -185,7 +185,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (listeningScore >= 31) {
-                    ErrorText("Listeningスコアは31未満である必要があります。")
+                    ErrorText("Listeningスコアの上限は30です。")
                     listeningMaxScoreError = true
                 } else {
                     listeningMaxScoreError = false
@@ -215,7 +215,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (writingScore >= 31) {
-                    ErrorText("Writingスコアは31未満である必要があります。")
+                    ErrorText("Writingスコアの上限は30です。")
                     writingMaxScoreError = true
                 } else {
                     writingMaxScoreError = false
@@ -245,7 +245,7 @@ fun ToeflIbtRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (speakingScore >= 31) {
-                    ErrorText("Speakingスコアは31未満である必要があります。")
+                    ErrorText("Speakingスコアの上限は30です。")
                     speakingMaxScoreError = true
                 } else {
                     speakingMaxScoreError = false

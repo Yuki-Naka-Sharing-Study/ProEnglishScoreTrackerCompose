@@ -67,7 +67,7 @@ fun EikenEditScreen(
         return when {
             score == null -> false
             score > 850 -> {
-                readingErrorMessage = "Readingスコアが上限を超えています。"
+                readingErrorMessage = "Readingスコアの上限は850です。"
                 false
             }
             else -> {
@@ -82,7 +82,7 @@ fun EikenEditScreen(
         return when {
             score == null -> false
             score > 850 -> {
-                listeningErrorMessage = "Listeningスコアが上限を超えています。"
+                listeningErrorMessage = "Listeningスコアの上限は850です。"
                 false
             }
             else -> {
@@ -97,7 +97,7 @@ fun EikenEditScreen(
         return when {
             score == null -> false
             score > 850 -> {
-                writingErrorMessage = "Writingスコアが上限を超えています。"
+                writingErrorMessage = "Writingスコアの上限は850です。"
                 false
             }
             else -> {
@@ -112,7 +112,7 @@ fun EikenEditScreen(
         return when {
             score == null -> false
             score > 850 -> {
-                speakingErrorMessage = "Speakingスコアが上限を超えています。"
+                speakingErrorMessage = "Speakingスコアの上限は850です。"
                 false
             }
             else -> {

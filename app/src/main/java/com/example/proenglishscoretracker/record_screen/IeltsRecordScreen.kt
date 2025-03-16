@@ -156,7 +156,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (readingScore >= 9.1) {
-                    ErrorText("Readingスコアは9.0未満である必要があります。")
+                    ErrorText("Readingスコアの上限は9.0です。")
                     readingMaxScoreError = true
                 } else {
                     readingMaxScoreError = false
@@ -186,7 +186,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (listeningScore >= 9.1) {
-                    ErrorText("Listeningスコアは9.0未満である必要があります。")
+                    ErrorText("Listeningスコアの上限は9.0です。")
                     listeningMaxScoreError = true
                 } else {
                     listeningMaxScoreError = false
@@ -216,7 +216,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (writingScore >= 9.1) {
-                    ErrorText("Writingスコアは9.0未満である必要があります。")
+                    ErrorText("Writingスコアの上限は9.0です。")
                     writingMaxScoreError = true
                 } else {
                     writingMaxScoreError = false
@@ -246,7 +246,7 @@ fun IeltsRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (speakingScore >= 9.1) {
-                    ErrorText("Speakingスコアは9.0未満である必要があります。")
+                    ErrorText("Speakingスコアの上限は9.0です。")
                     speakingMaxScoreError = true
                 } else {
                     speakingMaxScoreError = false

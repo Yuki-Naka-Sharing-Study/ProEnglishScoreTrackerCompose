@@ -198,7 +198,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (readingScore >= 851) {
-                    ErrorText("Readingスコアは851未満である必要があります。")
+                    ErrorText("Readingスコアの上限は850です。")
                     readingMaxScoreError = true
                 } else {
                     readingMaxScoreError = false
@@ -229,7 +229,7 @@ fun EikenRecordScreen(viewModel: EnglishInfoViewModel) {
             Row {
                 Spacer(modifier = Modifier.padding(start = dimensionResource(id = R.dimen.space_24_dp)))
                 if (listeningScore >= 851) {
-                    ErrorText("Listeningスコアは851未満である必要があります。")
+                    ErrorText("Listeningスコアの上限は850です。")
                     listeningMaxScoreError = true
                 } else {
                     listeningMaxScoreError = false
@@ -1357,7 +1357,7 @@ private fun WritingScoreArea(
             Row {
                 Spacer(modifier = modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
                 if (writingScore >= 851) {
-                    ErrorText("WritingScoreスコアは851未満である必要があります。")
+                    ErrorText("Writingスコアの上限は850です。")
                 }
             }
         }
@@ -1399,7 +1399,7 @@ private fun SpeakingScoreArea(
             Row {
                 Spacer(modifier = modifier.padding(start = dimensionResource(id = R.dimen.space_36_dp)))
                 if (speakingScore >= 851) {
-                    ErrorText("SpeakingScoreスコアは851未満である必要があります。")
+                    ErrorText("Speakingスコアの上限は850です。")
                 }
             }
             Spacer(modifier = modifier.height(dimensionResource(id = R.dimen.space_16_dp)))

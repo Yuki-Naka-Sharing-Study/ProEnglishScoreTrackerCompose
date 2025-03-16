@@ -65,7 +65,7 @@ fun ToeicSwEditScreen(
         return when {
             score == null -> false
             score > 200 -> {
-                writingErrorMessage = "Writingスコアが上限を超えています。"
+                writingErrorMessage = "Writingスコアの上限は200です。"
                 false
             }
             !isWritingFocused && score % 5 != 0 -> {
@@ -84,7 +84,7 @@ fun ToeicSwEditScreen(
         return when {
             score == null -> false
             score > 200 -> {
-                speakingErrorMessage = "Speakingスコアが上限を超えています。"
+                speakingErrorMessage = "Speakingスコアの上限は200です。"
                 false
             }
             !isSpeakingFocused && score % 5 != 0 -> {
