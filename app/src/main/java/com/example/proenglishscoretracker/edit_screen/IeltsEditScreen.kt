@@ -30,6 +30,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+// TODO : 0.5の倍数以外のスコアでも登録できてしまう問題を解決
 @Composable
 fun IeltsEditScreen(
     ieltsInfo: EnglishTestInfo.IELTS,
