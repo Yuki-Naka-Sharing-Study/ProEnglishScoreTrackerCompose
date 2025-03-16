@@ -895,7 +895,8 @@ private fun IeltsRLWSScorePicker(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     IeltsRLWSScorePickerView(
                         score = tempScore,
