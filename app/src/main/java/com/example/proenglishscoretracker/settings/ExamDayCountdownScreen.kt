@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit
 data class ExamSetting(val name: String, val prefKey: String)
 
 @Composable
-fun CountdownSettingsScreen(
+fun ExamDayCountdownScreen(
     navHostController: NavHostController
 ) {
     val context = LocalContext.current

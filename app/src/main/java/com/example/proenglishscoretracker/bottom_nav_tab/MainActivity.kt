@@ -68,7 +68,7 @@ import com.example.proenglishscoretracker.list_screen.ToeflIbtListScreen
 import com.example.proenglishscoretracker.list_screen.ToeicListScreen
 import com.example.proenglishscoretracker.list_screen.ToeicSwListScreen
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
-import com.example.proenglishscoretracker.settings.CountdownSettingsScreen
+import com.example.proenglishscoretracker.settings.ExamDayCountdownScreen
 import com.example.proenglishscoretracker.settings.ExpireCountdownScreen
 import com.example.proenglishscoretracker.settings.YoutuberScreen
 
@@ -194,7 +194,7 @@ fun EnglishScoreTracker(
                 composable("examRecordScreen") { ExamRecordScreen(viewModel) }
                 composable("setting") { SettingsScreen(navController) }
 
-                composable("examCountdownScreen") { CountdownSettingsScreen(navController)}
+                composable("examDayCountdownScreen") { ExamDayCountdownScreen(navController)}
                 composable("expireCountdownScreen") { ExpireCountdownScreen(navController)}
                 composable("youtuberScreen") { YoutuberScreen(navController)}
 
