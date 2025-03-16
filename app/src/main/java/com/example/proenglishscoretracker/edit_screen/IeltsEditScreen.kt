@@ -56,7 +56,7 @@ fun IeltsEditScreen(
         val score = readingScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 30 -> {
+            score > 9.0 -> {
                 readingErrorMessage = "Readingスコアが上限を超えています。"
                 false
             }
@@ -71,7 +71,7 @@ fun IeltsEditScreen(
         val score = listeningScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 30 -> {
+            score > 9.0 -> {
                 listeningErrorMessage = "Listeningスコアが上限を超えています。"
                 false
             }
@@ -86,7 +86,7 @@ fun IeltsEditScreen(
         val score = writingScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 30 -> {
+            score > 9.0 -> {
                 writingErrorMessage = "Writingスコアが上限を超えています。"
                 false
             }
@@ -101,7 +101,7 @@ fun IeltsEditScreen(
         val score = speakingScore.toIntOrNull()
         return when {
             score == null -> false
-            score > 30 -> {
+            score > 9.0 -> {
                 speakingErrorMessage = "Speakingスコアが上限を超えています。"
                 false
             }
