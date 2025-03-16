@@ -14,22 +14,21 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.proenglishscoretracker.chart_screen.ToeicChartScreen
-import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
+import com.example.proenglishscoretracker.list_screen.ToeicListScreen
 import androidx.compose.material.*
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
 import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeicSwChartScreen
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
-import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
-import com.example.proenglishscoretracker.individual_screen.IeltsIndividualScreen
-import com.example.proenglishscoretracker.individual_screen.ToeflIbtIndividualScreen
-import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScreen
+import com.example.proenglishscoretracker.list_screen.EikenListScreen
+import com.example.proenglishscoretracker.list_screen.IeltsListScreen
+import com.example.proenglishscoretracker.list_screen.ToeflIbtListScreen
+import com.example.proenglishscoretracker.list_screen.ToeicSwListScreen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import kotlinx.coroutines.launch
@@ -101,7 +100,7 @@ private fun ToeicSegmentedButton(
     navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("グラフ", "個別")
+    val options = listOf("グラフ", "一覧")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -131,7 +130,7 @@ private fun ToeicSegmentedButton(
         }
         when (selectedIndex) {
             0 -> ToeicChartScreen(viewModel)
-            1 -> ToeicIndividualScreen(viewModel, navHostController)
+            1 -> ToeicListScreen(viewModel, navHostController)
         }
     }
 }
@@ -142,7 +141,7 @@ private fun ToeicSwSegmentedButton(
     navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("グラフ", "個別")
+    val options = listOf("グラフ", "一覧")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -172,7 +171,7 @@ private fun ToeicSwSegmentedButton(
         }
         when (selectedIndex) {
             0 -> ToeicSwChartScreen(viewModel)
-            1 -> ToeicSwIndividualScreen(viewModel, navHostController)
+            1 -> ToeicSwListScreen(viewModel, navHostController)
         }
     }
 }
@@ -183,7 +182,7 @@ private fun EikenSegmentedButton(
     navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("グラフ", "個別")
+    val options = listOf("グラフ", "一覧")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -213,7 +212,7 @@ private fun EikenSegmentedButton(
         }
         when (selectedIndex) {
             0 -> EikenChartScreen(viewModel)
-            1 -> EikenIndividualScreen(viewModel, navHostController)
+            1 -> EikenListScreen(viewModel, navHostController)
         }
     }
 }
@@ -224,7 +223,7 @@ private fun ToeflIbtSegmentedButton(
     navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("グラフ", "個別")
+    val options = listOf("グラフ", "一覧")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -254,7 +253,7 @@ private fun ToeflIbtSegmentedButton(
         }
         when (selectedIndex) {
             0 -> ToeflIbtChartScreen(viewModel)
-            1 -> ToeflIbtIndividualScreen(viewModel, navHostController)
+            1 -> ToeflIbtListScreen(viewModel, navHostController)
         }
     }
 }
@@ -265,7 +264,7 @@ private fun IeltsSegmentedButton(
     navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-    val options = listOf("グラフ", "個別")
+    val options = listOf("グラフ", "一覧")
 
     Column(modifier = Modifier.fillMaxWidth()) {
         SingleChoiceSegmentedButtonRow(
@@ -295,7 +294,7 @@ private fun IeltsSegmentedButton(
         }
         when (selectedIndex) {
             0 -> IeltsChartScreen(viewModel)
-            1 -> IeltsIndividualScreen(viewModel, navHostController)
+            1 -> IeltsListScreen(viewModel, navHostController)
         }
     }
 }

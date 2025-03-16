@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.individual_screen
+package com.example.proenglishscoretracker.list_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -33,7 +33,7 @@ import com.example.proenglishscoretracker.data.EnglishTestInfo
 
 // TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
-fun EikenIndividualScreen(
+fun EikenListScreen(
     viewModel: EnglishInfoViewModel,
     navHostController: NavHostController
 ) {

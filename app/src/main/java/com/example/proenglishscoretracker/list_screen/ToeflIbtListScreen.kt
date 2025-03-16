@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.individual_screen
+package com.example.proenglishscoretracker.list_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -27,23 +26,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
 // TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
-fun ToeicIndividualScreen(
+fun ToeflIbtListScreen(
     viewModel: EnglishInfoViewModel,
     navHostController: NavHostController
 ) {
-    val toeicInfoList = viewModel.toeicInfo.collectAsState().value
+    val toeflIbtInfoList = viewModel.toeflIbtInfo.collectAsState().value
 
     // 日付の降順でソート
-    val sortedToeicInfoList = remember(toeicInfoList) {
-        toeicInfoList.sortedByDescending { it.date }
+    val sortedToeflIbtInfoList = remember(toeflIbtInfoList) {
+        toeflIbtInfoList.sortedByDescending { it.date }
     }
 
-    if (sortedToeicInfoList.isEmpty()) {
+    if (sortedToeflIbtInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -58,35 +58,34 @@ fun ToeicIndividualScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(items = sortedToeicInfoList) { toeicInfo ->
-                ToeicItem(
-                    toeicInfo = toeicInfo,
+            items(items = sortedToeflIbtInfoList) { toeflIbtInfo ->
+                ToeflIbtInfo(
+                    toeflIbtInfo = toeflIbtInfo,
                     navController = navHostController
                 )
             }
         }
     }
 }
-
 @Composable
-private fun ToeicItem(
-    toeicInfo: EnglishTestInfo.TOEIC,
-    navController: NavHostController
+private fun ToeflIbtInfo(
+    toeflIbtInfo: EnglishTestInfo.TOEFL,
+    navController: NavController
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
-            .clickable {
-                // 詳細画面に遷移
-                navController.navigate("toeic_detail/${toeicInfo.id}")
-            },
+            .padding(8.dp),
         elevation = 4.dp
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
+                .clickable {
+                    // 詳細画面に遷移
+                    navController.navigate("toefl_ibt_detail/${toeflIbtInfo.id}")
+                },
         ) {
             Column(
                 modifier = Modifier.align(Alignment.CenterStart)
@@ -96,7 +95,19 @@ private fun ToeicItem(
                 ) {
                     Text(text = "受験日:")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeicInfo.date)
+                    Text(text = toeflIbtInfo.date)
+                }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                Divider()
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Overallスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.overallScore.toString())
                 }
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
@@ -108,7 +119,7 @@ private fun ToeicItem(
                 ) {
                     Text(text = "Readingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeicInfo.readingScore.toString())
+                    Text(text = toeflIbtInfo.readingScore.toString())
                 }
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
@@ -120,7 +131,31 @@ private fun ToeicItem(
                 ) {
                     Text(text = "Listeningスコア:")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeicInfo.listeningScore.toString())
+                    Text(text = toeflIbtInfo.listeningScore.toString())
+                }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                Divider()
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Writingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.writingScore.toString())
+                }
+
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+                Divider()
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Speakingスコア:")
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(text = toeflIbtInfo.speakingScore.toString())
                 }
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
@@ -131,7 +166,7 @@ private fun ToeicItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "メモ: ${toeicInfo.memo}",
+                        text = "メモ: ${toeflIbtInfo.memo}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

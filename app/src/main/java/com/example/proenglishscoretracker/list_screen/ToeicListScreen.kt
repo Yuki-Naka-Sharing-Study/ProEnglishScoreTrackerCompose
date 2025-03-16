@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.individual_screen
+package com.example.proenglishscoretracker.list_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,24 +26,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
 // TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
-fun ToeflIbtIndividualScreen(
+fun ToeicListScreen(
     viewModel: EnglishInfoViewModel,
     navHostController: NavHostController
 ) {
-    val toeflIbtInfoList = viewModel.toeflIbtInfo.collectAsState().value
+    val toeicInfoList = viewModel.toeicInfo.collectAsState().value
 
     // 日付の降順でソート
-    val sortedToeflIbtInfoList = remember(toeflIbtInfoList) {
-        toeflIbtInfoList.sortedByDescending { it.date }
+    val sortedToeicInfoList = remember(toeicInfoList) {
+        toeicInfoList.sortedByDescending { it.date }
     }
 
-    if (sortedToeflIbtInfoList.isEmpty()) {
+    if (sortedToeicInfoList.isEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -58,34 +57,35 @@ fun ToeflIbtIndividualScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
-            items(items = sortedToeflIbtInfoList) { toeflIbtInfo ->
-                ToeflIbtInfo(
-                    toeflIbtInfo = toeflIbtInfo,
+            items(items = sortedToeicInfoList) { toeicInfo ->
+                ToeicItem(
+                    toeicInfo = toeicInfo,
                     navController = navHostController
                 )
             }
         }
     }
 }
+
 @Composable
-private fun ToeflIbtInfo(
-    toeflIbtInfo: EnglishTestInfo.TOEFL,
-    navController: NavController
+private fun ToeicItem(
+    toeicInfo: EnglishTestInfo.TOEIC,
+    navController: NavHostController
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {
+                // 詳細画面に遷移
+                navController.navigate("toeic_detail/${toeicInfo.id}")
+            },
         elevation = 4.dp
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .clickable {
-                    // 詳細画面に遷移
-                    navController.navigate("toefl_ibt_detail/${toeflIbtInfo.id}")
-                },
         ) {
             Column(
                 modifier = Modifier.align(Alignment.CenterStart)
@@ -95,19 +95,7 @@ private fun ToeflIbtInfo(
                 ) {
                     Text(text = "受験日:")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeflIbtInfo.date)
-                }
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Divider()
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Overallスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeflIbtInfo.overallScore.toString())
+                    Text(text = toeicInfo.date)
                 }
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
@@ -119,7 +107,7 @@ private fun ToeflIbtInfo(
                 ) {
                     Text(text = "Readingスコア:")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeflIbtInfo.readingScore.toString())
+                    Text(text = toeicInfo.readingScore.toString())
                 }
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
@@ -131,31 +119,7 @@ private fun ToeflIbtInfo(
                 ) {
                     Text(text = "Listeningスコア:")
                     Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeflIbtInfo.listeningScore.toString())
-                }
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Divider()
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Writingスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeflIbtInfo.writingScore.toString())
-                }
-
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-                Divider()
-                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Speakingスコア:")
-                    Spacer(modifier = Modifier.weight(1f))
-                    Text(text = toeflIbtInfo.speakingScore.toString())
+                    Text(text = toeicInfo.listeningScore.toString())
                 }
 
                 Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_8_dp)))
@@ -166,7 +130,7 @@ private fun ToeflIbtInfo(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "メモ: ${toeflIbtInfo.memo}",
+                        text = "メモ: ${toeicInfo.memo}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )

@@ -1,4 +1,4 @@
-package com.example.proenglishscoretracker.individual_screen
+package com.example.proenglishscoretracker.list_screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,13 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
 // TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
-fun IeltsIndividualScreen(
+fun IeltsListScreen(
     viewModel: EnglishInfoViewModel,
     navHostController: NavHostController
 ) {

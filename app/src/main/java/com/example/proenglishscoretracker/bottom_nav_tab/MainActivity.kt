@@ -62,11 +62,11 @@ import com.example.proenglishscoretracker.record_screen.IeltsRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeflIbtRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicRecordScreen
 import com.example.proenglishscoretracker.record_screen.ToeicSwRecordScreen
-import com.example.proenglishscoretracker.individual_screen.EikenIndividualScreen
-import com.example.proenglishscoretracker.individual_screen.IeltsIndividualScreen
-import com.example.proenglishscoretracker.individual_screen.ToeflIbtIndividualScreen
-import com.example.proenglishscoretracker.individual_screen.ToeicIndividualScreen
-import com.example.proenglishscoretracker.individual_screen.ToeicSwIndividualScreen
+import com.example.proenglishscoretracker.list_screen.EikenListScreen
+import com.example.proenglishscoretracker.list_screen.IeltsListScreen
+import com.example.proenglishscoretracker.list_screen.ToeflIbtListScreen
+import com.example.proenglishscoretracker.list_screen.ToeicListScreen
+import com.example.proenglishscoretracker.list_screen.ToeicSwListScreen
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
 import com.example.proenglishscoretracker.settings.CountdownSettingsScreen
 import com.example.proenglishscoretracker.settings.YoutuberScreen
@@ -197,11 +197,11 @@ fun EnglishScoreTracker(
                 composable("youtuberScreen") { YoutuberScreen(navController)}
 
                 // XxxIndividualScreen
-                composable("toeicIndividualScreen") { ToeicIndividualScreen(viewModel, navController) }
-                composable("toeicSwIndividualScreen") { ToeicSwIndividualScreen(viewModel, navController) }
-                composable("eikenIchijiIndividualScreen") { EikenIndividualScreen(viewModel, navController) }
-                composable("toeflIbtIndividualScreen") { ToeflIbtIndividualScreen(viewModel, navController) }
-                composable("ieltsIndividualScreen") { IeltsIndividualScreen(viewModel, navController) }
+                composable("toeicIndividualScreen") { ToeicListScreen(viewModel, navController) }
+                composable("toeicSwIndividualScreen") { ToeicSwListScreen(viewModel, navController) }
+                composable("eikenIchijiIndividualScreen") { EikenListScreen(viewModel, navController) }
+                composable("toeflIbtIndividualScreen") { ToeflIbtListScreen(viewModel, navController) }
+                composable("ieltsIndividualScreen") { IeltsListScreen(viewModel, navController) }
 
                 // XxxDetailScreen
                 composable("toeic_detail/{toeicId}") { backStackEntry ->
