@@ -24,7 +24,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 import java.text.ParseException
@@ -35,7 +35,7 @@ import java.util.Locale
 fun ToeicEditScreen(
     toeicInfo: EnglishTestInfo.TOEIC,
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     var date by remember { mutableStateOf(toeicInfo.date) }
     var readingScore by remember { mutableStateOf(toeicInfo.readingScore.toString()) }
@@ -112,7 +112,7 @@ fun ToeicEditScreen(
             TopAppBar(
                 title = { Text("TOEIC データ編集") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "戻る")
                     }
                 },
@@ -129,7 +129,7 @@ fun ToeicEditScreen(
                                         memo = memo
                                     )
                                 )
-                                navController.popBackStack()
+                                navHostController.popBackStack()
                             }
                         },
                         enabled = isFormValid

@@ -31,7 +31,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 
@@ -39,7 +39,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 fun ToeicSwDetailScreen(
     toeicSwId: String,
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     // 画面表示時にデータを取得
     LaunchedEffect(toeicSwId, viewModel) {
@@ -59,7 +59,7 @@ fun ToeicSwDetailScreen(
                     onClick = {
                         viewModel.deleteToeicSwInfo(toeicSwId)
                         showAlertDialog = false
-                        navController.popBackStack()
+                        navHostController.popBackStack()
                     }
                 ) {
                     Text(
@@ -81,7 +81,7 @@ fun ToeicSwDetailScreen(
             .verticalScroll(rememberScrollState())
     ) {
         IconButton(
-            onClick = { navController.popBackStack() },
+            onClick = { navHostController.popBackStack() },
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
@@ -111,7 +111,7 @@ fun ToeicSwDetailScreen(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
                     toeicSwInfo?.let {
-                        navController.navigate("toeic_sw_edit/${it.id}")
+                        navHostController.navigate("toeic_sw_edit/${it.id}")
                     }
                 }
             ) {

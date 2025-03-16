@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 import java.text.ParseException
@@ -34,7 +34,7 @@ import java.util.Locale
 fun EikenEditScreen(
     eikenInfo: EnglishTestInfo.EIKEN,
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     var date by remember { mutableStateOf(eikenInfo.date) }
     var grade by remember { mutableStateOf(eikenInfo.grade) }
@@ -144,7 +144,7 @@ fun EikenEditScreen(
             TopAppBar(
                 title = { Text("英検 データ編集") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             Icons.Default.ArrowBack,
                             contentDescription = "戻る"
@@ -171,7 +171,7 @@ fun EikenEditScreen(
                                         memo = memo
                                     )
                                 )
-                                navController.popBackStack()
+                                navHostController.popBackStack()
                             }
                         },
                         enabled = isFormValid

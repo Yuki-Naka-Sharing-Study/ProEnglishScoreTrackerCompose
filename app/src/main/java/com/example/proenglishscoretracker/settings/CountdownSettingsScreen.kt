@@ -42,7 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.work.*
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
@@ -52,7 +52,7 @@ data class ExamSetting(val name: String, val prefKey: String)
 
 @Composable
 fun CountdownSettingsScreen(
-    navController: NavController
+    navHostController: NavHostController
 ) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("exam_prefs", Context.MODE_PRIVATE)
@@ -75,7 +75,7 @@ fun CountdownSettingsScreen(
             TopAppBar(
                 title = { Text("受験日カウントダウン設定", fontSize = 20.sp) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "戻る",

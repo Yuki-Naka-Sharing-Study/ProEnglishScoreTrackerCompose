@@ -27,13 +27,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
 // TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
 fun IeltsIndividualScreen(
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     val ieltsInfoList = viewModel.ieltsInfo.collectAsState().value
 
@@ -60,7 +61,7 @@ fun IeltsIndividualScreen(
             items(items = sortedIeltsInfoList) { ieltsInfo ->
                 IeltsInfo(
                     ieltsInfo = ieltsInfo,
-                    navController = navController
+                    navHostController = navHostController
                 )
             }
         }
@@ -69,7 +70,7 @@ fun IeltsIndividualScreen(
 @Composable
 private fun IeltsInfo(
     ieltsInfo: EnglishTestInfo.IELTS,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     Card(
         modifier = Modifier
@@ -83,7 +84,7 @@ private fun IeltsInfo(
                 .padding(16.dp)
                 .clickable {
                     // 詳細画面に遷移
-                    navController.navigate("ielts_detail/${ieltsInfo.id}")
+                    navHostController.navigate("ielts_detail/${ieltsInfo.id}")
                 },
         ) {
             Column(

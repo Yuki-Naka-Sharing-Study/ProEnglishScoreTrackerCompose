@@ -27,13 +27,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
 // TODO : りくとさんから頂いたFB通り、Circular Progress Indicatorを使ったデザインで修正
 @Composable
 fun ToeicSwIndividualScreen(
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     val toeicSwInfoList = viewModel.toeicSwInfo.collectAsState().value
 
@@ -60,7 +61,7 @@ fun ToeicSwIndividualScreen(
             items(items = sortedToeicSwInfoList) { toeicSwInfo ->
                 ToeicSwItem(
                     toeicSwInfo = toeicSwInfo,
-                    navController = navController
+                    navController = navHostController
                 )
             }
         }

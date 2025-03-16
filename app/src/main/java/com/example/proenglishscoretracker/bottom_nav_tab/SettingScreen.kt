@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(navHostController: NavHostController) {
     val context = LocalContext.current
 
     Column(
@@ -66,8 +66,8 @@ fun SettingsScreen(navController: NavController) {
                 context.startActivity(Intent.createChooser(shareIntent, "アプリを共有"))
             },
             "バージョン 1.0.0" to {},
-            "受験日カウントダウンを設定" to { navController.navigate("examCountdown") },
-            "登録推奨YouTuber" to { navController.navigate("youtuberScreen") },
+            "受験日カウントダウンを設定" to { navHostController.navigate("examCountdown") },
+            "登録推奨YouTuber" to { navHostController.navigate("youtuberScreen") },
         )
 
         items.forEach { (title, action) ->

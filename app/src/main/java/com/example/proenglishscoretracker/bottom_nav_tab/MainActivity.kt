@@ -15,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -35,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavHostController
 import androidx.room.Room
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
@@ -211,7 +211,7 @@ fun EnglishScoreTracker(
                         ToeicDetailScreen(
                             toeicId = toeicId,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -221,7 +221,7 @@ fun EnglishScoreTracker(
                         ToeicSwDetailScreen(
                             toeicSwId = toeicSwId,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -231,7 +231,7 @@ fun EnglishScoreTracker(
                         EikenDetailScreen(
                             eikenId = eikenId,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -241,7 +241,7 @@ fun EnglishScoreTracker(
                         ToeflIbtDetailScreen(
                             toeflIbtId = toeflIbtId,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -251,7 +251,7 @@ fun EnglishScoreTracker(
                         IeltsDetailScreen(
                             ieltsId = ieltsId,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -265,7 +265,7 @@ fun EnglishScoreTracker(
                         ToeicEditScreen(
                             toeicInfo = toeicInfo,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -277,7 +277,7 @@ fun EnglishScoreTracker(
                         ToeicSwEditScreen(
                             toeicSwInfo = toeicSwInfo,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -289,7 +289,7 @@ fun EnglishScoreTracker(
                         EikenEditScreen(
                             eikenInfo = eikenInfo,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -301,7 +301,7 @@ fun EnglishScoreTracker(
                         ToeflIbtEditScreen(
                             toeflIbtInfo = toeflIbtInfo,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -313,7 +313,7 @@ fun EnglishScoreTracker(
                         IeltsEditScreen(
                             ieltsInfo = ieltsInfo,
                             viewModel = viewModel,
-                            navController = navController
+                            navHostController = navController
                         )
                     }
                 }
@@ -339,7 +339,7 @@ fun EnglishScoreTracker(
 
 @Composable
 fun BottomNavigationBar(
-    navController: NavController,
+    navController: NavHostController,
     viewModel: EnglishInfoViewModel
 ) {
     val eikenUnsavedChanges by viewModel.eikenUnsavedChanges.collectAsState()

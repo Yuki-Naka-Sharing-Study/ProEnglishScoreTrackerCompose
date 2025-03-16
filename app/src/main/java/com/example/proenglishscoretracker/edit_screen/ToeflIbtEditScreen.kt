@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 import com.example.proenglishscoretracker.data.EnglishTestInfo
 import java.text.ParseException
@@ -34,7 +34,7 @@ import java.util.Locale
 fun ToeflIbtEditScreen(
     toeflIbtInfo: EnglishTestInfo.TOEFL,
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     var date by remember { mutableStateOf(toeflIbtInfo.date) }
     var readingScore by remember { mutableStateOf(toeflIbtInfo.readingScore.toString()) }
@@ -143,7 +143,7 @@ fun ToeflIbtEditScreen(
             TopAppBar(
                 title = { Text("TOEFL iBT データ編集") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             Icons.Default.ArrowBack,
                             contentDescription = "戻る"
@@ -169,7 +169,7 @@ fun ToeflIbtEditScreen(
                                         memo = memo
                                     )
                                 )
-                                navController.popBackStack()
+                                navHostController.popBackStack()
                             }
                         },
                         enabled = isFormValid

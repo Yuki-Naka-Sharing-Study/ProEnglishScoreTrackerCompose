@@ -36,12 +36,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
 @Composable
 fun YoutuberScreen(
-    navController: NavController
+    navHostController: NavHostController
 ) {
     Scaffold(
         topBar = {
@@ -50,7 +50,7 @@ fun YoutuberScreen(
                     Text("登録推奨YouTuber")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back"

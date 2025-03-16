@@ -139,7 +139,7 @@ private fun ToeicSegmentedButton(
 @Composable
 private fun ToeicSwSegmentedButton(
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("グラフ", "個別")
@@ -172,7 +172,7 @@ private fun ToeicSwSegmentedButton(
         }
         when (selectedIndex) {
             0 -> ToeicSwChartScreen(viewModel)
-            1 -> ToeicSwIndividualScreen(viewModel, navController)
+            1 -> ToeicSwIndividualScreen(viewModel, navHostController)
         }
     }
 }
@@ -180,7 +180,7 @@ private fun ToeicSwSegmentedButton(
 @Composable
 private fun EikenSegmentedButton(
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("グラフ", "個別")
@@ -213,7 +213,7 @@ private fun EikenSegmentedButton(
         }
         when (selectedIndex) {
             0 -> EikenChartScreen(viewModel)
-            1 -> EikenIndividualScreen(viewModel, navController)
+            1 -> EikenIndividualScreen(viewModel, navHostController)
         }
     }
 }
@@ -221,7 +221,7 @@ private fun EikenSegmentedButton(
 @Composable
 private fun ToeflIbtSegmentedButton(
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("グラフ", "個別")
@@ -254,7 +254,7 @@ private fun ToeflIbtSegmentedButton(
         }
         when (selectedIndex) {
             0 -> ToeflIbtChartScreen(viewModel)
-            1 -> ToeflIbtIndividualScreen(viewModel, navController)
+            1 -> ToeflIbtIndividualScreen(viewModel, navHostController)
         }
     }
 }
@@ -262,7 +262,7 @@ private fun ToeflIbtSegmentedButton(
 @Composable
 private fun IeltsSegmentedButton(
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val options = listOf("グラフ", "個別")
@@ -295,7 +295,7 @@ private fun IeltsSegmentedButton(
         }
         when (selectedIndex) {
             0 -> IeltsChartScreen(viewModel)
-            1 -> IeltsIndividualScreen(viewModel, navController)
+            1 -> IeltsIndividualScreen(viewModel, navHostController)
         }
     }
 }

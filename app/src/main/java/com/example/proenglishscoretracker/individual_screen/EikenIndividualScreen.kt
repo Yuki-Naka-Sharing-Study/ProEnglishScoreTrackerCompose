@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
@@ -34,7 +35,7 @@ import com.example.proenglishscoretracker.data.EnglishTestInfo
 @Composable
 fun EikenIndividualScreen(
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     val eikenInfoList = viewModel.eikenSecondInfo.collectAsState().value
 
@@ -61,7 +62,7 @@ fun EikenIndividualScreen(
             items(items = sortedEikenInfoList) { eikenInfo ->
                 EikenItem(
                     eikenInfo = eikenInfo,
-                    navController = navController
+                    navController = navHostController
                 )
             }
         }

@@ -31,7 +31,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 
@@ -39,7 +39,7 @@ import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 fun EikenDetailScreen(
     eikenId: String,
     viewModel: EnglishInfoViewModel,
-    navController: NavController
+    navHostController: NavHostController
 ) {
     // 画面表示時にデータを取得
     LaunchedEffect(eikenId, viewModel) {
@@ -60,7 +60,7 @@ fun EikenDetailScreen(
                     onClick = {
                         viewModel.deleteEikenInfo(eikenId)
                         showAlertDialog = false
-                        navController.popBackStack()
+                        navHostController.popBackStack()
                     }
                 ) {
                     Text(
@@ -82,7 +82,7 @@ fun EikenDetailScreen(
             .verticalScroll(rememberScrollState())
     ) {
         IconButton(
-            onClick = { navController.popBackStack() },
+            onClick = { navHostController.popBackStack() },
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(16.dp)
@@ -112,7 +112,7 @@ fun EikenDetailScreen(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
                     eikenInfo?.let {
-                        navController.navigate("eiken_edit/${it.id}")
+                        navHostController.navigate("eiken_edit/${it.id}")
                     }
                 }
             ) {

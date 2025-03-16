@@ -34,7 +34,7 @@ import com.example.proenglishscoretracker.R
 @Composable
 fun ToeicIndividualScreen(
     viewModel: EnglishInfoViewModel,
-    navController: NavHostController
+    navHostController: NavHostController
 ) {
     val toeicInfoList = viewModel.toeicInfo.collectAsState().value
 
@@ -61,7 +61,7 @@ fun ToeicIndividualScreen(
             items(items = sortedToeicInfoList) { toeicInfo ->
                 ToeicItem(
                     toeicInfo = toeicInfo,
-                    navController = navController
+                    navController = navHostController
                 )
             }
         }
