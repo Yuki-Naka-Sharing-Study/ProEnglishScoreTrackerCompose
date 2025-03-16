@@ -67,6 +67,7 @@ fun SettingsScreen(navHostController: NavHostController) {
             },
             "バージョン 1.0.0" to {},
             "受験日カウントダウンを設定" to { navHostController.navigate("examCountdown") },
+            "有効期限カウントダウンを設定" to { navHostController.navigate("examCountdown") },
             "登録推奨YouTuber" to { navHostController.navigate("youtuberScreen") },
         )
 
