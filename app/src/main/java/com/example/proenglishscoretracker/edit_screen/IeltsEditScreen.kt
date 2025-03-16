@@ -30,7 +30,6 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-// TODO : 0.5の倍数以外のスコアでも登録できてしまう問題を解決
 @Composable
 fun IeltsEditScreen(
     ieltsInfo: EnglishTestInfo.IELTS,
@@ -44,72 +43,74 @@ fun IeltsEditScreen(
     var speakingScore by remember { mutableStateOf(ieltsInfo.speakingScore.toString()) }
     var memo by remember { mutableStateOf(ieltsInfo.memo) }
 
-    // 日付の有効性とエラーメッセージの管理
-    var dateErrorMessage by remember { mutableStateOf<String?>(null) } // エラーメッセージを保持
-    var isDateValid by remember { mutableStateOf(true) } // 日付の有効性を保持
+    // エラーメッセージを管理
+    var dateErrorMessage by remember { mutableStateOf<String?>(null) }
+    var isDateValid by remember { mutableStateOf(true) }
 
     var readingErrorMessage by remember { mutableStateOf<String?>(null) }
     var listeningErrorMessage by remember { mutableStateOf<String?>(null) }
     var writingErrorMessage by remember { mutableStateOf<String?>(null) }
     var speakingErrorMessage by remember { mutableStateOf<String?>(null) }
 
+    // 0.5の倍数チェックを行う関数
+    fun isHalfMultiple(score: Float?): Boolean {
+        return score != null && (score * 2) % 1 == 0f
+    }
+
+    // スコアのバリデーションを行う関数（上限エラーと0.5倍数エラー）
     fun validateReadingScore(): Boolean {
         val score = readingScore.toFloatOrNull()
-        return when {
-            score == null -> false
-            score > 9.0 -> {
-                readingErrorMessage = "Readingスコアが上限を超えています。"
-                false
+        return if (score == null) {
+            false
+        } else {
+            readingErrorMessage = when {
+                score > 9.0 -> "Readingスコアが上限を超えています。"
+                !isHalfMultiple(score) -> "Readingスコアは0.5の倍数でなければなりません。"
+                else -> null
             }
-            else -> {
-                readingErrorMessage = null
-                true
-            }
+            readingErrorMessage == null
         }
     }
 
     fun validateListeningScore(): Boolean {
         val score = listeningScore.toFloatOrNull()
-        return when {
-            score == null -> false
-            score > 9.0 -> {
-                listeningErrorMessage = "Listeningスコアが上限を超えています。"
-                false
+        return if (score == null) {
+            false
+        } else {
+            listeningErrorMessage = when {
+                score > 9.0 -> "Listeningスコアが上限を超えています。"
+                !isHalfMultiple(score) -> "Listeningスコアは0.5の倍数でなければなりません。"
+                else -> null
             }
-            else -> {
-                listeningErrorMessage = null
-                true
-            }
+            listeningErrorMessage == null
         }
     }
 
     fun validateWritingScore(): Boolean {
         val score = writingScore.toFloatOrNull()
-        return when {
-            score == null -> false
-            score > 9.0 -> {
-                writingErrorMessage = "Writingスコアが上限を超えています。"
-                false
+        return if (score == null) {
+            false
+        } else {
+            writingErrorMessage = when {
+                score > 9.0 -> "Writingスコアが上限を超えています。"
+                !isHalfMultiple(score) -> "Writingスコアは0.5の倍数でなければなりません。"
+                else -> null
             }
-            else -> {
-                writingErrorMessage = null
-                true
-            }
+            writingErrorMessage == null
         }
     }
 
     fun validateSpeakingScore(): Boolean {
         val score = speakingScore.toFloatOrNull()
-        return when {
-            score == null -> false
-            score > 9.0 -> {
-                speakingErrorMessage = "Speakingスコアが上限を超えています。"
-                false
+        return if (score == null) {
+            false
+        } else {
+            speakingErrorMessage = when {
+                score > 9.0 -> "Speakingスコアが上限を超えています。"
+                !isHalfMultiple(score) -> "Speakingスコアは0.5の倍数でなければなりません。"
+                else -> null
             }
-            else -> {
-                speakingErrorMessage = null
-                true
-            }
+            speakingErrorMessage == null
         }
     }
 
@@ -119,10 +120,9 @@ fun IeltsEditScreen(
             validateWritingScore() &&
             validateSpeakingScore()
 
-    // FDate型チェックと日付が有効か確認する関数
+    // 日付検証関数
     fun isValidDate(date: String): Boolean {
         return try {
-            // "yyyy-MM-dd" フォーマットで日付を検証
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.JAPAN)
             dateFormat.isLenient = false
             dateFormat.parse(date) != null
@@ -131,10 +131,8 @@ fun IeltsEditScreen(
         }
     }
 
-    // 日付が変更された場合の処理
     fun onDateChange(newDate: String) {
         date = newDate
-        // 日付が有効かチェック
         isDateValid = isValidDate(newDate)
         dateErrorMessage = if (isDateValid) null else "無効な日付です。"
     }
