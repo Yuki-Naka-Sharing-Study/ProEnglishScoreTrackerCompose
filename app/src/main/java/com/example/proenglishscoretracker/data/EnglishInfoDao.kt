@@ -83,7 +83,7 @@ interface EnglishInfoDao {
     suspend fun getToeflIbtInfoById(toeflIbtId: String): EnglishTestInfo.TOEFL?
 
 
-    // TOEFL
+    // IELTS
     // 指定された受験日と一致するデータの数を取得
     @Query("SELECT COUNT(*) FROM ielts WHERE date = :date")
     suspend fun countIeltsEntriesByDate(date: String): Int

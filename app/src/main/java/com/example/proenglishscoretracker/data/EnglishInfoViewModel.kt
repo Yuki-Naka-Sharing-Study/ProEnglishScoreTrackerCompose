@@ -437,7 +437,7 @@ class EnglishInfoViewModel(
                 overallScore,
                 memo
             )
-            loadAllToeflIbtInfo()
+            loadAllIeltsInfo()
         }
     }
     fun deleteIeltsInfo(ieltstId: String) {
