@@ -24,7 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -119,8 +118,8 @@ fun ToeicSwDetailScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
+                .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (toeicSwInfo != null) {
                 Row {
                     Text(text = "[受験日]", fontSize = 20.sp)

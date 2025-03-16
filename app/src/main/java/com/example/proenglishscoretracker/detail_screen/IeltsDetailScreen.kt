@@ -119,8 +119,8 @@ fun IeltsDetailScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
+                .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_120_dp)))
             if (ieltsInfo != null) {
                 Row {
                     Text(text = "[受験日]", fontSize = 20.sp)
