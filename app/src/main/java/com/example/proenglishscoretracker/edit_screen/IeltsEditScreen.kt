@@ -141,7 +141,7 @@ fun IeltsEditScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("TOEFL iBT データ編集") },
+                title = { Text("IELTS データ編集") },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
