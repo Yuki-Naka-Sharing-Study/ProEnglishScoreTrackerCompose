@@ -53,7 +53,7 @@ fun IeltsEditScreen(
     var speakingErrorMessage by remember { mutableStateOf<String?>(null) }
 
     fun validateReadingScore(): Boolean {
-        val score = readingScore.toIntOrNull()
+        val score = readingScore.toFloatOrNull()
         return when {
             score == null -> false
             score > 9.0 -> {
@@ -68,7 +68,7 @@ fun IeltsEditScreen(
     }
 
     fun validateListeningScore(): Boolean {
-        val score = listeningScore.toIntOrNull()
+        val score = listeningScore.toFloatOrNull()
         return when {
             score == null -> false
             score > 9.0 -> {
@@ -83,7 +83,7 @@ fun IeltsEditScreen(
     }
 
     fun validateWritingScore(): Boolean {
-        val score = writingScore.toIntOrNull()
+        val score = writingScore.toFloatOrNull()
         return when {
             score == null -> false
             score > 9.0 -> {
@@ -98,7 +98,7 @@ fun IeltsEditScreen(
     }
 
     fun validateSpeakingScore(): Boolean {
-        val score = speakingScore.toIntOrNull()
+        val score = speakingScore.toFloatOrNull()
         return when {
             score == null -> false
             score > 9.0 -> {
