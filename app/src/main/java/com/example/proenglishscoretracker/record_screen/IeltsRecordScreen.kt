@@ -877,7 +877,7 @@ private fun IeltsRLWSScorePicker(
             colors = ButtonDefaults.buttonColors(Color(0xFFf5f5f5)),
         ) {
             Text(
-                text = "${"%.1f".format(ieltsRLWSScore)}",
+                text = "%.1f".format(ieltsRLWSScore),
                 color = Color.Black
             )
         }
