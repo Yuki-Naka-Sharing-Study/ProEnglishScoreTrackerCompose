@@ -73,7 +73,7 @@ fun EikenDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "英検詳細") },
+                title = { Text(text = "英検 詳細") },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
