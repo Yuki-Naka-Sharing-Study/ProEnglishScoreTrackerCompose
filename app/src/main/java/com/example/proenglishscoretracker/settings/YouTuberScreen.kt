@@ -57,7 +57,6 @@ fun YoutuberScreen(
                         )
                     }
                 },
-                backgroundColor = Color.Blue,
                 contentColor = Color.White,
             )
         },
@@ -67,7 +66,7 @@ fun YoutuberScreen(
 }
 
 @Composable
-fun YoutuberContentScreen(
+private fun YoutuberContentScreen(
     innerPadding: PaddingValues
 ) {
     val items = listOf(
