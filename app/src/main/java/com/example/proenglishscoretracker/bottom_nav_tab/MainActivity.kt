@@ -69,6 +69,7 @@ import com.example.proenglishscoretracker.list_screen.ToeicListScreen
 import com.example.proenglishscoretracker.list_screen.ToeicSwListScreen
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
 import com.example.proenglishscoretracker.settings.CountdownSettingsScreen
+import com.example.proenglishscoretracker.settings.ExpireCountdownScreen
 import com.example.proenglishscoretracker.settings.YoutuberScreen
 
 class MainActivity : FragmentActivity() {
@@ -194,7 +195,7 @@ fun EnglishScoreTracker(
                 composable("setting") { SettingsScreen(navController) }
 
                 composable("examCountdownScreen") { CountdownSettingsScreen(navController)}
-                composable("expireCountdownScreen") { CountdownSettingsScreen(navController)}
+                composable("expireCountdownScreen") { ExpireCountdownScreen(navController)}
                 composable("youtuberScreen") { YoutuberScreen(navController)}
 
                 // XxxIndividualScreen
