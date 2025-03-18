@@ -38,18 +38,18 @@ fun OnboardingScreen(
 ) {
     val pages = listOf(
         OnBoardModel(
-            title = "スコアを入力しましょう。",
-            description = "各英語試験のスコアを入力しましょう。",
+            title = "スコアを入力しよう。",
+            description = "各英語試験のスコアを入力しよう。",
             imageRes = R.drawable.writing
         ),
         OnBoardModel(
-            title = "グラフで確認しましょう。",
-            description = "各英語試験のスコアをグラフで確認しましょう。",
+            title = "グラフで確認しよう。",
+            description = "各英語試験のスコアをグラフで確認しよう。",
             imageRes = R.drawable.chart
         ),
         OnBoardModel(
-            title = "学習を継続しよう",
-            description = "スコアを確認後学習を継続していきましょう。",
+            title = "学習を継続しよう。",
+            description = "スコアを確認後学習を継続しよう。",
             imageRes = R.drawable.reading
         )
     )
