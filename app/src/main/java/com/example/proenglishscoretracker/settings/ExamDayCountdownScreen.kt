@@ -26,7 +26,9 @@ import java.util.Date
 import java.util.Locale
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Scaffold
@@ -191,15 +193,20 @@ private fun ExamCountdownSettingItem(
                     Text(text = "受験日を設定")
                 }
                 Spacer(modifier = Modifier.width(16.dp))
+
                 // 公式HPに遷移するボタン
                 Button(onClick = {
                     val url = examUrls[setting.name] ?: return@Button
-                    // 公式HPを表示するためのWebViewActivityに遷移
-                    val intent = Intent(context, WebViewActivity::class.java).apply {
-                        putExtra("url", url)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                        setPackage("com.android.chrome") // Chromeを指定
                     }
-                    intent.putExtra("URL", url) // URLを渡す
-                    context.startActivity(intent)
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        // Chromeがインストールされていない場合、デフォルトのブラウザで開く
+                        intent.setPackage(null)
+                        context.startActivity(intent)
+                    }
                 }) {
                     Text(text = "公式HPを開く")
                 }
