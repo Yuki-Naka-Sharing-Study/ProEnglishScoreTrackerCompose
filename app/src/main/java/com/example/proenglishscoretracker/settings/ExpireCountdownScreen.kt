@@ -238,6 +238,9 @@ private fun notifyExpireSoon(workManager: WorkManager) {
     )
 }
 
+// TODO : 現状、英検以外の全ての英語資格の通知がまとめて来るので
+//  関数「notifyExpired」を
+//  「notifyToeicExpired」「notifyToeicSwExpired」「notifyToeflIbtExpired」「notifyIeltsExpired」に分割する予定。
 private fun notifyExpired(workManager: WorkManager) {
     val request = OneTimeWorkRequestBuilder<ExpiredWorker>()
 //        .setInitialDelay(1, TimeUnit.DAYS)
