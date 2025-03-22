@@ -223,7 +223,9 @@ fun ExpireCountdownScreen(
     }
 }
 
-// WorkManager の定期実行をスケジュール（1日ごとに実行）
+// TODO : 現状、英検以外の全ての英語資格の通知がまとめて来るので
+//  関数「notifyExpireSoon」を
+//  「notifyToeicExpireSoon」「notifyToeicSwExpireSoon」「notifyToeflIbtExpireSoon」「notifyIeltsExpireSoon」に分割する予定。
 private fun notifyExpireSoon(workManager: WorkManager) {
     val request = PeriodicWorkRequestBuilder<ExpireSoonWorker>(1, TimeUnit.DAYS)
 //        .setInitialDelay(1, TimeUnit.DAYS)
