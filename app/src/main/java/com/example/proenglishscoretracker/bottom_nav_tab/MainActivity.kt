@@ -190,10 +190,12 @@ fun EnglishScoreTracker(
                         }
                     )
                 }
+                // BottomNavigationBar
                 composable("examDataScreen") { ExamDataScreen(viewModel, navController) }
                 composable("examRecordScreen") { ExamRecordScreen(viewModel) }
                 composable("setting") { SettingsScreen(navController) }
 
+                // SettingsScreen
                 composable("examDayCountdownScreen") { ExamDayCountdownScreen(navController)}
                 composable("expirationSettingsScreen") { ExpirationSettingsScreen(navController)}
                 composable("youtuberScreen") { YoutuberScreen(navController)}
