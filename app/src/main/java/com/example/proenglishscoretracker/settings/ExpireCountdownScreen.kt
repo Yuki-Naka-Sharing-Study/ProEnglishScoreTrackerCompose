@@ -226,7 +226,7 @@ private fun notifyExpireSoon(workManager: WorkManager) {
         .setInitialDelay(1, TimeUnit.DAYS)
         .build()
     workManager.enqueueUniquePeriodicWork(
-        "expire_soon_countdown",
+        "notify_expire_soon",
         ExistingPeriodicWorkPolicy.REPLACE,
         request
     )
@@ -237,7 +237,7 @@ private fun notifyExpired(workManager: WorkManager) {
         .setInitialDelay(1, TimeUnit.DAYS)
         .build()
     workManager.enqueueUniquePeriodicWork(
-        "expire_soon_countdown",
+        "notify_expired",
         ExistingPeriodicWorkPolicy.REPLACE,
         request
     )
@@ -305,7 +305,7 @@ class ExpireSoonWorker(
     }
 
     private fun sendNotification(context: Context, title: String, message: String) {
-        val channelId = "expire_notification_channel"
+        val channelId = "expire_soon_notification_channel"
         val notificationManager = context.getSystemService(NotificationManager::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -390,7 +390,7 @@ class ExpiredWorker(
     }
 
     private fun sendNotification(context: Context, title: String, message: String) {
-        val channelId = "expire_notification_channel"
+        val channelId = "expired_notification_channel"
         val notificationManager = context.getSystemService(NotificationManager::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
