@@ -304,7 +304,11 @@ class ExpireSoonWorker(
         return notifications
     }
 
-    private fun sendNotification(context: Context, title: String, message: String) {
+    private fun sendNotification(
+        context: Context,
+        title: String,
+        message: String
+    ) {
         val channelId = "expire_soon_notification_channel"
         val notificationManager = context.getSystemService(NotificationManager::class.java)
 
@@ -389,7 +393,11 @@ class ExpiredWorker(
         return notifications
     }
 
-    private fun sendNotification(context: Context, title: String, message: String) {
+    private fun sendNotification(
+        context: Context,
+        title: String,
+        message: String
+    ) {
         val channelId = "expired_notification_channel"
         val notificationManager = context.getSystemService(NotificationManager::class.java)
 
