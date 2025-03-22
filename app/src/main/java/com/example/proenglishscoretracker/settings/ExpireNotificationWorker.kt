@@ -26,19 +26,23 @@ class ExpireNotificationWorker(
 
         // TOEIC の有効期限チェック
         val toeicList = dao.getAllToeicInfo()
-        notifications.addAll(checkExpiry(toeicList, "TOEIC", today))
+        notifications.addAll(notifyExpirySoon(toeicList, "TOEIC", today))
+        notifications.addAll(notifyExpired(toeicList, "TOEIC", today))
 
         // TOEIC SW の有効期限チェック
         val toeicSwList = dao.getAllToeicSwInfo()
-        notifications.addAll(checkExpiry(toeicSwList, "TOEIC SW", today))
+        notifications.addAll(notifyExpirySoon(toeicSwList, "TOEIC SW", today))
+        notifications.addAll(notifyExpired(toeicSwList, "TOEIC SW", today))
 
         // TOEFL の有効期限チェック
         val toeflList = dao.getAllToeflIbtInfo()
-        notifications.addAll(checkExpiry(toeflList, "TOEFL iBT", today))
+        notifications.addAll(notifyExpirySoon(toeflList, "TOEFL iBT", today))
+        notifications.addAll(notifyExpired(toeflList, "TOEFL iBT", today))
 
         // IELTS の有効期限チェック
         val ieltsList = dao.getAllIeltsInfo()
-        notifications.addAll(checkExpiry(ieltsList, "IELTS", today))
+        notifications.addAll(notifyExpirySoon(ieltsList, "IELTS", today))
+        notifications.addAll(notifyExpired(ieltsList, "IELTS", today))
 
         // 通知を送信
         notifications.forEach { message ->
@@ -48,27 +52,46 @@ class ExpireNotificationWorker(
         return Result.success()
     }
 
-    private fun checkExpiry(testList: List<EnglishTestInfo>, testName: String, today: LocalDate): List<String> {
+    private fun notifyExpirySoon(testList: List<EnglishTestInfo>, testName: String, today: LocalDate): List<String> {
         val notifications = mutableListOf<String>()
-
         for (info in testList) {
             val dateString: String? = when (info) {
                 is EnglishTestInfo.TOEIC -> info.date
                 is EnglishTestInfo.TOEIC_SW -> info.date
                 is EnglishTestInfo.TOEFL -> info.date
                 is EnglishTestInfo.IELTS -> info.date
-                is EnglishTestInfo.EIKEN -> null  // 英検は有効期限なし
+                is EnglishTestInfo.EIKEN -> null
             }
 
             if (dateString != null) {
-                val expiryDate = LocalDate.parse(dateString).plusYears(2)  // すべての試験で有効期限2年
+                val expiryDate = LocalDate.parse(dateString).plusYears(2)
                 val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
 
-                when {
-                    remainingDays in 1..60 ->
-                        notifications.add("$testName ($dateString) の有効期限が近づいています。(残り${remainingDays}日)")
-                    remainingDays < 0 ->
-                        notifications.add("$testName ($dateString) の有効期限が切れました。")
+                if (remainingDays in 1..60) {
+                    notifications.add("$testName ($dateString) の有効期限が近づいています。(残り${remainingDays}日)")
+                }
+            }
+        }
+        return notifications
+    }
+
+    private fun notifyExpired(testList: List<EnglishTestInfo>, testName: String, today: LocalDate): List<String> {
+        val notifications = mutableListOf<String>()
+        for (info in testList) {
+            val dateString: String? = when (info) {
+                is EnglishTestInfo.TOEIC -> info.date
+                is EnglishTestInfo.TOEIC_SW -> info.date
+                is EnglishTestInfo.TOEFL -> info.date
+                is EnglishTestInfo.IELTS -> info.date
+                is EnglishTestInfo.EIKEN -> null
+            }
+
+            if (dateString != null) {
+                val expiryDate = LocalDate.parse(dateString).plusYears(2)
+                val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
+
+                if (remainingDays < 0) {
+                    notifications.add("$testName ($dateString) の有効期限が切れました。")
                 }
             }
         }
