@@ -139,6 +139,8 @@ private fun ExamCountdownSettingItem(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = setting.name, modifier = Modifier.weight(1f))
+            // TODO : Switchをトグルしないと公式HPに遷移できなかったり、
+            //  受験日カウントダウンを設定できないのはUXの観点から良くないので修正する。
             Switch(
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = Color(0xFF8A2BE2),
