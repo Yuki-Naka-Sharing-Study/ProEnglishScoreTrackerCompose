@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
@@ -48,23 +47,22 @@ fun ExpireCountdownScreen(
     navHostController: NavHostController
 ) {
     val context = LocalContext.current
-    val expireSoonPreferences =
-        context.getSharedPreferences("expire_soon_prefs", Context.MODE_PRIVATE)
-    val expiredPreferences = context.getSharedPreferences("expire_soon_prefs", Context.MODE_PRIVATE)
+    val expireSoonPreferences = context.getSharedPreferences("expire_soon_prefs", Context.MODE_PRIVATE)
+    val expiredPreferences = context.getSharedPreferences("expired_prefs", Context.MODE_PRIVATE)
     val workManager = WorkManager.getInstance(context)
 
     // 各試験ごとの設定状態を管理
-    val expireSoonEnabledToeic = remember { mutableStateOf(false) }
-    val expiredEnabledToeic = remember { mutableStateOf(false) }
+    val expireSoonEnabledToeic = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledToeic", false)) }
+    val expiredEnabledToeic = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeic", false)) }
 
-    val expireSoonEnabledToeicSw = remember { mutableStateOf(false) }
-    val expiredEnabledToeicSw = remember { mutableStateOf(false) }
+    val expireSoonEnabledToeicSw = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledToeicSw", false)) }
+    val expiredEnabledToeicSw = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeicSw", false)) }
 
-    val expireSoonEnabledToefl = remember { mutableStateOf(false) }
-    val expiredEnabledToefl = remember { mutableStateOf(false) }
+    val expireSoonEnabledToefl = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledToefl", false)) }
+    val expiredEnabledToefl = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToefl", false)) }
 
-    val expireSoonEnabledIelts = remember { mutableStateOf(false) }
-    val expiredEnabledIelts = remember { mutableStateOf(false) }
+    val expireSoonEnabledIelts = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledIelts", false)) }
+    val expiredEnabledIelts = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledIelts", false)) }
 
     LaunchedEffect(Unit) {
         scheduleExpireCountdown(workManager)
@@ -100,7 +98,11 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledToeic.value,
-                    onCheckedChange = { expireSoonEnabledToeic.value = it }
+                    onCheckedChange = {
+                        expireSoonEnabledToeic.value = it
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeic", it).apply()
+                        scheduleExpireCountdown(workManager)
+                    }
                 )
             }
 
@@ -111,7 +113,10 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledToeic.value,
-                    onCheckedChange = { expiredEnabledToeic.value = it }
+                    onCheckedChange = {
+                        expiredEnabledToeic.value = it
+                        expiredPreferences.edit().putBoolean("expiredEnabledToeic", it).apply()
+                    }
                 )
             }
 
@@ -125,7 +130,10 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledToeicSw.value,
-                    onCheckedChange = { expireSoonEnabledToeicSw.value = it }
+                    onCheckedChange = {
+                        expireSoonEnabledToeicSw.value = it
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeicSw", it).apply()
+                    }
                 )
             }
 
@@ -136,7 +144,10 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledToeicSw.value,
-                    onCheckedChange = { expiredEnabledToeicSw.value = it }
+                    onCheckedChange = {
+                        expiredEnabledToeicSw.value = it
+                        expiredPreferences.edit().putBoolean("expiredEnabledToeicSw", it).apply()
+                    }
                 )
             }
 
@@ -150,7 +161,10 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledToefl.value,
-                    onCheckedChange = { expireSoonEnabledToefl.value = it }
+                    onCheckedChange = {
+                        expireSoonEnabledToefl.value = it
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToefl", it).apply()
+                    }
                 )
             }
 
@@ -161,7 +175,10 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledToefl.value,
-                    onCheckedChange = { expiredEnabledToefl.value = it }
+                    onCheckedChange = {
+                        expiredEnabledToefl.value = it
+                        expiredPreferences.edit().putBoolean("expiredEnabledToefl", it).apply()
+                    }
                 )
             }
 
@@ -175,7 +192,10 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledIelts.value,
-                    onCheckedChange = { expireSoonEnabledIelts.value = it }
+                    onCheckedChange = {
+                        expireSoonEnabledIelts.value = it
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledIelts", it).apply()
+                    }
                 )
             }
 
@@ -186,7 +206,10 @@ fun ExpireCountdownScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledIelts.value,
-                    onCheckedChange = { expiredEnabledIelts.value = it }
+                    onCheckedChange = {
+                        expiredEnabledIelts.value = it
+                        expiredPreferences.edit().putBoolean("expiredEnabledIelts", it).apply()
+                    }
                 )
             }
         }
