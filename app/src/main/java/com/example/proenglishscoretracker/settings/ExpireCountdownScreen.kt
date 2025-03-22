@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -225,7 +226,8 @@ fun ExpireCountdownScreen(
 // WorkManager の定期実行をスケジュール（1日ごとに実行）
 private fun notifyExpireSoon(workManager: WorkManager) {
     val request = PeriodicWorkRequestBuilder<ExpireSoonWorker>(1, TimeUnit.DAYS)
-        .setInitialDelay(1, TimeUnit.DAYS)
+//        .setInitialDelay(1, TimeUnit.DAYS)
+        .setInitialDelay(0, TimeUnit.MINUTES)
         .build()
     workManager.enqueueUniquePeriodicWork(
         "notify_expire_soon",
@@ -236,7 +238,8 @@ private fun notifyExpireSoon(workManager: WorkManager) {
 
 private fun notifyExpired(workManager: WorkManager) {
     val request = OneTimeWorkRequestBuilder<ExpiredWorker>()
-        .setInitialDelay(1, TimeUnit.DAYS)
+//        .setInitialDelay(1, TimeUnit.DAYS)
+        .setInitialDelay(0, TimeUnit.MINUTES)
         .build()
     workManager.enqueueUniqueWork(
         "notify_expired",
@@ -252,31 +255,35 @@ class ExpireSoonWorker(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        Log.d("WorkerManager", "ExpireSoonWorker started")
+
         val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
         val today = LocalDate.now()
         val notifications = mutableListOf<String>()
 
         // 各試験の有効期限チェック
         val toeicList = dao.getAllToeicInfo()
+        Log.d("WorkerManager", "Fetched TOEIC list: ${toeicList.size}")
+
         notifications.addAll(notifyExpirySoon(toeicList, "TOEIC", today))
-        notifications.addAll(notifyExpirySoon(toeicList, "TOEIC", today))
+        Log.d("WorkerManager", "Generated notifications: ${notifications.size}")
+
 
         val toeicSwList = dao.getAllToeicSwInfo()
-        notifications.addAll(notifyExpirySoon(toeicSwList, "TOEIC SW", today))
         notifications.addAll(notifyExpirySoon(toeicSwList, "TOEIC SW", today))
 
         val toeflList = dao.getAllToeflIbtInfo()
         notifications.addAll(notifyExpirySoon(toeflList, "TOEFL iBT", today))
-        notifications.addAll(notifyExpirySoon(toeflList, "TOEFL iBT", today))
 
         val ieltsList = dao.getAllIeltsInfo()
-        notifications.addAll(notifyExpirySoon(ieltsList, "IELTS", today))
         notifications.addAll(notifyExpirySoon(ieltsList, "IELTS", today))
 
         // 通知を送信
         notifications.forEach { message ->
             sendNotification(applicationContext, "資格の有効期限", message)
         }
+
+        Log.d("WorkerManager", "Notifications sent successfully")
 
         return Result.success()
     }
@@ -348,18 +355,14 @@ class ExpiredWorker(
         // 各試験の有効期限チェック
         val toeicList = dao.getAllToeicInfo()
         notifications.addAll(notifyExpired(toeicList, "TOEIC", today))
-        notifications.addAll(notifyExpired(toeicList, "TOEIC", today))
 
         val toeicSwList = dao.getAllToeicSwInfo()
-        notifications.addAll(notifyExpired(toeicSwList, "TOEIC SW", today))
         notifications.addAll(notifyExpired(toeicSwList, "TOEIC SW", today))
 
         val toeflList = dao.getAllToeflIbtInfo()
         notifications.addAll(notifyExpired(toeflList, "TOEFL iBT", today))
-        notifications.addAll(notifyExpired(toeflList, "TOEFL iBT", today))
 
         val ieltsList = dao.getAllIeltsInfo()
-        notifications.addAll(notifyExpired(ieltsList, "IELTS", today))
         notifications.addAll(notifyExpired(ieltsList, "IELTS", today))
 
         // 通知を送信
