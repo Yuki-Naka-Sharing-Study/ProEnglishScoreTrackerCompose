@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 @Composable
-fun ExpireCountdownScreen(
+fun ExpirationSettingsScreen(
     navHostController: NavHostController
 ) {
     val context = LocalContext.current
