@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,8 +38,6 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoDatabase
-import com.example.proenglishscoretracker.data.EnglishInfoViewModel
-import com.example.proenglishscoretracker.data.EnglishTestInfo
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
@@ -48,30 +45,68 @@ import kotlin.random.Random
 
 @Composable
 fun ExpireCountdownScreen(
-    viewModel: EnglishInfoViewModel,
     navHostController: NavHostController
 ) {
     val context = LocalContext.current
-    val expireSoonPreferences = context.getSharedPreferences("expire_soon_prefs", Context.MODE_PRIVATE)
+    val expireSoonPreferences =
+        context.getSharedPreferences("expire_soon_prefs", Context.MODE_PRIVATE)
     val expiredPreferences = context.getSharedPreferences("expired_prefs", Context.MODE_PRIVATE)
     val workManager = WorkManager.getInstance(context)
 
     // 各試験ごとの設定状態を管理
-    val expireSoonEnabledToeic = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledToeic", false)) }
-    val expiredEnabledToeic = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeic", false)) }
+    val expireSoonEnabledToeic = remember {
+        mutableStateOf(
+            expireSoonPreferences.getBoolean(
+                "expireSoonEnabledToeic",
+                false
+            )
+        )
+    }
+    val expiredEnabledToeic =
+        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeic", false)) }
 
-    val expireSoonEnabledToeicSw = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledToeicSw", false)) }
-    val expiredEnabledToeicSw = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeicSw", false)) }
+    val expireSoonEnabledToeicSw = remember {
+        mutableStateOf(
+            expireSoonPreferences.getBoolean(
+                "expireSoonEnabledToeicSw",
+                false
+            )
+        )
+    }
+    val expiredEnabledToeicSw =
+        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeicSw", false)) }
 
-    val expireSoonEnabledToefl = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledToefl", false)) }
-    val expiredEnabledToefl = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToefl", false)) }
+    val expireSoonEnabledToefl = remember {
+        mutableStateOf(
+            expireSoonPreferences.getBoolean(
+                "expireSoonEnabledToefl",
+                false
+            )
+        )
+    }
+    val expiredEnabledToefl =
+        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToefl", false)) }
 
-    val expireSoonEnabledIelts = remember { mutableStateOf(expireSoonPreferences.getBoolean("expireSoonEnabledIelts", false)) }
-    val expiredEnabledIelts = remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledIelts", false)) }
+    val expireSoonEnabledIelts = remember {
+        mutableStateOf(
+            expireSoonPreferences.getBoolean(
+                "expireSoonEnabledIelts",
+                false
+            )
+        )
+    }
+    val expiredEnabledIelts =
+        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledIelts", false)) }
 
     LaunchedEffect(Unit) {
-        notifyExpireSoon(workManager)
-        notifyExpired(workManager)
+        notifyToeicExpireSoon(workManager)
+        notifyToeicExpired(workManager)
+        notifyToeicSwExpireSoon(workManager)
+        notifyToeicSwExpired(workManager)
+        notifyToeflIbtExpireSoon(workManager)
+        notifyToeflIbtExpired(workManager)
+        notifyIeltsExpireSoon(workManager)
+        notifyIeltsExpired(workManager)
     }
 
     Scaffold(
@@ -106,8 +141,9 @@ fun ExpireCountdownScreen(
                     checked = expireSoonEnabledToeic.value,
                     onCheckedChange = {
                         expireSoonEnabledToeic.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeic", it).apply()
-                        notifyExpireSoon(workManager)
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeic", it)
+                            .apply()
+                        notifyToeicExpireSoon(workManager)
                     }
                 )
             }
@@ -122,7 +158,7 @@ fun ExpireCountdownScreen(
                     onCheckedChange = {
                         expiredEnabledToeic.value = it
                         expiredPreferences.edit().putBoolean("expiredEnabledToeic", it).apply()
-                        notifyExpired(workManager)
+                        notifyToeicExpired(workManager)
                     }
                 )
             }
@@ -139,7 +175,9 @@ fun ExpireCountdownScreen(
                     checked = expireSoonEnabledToeicSw.value,
                     onCheckedChange = {
                         expireSoonEnabledToeicSw.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeicSw", it).apply()
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeicSw", it)
+                            .apply()
+                        notifyToeicSwExpireSoon(workManager)
                     }
                 )
             }
@@ -154,6 +192,7 @@ fun ExpireCountdownScreen(
                     onCheckedChange = {
                         expiredEnabledToeicSw.value = it
                         expiredPreferences.edit().putBoolean("expiredEnabledToeicSw", it).apply()
+                        notifyToeicSwExpired(workManager)
                     }
                 )
             }
@@ -170,7 +209,9 @@ fun ExpireCountdownScreen(
                     checked = expireSoonEnabledToefl.value,
                     onCheckedChange = {
                         expireSoonEnabledToefl.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToefl", it).apply()
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToefl", it)
+                            .apply()
+                        notifyToeflIbtExpireSoon(workManager)
                     }
                 )
             }
@@ -185,6 +226,7 @@ fun ExpireCountdownScreen(
                     onCheckedChange = {
                         expiredEnabledToefl.value = it
                         expiredPreferences.edit().putBoolean("expiredEnabledToefl", it).apply()
+                        notifyToeflIbtExpired(workManager)
                     }
                 )
             }
@@ -201,7 +243,9 @@ fun ExpireCountdownScreen(
                     checked = expireSoonEnabledIelts.value,
                     onCheckedChange = {
                         expireSoonEnabledIelts.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledIelts", it).apply()
+                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledIelts", it)
+                            .apply()
+                        notifyIeltsExpireSoon(workManager)
                     }
                 )
             }
@@ -216,6 +260,7 @@ fun ExpireCountdownScreen(
                     onCheckedChange = {
                         expiredEnabledIelts.value = it
                         expiredPreferences.edit().putBoolean("expiredEnabledIelts", it).apply()
+                        notifyIeltsExpired(workManager)
                     }
                 )
             }
@@ -223,110 +268,136 @@ fun ExpireCountdownScreen(
     }
 }
 
-// TODO : 現状、英検以外の全ての英語資格の通知がまとめて来るので
-//  関数「notifyExpireSoon」を
-//  「notifyToeicExpireSoon」「notifyToeicSwExpireSoon」「notifyToeflIbtExpireSoon」「notifyIeltsExpireSoon」に分割する予定。
-private fun notifyExpireSoon(workManager: WorkManager) {
-    val request = PeriodicWorkRequestBuilder<ExpireSoonWorker>(1, TimeUnit.DAYS)
-//        .setInitialDelay(1, TimeUnit.DAYS)
+// TOEICの有効期限通知(もうすぐ切れる)
+private fun notifyToeicExpireSoon(workManager: WorkManager) {
+    val request = PeriodicWorkRequestBuilder<ToeicExpireSoonWorker>(1, TimeUnit.DAYS)
         .setInitialDelay(0, TimeUnit.MINUTES)
         .build()
     workManager.enqueueUniquePeriodicWork(
-        "notify_expire_soon",
+        "notify_toeic_expire_soon",
         ExistingPeriodicWorkPolicy.REPLACE,
         request
     )
 }
 
-// TODO : 現状、英検以外の全ての英語資格の通知がまとめて来るので
-//  関数「notifyExpired」を
-//  「notifyToeicExpired」「notifyToeicSwExpired」「notifyToeflIbtExpired」「notifyIeltsExpired」に分割する予定。
-private fun notifyExpired(workManager: WorkManager) {
-    val request = OneTimeWorkRequestBuilder<ExpiredWorker>()
-//        .setInitialDelay(1, TimeUnit.DAYS)
+// TOEIC SWの有効期限通知(もうすぐ切れる)
+private fun notifyToeicSwExpireSoon(workManager: WorkManager) {
+    val request = PeriodicWorkRequestBuilder<ToeicSwExpireSoonWorker>(1, TimeUnit.DAYS)
         .setInitialDelay(0, TimeUnit.MINUTES)
         .build()
+    workManager.enqueueUniquePeriodicWork(
+        "notify_toeic_sw_expire_soon",
+        ExistingPeriodicWorkPolicy.REPLACE,
+        request
+    )
+}
+
+// TOEFL iBTの有効期限通知(もうすぐ切れる)
+private fun notifyToeflIbtExpireSoon(workManager: WorkManager) {
+    val request = PeriodicWorkRequestBuilder<ToeflIbtExpireSoonWorker>(1, TimeUnit.DAYS)
+        .setInitialDelay(0, TimeUnit.MINUTES)
+        .build()
+    workManager.enqueueUniquePeriodicWork(
+        "notify_toefl_ibt_expire_soon",
+        ExistingPeriodicWorkPolicy.REPLACE,
+        request
+    )
+}
+
+// IELTSの有効期限通知(もうすぐ切れる)
+private fun notifyIeltsExpireSoon(workManager: WorkManager) {
+    val request = PeriodicWorkRequestBuilder<IeltsExpireSoonWorker>(1, TimeUnit.DAYS)
+        .setInitialDelay(0, TimeUnit.MINUTES)
+        .build()
+    workManager.enqueueUniquePeriodicWork(
+        "notify_ielts_expire_soon",
+        ExistingPeriodicWorkPolicy.REPLACE,
+        request
+    )
+}
+
+// TOEICの有効期限通知(有効期限切れ)
+private fun notifyToeicExpired(workManager: WorkManager) {
+    val request = OneTimeWorkRequestBuilder<ToeicExpiredWorker>()
+        .setInitialDelay(1, TimeUnit.DAYS)
+        .build()
     workManager.enqueueUniqueWork(
-        "notify_expired",
+        "notify_toeic_expired",
         ExistingWorkPolicy.REPLACE,
         request
     )
 }
 
-// TODO : 現状、英検以外の全ての英語資格の通知がまとめて来るので
-//  関数「ExpireSoonWorker」を
-//  「ToeicExpireSoonWorker」「ToeicSwExpireSoonWorker」「ToeflExpireSoonWorker」「IeltsExpireSoonWorker」に分割する予定。
-class ExpireSoonWorker(
+// TOEIC SWの有効期限通知(有効期限切れ)
+private fun notifyToeicSwExpired(workManager: WorkManager) {
+    val request = OneTimeWorkRequestBuilder<ToeicSwExpiredWorker>()
+        .setInitialDelay(1, TimeUnit.DAYS)
+        .build()
+    workManager.enqueueUniqueWork(
+        "notify_toeic_sw_expired",
+        ExistingWorkPolicy.REPLACE,
+        request
+    )
+}
+
+// TOEFL iBTの有効期限通知(有効期限切れ)
+private fun notifyToeflIbtExpired(workManager: WorkManager) {
+    val request = OneTimeWorkRequestBuilder<ToeflIbtExpiredWorker>()
+        .setInitialDelay(1, TimeUnit.DAYS)
+        .build()
+    workManager.enqueueUniqueWork(
+        "notify_toefl_ibt_expired",
+        ExistingWorkPolicy.REPLACE,
+        request
+    )
+}
+
+// IELTSの有効期限通知(有効期限切れ)
+private fun notifyIeltsExpired(workManager: WorkManager) {
+    val request = OneTimeWorkRequestBuilder<IeltsExpiredWorker>()
+        .setInitialDelay(1, TimeUnit.DAYS)
+        .build()
+    workManager.enqueueUniqueWork(
+        "notify_ielts_expired",
+        ExistingWorkPolicy.REPLACE,
+        request
+    )
+}
+
+// TOEICの有効期限が近づいている場合のWorker
+class ToeicExpireSoonWorker(
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
-
     override suspend fun doWork(): Result {
-        Log.d("WorkerManager", "ExpireSoonWorker started")
-
         val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
         val today = LocalDate.now()
         val notifications = mutableListOf<String>()
 
-        // 各試験の有効期限チェック
-        val toeicList = dao.getAllToeicInfo()
-        Log.d("WorkerManager", "Fetched TOEIC list: ${toeicList.size}")
+        // TOEICの有効期限チェック
+        val toeicList = dao.getAllToeicInfo() // TOEICに関するデータだけ取得
+        toeicList.forEach { toeic ->
+            val expiryDate = LocalDate.parse(toeic.date).plusYears(2) // 2年後が有効期限
+            val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
 
-        notifications.addAll(notifyExpirySoon(toeicList, "TOEIC", today))
-        Log.d("WorkerManager", "Generated notifications: ${notifications.size}")
-
-
-        val toeicSwList = dao.getAllToeicSwInfo()
-        notifications.addAll(notifyExpirySoon(toeicSwList, "TOEIC SW", today))
-
-        val toeflList = dao.getAllToeflIbtInfo()
-        notifications.addAll(notifyExpirySoon(toeflList, "TOEFL iBT", today))
-
-        val ieltsList = dao.getAllIeltsInfo()
-        notifications.addAll(notifyExpirySoon(ieltsList, "IELTS", today))
+            // 残り60日以内であれば通知
+            if (remainingDays in 1..60) {
+                notifications.add("TOEIC の有効期限が近づいています。(残り${remainingDays}日)")
+            }
+        }
 
         // 通知を送信
         notifications.forEach { message ->
             sendNotification(applicationContext, "資格の有効期限", message)
         }
-
-        Log.d("WorkerManager", "Notifications sent successfully")
-
         return Result.success()
     }
-
-    private fun notifyExpirySoon(
-        testList: List<EnglishTestInfo>,
-        testName: String,
-        today: LocalDate
-    ): List<String> {
-        val notifications = mutableListOf<String>()
-        val latestTest = testList.lastOrNull() // 最新受験日を取得
-        latestTest?.let {
-            val dateString: String = when (it) {
-                is EnglishTestInfo.TOEIC -> it.date
-                is EnglishTestInfo.TOEIC_SW -> it.date
-                is EnglishTestInfo.TOEFL -> it.date
-                is EnglishTestInfo.IELTS -> it.date
-                else -> ""
-            }
-
-            val expiryDate = LocalDate.parse(dateString).plusYears(2)
-            val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
-
-            if (remainingDays in 1..60) {
-                notifications.add("$testName ($dateString) の有効期限が近づいています。(残り${remainingDays}日)")
-            }
-        }
-        return notifications
-    }
-
     private fun sendNotification(
         context: Context,
         title: String,
         message: String
     ) {
-        val channelId = "expire_soon_notification_channel"
+        val channelId = "toeic_expire_soon_notification_channel"
         val notificationManager = context.getSystemService(NotificationManager::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -337,84 +408,45 @@ class ExpireSoonWorker(
             )
             notificationManager.createNotificationChannel(channel)
         }
-
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.calendar)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
-
         notificationManager.notify(Random.nextInt(), notification)
     }
 }
 
-// TODO : 現状、英検以外の全ての英語資格の通知がまとめて来るので
-//  関数「ExpiredWorker」を
-//  「ToeicExpiredWorker」「ToeicSwExpiredWorker」「ToeflExpiredWorker」「IeltsExpiredWorker」に分割する予定。
-class ExpiredWorker(
+class ToeicSwExpireSoonWorker(
     context: Context,
     params: WorkerParameters
 ) : CoroutineWorker(context, params) {
-
     override suspend fun doWork(): Result {
         val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
         val today = LocalDate.now()
         val notifications = mutableListOf<String>()
-
-        // 各試験の有効期限チェック
-        val toeicList = dao.getAllToeicInfo()
-        notifications.addAll(notifyExpired(toeicList, "TOEIC", today))
-
         val toeicSwList = dao.getAllToeicSwInfo()
-        notifications.addAll(notifyExpired(toeicSwList, "TOEIC SW", today))
 
-        val toeflList = dao.getAllToeflIbtInfo()
-        notifications.addAll(notifyExpired(toeflList, "TOEFL iBT", today))
+        toeicSwList.forEach { toeicSw ->
+            val expiryDate = LocalDate.parse(toeicSw.date).plusYears(2)
+            val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
 
-        val ieltsList = dao.getAllIeltsInfo()
-        notifications.addAll(notifyExpired(ieltsList, "IELTS", today))
-
-        // 通知を送信
+            if (remainingDays in 1..60) {
+                notifications.add("TOEIC SW の有効期限が近づいています。(残り${remainingDays}日)")
+            }
+        }
         notifications.forEach { message ->
             sendNotification(applicationContext, "資格の有効期限", message)
         }
-
         return Result.success()
     }
-
-    private fun notifyExpired(
-        testList: List<EnglishTestInfo>,
-        testName: String,
-        today: LocalDate
-    ): List<String> {
-        val notifications = mutableListOf<String>()
-        val latestTest = testList.lastOrNull() // 最新受験日を取得
-        latestTest?.let {
-            val dateString: String = when (it) {
-                is EnglishTestInfo.TOEIC -> it.date
-                is EnglishTestInfo.TOEIC_SW -> it.date
-                is EnglishTestInfo.TOEFL -> it.date
-                is EnglishTestInfo.IELTS -> it.date
-                else -> ""
-            }
-
-            val expiryDate = LocalDate.parse(dateString).plusYears(2)
-            val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
-
-            if (remainingDays < 0) {
-                notifications.add("$testName ($dateString) の有効期限が切れました。")
-            }
-        }
-        return notifications
-    }
-
     private fun sendNotification(
         context: Context,
         title: String,
         message: String
     ) {
-        val channelId = "expired_notification_channel"
+        val channelId = "toeic_sw_expire_soon_notification_channel"
         val notificationManager = context.getSystemService(NotificationManager::class.java)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -425,14 +457,300 @@ class ExpiredWorker(
             )
             notificationManager.createNotificationChannel(channel)
         }
-
         val notification = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(R.drawable.calendar)
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .build()
-
         notificationManager.notify(Random.nextInt(), notification)
+    }
+}
+
+class ToeflIbtExpireSoonWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result {
+        val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
+        val today = LocalDate.now()
+        val notifications = mutableListOf<String>()
+        val toeflIbtList = dao.getAllToeflIbtInfo()
+
+        toeflIbtList.forEach { toefl ->
+            val expiryDate = LocalDate.parse(toefl.date).plusYears(2)
+            val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
+
+            if (remainingDays in 1..60) {
+                notifications.add("TOEFL iBT の有効期限が近づいています。(残り${remainingDays}日)")
+            }
+        }
+        notifications.forEach { message ->
+            sendNotification(applicationContext, "資格の有効期限", message)
+        }
+        return Result.success()
+    }
+    private fun sendNotification(
+        context: Context,
+        title: String,
+        message: String
+    ) {
+        val channelId = "toefl_ibt_expire_soon_notification_channel"
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "資格の有効期限",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.calendar)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
+        notificationManager.notify(Random.nextInt(), notification)
+    }
+}
+
+class IeltsExpireSoonWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
+        val today = LocalDate.now()
+        val notifications = mutableListOf<String>()
+        val ieltsList = dao.getAllIeltsInfo()
+
+        ieltsList.forEach { ielts ->
+            val expiryDate = LocalDate.parse(ielts.date).plusYears(2)
+            val remainingDays = ChronoUnit.DAYS.between(today, expiryDate)
+
+            if (remainingDays in 1..60) {
+                notifications.add("IELTS の有効期限が近づいています。(残り${remainingDays}日)")
+            }
+        }
+        notifications.forEach { message ->
+            sendNotification(applicationContext, "資格の有効期限", message)
+        }
+
+        return Result.success()
+    }
+    private fun sendNotification(
+        context: Context,
+        title: String,
+        message: String
+    ) {
+        val channelId = "ielts_expire_soon_notification_channel"
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "資格の有効期限",
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+        val notification = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.calendar)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
+        notificationManager.notify(Random.nextInt(), notification)
+    }
+}
+
+class ToeicExpiredWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+
+    override suspend fun doWork(): Result {
+        val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
+        val today = LocalDate.now()
+        val notifications = mutableListOf<String>()
+        val toeicList = dao.getAllToeicInfo()
+
+        toeicList.forEach { toeic ->
+            val expiryDate = LocalDate.parse(toeic.date).plusYears(2)
+            if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
+                notifications.add("TOEIC (${toeic.date}) の有効期限が切れました。")
+            }
+        }
+        fun sendNotification(
+            context: Context,
+            title: String,
+            message: String
+        ) {
+            val channelId = "toeic_expired_notification_channel"
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    channelId,
+                    "資格の有効期限",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+            val notification = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.calendar)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build()
+
+            notificationManager.notify(Random.nextInt(), notification)
+        }
+        notifications.forEach { message ->
+            sendNotification(applicationContext, "資格の有効期限", message)
+        }
+        return Result.success()
+    }
+}
+
+class ToeicSwExpiredWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
+        val today = LocalDate.now()
+        val notifications = mutableListOf<String>()
+        val toeicSwList = dao.getAllToeicSwInfo()
+        toeicSwList.forEach { toeicSw ->
+            val expiryDate = LocalDate.parse(toeicSw.date).plusYears(2)
+            if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
+                notifications.add("TOEIC SW (${toeicSw.date}) の有効期限が切れました。")
+            }
+        }
+        fun sendNotification(
+            context: Context,
+            title: String,
+            message: String
+        ) {
+            val channelId = "toeic_sw_expired_notification_channel"
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    channelId,
+                    "資格の有効期限",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+            val notification = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.calendar)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build()
+            notificationManager.notify(Random.nextInt(), notification)
+        }
+        notifications.forEach { message ->
+            sendNotification(applicationContext, "資格の有効期限", message)
+        }
+        return Result.success()
+    }
+}
+
+class ToeflIbtExpiredWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
+        val today = LocalDate.now()
+        val notifications = mutableListOf<String>()
+        val toeflList = dao.getAllToeflIbtInfo()
+        toeflList.forEach { toefl ->
+            val expiryDate = LocalDate.parse(toefl.date).plusYears(2)
+            if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
+                notifications.add("TOEFL iBT (${toefl.date}) の有効期限が切れました。")
+            }
+        }
+        fun sendNotification(
+            context: Context,
+            title: String,
+            message: String
+        ) {
+            val channelId = "toefl_ibt_expired_notification_channel"
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    channelId,
+                    "資格の有効期限",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+            val notification = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.calendar)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build()
+
+            notificationManager.notify(Random.nextInt(), notification)
+        }
+        notifications.forEach { message ->
+            sendNotification(applicationContext, "資格の有効期限", message)
+        }
+        return Result.success()
+    }
+}
+
+class IeltsExpiredWorker(
+    context: Context,
+    params: WorkerParameters
+) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        val dao = EnglishInfoDatabase.getEnglishInfoDatabase(applicationContext).englishInfoDao()
+        val today = LocalDate.now()
+        val notifications = mutableListOf<String>()
+        val ieltsList = dao.getAllIeltsInfo()
+        ieltsList.forEach { ielts ->
+            val expiryDate = LocalDate.parse(ielts.date).plusYears(2)
+            if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
+                notifications.add("IELTS (${ielts.date}) の有効期限が切れました。")
+            }
+        }
+        fun sendNotification(
+            context: Context,
+            title: String,
+            message: String
+        ) {
+            val channelId = "ielts_expired_notification_channel"
+            val notificationManager = context.getSystemService(NotificationManager::class.java)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    channelId,
+                    "資格の有効期限",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                notificationManager.createNotificationChannel(channel)
+            }
+            val notification = NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.calendar)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build()
+            notificationManager.notify(Random.nextInt(), notification)
+        }
+        notifications.forEach { message ->
+            sendNotification(applicationContext, "資格の有効期限", message)
+        }
+        return Result.success()
     }
 }

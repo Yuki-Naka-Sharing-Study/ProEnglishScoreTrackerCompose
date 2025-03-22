@@ -195,7 +195,7 @@ fun EnglishScoreTracker(
                 composable("setting") { SettingsScreen(navController) }
 
                 composable("examDayCountdownScreen") { ExamDayCountdownScreen(navController)}
-                composable("expireCountdownScreen") { ExpireCountdownScreen(viewModel, navController)}
+                composable("expireCountdownScreen") { ExpireCountdownScreen(navController)}
                 composable("youtuberScreen") { YoutuberScreen(navController)}
 
                 // XxxIndividualScreen
