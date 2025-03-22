@@ -200,12 +200,12 @@ fun EnglishScoreTracker(
                 composable("expirationSettingsScreen") { ExpirationSettingsScreen(navController)}
                 composable("youtuberScreen") { YoutuberScreen(navController)}
 
-                // XxxIndividualScreen
-                composable("toeicIndividualScreen") { ToeicListScreen(viewModel, navController) }
-                composable("toeicSwIndividualScreen") { ToeicSwListScreen(viewModel, navController) }
-                composable("eikenIchijiIndividualScreen") { EikenListScreen(viewModel, navController) }
-                composable("toeflIbtIndividualScreen") { ToeflIbtListScreen(viewModel, navController) }
-                composable("ieltsIndividualScreen") { IeltsListScreen(viewModel, navController) }
+                // XxxListScreen
+                composable("toeicListScreen") { ToeicListScreen(viewModel, navController) }
+                composable("toeicSwListScreen") { ToeicSwListScreen(viewModel, navController) }
+                composable("eikenListScreen") { EikenListScreen(viewModel, navController) }
+                composable("toeflIbtListScreen") { ToeflIbtListScreen(viewModel, navController) }
+                composable("ieltsListScreen") { IeltsListScreen(viewModel, navController) }
 
                 // XxxDetailScreen
                 composable("toeic_detail/{toeicId}") { backStackEntry ->
