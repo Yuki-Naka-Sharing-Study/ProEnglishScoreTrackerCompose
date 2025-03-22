@@ -344,6 +344,9 @@ class ExpireSoonWorker(
     }
 }
 
+// TODO : 現状、英検以外の全ての英語資格の通知がまとめて来るので
+//  関数「ExpiredWorker」を
+//  「ToeicExpiredWorker」「ToeicSwExpiredWorker」「ToeflExpiredWorker」「IeltsExpiredWorker」に分割する予定。
 class ExpiredWorker(
     context: Context,
     params: WorkerParameters
