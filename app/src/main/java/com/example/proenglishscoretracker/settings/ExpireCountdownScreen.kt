@@ -31,6 +31,8 @@ import androidx.core.app.NotificationCompat
 import androidx.navigation.NavHostController
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -233,15 +235,16 @@ private fun notifyExpireSoon(workManager: WorkManager) {
 }
 
 private fun notifyExpired(workManager: WorkManager) {
-    val request = PeriodicWorkRequestBuilder<ExpiredWorker>(1, TimeUnit.DAYS)
+    val request = OneTimeWorkRequestBuilder<ExpiredWorker>()
         .setInitialDelay(1, TimeUnit.DAYS)
         .build()
-    workManager.enqueueUniquePeriodicWork(
+    workManager.enqueueUniqueWork(
         "notify_expired",
-        ExistingPeriodicWorkPolicy.REPLACE,
+        ExistingWorkPolicy.REPLACE,
         request
     )
 }
+
 
 class ExpireSoonWorker(
     context: Context,
