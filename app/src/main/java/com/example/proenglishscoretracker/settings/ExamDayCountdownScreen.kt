@@ -32,7 +32,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -113,18 +112,15 @@ private fun ExamCountdownSettingItem(
     workManager: WorkManager
 ) {
     val context = LocalContext.current
-    // SharedPreferences に保存されている受験日（ミリ秒）
     val savedExamDate = sharedPreferences.getLong(setting.prefKey, 0L)
-    // Switch の状態は、受験日が設定されていれば ON とする
-    var isEnabled by remember { mutableStateOf(savedExamDate > 0L) }
+    val isNotificationEnabled = sharedPreferences.getBoolean("${setting.prefKey}_notify", false)
+
     var examDate by remember { mutableStateOf(savedExamDate) }
+    var isEnabled by remember { mutableStateOf(isNotificationEnabled) }
 
     val dateFormatter = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
-    val formattedDate =
-        if (examDate > 0L) dateFormatter.format(Date(examDate))
-        else "未設定"
+    val formattedDate = if (examDate > 0L) dateFormatter.format(Date(examDate)) else "未設定"
 
-    // 公式HPのURLを設定
     val examUrls = mapOf(
         "TOEIC" to "https://www.toeic.or.jp/",
         "TOEIC SW" to "https://www.iibc-global.org/toeic/test/sw.html",
@@ -139,79 +135,61 @@ private fun ExamCountdownSettingItem(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = setting.name, modifier = Modifier.weight(1f))
-            // TODO : Switchをトグルしないと公式HPに遷移できなかったり、
-            //  受験日カウントダウンを設定できないのはUXの観点から良くないので修正する。
             Switch(
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = Color(0xFF8A2BE2),
-                    uncheckedThumbColor = Color.Gray,
-                    checkedTrackColor = Color(0xFF8A2BE2),
-                    uncheckedTrackColor = Color.LightGray
-                ),
                 checked = isEnabled,
                 onCheckedChange = { checked ->
                     isEnabled = checked
-                    if (!checked) {
-                        examDate = 0L
-                        sharedPreferences.edit().remove(setting.prefKey).apply()
-                        scheduleExamCountdown(workManager)
-                    }
+                    sharedPreferences.edit().putBoolean("${setting.prefKey}_notify", checked).apply()
                 }
             )
         }
-        if (isEnabled) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Spacer(modifier = Modifier.width(20.dp))
-                Text(
-                    text = "受験日:\n$formattedDate",
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Button(onClick = {
-                    // DatePickerDialog を表示するため、context を Activity にキャスト
-                    val activity = context as? Activity
-                    val calendar = Calendar.getInstance()
-                    activity?.let {
-                        DatePickerDialog(
-                            it,
-                            { _, year, month, dayOfMonth ->
-                                val selectedCalendar = Calendar.getInstance().apply {
-                                    set(year, month, dayOfMonth, 0, 0, 0)
-                                }
-                                examDate = selectedCalendar.timeInMillis
-                                sharedPreferences.edit().putLong(setting.prefKey, examDate).apply()
-                                scheduleExamCountdown(workManager)
-                            },
-                            calendar.get(Calendar.YEAR),
-                            calendar.get(Calendar.MONTH),
-                            calendar.get(Calendar.DAY_OF_MONTH)
-                        ).show()
-                    }
-                }) {
-                    Text(text = "受験日を設定")
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Spacer(modifier = Modifier.width(20.dp))
+            Text(
+                text = "受験日:\n$formattedDate",
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(onClick = {
+                val activity = context as? Activity
+                val calendar = Calendar.getInstance()
+                activity?.let {
+                    DatePickerDialog(
+                        it,
+                        { _, year, month, dayOfMonth ->
+                            val selectedCalendar = Calendar.getInstance().apply {
+                                set(year, month, dayOfMonth, 0, 0, 0)
+                            }
+                            examDate = selectedCalendar.timeInMillis
+                            sharedPreferences.edit().putLong(setting.prefKey, examDate).apply()
+                            scheduleExamCountdown(workManager)
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    ).show()
                 }
-                Spacer(modifier = Modifier.width(16.dp))
-
-                // 公式HPに遷移するボタン
-                Button(onClick = {
-                    val url = examUrls[setting.name] ?: return@Button
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-                        setPackage("com.android.chrome") // Chromeを指定
-                    }
-                    try {
-                        context.startActivity(intent)
-                    } catch (e: ActivityNotFoundException) {
-                        // Chromeがインストールされていない場合、デフォルトのブラウザで開く
-                        intent.setPackage(null)
-                        context.startActivity(intent)
-                    }
-                }) {
-                    Text(text = "公式HPを開く")
+            }) {
+                Text(text = "受験日を設定")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(onClick = {
+                val url = examUrls[setting.name] ?: return@Button
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                    setPackage("com.android.chrome")
                 }
+                try {
+                    context.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    intent.setPackage(null)
+                    context.startActivity(intent)
+                }
+            }) {
+                Text(text = "公式HPを開く")
             }
         }
     }
@@ -245,7 +223,8 @@ class MultiExamCountdownWorker(
     )
 
     override fun doWork(): Result {
-        val sharedPreferences = applicationContext.getSharedPreferences("exam_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            applicationContext.getSharedPreferences("exam_prefs", Context.MODE_PRIVATE)
         val now = Calendar.getInstance().timeInMillis
         examSettings.forEach { exam ->
             val examDate = sharedPreferences.getLong(exam.prefKey, 0L)
@@ -260,7 +239,8 @@ class MultiExamCountdownWorker(
     }
 
     private fun sendNotification(examName: String, daysLeft: Int) {
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "multi_exam_countdown_channel"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
