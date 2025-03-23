@@ -68,9 +68,9 @@ import com.example.proenglishscoretracker.list_screen.ToeflIbtListScreen
 import com.example.proenglishscoretracker.list_screen.ToeicListScreen
 import com.example.proenglishscoretracker.list_screen.ToeicSwListScreen
 import com.example.proenglishscoretracker.onboard.OnboardingScreen
-import com.example.proenglishscoretracker.settings.ExamDayCountdownScreen
 import com.example.proenglishscoretracker.settings.ExpirationSettingsScreen
 import com.example.proenglishscoretracker.settings.YoutuberScreen
+import com.example.proenglishscoretracker.settings.ExamDayCountdownScreen
 
 class MainActivity : FragmentActivity() {
     private lateinit var englishInfoDao: EnglishInfoDao
