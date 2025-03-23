@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.navigation.NavHostController
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -38,6 +41,9 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoDatabase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.TimeUnit
@@ -48,57 +54,46 @@ fun ExpirationSettingsScreen(
     navHostController: NavHostController
 ) {
     val context = LocalContext.current
-    val expireSoonPreferences =
-        context.getSharedPreferences("expire_soon_prefs", Context.MODE_PRIVATE)
-    val expiredPreferences = context.getSharedPreferences("expired_prefs", Context.MODE_PRIVATE)
+    val dataStore = context.dataStore
     val workManager = WorkManager.getInstance(context)
+    val scope = rememberCoroutineScope()
 
     // 各試験ごとの設定状態を管理
-    val expireSoonEnabledToeic = remember {
-        mutableStateOf(
-            expireSoonPreferences.getBoolean(
-                "expireSoonEnabledToeic",
-                false
-            )
-        )
-    }
-    val expiredEnabledToeic =
-        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeic", false)) }
+    val expireSoonEnabledToeic = remember { mutableStateOf(false) }
+    val expiredEnabledToeic = remember { mutableStateOf(false) }
+    val expireSoonEnabledToeicSw = remember { mutableStateOf(false) }
+    val expiredEnabledToeicSw = remember { mutableStateOf(false) }
+    val expireSoonEnabledToefl = remember { mutableStateOf(false) }
+    val expiredEnabledToefl = remember { mutableStateOf(false) }
+    val expireSoonEnabledIelts = remember { mutableStateOf(false) }
+    val expiredEnabledIelts = remember { mutableStateOf(false) }
 
-    val expireSoonEnabledToeicSw = remember {
-        mutableStateOf(
-            expireSoonPreferences.getBoolean(
-                "expireSoonEnabledToeicSw",
-                false
-            )
-        )
-    }
-    val expiredEnabledToeicSw =
-        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToeicSw", false)) }
-
-    val expireSoonEnabledToefl = remember {
-        mutableStateOf(
-            expireSoonPreferences.getBoolean(
-                "expireSoonEnabledToefl",
-                false
-            )
-        )
-    }
-    val expiredEnabledToefl =
-        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledToefl", false)) }
-
-    val expireSoonEnabledIelts = remember {
-        mutableStateOf(
-            expireSoonPreferences.getBoolean(
-                "expireSoonEnabledIelts",
-                false
-            )
-        )
-    }
-    val expiredEnabledIelts =
-        remember { mutableStateOf(expiredPreferences.getBoolean("expiredEnabledIelts", false)) }
+    // ローカルスコープでキーを定義
+    val EXPIRE_SOON_ENABLED_TOEIC = booleanPreferencesKey("expireSoonEnabledToeic")
+    val EXPIRED_ENABLED_TOEIC = booleanPreferencesKey("expiredEnabledToeic")
+    val EXPIRE_SOON_ENABLED_TOEIC_SW = booleanPreferencesKey("expireSoonEnabledToeicSw")
+    val EXPIRED_ENABLED_TOEIC_SW = booleanPreferencesKey("expiredEnabledToeicSw")
+    val EXPIRE_SOON_ENABLED_TOEFL = booleanPreferencesKey("expireSoonEnabledToefl")
+    val EXPIRED_ENABLED_TOEFL = booleanPreferencesKey("expiredEnabledToefl")
+    val EXPIRE_SOON_ENABLED_IELTS = booleanPreferencesKey("expireSoonEnabledIelts")
+    val EXPIRED_ENABLED_IELTS = booleanPreferencesKey("expiredEnabledIelts")
 
     LaunchedEffect(Unit) {
+        val preferences = dataStore.data.first()
+
+        expireSoonEnabledToeic.value = preferences[EXPIRE_SOON_ENABLED_TOEIC] ?: false
+        expiredEnabledToeic.value = preferences[EXPIRED_ENABLED_TOEIC] ?: false
+
+        expireSoonEnabledToeicSw.value = preferences[EXPIRE_SOON_ENABLED_TOEIC_SW] ?: false
+        expiredEnabledToeicSw.value = preferences[EXPIRED_ENABLED_TOEIC_SW] ?: false
+
+        expireSoonEnabledToefl.value = preferences[EXPIRE_SOON_ENABLED_TOEFL] ?: false
+        expiredEnabledToefl.value = preferences[EXPIRED_ENABLED_TOEFL] ?: false
+
+        expireSoonEnabledIelts.value = preferences[EXPIRE_SOON_ENABLED_IELTS] ?: false
+        expiredEnabledIelts.value = preferences[EXPIRED_ENABLED_IELTS] ?: false
+
+        // 初回読み込み時に通知処理を行う
         notifyToeicExpireSoon(workManager)
         notifyToeicExpired(workManager)
         notifyToeicSwExpireSoon(workManager)
@@ -141,8 +136,11 @@ fun ExpirationSettingsScreen(
                     checked = expireSoonEnabledToeic.value,
                     onCheckedChange = {
                         expireSoonEnabledToeic.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeic", it)
-                            .apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRE_SOON_ENABLED_TOEIC] = it
+                            }
+                        }
                         notifyToeicExpireSoon(workManager)
                     }
                 )
@@ -157,7 +155,11 @@ fun ExpirationSettingsScreen(
                     checked = expiredEnabledToeic.value,
                     onCheckedChange = {
                         expiredEnabledToeic.value = it
-                        expiredPreferences.edit().putBoolean("expiredEnabledToeic", it).apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRED_ENABLED_TOEIC] = it
+                            }
+                        }
                         notifyToeicExpired(workManager)
                     }
                 )
@@ -175,8 +177,11 @@ fun ExpirationSettingsScreen(
                     checked = expireSoonEnabledToeicSw.value,
                     onCheckedChange = {
                         expireSoonEnabledToeicSw.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToeicSw", it)
-                            .apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRE_SOON_ENABLED_TOEIC_SW] = it
+                            }
+                        }
                         notifyToeicSwExpireSoon(workManager)
                     }
                 )
@@ -191,7 +196,11 @@ fun ExpirationSettingsScreen(
                     checked = expiredEnabledToeicSw.value,
                     onCheckedChange = {
                         expiredEnabledToeicSw.value = it
-                        expiredPreferences.edit().putBoolean("expiredEnabledToeicSw", it).apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRED_ENABLED_TOEIC_SW] = it
+                            }
+                        }
                         notifyToeicSwExpired(workManager)
                     }
                 )
@@ -209,8 +218,11 @@ fun ExpirationSettingsScreen(
                     checked = expireSoonEnabledToefl.value,
                     onCheckedChange = {
                         expireSoonEnabledToefl.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledToefl", it)
-                            .apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRE_SOON_ENABLED_TOEFL] = it
+                            }
+                        }
                         notifyToeflIbtExpireSoon(workManager)
                     }
                 )
@@ -225,7 +237,11 @@ fun ExpirationSettingsScreen(
                     checked = expiredEnabledToefl.value,
                     onCheckedChange = {
                         expiredEnabledToefl.value = it
-                        expiredPreferences.edit().putBoolean("expiredEnabledToefl", it).apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRED_ENABLED_TOEFL] = it
+                            }
+                        }
                         notifyToeflIbtExpired(workManager)
                     }
                 )
@@ -243,8 +259,11 @@ fun ExpirationSettingsScreen(
                     checked = expireSoonEnabledIelts.value,
                     onCheckedChange = {
                         expireSoonEnabledIelts.value = it
-                        expireSoonPreferences.edit().putBoolean("expireSoonEnabledIelts", it)
-                            .apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRE_SOON_ENABLED_IELTS] = it
+                            }
+                        }
                         notifyIeltsExpireSoon(workManager)
                     }
                 )
@@ -259,7 +278,11 @@ fun ExpirationSettingsScreen(
                     checked = expiredEnabledIelts.value,
                     onCheckedChange = {
                         expiredEnabledIelts.value = it
-                        expiredPreferences.edit().putBoolean("expiredEnabledIelts", it).apply()
+                        scope.launch(Dispatchers.IO) {
+                            dataStore.edit { preferences ->
+                                preferences[EXPIRED_ENABLED_IELTS] = it
+                            }
+                        }
                         notifyIeltsExpired(workManager)
                     }
                 )
@@ -581,7 +604,7 @@ class ToeicExpiredWorker(
         toeicList.forEach { toeic ->
             val expiryDate = LocalDate.parse(toeic.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("TOEIC の有効期限が切れました。")
+                notifications.add("TOEIC ($expiryDate) の有効期限が切れました。")
             }
         }
         fun sendNotification(
@@ -628,7 +651,7 @@ class ToeicSwExpiredWorker(
         toeicSwList.forEach { toeicSw ->
             val expiryDate = LocalDate.parse(toeicSw.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("TOEIC SW の有効期限が切れました。")
+                notifications.add("TOEIC SW ($expiryDate) の有効期限が切れました。")
             }
         }
         fun sendNotification(
@@ -674,7 +697,7 @@ class ToeflIbtExpiredWorker(
         toeflList.forEach { toefl ->
             val expiryDate = LocalDate.parse(toefl.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("TOEFL iBT の有効期限が切れました。")
+                notifications.add("TOEFL iBT ($expiryDate) の有効期限が切れました。")
             }
         }
         fun sendNotification(
@@ -721,7 +744,7 @@ class IeltsExpiredWorker(
         ieltsList.forEach { ielts ->
             val expiryDate = LocalDate.parse(ielts.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("IELTS の有効期限が切れました。")
+                notifications.add("IELTS ($expiryDate) の有効期限が切れました。")
             }
         }
         fun sendNotification(
