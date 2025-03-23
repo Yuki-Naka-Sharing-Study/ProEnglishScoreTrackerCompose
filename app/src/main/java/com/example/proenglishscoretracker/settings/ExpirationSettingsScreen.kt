@@ -604,7 +604,7 @@ class ToeicExpiredWorker(
         toeicList.forEach { toeic ->
             val expiryDate = LocalDate.parse(toeic.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("TOEIC ($expiryDate) の有効期限が切れました。")
+                notifications.add("TOEIC ${toeic.date} の有効期限が切れました。")
             }
         }
         fun sendNotification(
@@ -651,7 +651,7 @@ class ToeicSwExpiredWorker(
         toeicSwList.forEach { toeicSw ->
             val expiryDate = LocalDate.parse(toeicSw.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("TOEIC SW ($expiryDate) の有効期限が切れました。")
+                notifications.add("TOEIC SW ${toeicSw.date} の有効期限が切れました。")
             }
         }
         fun sendNotification(
@@ -697,7 +697,7 @@ class ToeflIbtExpiredWorker(
         toeflList.forEach { toefl ->
             val expiryDate = LocalDate.parse(toefl.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("TOEFL iBT ($expiryDate) の有効期限が切れました。")
+                notifications.add("TOEFL iBT ${toefl.date} の有効期限が切れました。")
             }
         }
         fun sendNotification(
@@ -744,7 +744,7 @@ class IeltsExpiredWorker(
         ieltsList.forEach { ielts ->
             val expiryDate = LocalDate.parse(ielts.date).plusYears(2)
             if (ChronoUnit.DAYS.between(today, expiryDate) < 0) {
-                notifications.add("IELTS ($expiryDate) の有効期限が切れました。")
+                notifications.add("IELTS ${ielts.date} の有効期限が切れました。")
             }
         }
         fun sendNotification(
