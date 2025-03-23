@@ -202,10 +202,8 @@ private fun ExamCountdownSettingItem(
 
 // WorkManager の定期実行をスケジュール（1日ごとに実行）
 private fun scheduleExamCountdown(workManager: WorkManager) {
-//    val request = PeriodicWorkRequestBuilder<MultiExamCountdownWorker>(1, TimeUnit.DAYS)
-    val request = PeriodicWorkRequestBuilder<MultiExamCountdownWorker>(1, TimeUnit.MINUTES)
-//        .setInitialDelay(1, TimeUnit.DAYS)
-        .setInitialDelay(1, TimeUnit.MINUTES)
+    val request = PeriodicWorkRequestBuilder<MultiExamCountdownWorker>(1, TimeUnit.DAYS)
+        .setInitialDelay(1, TimeUnit.DAYS)
         .build()
     workManager.enqueueUniquePeriodicWork(
         "multi_exam_countdown",
