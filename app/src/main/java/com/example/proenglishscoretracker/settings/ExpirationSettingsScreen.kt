@@ -26,6 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationCompat
@@ -130,7 +134,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("TOEIC - 有効期限が近づいている通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                            )
+                        ) {
+                            append("TOEIC")
+                        }
+                        append(" - 有効期限が近づいている")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledToeic.value,
@@ -149,7 +166,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("TOEIC - 有効期限が切れた通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        ) {
+                            append("TOEIC")
+                        }
+                        append(" - 有効期限が切れた")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledToeic.value,
@@ -171,7 +201,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("TOEIC SW - 有効期限が近づいている通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        ) {
+                            append("TOEIC SW")
+                        }
+                        append(" - 有効期限が近づいている")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledToeicSw.value,
@@ -190,7 +233,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("TOEIC SW - 有効期限が切れた通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        ) {
+                            append("TOEIC SW")
+                        }
+                        append(" - 有効期限が切れた")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledToeicSw.value,
@@ -212,7 +268,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("TOEFL - 有効期限が近づいている通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        ) {
+                            append("TOEFL")
+                        }
+                        append(" - 有効期限が近づいている")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledToefl.value,
@@ -231,7 +300,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("TOEFL - 有効期限が切れた通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        ) {
+                            append("TOEFL")
+                        }
+                        append(" - 有効期限が切れた")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledToefl.value,
@@ -239,7 +321,7 @@ fun ExpirationSettingsScreen(
                         expiredEnabledToefl.value = it
                         scope.launch(Dispatchers.IO) {
                             dataStore.edit { preferences ->
-                                preferences[EXPIRED_ENABLED_TOEFL] = it
+                                preferences[EXPIRE_SOON_ENABLED_TOEFL] = it
                             }
                         }
                         notifyToeflIbtExpired(workManager)
@@ -253,7 +335,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("IELTS - 有効期限が近づいている通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        ) {
+                            append("IELTS")
+                        }
+                        append(" - 有効期限が近づいている")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expireSoonEnabledIelts.value,
@@ -272,7 +367,20 @@ fun ExpirationSettingsScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("IELTS - 有効期限が切れた通知設定")
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        ) {
+                            append("IELTS")
+                        }
+                        append(" - 有効期限が切れた")
+                    },
+                    fontSize = 16.sp
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = expiredEnabledIelts.value,
