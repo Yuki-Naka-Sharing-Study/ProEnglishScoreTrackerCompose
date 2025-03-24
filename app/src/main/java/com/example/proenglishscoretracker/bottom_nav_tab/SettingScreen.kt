@@ -44,6 +44,7 @@ fun SettingsScreen(navHostController: NavHostController) {
         val items: List<Pair<String, () -> Unit>> = listOf(
             // 受験日カウントダウン設定 → examCountdown 画面へ遷移
             "このアプリについて" to {},
+            // TODO : お問い合わせの箇所には自分のメールアドレスを入力
             "お問い合わせ" to {
                 val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                     data = Uri.parse("mailto:support@example.com")
