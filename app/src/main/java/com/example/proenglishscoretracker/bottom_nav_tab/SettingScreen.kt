@@ -66,8 +66,8 @@ fun SettingsScreen(navHostController: NavHostController) {
                 context.startActivity(Intent.createChooser(shareIntent, "アプリを共有"))
             },
             "バージョン 1.0.0" to {},
-            "受験日カウントダウンを設定" to { navHostController.navigate("examDayCountdownScreen") },
-            "有効期限カウントダウンを設定" to { navHostController.navigate("expirationSettingsScreen") },
+            "受験日カウントダウン設定" to { navHostController.navigate("examDayCountdownScreen") },
+            "資格有効期限通知設定" to { navHostController.navigate("expirationSettingsScreen") },
             "登録推奨YouTuber" to { navHostController.navigate("youtuberScreen") },
         )
 
