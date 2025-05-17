@@ -12,11 +12,13 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,6 +35,7 @@ import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EikenDetailScreen(
     eikenId: String,
@@ -72,8 +75,14 @@ fun EikenDetailScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "英検 詳細") },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "英検 詳細",
+                        fontSize = 20.sp,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
@@ -102,7 +111,10 @@ fun EikenDetailScreen(
                             tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF6200EE)
+                )
             )
         }
     ) { paddingValues ->
