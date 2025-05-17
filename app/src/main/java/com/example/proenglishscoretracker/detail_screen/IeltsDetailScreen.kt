@@ -85,7 +85,7 @@ fun IeltsDetailScreen(
                 title = {
                     Text(
                         text = "IELTS 詳細",
-                        fontSize = 24.sp,
+                        fontSize = 20.sp,
                         color = Color.White
                     )
                 },
