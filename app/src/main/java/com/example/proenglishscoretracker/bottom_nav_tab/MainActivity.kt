@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
@@ -20,23 +19,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material3.TextButton
+import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.room.Room
-import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.chart_screen.EikenChartScreen
 import com.example.proenglishscoretracker.chart_screen.IeltsChartScreen
 import com.example.proenglishscoretracker.chart_screen.ToeflIbtChartScreen
@@ -193,7 +190,7 @@ fun EnglishScoreTracker(
                 // BottomNavigationBar
                 composable("examDataScreen") { ExamDataScreen(viewModel, navController) }
                 composable("examRecordScreen") { ExamRecordScreen(viewModel) }
-                composable("setting") { SettingsScreen(navController) }
+                composable("settingScreen") { SettingsScreen(navController) }
 
                 // SettingsScreen
                 composable("examDayCountdownScreen") { ExamDayCountdownScreen(navController)}
@@ -341,172 +338,92 @@ fun EnglishScoreTracker(
     }
 }
 
+
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController,
     viewModel: EnglishInfoViewModel
 ) {
-    val eikenUnsavedChanges by viewModel.eikenUnsavedChanges.collectAsState()
-    var showDialog by rememberSaveable { mutableStateOf(false) }
-    var targetRoute by rememberSaveable { mutableStateOf<String?>(null) }
-    val eikenGrade by viewModel.eikenGrade.collectAsState()
-    val eikenReadingScore by viewModel.eikenReadingScore.collectAsState()
-    val eikenListeningScore by viewModel.eikenListeningScore.collectAsState()
-    val eikenWritingScore by viewModel.eikenWritingScore.collectAsState()
-    val eikenSpeakingScore by viewModel.eikenSpeakingScore.collectAsState()
-    val eikenMemoText by viewModel.eikenMemoText.collectAsState()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text(text = "確認") },
-            text = { Text("入力途中で画面を切り替えると情報が失われますが大丈夫でしょうか？") },
-            confirmButton = {
-                TextButton(onClick = {
-                    showDialog = false
-                    targetRoute?.let {
-                        // TODO : TOEICの情報喪失アラートの実装
+    val selectedColor = Color(0xFF9C27B0)
+    val unselectedColor = Color.Gray
 
-                        viewModel.setEikenGrade("")
-                        viewModel.setEikenReadingScore(0)
-                        viewModel.setEikenListeningScore(0)
-                        viewModel.setEikenWritingScore(0)
-                        viewModel.setEikenSpeakingScore(0)
-                        viewModel.setEikenMemoText("")
-                        navController.navigate(it) {
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                }) {
-                    Text(text = "OK")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text(text = "キャンセル")
-                }
-            }
-        )
-    }
-
-    BottomNavigation(
-        backgroundColor = Color(0xFFCE93D8),
-        contentColor = Color(0xFF00796B)
-    ) {
+    BottomNavigation(backgroundColor = Color.White) {
         BottomNavigationItem(
             icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.chart),
-                    contentDescription = "examDataScreen"
+                    Icons.Default.ShowChart,
+                    contentDescription = "確認",
+                    tint = if (currentRoute == "examDataScreen") selectedColor else unselectedColor
                 )
             },
-            label = { Text("記録確認") },
-            selected = navController.currentBackStackEntry?.destination?.route == "examDataScreen",
+            label = {
+                Text(
+                    "確認",
+                    color = if (currentRoute == "examDataScreen") selectedColor else unselectedColor
+                )
+            },
+            selected = currentRoute == "examDataScreen",
             onClick = {
-                if (
-                // TODO : TOEICの情報喪失アラートの実装
-
-                    eikenUnsavedChanges &&
-                    eikenGrade.isNotEmpty() ||
-                    eikenReadingScore > 0 ||
-                    eikenListeningScore > 0 ||
-                    eikenWritingScore > 0 ||
-                    eikenSpeakingScore > 0 ||
-                    eikenMemoText.isNotEmpty()
-                    )
-                {
-                    targetRoute = "examDataScreen"
-                    showDialog = true
-                } else {
-                    // TODO : TOEICの情報喪失アラートの実装
-
-                    viewModel.setEikenGrade("")
-                    viewModel.setEikenReadingScore(0)
-                    viewModel.setEikenListeningScore(0)
-                    viewModel.setEikenWritingScore(0)
-                    viewModel.setEikenSpeakingScore(0)
-                    viewModel.setEikenMemoText("")
+                if (currentRoute != "examDataScreen") {
                     navController.navigate("examDataScreen") {
                         launchSingleTop = true
                         restoreState = true
                     }
                 }
-            },
-            selectedContentColor = Color(0xFF004D40),
-            unselectedContentColor = Color(0xFFB2DFDB)
+            }
         )
+
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Edit, contentDescription = "Record") },
-            label = { Text("記録") },
-            selected = navController.currentBackStackEntry?.destination?.route == "examRecordScreen",
+            icon = {
+                Icon(
+                    Icons.Default.Edit,
+                    contentDescription = "記録",
+                    tint = if (currentRoute == "examRecordScreen") selectedColor else unselectedColor
+                )
+            },
+            label = {
+                Text(
+                    "記録",
+                    color = if (currentRoute == "examRecordScreen") selectedColor else unselectedColor
+                )
+            },
+            selected = currentRoute == "examRecordScreen",
             onClick = {
-                if (
-                // TODO : TOEICの情報喪失アラートの実装
-
-                    eikenUnsavedChanges &&
-                    eikenGrade.isNotEmpty() ||
-                    eikenReadingScore > 0 ||
-                    eikenListeningScore > 0 ||
-                    eikenWritingScore > 0 ||
-                    eikenSpeakingScore > 0 ||
-                    eikenMemoText.isNotEmpty())
-                {
-                    targetRoute = "examRecordScreen"
-                    showDialog = true
-                } else {
-                    // TODO : TOEICの情報喪失アラートの実装
-
-                    viewModel.setEikenGrade("")
-                    viewModel.setEikenReadingScore(0)
-                    viewModel.setEikenListeningScore(0)
-                    viewModel.setEikenWritingScore(0)
-                    viewModel.setEikenSpeakingScore(0)
-                    viewModel.setEikenMemoText("")
+                if (currentRoute != "examRecordScreen") {
                     navController.navigate("examRecordScreen") {
                         launchSingleTop = true
                         restoreState = true
                     }
                 }
-            },
-            selectedContentColor = Color(0xFF004D40),
-            unselectedContentColor = Color(0xFFB2DFDB)
+            }
         )
+
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-            label = { Text("設定") },
-            selected = navController.currentBackStackEntry?.destination?.route == "setting",
+            icon = {
+                Icon(
+                    Icons.Default.Settings,
+                    contentDescription = "設定",
+                    tint = if (currentRoute == "settingScreen") selectedColor else unselectedColor
+                )
+            },
+            label = {
+                Text(
+                    "設定",
+                    color = if (currentRoute == "settingScreen") selectedColor else unselectedColor
+                )
+            },
+            selected = currentRoute == "settingScreen",
             onClick = {
-                if (
-                // TODO : TOEICの情報喪失アラートの実装
-
-                    eikenUnsavedChanges &&
-                    eikenGrade.isNotEmpty() ||
-                    eikenReadingScore > 0 ||
-                    eikenListeningScore > 0 ||
-                    eikenWritingScore > 0 ||
-                    eikenSpeakingScore > 0 ||
-                    eikenMemoText.isNotEmpty())
-                {
-                    targetRoute = "setting"
-                    showDialog = true
-                } else {
-                    // TODO : TOEICの情報喪失アラートの実装
-
-                    viewModel.setEikenGrade("")
-                    viewModel.setEikenReadingScore(0)
-                    viewModel.setEikenListeningScore(0)
-                    viewModel.setEikenWritingScore(0)
-                    viewModel.setEikenSpeakingScore(0)
-                    viewModel.setEikenMemoText("")
-                    navController.navigate("setting") {
+                if (currentRoute != "settingScreen") {
+                    navController.navigate("settingScreen") {
                         launchSingleTop = true
                         restoreState = true
                     }
                 }
-            },
-            selectedContentColor = Color(0xFF004D40),
-            unselectedContentColor = Color(0xFFB2DFDB)
+            }
         )
     }
 }
