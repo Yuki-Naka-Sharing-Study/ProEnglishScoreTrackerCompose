@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +44,7 @@ data class ExamSetting(val name: String, val prefKey: String)
 // DataStore のインスタンスを取得
 val Context.dataStore by preferencesDataStore(name = "exam_prefs")
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamDayCountdownScreen(
     navHostController: NavHostController
@@ -62,8 +66,14 @@ fun ExamDayCountdownScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("受験日カウントダウン設定", fontSize = 20.sp) },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "受験日カウントダウン設定",
+                        fontSize = 20.sp,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
@@ -72,7 +82,10 @@ fun ExamDayCountdownScreen(
                             tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF6200EE)
+                )
             )
         }
     ) { paddingValues ->
