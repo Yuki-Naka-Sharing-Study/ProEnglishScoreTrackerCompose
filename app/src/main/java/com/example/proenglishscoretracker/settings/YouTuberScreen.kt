@@ -23,9 +23,11 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,27 +41,35 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun YoutuberScreen(
     navHostController: NavHostController
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
-                    Text("登録推奨YouTuber")
+                    Text(
+                        text = "登録推奨YouTuber",
+                        fontSize = 20.sp,
+                        color = Color.White
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = "Back",
+                            tint = Color.White
                         )
                     }
                 },
-                contentColor = Color.White,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF6200EE)
+                )
             )
-        },
+        }
     ) { innerPadding ->
         YoutuberContentScreen(innerPadding)
     }
