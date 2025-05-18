@@ -66,7 +66,7 @@ fun YoutuberScreen(
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFF6200EE)
+                    containerColor = Color(0xFF9C27B0)
                 )
             )
         }
