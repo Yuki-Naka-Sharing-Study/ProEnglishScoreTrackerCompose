@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -131,7 +132,7 @@ fun ExpirationSettingsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFF6200EE)
+                    containerColor = Color(0xFF9C27B0)
                 )
             )
         }
@@ -171,7 +172,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyToeicExpireSoon(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
 
