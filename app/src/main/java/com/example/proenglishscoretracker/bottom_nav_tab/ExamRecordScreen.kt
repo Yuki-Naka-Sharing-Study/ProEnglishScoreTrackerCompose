@@ -5,7 +5,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.material.*
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.Color
@@ -34,7 +33,6 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
     )
     val pagerState = com.google.accompanist.pager.rememberPagerState(initialPage = 0)
     val scope = rememberCoroutineScope()
-    var showDialog by rememberSaveable { mutableStateOf(false) }
     var pendingPage by rememberSaveable { mutableIntStateOf(0) }
 
     Column {
@@ -42,22 +40,8 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
             tabs = tabs,
             pagerState = pagerState,
             onTabClick = { index ->
-                if (
-                    // TODO : TOEICの情報喪失アラートの実装
-
-                    viewModel.eikenGrade.value.isNotEmpty() ||
-                    viewModel.eikenReadingScore.value > 0 ||
-                    viewModel.eikenListeningScore.value > 0 ||
-                    viewModel.eikenWritingScore.value > 0 ||
-                    viewModel.eikenSpeakingScore.value > 0 ||
-                    viewModel.eikenMemoText.value.isNotEmpty()
-                )
-                {
-                    showDialog = true
                     pendingPage = index
-                } else {
                     scope.launch { pagerState.animateScrollToPage(index) }
-                }
             }
         )
         when (pagerState.currentPage) {
@@ -68,28 +52,6 @@ fun ExamRecordScreen(viewModel: EnglishInfoViewModel) {
             4 -> IeltsRecordScreen(viewModel = viewModel)
         }
         TabsContent(tabs = tabs, pagerState = pagerState)
-    }
-
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = { Text("データ喪失の可能性") },
-            text = { Text("入力途中で画面遷移するとデータが喪失しますが宜しいでしょうか？") },
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.setEikenMemoText("")
-                    scope.launch { pagerState.animateScrollToPage(pendingPage) }
-                    showDialog = false
-                }) {
-                    Text("はい")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDialog = false }) {
-                    Text("いいえ")
-                }
-            }
-        )
     }
 }
 
