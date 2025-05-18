@@ -208,7 +208,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyToeicExpired(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
 
@@ -243,7 +247,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyToeicSwExpireSoon(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
 
@@ -275,7 +283,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyToeicSwExpired(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
 
@@ -310,7 +322,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyToeflIbtExpireSoon(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
 
@@ -342,7 +358,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyToeflIbtExpired(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
 
@@ -377,7 +397,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyIeltsExpireSoon(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
 
@@ -409,7 +433,11 @@ fun ExpirationSettingsScreen(
                             }
                         }
                         notifyIeltsExpired(workManager)
-                    }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color(0xFF9C27B0),
+                        checkedTrackColor = Color(0xFFCE93D8)
+                    )
                 )
             }
         }
