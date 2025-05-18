@@ -84,7 +84,7 @@ fun ExamDayCountdownScreen(
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color(0xFF6200EE)
+                    containerColor = Color(0xFF9C27B0)
                 )
             )
         }
@@ -159,7 +159,11 @@ private fun ExamCountdownSettingItem(
                             preferences[booleanPreferencesKey("${setting.prefKey}_notify")] = checked
                         }
                     }
-                }
+                },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color(0xFF9C27B0),
+                    checkedTrackColor = Color(0xFFCE93D8)
+                )
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -173,46 +177,58 @@ private fun ExamCountdownSettingItem(
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = {
-                val activity = context as? Activity
-                val calendar = Calendar.getInstance()
-                activity?.let {
-                    DatePickerDialog(
-                        it,
-                        { _, year, month, dayOfMonth ->
-                            val selectedCalendar = Calendar.getInstance().apply {
-                                set(year, month, dayOfMonth, 0, 0, 0)
-                            }
-                            examDate = selectedCalendar.timeInMillis
-                            // DataStoreに保存
-                            scope.launch(Dispatchers.IO) {
-                                dataStore.edit { preferences ->
-                                    preferences[longPreferencesKey(setting.prefKey)] = examDate
+            Button(
+                onClick = {
+                    val activity = context as? Activity
+                    val calendar = Calendar.getInstance()
+                    activity?.let {
+                        DatePickerDialog(
+                            it,
+                            { _, year, month, dayOfMonth ->
+                                val selectedCalendar = Calendar.getInstance().apply {
+                                    set(year, month, dayOfMonth, 0, 0, 0)
                                 }
-                            }
-                            scheduleExamCountdown(workManager)
-                        },
-                        calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH),
-                        calendar.get(Calendar.DAY_OF_MONTH)
-                    ).show()
-                }
-            }) {
+                                examDate = selectedCalendar.timeInMillis
+                                // DataStoreに保存
+                                scope.launch(Dispatchers.IO) {
+                                    dataStore.edit { preferences ->
+                                        preferences[longPreferencesKey(setting.prefKey)] = examDate
+                                    }
+                                }
+                                scheduleExamCountdown(workManager)
+                            },
+                            calendar.get(Calendar.YEAR),
+                            calendar.get(Calendar.MONTH),
+                            calendar.get(Calendar.DAY_OF_MONTH)
+                        ).show()
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(0xFF9C27B0),
+                    contentColor = Color.White
+                )
+            ) {
                 Text(text = "受験日を設定")
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Button(onClick = {
-                val url = examUrls[setting.name] ?: return@Button
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-                    setPackage("com.android.chrome")
-                }
-                try {
-                    context.startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    intent.setPackage(null)
-                    context.startActivity(intent)
-                }
-            }) {
+            Button(
+                onClick = {
+                    val url = examUrls[setting.name] ?: return@Button
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                        setPackage("com.android.chrome")
+                    }
+                    try {
+                        context.startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        intent.setPackage(null)
+                        context.startActivity(intent)
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(0xFF9C27B0),
+                    contentColor = Color.White
+                )
+            ) {
                 Text(text = "公式HPを開く")
             }
         }
