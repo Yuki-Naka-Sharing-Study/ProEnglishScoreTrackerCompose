@@ -16,10 +16,12 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
@@ -31,6 +33,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.proenglishscoretracker.R
 import com.example.proenglishscoretracker.data.EnglishInfoViewModel
@@ -39,6 +42,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IeltsEditScreen(
     ieltsInfo: EnglishTestInfo.IELTS,
@@ -148,13 +152,20 @@ fun IeltsEditScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("IELTS データ編集") },
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "IELTS データ編集",
+                        fontSize = 20.sp,
+                        color = Color.White
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navHostController.popBackStack() }) {
                         Icon(
                             Icons.Default.ArrowBack,
-                            contentDescription = "戻る"
+                            contentDescription = "戻る",
+                            tint = Color.White
                         )
                     }
                 },
@@ -184,10 +195,14 @@ fun IeltsEditScreen(
                     ) {
                         Icon(
                             Icons.Default.Check,
-                            contentDescription = "保存"
+                            contentDescription = "保存",
+                            tint = Color.White
                         )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF6200EE)
+                )
             )
         }
     ) { padding ->
