@@ -341,7 +341,6 @@ fun EnglishScoreTracker(
     }
 }
 
-
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController,
@@ -350,35 +349,65 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // 「設定タブに含める」ルートを列挙（必要に応じて追加）
+    // 設定タブに含めるルート
     val settingsRoutes = remember {
         setOf(
-            "settingScreen",                // 設定メイン
-            "examDayCountdownScreen",       // 受験日カウントダウン設定
-            "expirationSettingsScreen",     // 資格有効期限通知設定
-            "youtuberScreen"                // 登録推奨YouTuber
+            "settingScreen",
+            "examDayCountdownScreen",
+            "expirationSettingsScreen",
+            "youtuberScreen"
         )
     }
+
+    // データ（詳細・編集・チャート）系ルート
+    val dataRoutes = remember {
+        setOf(
+            // Detail
+            "toeic_detail/{toeicId}",
+            "toeic_sw_detail/{toeicSwId}",
+            "eiken_detail/{eikenId}",
+            "toefl_ibt_detail/{toeflIbtId}",
+            "ielts_detail/{ieltsId}",
+
+            // Edit
+            "toeic_edit/{toeicId}",
+            "toeic_sw_edit/{toeicSwId}",
+            "eiken_edit/{eikenId}",
+            "toefl_ibt_edit/{toeflIbtId}",
+            "ielts_edit/{ieltsId}",
+
+            // Chart
+            "toeicChartScreen",
+            "toeicSwChartScreen",
+            "eikenIchijiChartScreen",
+            "toeflIbtChartScreen",
+            "ieltsIbtChartScreen"
+        )
+    }
+
+    // 記録確認タブとして扱いたいルート集合（rootも含める）
+    val dataRootRoutes = remember { dataRoutes + setOf("examDataScreen") }
 
     fun NavDestination?.isIn(routes: Set<String>): Boolean =
         this?.hierarchy?.any { it.route in routes } == true
 
     fun navigateBottomTab(route: String) {
-        // 同一タブ内なら何もしない（多重 navigate 防止）
-        if (currentDestination.isIn(settingsRoutes) && route == "settingScreen") return
+        // 同一タブ内での多重 navigate を抑止
+        if (route == "settingScreen" && currentDestination.isIn(settingsRoutes)) return
+        if (route == "examDataScreen" && currentDestination.isIn(dataRootRoutes)) return
         if (currentDestination?.route == route) return
 
         navController.navigate(route) {
-            // タブ間移動の復元を安定化
-            popUpTo("examDataScreen") { saveState = true }
+            popUpTo("examDataScreen") { saveState = true } // タブ間復元の安定化
             launchSingleTop = true
             restoreState = true
         }
     }
 
     NavigationBar(containerColor = Color(0xFFCE93D8)) {
+        // 記録確認
         NavigationBarItem(
-            selected = currentDestination?.hierarchy?.any { it.route == "examDataScreen" } == true,
+            selected = currentDestination.isIn(dataRootRoutes),
             onClick = { navigateBottomTab("examDataScreen") },
             icon = { Icon(Icons.Filled.ShowChart, contentDescription = "記録確認") },
             label = { Text("記録確認") },
@@ -391,6 +420,7 @@ fun BottomNavigationBar(
             )
         )
 
+        // 記録
         NavigationBarItem(
             selected = currentDestination?.hierarchy?.any { it.route == "examRecordScreen" } == true,
             onClick = { navigateBottomTab("examRecordScreen") },
@@ -405,7 +435,7 @@ fun BottomNavigationBar(
             )
         )
 
-        // ★ 設定タブ：下位画面も含む集合で判定
+        // 設定（配下画面も含めて選択扱い）
         NavigationBarItem(
             selected = currentDestination.isIn(settingsRoutes),
             onClick = { navigateBottomTab("settingScreen") },
