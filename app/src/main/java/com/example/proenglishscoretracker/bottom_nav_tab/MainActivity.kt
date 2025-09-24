@@ -17,9 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.filled.ShowChart
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.room.Room
@@ -345,85 +348,76 @@ fun BottomNavigationBar(
     viewModel: EnglishInfoViewModel
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+    val currentDestination = navBackStackEntry?.destination
 
-    val selectedColor = Color(0xFF9C27B0)
-    val unselectedColor = Color.Gray
+    // 「設定タブに含める」ルートを列挙（必要に応じて追加）
+    val settingsRoutes = remember {
+        setOf(
+            "settingScreen",                // 設定メイン
+            "examDayCountdownScreen",       // 受験日カウントダウン設定
+            "expirationSettingsScreen",     // 資格有効期限通知設定
+            "youtuberScreen"                // 登録推奨YouTuber
+        )
+    }
 
-    BottomNavigation(backgroundColor = Color.White) {
-        BottomNavigationItem(
-            icon = {
-                Icon(
-                    Icons.Default.ShowChart,
-                    contentDescription = "確認",
-                    tint = if (currentRoute == "examDataScreen") selectedColor else unselectedColor
-                )
-            },
-            label = {
-                Text(
-                    "確認",
-                    color = if (currentRoute == "examDataScreen") selectedColor else unselectedColor
-                )
-            },
-            selected = currentRoute == "examDataScreen",
-            onClick = {
-                if (currentRoute != "examDataScreen") {
-                    navController.navigate("examDataScreen") {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
+    fun NavDestination?.isIn(routes: Set<String>): Boolean =
+        this?.hierarchy?.any { it.route in routes } == true
+
+    fun navigateBottomTab(route: String) {
+        // 同一タブ内なら何もしない（多重 navigate 防止）
+        if (currentDestination.isIn(settingsRoutes) && route == "settingScreen") return
+        if (currentDestination?.route == route) return
+
+        navController.navigate(route) {
+            // タブ間移動の復元を安定化
+            popUpTo("examDataScreen") { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
+    NavigationBar(containerColor = Color(0xFFCE93D8)) {
+        NavigationBarItem(
+            selected = currentDestination?.hierarchy?.any { it.route == "examDataScreen" } == true,
+            onClick = { navigateBottomTab("examDataScreen") },
+            icon = { Icon(Icons.Filled.ShowChart, contentDescription = "記録確認") },
+            label = { Text("記録確認") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color(0xFF004D40),
+                selectedTextColor = Color(0xFF004D40),
+                unselectedIconColor = Color(0xFFB2DFDB),
+                unselectedTextColor = Color(0xFFB2DFDB),
+                indicatorColor = Color.Transparent
+            )
         )
 
-        BottomNavigationItem(
-            icon = {
-                Icon(
-                    Icons.Default.Edit,
-                    contentDescription = "記録",
-                    tint = if (currentRoute == "examRecordScreen") selectedColor else unselectedColor
-                )
-            },
-            label = {
-                Text(
-                    "記録",
-                    color = if (currentRoute == "examRecordScreen") selectedColor else unselectedColor
-                )
-            },
-            selected = currentRoute == "examRecordScreen",
-            onClick = {
-                if (currentRoute != "examRecordScreen") {
-                    navController.navigate("examRecordScreen") {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
+        NavigationBarItem(
+            selected = currentDestination?.hierarchy?.any { it.route == "examRecordScreen" } == true,
+            onClick = { navigateBottomTab("examRecordScreen") },
+            icon = { Icon(Icons.Filled.Edit, contentDescription = "記録") },
+            label = { Text("記録") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color(0xFF004D40),
+                selectedTextColor = Color(0xFF004D40),
+                unselectedIconColor = Color(0xFFB2DFDB),
+                unselectedTextColor = Color(0xFFB2DFDB),
+                indicatorColor = Color.Transparent
+            )
         )
 
-        BottomNavigationItem(
-            icon = {
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = "設定",
-                    tint = if (currentRoute == "settingScreen") selectedColor else unselectedColor
-                )
-            },
-            label = {
-                Text(
-                    "設定",
-                    color = if (currentRoute == "settingScreen") selectedColor else unselectedColor
-                )
-            },
-            selected = currentRoute == "settingScreen",
-            onClick = {
-                if (currentRoute != "settingScreen") {
-                    navController.navigate("settingScreen") {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
+        // ★ 設定タブ：下位画面も含む集合で判定
+        NavigationBarItem(
+            selected = currentDestination.isIn(settingsRoutes),
+            onClick = { navigateBottomTab("settingScreen") },
+            icon = { Icon(Icons.Filled.Settings, contentDescription = "設定") },
+            label = { Text("設定") },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = Color(0xFF004D40),
+                selectedTextColor = Color(0xFF004D40),
+                unselectedIconColor = Color(0xFFB2DFDB),
+                unselectedTextColor = Color(0xFFB2DFDB),
+                indicatorColor = Color.Transparent
+            )
         )
     }
 }
