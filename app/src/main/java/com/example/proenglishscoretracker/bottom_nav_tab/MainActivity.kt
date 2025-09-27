@@ -349,18 +349,18 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // 設定タブに含めるルート
-    val settingsRoutes = remember {
+    // --- 設定タブ：配下（サブ）と起点を分離し、最終集合を合成 ---
+    val settingsSubRoutes = remember {
         setOf(
-            "settingScreen",
             "examDayCountdownScreen",
             "expirationSettingsScreen",
             "youtuberScreen"
         )
     }
+    val settingsRootRoutes = remember { settingsSubRoutes + setOf("settingScreen") }
 
-    // データ（詳細・編集・チャート）系ルート
-    val dataRoutes = remember {
+    // --- 記録確認タブ：配下（詳細・編集・チャート）と起点を分離し、最終集合を合成 ---
+    val dataSubRoutes = remember {
         setOf(
             // Detail
             "toeic_detail/{toeicId}",
@@ -384,28 +384,28 @@ fun BottomNavigationBar(
             "ieltsIbtChartScreen"
         )
     }
+    val dataRootRoutes = remember { dataSubRoutes + setOf("examDataScreen") }
 
-    // 記録確認タブとして扱いたいルート集合（rootも含める）
-    val dataRootRoutes = remember { dataRoutes + setOf("examDataScreen") }
-
+    // 現在地が指定集合（起点＋配下）に属するかを判定
     fun NavDestination?.isIn(routes: Set<String>): Boolean =
         this?.hierarchy?.any { it.route in routes } == true
 
     fun navigateBottomTab(route: String) {
         // 同一タブ内での多重 navigate を抑止
-        if (route == "settingScreen" && currentDestination.isIn(settingsRoutes)) return
+        if (route == "settingScreen" && currentDestination.isIn(settingsRootRoutes)) return
         if (route == "examDataScreen" && currentDestination.isIn(dataRootRoutes)) return
         if (currentDestination?.route == route) return
 
         navController.navigate(route) {
-            popUpTo("examDataScreen") { saveState = true } // タブ間復元の安定化
+            // タブ間移動の状態復元を安定化（起点まで popUp／状態保存→後で復元）
+            popUpTo("examDataScreen") { saveState = true }
             launchSingleTop = true
             restoreState = true
         }
     }
 
     NavigationBar(containerColor = Color(0xFFCE93D8)) {
-        // 記録確認
+        // 記録確認（起点＋配下で選択状態を維持）
         NavigationBarItem(
             selected = currentDestination.isIn(dataRootRoutes),
             onClick = { navigateBottomTab("examDataScreen") },
@@ -420,7 +420,7 @@ fun BottomNavigationBar(
             )
         )
 
-        // 記録
+        // 記録（単独ルート）
         NavigationBarItem(
             selected = currentDestination?.hierarchy?.any { it.route == "examRecordScreen" } == true,
             onClick = { navigateBottomTab("examRecordScreen") },
@@ -435,9 +435,9 @@ fun BottomNavigationBar(
             )
         )
 
-        // 設定（配下画面も含めて選択扱い）
+        // 設定（起点＋配下で選択状態を維持）
         NavigationBarItem(
-            selected = currentDestination.isIn(settingsRoutes),
+            selected = currentDestination.isIn(settingsRootRoutes),
             onClick = { navigateBottomTab("settingScreen") },
             icon = { Icon(Icons.Filled.Settings, contentDescription = "設定") },
             label = { Text("設定") },
