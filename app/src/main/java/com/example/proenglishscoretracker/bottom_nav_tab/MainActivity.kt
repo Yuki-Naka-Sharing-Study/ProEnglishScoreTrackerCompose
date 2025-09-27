@@ -349,6 +349,10 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
+    // --- 色指定（元コードに合わせる） ---
+    val selectedColor = Color(0xFF9C27B0)
+    val unselectedColor = Color.Gray
+
     // --- 設定タブ：配下（サブ）と起点を分離し、最終集合を合成 ---
     val settingsSubRoutes = remember {
         setOf(
@@ -368,14 +372,12 @@ fun BottomNavigationBar(
             "eiken_detail/{eikenId}",
             "toefl_ibt_detail/{toeflIbtId}",
             "ielts_detail/{ieltsId}",
-
             // Edit
             "toeic_edit/{toeicId}",
             "toeic_sw_edit/{toeicSwId}",
             "eiken_edit/{eikenId}",
             "toefl_ibt_edit/{toeflIbtId}",
             "ielts_edit/{ieltsId}",
-
             // Chart
             "toeicChartScreen",
             "toeicSwChartScreen",
@@ -397,14 +399,13 @@ fun BottomNavigationBar(
         if (currentDestination?.route == route) return
 
         navController.navigate(route) {
-            // タブ間移動の状態復元を安定化（起点まで popUp／状態保存→後で復元）
-            popUpTo("examDataScreen") { saveState = true }
+            popUpTo("examDataScreen") { saveState = true } // タブ間復元の安定化
             launchSingleTop = true
             restoreState = true
         }
     }
 
-    NavigationBar(containerColor = Color(0xFFCE93D8)) {
+    NavigationBar(containerColor = Color.White) {
         // 記録確認（起点＋配下で選択状態を維持）
         NavigationBarItem(
             selected = currentDestination.isIn(dataRootRoutes),
@@ -412,10 +413,10 @@ fun BottomNavigationBar(
             icon = { Icon(Icons.Filled.ShowChart, contentDescription = "記録確認") },
             label = { Text("記録確認") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color(0xFF004D40),
-                selectedTextColor = Color(0xFF004D40),
-                unselectedIconColor = Color(0xFFB2DFDB),
-                unselectedTextColor = Color(0xFFB2DFDB),
+                selectedIconColor = selectedColor,
+                selectedTextColor = selectedColor,
+                unselectedIconColor = unselectedColor,
+                unselectedTextColor = unselectedColor,
                 indicatorColor = Color.Transparent
             )
         )
@@ -427,10 +428,10 @@ fun BottomNavigationBar(
             icon = { Icon(Icons.Filled.Edit, contentDescription = "記録") },
             label = { Text("記録") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color(0xFF004D40),
-                selectedTextColor = Color(0xFF004D40),
-                unselectedIconColor = Color(0xFFB2DFDB),
-                unselectedTextColor = Color(0xFFB2DFDB),
+                selectedIconColor = selectedColor,
+                selectedTextColor = selectedColor,
+                unselectedIconColor = unselectedColor,
+                unselectedTextColor = unselectedColor,
                 indicatorColor = Color.Transparent
             )
         )
@@ -442,10 +443,10 @@ fun BottomNavigationBar(
             icon = { Icon(Icons.Filled.Settings, contentDescription = "設定") },
             label = { Text("設定") },
             colors = NavigationBarItemDefaults.colors(
-                selectedIconColor = Color(0xFF004D40),
-                selectedTextColor = Color(0xFF004D40),
-                unselectedIconColor = Color(0xFFB2DFDB),
-                unselectedTextColor = Color(0xFFB2DFDB),
+                selectedIconColor = selectedColor,
+                selectedTextColor = selectedColor,
+                unselectedIconColor = unselectedColor,
+                unselectedTextColor = unselectedColor,
                 indicatorColor = Color.Transparent
             )
         )
